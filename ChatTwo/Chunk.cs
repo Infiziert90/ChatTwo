@@ -4,6 +4,11 @@ using Dalamud.Game.Text.SeStringHandling;
 namespace ChatTwo;
 
 internal abstract class Chunk {
+    internal Payload? Link;
+
+    protected Chunk(Payload? link) {
+        this.Link = link;
+    }
 }
 
 internal class TextChunk : Chunk {
@@ -13,11 +18,11 @@ internal class TextChunk : Chunk {
     internal bool Italic { get; set; }
     internal string Content { get; set; }
 
-    internal TextChunk(string content) {
+    internal TextChunk(Payload? link, string content) : base(link) {
         this.Content = content;
     }
 
-    internal TextChunk(ChatType? fallbackColour, uint? foreground, uint? glow, bool italic, string content) {
+    internal TextChunk(Payload? link, ChatType? fallbackColour, uint? foreground, uint? glow, bool italic, string content) : base(link) {
         this.FallbackColour = fallbackColour;
         this.Foreground = foreground;
         this.Glow = glow;
@@ -29,7 +34,7 @@ internal class TextChunk : Chunk {
 internal class IconChunk : Chunk {
     internal BitmapFontIcon Icon;
 
-    public IconChunk(BitmapFontIcon icon) {
+    public IconChunk(Payload? link, BitmapFontIcon icon) : base(link) {
         this.Icon = icon;
     }
 }

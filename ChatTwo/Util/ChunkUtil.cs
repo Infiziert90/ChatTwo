@@ -1,8 +1,9 @@
 ﻿using ChatTwo.Code;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
+using Dalamud.Logging;
 
-namespace ChatTwo.Util; 
+namespace ChatTwo.Util;
 
 internal static class ChunkUtil {
     internal static IEnumerable<Chunk> ToChunks(SeString msg, ChatType? defaultColour) {
@@ -11,9 +12,10 @@ internal static class ChunkUtil {
         var italic = false;
         var foreground = new Stack<uint>();
         var glow = new Stack<uint>();
+        Payload? link = null;
 
         void Append(string text) {
-            chunks.Add(new TextChunk(text) {
+            chunks.Add(new TextChunk(link, text) {
                 FallbackColour = defaultColour,
                 Foreground = foreground.Count > 0 ? foreground.Peek() : null,
                 Glow = glow.Count > 0 ? glow.Peek() : null,
@@ -21,7 +23,13 @@ internal static class ChunkUtil {
             });
         }
 
+        PluginLog.Log("");
         foreach (var payload in msg.Payloads) {
+            PluginLog.Log(payload.Type.ToString());
+            if (payload.Type == PayloadType.Unknown) {
+                PluginLog.Log(payload.Encode().Select(b => b.ToString("x2")).Aggregate(string.Concat));
+            }
+
             switch (payload.Type) {
                 case PayloadType.EmphasisItalic:
                     var newStatus = ((EmphasisItalicPayload) payload).IsEnabled;
@@ -46,19 +54,29 @@ internal static class ChunkUtil {
 
                     break;
                 case PayloadType.AutoTranslateText:
-                    chunks.Add(new IconChunk(BitmapFontIcon.AutoTranslateBegin));
+                    chunks.Add(new IconChunk(link, BitmapFontIcon.AutoTranslateBegin));
                     var autoText = ((AutoTranslatePayload) payload).Text;
                     Append(autoText.Substring(2, autoText.Length - 4));
-                    chunks.Add(new IconChunk(BitmapFontIcon.AutoTranslateEnd));
+                    chunks.Add(new IconChunk(link, BitmapFontIcon.AutoTranslateEnd));
                     break;
                 case PayloadType.Icon:
-                    chunks.Add(new IconChunk(((IconPayload) payload).Icon));
+                    chunks.Add(new IconChunk(link, ((IconPayload) payload).Icon));
+                    break;
+                case PayloadType.MapLink:
+                case PayloadType.Quest:
+                case PayloadType.DalamudLink:
+                case PayloadType.Status:
+                case PayloadType.Item:
+                case PayloadType.Player:
+                    link = payload;
                     break;
                 case PayloadType.Unknown:
                     var rawPayload = (RawPayload) payload;
                     if (rawPayload.Data[1] == 0x13) {
                         foreground.Pop();
                         glow.Pop();
+                    } else if (rawPayload == RawPayload.LinkTerminator) {
+                        link = null;
                     }
 
                     break;

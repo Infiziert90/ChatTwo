@@ -86,11 +86,11 @@ internal class Store : IDisposable {
 
         var senderChunks = new List<Chunk>();
         if (formatting is { IsPresent: true }) {
-            senderChunks.Add(new TextChunk(formatting.Before) {
+            senderChunks.Add(new TextChunk(null, formatting.Before) {
                 FallbackColour = chatCode.Type,
             });
             senderChunks.AddRange(ChunkUtil.ToChunks(sender, chatCode.Type));
-            senderChunks.Add(new TextChunk(formatting.After) {
+            senderChunks.Add(new TextChunk(null, formatting.After) {
                 FallbackColour = chatCode.Type,
             });
         }

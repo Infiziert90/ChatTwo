@@ -87,7 +87,7 @@ internal sealed class ChatLog : IUiComponent {
 
                                 if (tab.DisplayTimestamp) {
                                     var timestamp = message.Date.ToLocalTime().ToString("t");
-                                    this.DrawChunk(new TextChunk($"[{timestamp}]") {
+                                    this.DrawChunk(new TextChunk(null, $"[{timestamp}]") {
                                         Foreground = 0xFFFFFFFF,
                                     });
                                     ImGui.SameLine();
