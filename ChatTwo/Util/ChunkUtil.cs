@@ -1,7 +1,6 @@
 ﻿using ChatTwo.Code;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
-using Dalamud.Logging;
 
 namespace ChatTwo.Util;
 
@@ -23,13 +22,7 @@ internal static class ChunkUtil {
             });
         }
 
-        PluginLog.Log("");
         foreach (var payload in msg.Payloads) {
-            PluginLog.Log(payload.Type.ToString());
-            if (payload.Type == PayloadType.Unknown) {
-                PluginLog.Log(payload.Encode().Select(b => b.ToString("x2")).Aggregate(string.Concat));
-            }
-
             switch (payload.Type) {
                 case PayloadType.EmphasisItalic:
                     var newStatus = ((EmphasisItalicPayload) payload).IsEnabled;
@@ -75,7 +68,7 @@ internal static class ChunkUtil {
                     if (rawPayload.Data[1] == 0x13) {
                         foreground.Pop();
                         glow.Pop();
-                    } else if (rawPayload == RawPayload.LinkTerminator) {
+                    } else if (Equals(rawPayload, RawPayload.LinkTerminator)) {
                         link = null;
                     }
 

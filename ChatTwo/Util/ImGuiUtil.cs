@@ -1,10 +1,39 @@
 ﻿using System.Text;
+using Dalamud.Game.Text.SeStringHandling;
 using ImGuiNET;
 
-namespace ChatTwo.Util; 
+namespace ChatTwo.Util;
 
 internal static class ImGuiUtil {
-    internal static unsafe void WrapText(string csText) {
+    private static readonly ImGuiMouseButton[] Buttons = {
+        ImGuiMouseButton.Left,
+        ImGuiMouseButton.Middle,
+        ImGuiMouseButton.Right,
+    };
+
+    internal static void PostPayload(Payload? payload, PayloadHandler? handler) {
+        if (payload != null && ImGui.IsItemHovered()) {
+            ImGui.SetMouseCursor(ImGuiMouseCursor.Hand);
+            handler?.Hover(payload);
+        }
+
+        if (payload == null || handler == null) {
+            return;
+        }
+
+        foreach (var button in Buttons) {
+            if (ImGui.IsItemClicked(button)) {
+                handler.Click(payload, button);
+            }
+        }
+    }
+
+    internal static unsafe void WrapText(string csText, Payload? payload, PayloadHandler? handler) {
+        void Text(byte* text, byte* textEnd) {
+            ImGuiNative.igTextUnformatted(text, textEnd);
+            PostPayload(payload, handler);
+        }
+
         foreach (var part in csText.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None)) {
             var bytes = Encoding.UTF8.GetBytes(part);
             fixed (byte* rawText = bytes) {
@@ -23,7 +52,7 @@ internal static class ImGuiUtil {
                     return;
                 }
 
-                ImGuiNative.igTextUnformatted(text, endPrevLine);
+                Text(text, endPrevLine);
 
                 widthLeft = ImGui.GetContentRegionAvail().X;
                 while (endPrevLine < textEnd) {
@@ -37,7 +66,7 @@ internal static class ImGuiUtil {
                         break;
                     }
 
-                    ImGuiNative.igTextUnformatted(text, endPrevLine);
+                    Text(text, endPrevLine);
                 }
             }
         }

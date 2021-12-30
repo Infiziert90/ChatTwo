@@ -1,4 +1,5 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Numerics;
+using System.Runtime.InteropServices;
 using ChatTwo.Ui;
 using Dalamud.Interface;
 using Dalamud.Logging;
@@ -10,6 +11,7 @@ internal sealed class PluginUi : IDisposable {
     internal Plugin Plugin { get; }
     internal ImFontPtr? RegularFont { get; private set; }
     internal ImFontPtr? ItalicFont { get; private set; }
+    internal Vector4 DefaultText { get; private set; }
 
     private List<IUiComponent> Components { get; }
     private ImFontConfigPtr _fontCfg;
@@ -104,6 +106,8 @@ internal sealed class PluginUi : IDisposable {
     }
 
     private void Draw() {
+        this.DefaultText = ImGui.GetStyle().Colors[(int) ImGuiCol.Text];
+
         var font = this.RegularFont.HasValue;
 
         if (font) {

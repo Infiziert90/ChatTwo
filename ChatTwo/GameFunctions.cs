@@ -102,6 +102,59 @@ internal unsafe class GameFunctions : IDisposable {
         return (*flags & (1 << 22)) == 0;
     }
 
+    internal void OpenItemTooltip(uint id) {
+        var atkStage = AtkStage.GetSingleton();
+        var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.ItemDetail);
+        var addon = atkStage->RaptureAtkUnitManager->GetAddonByName("ItemDetail");
+        if (agent == null || addon == null) {
+            // atkStage ain't gonna be null or we have bigger problems
+            return;
+        }
+
+        var agentPtr = (IntPtr) agent;
+
+        // addresses mentioned here are 6.01
+        // see the call near the end of AgentItemDetail.Update
+        // offsets valid as of 6.01
+
+        // 8BFC49: sets some shit
+        *(uint*) (agentPtr + 0x20) = 22;
+        // 8C04C8: switch goes down to default, which is what we want
+        *(byte*) (agentPtr + 0x118) = 1;
+        // 8BFCF6: item id when hovering over item in chat
+        *(uint*) (agentPtr + 0x11C) = id;
+        // 8BFCE4: always 0 when hovering over item in chat
+        *(uint*) (agentPtr + 0x120) = 0;
+        // 8C0B55: skips a check to do with inventory
+        *(byte*) (agentPtr + 0x128) &= 0xEF;
+        // 8BFC7C: when set to 1, lets everything continue (one frame)
+        *(byte*) (agentPtr + 0x146) = 1;
+        // 8BFC89: skips early return
+        *(byte*) (agentPtr + 0x14A) = 0;
+
+        // this just probably needs to be set
+        agent->AddonId = (uint) addon->ID;
+
+        // vcall from E8 ?? ?? ?? ?? 0F B7 C0 48 83 C4 60
+        var vf5 = (delegate*<AtkUnitBase*, byte, uint, void>*) ((IntPtr) addon->VTable + 40);
+        // E8872D: lets vf5 actually run
+        *(byte*) ((IntPtr) atkStage + 0x2B4) |= 2;
+        (*vf5)(addon, 0, 15);
+    }
+
+    internal void CloseItemTooltip() {
+        // hide addon first to prevent the "addon close" sound
+        var addon = AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName("ItemDetail");
+        if (addon != null) {
+            addon->Hide(true);
+        }
+
+        var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.ItemDetail);
+        if (agent != null) {
+            agent->Hide();
+        }
+    }
+
     private byte ChatLogRefreshDetour(IntPtr log, ushort eventId, AtkValue* value) {
         if (eventId == 0x31 && value != null && value->UInt is 0x05 or 0x0C) {
             string? eventInput = null;
@@ -144,7 +197,7 @@ internal unsafe class GameFunctions : IDisposable {
         }
 
         var channel = *(uint*) (shellModule + 0xFD0);
-        
+
         // var channel = *(uint*) (agent + 0x40);
         if (channel is 17 or 18) {
             channel = 0;

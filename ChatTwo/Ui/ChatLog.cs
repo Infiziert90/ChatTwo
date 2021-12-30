@@ -9,15 +9,18 @@ namespace ChatTwo.Ui;
 internal sealed class ChatLog : IUiComponent {
     private PluginUi Ui { get; }
 
-    private bool _activate;
-    private string _chat = string.Empty;
+    internal bool Activate;
+    internal string Chat = string.Empty;
     private readonly TextureWrap? _fontIcon;
     private readonly List<string> _inputBacklog = new();
     private int _inputBacklogIdx = -1;
     private int _lastTab;
 
+    private PayloadHandler PayloadHandler { get; }
+
     internal ChatLog(PluginUi ui) {
         this.Ui = ui;
+        this.PayloadHandler = new PayloadHandler(this.Ui, this);
 
         this._fontIcon = this.Ui.Plugin.DataManager.GetImGuiTexture("common/font/fonticon_ps5.tex");
 
@@ -30,9 +33,9 @@ internal sealed class ChatLog : IUiComponent {
     }
 
     private void ChatActivated(string? input) {
-        this._activate = true;
-        if (input != null && !this._chat.Contains(input)) {
-            this._chat += input;
+        this.Activate = true;
+        if (input != null && !this.Chat.Contains(input)) {
+            this.Chat += input;
         }
     }
 
@@ -80,7 +83,7 @@ internal sealed class ChatLog : IUiComponent {
                         // int numMessages;
                         try {
                             tab.MessagesMutex.WaitOne();
-                            
+
                             for (var i = 0; i < tab.Messages.Count; i++) {
                                 // numDrawn += 1;
                                 var message = tab.Messages[i];
@@ -94,11 +97,11 @@ internal sealed class ChatLog : IUiComponent {
                                 }
 
                                 if (message.Sender.Count > 0) {
-                                    this.DrawChunks(message.Sender);
+                                    this.DrawChunks(message.Sender, this.PayloadHandler);
                                     ImGui.SameLine();
                                 }
 
-                                this.DrawChunks(message.Content);
+                                this.DrawChunks(message.Content, this.PayloadHandler);
 
                                 // drawnHeight += ImGui.GetCursorPosY() - lastPos;
                                 // lastPos = ImGui.GetCursorPosY();
@@ -115,7 +118,7 @@ internal sealed class ChatLog : IUiComponent {
                         }
 
                         // PluginLog.Log($"numDrawn: {numDrawn}");
-                        
+
                         if (switchedTab || ImGui.GetScrollY() >= ImGui.GetScrollMaxY()) {
                             // PluginLog.Log($"drawnHeight: {drawnHeight}");
                             // var itemPosY = clipper.StartPosY + drawnHeight;
@@ -124,6 +127,8 @@ internal sealed class ChatLog : IUiComponent {
                             ImGui.SetScrollHereY(1f);
                         }
                     }
+
+                    this.PayloadHandler.Draw();
 
                     ImGui.EndChild();
 
@@ -134,7 +139,7 @@ internal sealed class ChatLog : IUiComponent {
             ImGui.EndTabBar();
         }
 
-        if (this._activate) {
+        if (this.Activate) {
             ImGui.SetKeyboardFocusHere();
         }
 
@@ -148,23 +153,23 @@ internal sealed class ChatLog : IUiComponent {
         if (inputColour != null) {
             ImGui.PushStyleColor(ImGuiCol.Text, ColourUtil.RgbaToAbgr(inputColour.Value));
         }
-        
+
         ImGui.SetNextItemWidth(-1);
         const ImGuiInputTextFlags inputFlags = ImGuiInputTextFlags.EnterReturnsTrue
                                                | ImGuiInputTextFlags.CallbackAlways
                                                | ImGuiInputTextFlags.CallbackHistory;
-        if (ImGui.InputText("##chat2-input", ref this._chat, 500, inputFlags, this.Callback)) {
-            if (!string.IsNullOrWhiteSpace(this._chat)) {
-                var trimmed = this._chat.Trim();
+        if (ImGui.InputText("##chat2-input", ref this.Chat, 500, inputFlags, this.Callback)) {
+            if (!string.IsNullOrWhiteSpace(this.Chat)) {
+                var trimmed = this.Chat.Trim();
                 this.AddBacklog(trimmed);
                 this._inputBacklogIdx = -1;
 
                 this.Ui.Plugin.Common.Functions.Chat.SendMessage(trimmed);
             }
 
-            this._chat = string.Empty;
+            this.Chat = string.Empty;
         }
-        
+
         if (inputColour != null) {
             ImGui.PopStyleColor();
         }
@@ -175,9 +180,9 @@ internal sealed class ChatLog : IUiComponent {
     private unsafe int Callback(ImGuiInputTextCallbackData* data) {
         var ptr = new ImGuiInputTextCallbackDataPtr(data);
 
-        if (this._activate) {
-            this._activate = false;
-            data->CursorPos = this._chat.Length;
+        if (this.Activate) {
+            this.Activate = false;
+            data->CursorPos = this.Chat.Length;
             data->SelectionStart = data->SelectionEnd = data->CursorPos;
         }
 
@@ -192,12 +197,12 @@ internal sealed class ChatLog : IUiComponent {
                 switch (this._inputBacklogIdx) {
                     case -1:
                         var offset = 0;
-                        
-                        if (!string.IsNullOrWhiteSpace(this._chat)) {
-                            this.AddBacklog(this._chat);
+
+                        if (!string.IsNullOrWhiteSpace(this.Chat)) {
+                            this.AddBacklog(this.Chat);
                             offset = 1;
                         }
-                        
+
                         this._inputBacklogIdx = this._inputBacklog.Count - 1 - offset;
                         break;
                     case > 0:
@@ -229,9 +234,9 @@ internal sealed class ChatLog : IUiComponent {
         return 0;
     }
 
-    private void DrawChunks(IReadOnlyList<Chunk> chunks) {
+    internal void DrawChunks(IReadOnlyList<Chunk> chunks, PayloadHandler? handler = null) {
         for (var i = 0; i < chunks.Count; i++) {
-            this.DrawChunk(chunks[i]);
+            this.DrawChunk(chunks[i], handler);
 
             if (i < chunks.Count - 1) {
                 ImGui.SameLine();
@@ -239,7 +244,7 @@ internal sealed class ChatLog : IUiComponent {
         }
     }
 
-    private void DrawChunk(Chunk chunk) {
+    private void DrawChunk(Chunk chunk, PayloadHandler? handler = null) {
         if (chunk is IconChunk icon && this._fontIcon != null) {
             var bounds = IconUtil.GetBounds((byte) icon.Icon);
             if (bounds != null) {
@@ -251,6 +256,7 @@ internal sealed class ChatLog : IUiComponent {
                 var uv0 = new Vector2(bounds.Value.X, bounds.Value.Y - 2) / texSize;
                 var uv1 = new Vector2(bounds.Value.X + bounds.Value.Z, bounds.Value.Y - 2 + bounds.Value.W) / texSize;
                 ImGui.Image(this._fontIcon.ImGuiHandle, size, uv0, uv1);
+                ImGuiUtil.PostPayload(chunk.Link, handler);
             }
 
             return;
@@ -277,7 +283,7 @@ internal sealed class ChatLog : IUiComponent {
             ImGui.PushFont(this.Ui.ItalicFont.Value);
         }
 
-        ImGuiUtil.WrapText(text.Content);
+        ImGuiUtil.WrapText(text.Content, chunk.Link, handler);
 
         if (text.Italic && this.Ui.ItalicFont.HasValue) {
             ImGui.PopFont();

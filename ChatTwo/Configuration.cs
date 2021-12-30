@@ -1,13 +1,14 @@
 ﻿using ChatTwo.Code;
 using Dalamud.Configuration;
 
-namespace ChatTwo; 
+namespace ChatTwo;
 
 [Serializable]
 internal class Configuration : IPluginConfiguration {
     public int Version { get; set; } = 1;
 
     public bool HideChat = true;
+    public bool NativeItemTooltips = true;
     public float FontSize = 17f;
     public Dictionary<ChatType, uint> ChatColours = new();
     public List<Tab> Tabs = new();
@@ -43,6 +44,7 @@ internal class Tab {
         if (this.Messages.Count > 1000) {
             this.Messages.RemoveAt(0);
         }
+
         this.MessagesMutex.ReleaseMutex();
 
         this.Unread += 1;

@@ -1,4 +1,4 @@
-﻿namespace ChatTwo.Code; 
+﻿namespace ChatTwo.Code;
 
 internal static class InputChannelExt {
     internal static ChatType ToChatType(this InputChannel input) {

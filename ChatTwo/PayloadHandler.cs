@@ -1,0 +1,190 @@
+﻿using System.Numerics;
+using ChatTwo.Ui;
+using ChatTwo.Util;
+using Dalamud.Game.ClientState.Objects.SubKinds;
+using Dalamud.Game.Text.SeStringHandling;
+using Dalamud.Game.Text.SeStringHandling.Payloads;
+using Dalamud.Logging;
+using Dalamud.Utility;
+using ImGuiNET;
+
+namespace ChatTwo;
+
+internal sealed class PayloadHandler {
+    private PluginUi Ui { get; }
+    private ChatLog Log { get; }
+
+    private HashSet<PlayerPayload> Popups { get; set; } = new();
+
+    private uint _hoveredItem;
+    private uint _hoverCounter;
+    private uint _lastHoverCounter;
+
+    internal PayloadHandler(PluginUi ui, ChatLog log) {
+        this.Ui = ui;
+        this.Log = log;
+    }
+
+    internal void Draw() {
+        var newPopups = new HashSet<PlayerPayload>();
+        foreach (var player in this.Popups) {
+            var id = PopupId(player);
+            if (!ImGui.BeginPopup(id)) {
+                continue;
+            }
+
+            newPopups.Add(player);
+            ImGui.PushID(id);
+
+            this.DrawPlayerPopup(player);
+
+            ImGui.PopID();
+            ImGui.EndPopup();
+        }
+
+        this.Popups = newPopups;
+
+        if (++this._hoverCounter - this._lastHoverCounter > 1) {
+            this.Ui.Plugin.Functions.CloseItemTooltip();
+            this._hoveredItem = 0;
+            this._hoverCounter = this._lastHoverCounter = 0;
+        }
+    }
+
+    internal void Click(Payload payload, ImGuiMouseButton button) {
+        PluginLog.Log($"clicked {payload} with {button}");
+
+        switch (button) {
+            case ImGuiMouseButton.Left:
+                this.LeftClickPayload(payload);
+                break;
+            case ImGuiMouseButton.Right:
+                this.RightClickPayload(payload);
+                break;
+        }
+    }
+
+    internal void Hover(Payload payload) {
+        switch (payload) {
+            case StatusPayload status: {
+                this.DoHover(() => this.HoverStatus(status), 250f);
+                break;
+            }
+            case ItemPayload item: {
+                if (this.Ui.Plugin.Config.NativeItemTooltips) {
+                    this.Ui.Plugin.Functions.OpenItemTooltip(item.ItemId);
+
+                    if (this._hoveredItem != item.ItemId) {
+                        this._hoveredItem = item.ItemId;
+                        this._hoverCounter = this._lastHoverCounter = 0;
+                    } else {
+                        this._lastHoverCounter = this._hoverCounter;
+                    }
+
+                    break;
+                }
+
+                this.DoHover(() => this.HoverItem(item), 250f);
+                break;
+            }
+        }
+    }
+
+    private void DoHover(Action inside, float width) {
+        ImGui.SetNextWindowSize(new Vector2(width, -1f));
+
+        ImGui.BeginTooltip();
+        ImGui.PushTextWrapPos();
+
+        ImGui.PushStyleColor(ImGuiCol.Text, this.Ui.DefaultText);
+        try {
+            inside();
+        } finally {
+            ImGui.PopStyleColor();
+            ImGui.PopTextWrapPos();
+            ImGui.EndTooltip();
+        }
+    }
+
+    private void HoverStatus(StatusPayload status) {
+        var name = ChunkUtil.ToChunks(status.Status.Name.ToDalamudString(), null);
+        this.Log.DrawChunks(name.ToList());
+        ImGui.Separator();
+
+        var desc = ChunkUtil.ToChunks(status.Status.Description.ToDalamudString(), null);
+        this.Log.DrawChunks(desc.ToList());
+    }
+
+    private void HoverItem(ItemPayload item) {
+        var name = ChunkUtil.ToChunks(item.Item.Name.ToDalamudString(), null);
+        this.Log.DrawChunks(name.ToList());
+        ImGui.Separator();
+
+        var desc = ChunkUtil.ToChunks(item.Item.Description.ToDalamudString(), null);
+        this.Log.DrawChunks(desc.ToList());
+    }
+
+    private void LeftClickPayload(Payload payload) {
+        switch (payload) {
+            case MapLinkPayload map: {
+                this.Ui.Plugin.GameGui.OpenMapWithMapLink(map);
+                break;
+            }
+            case QuestPayload quest: {
+                this.Ui.Plugin.Common.Functions.Journal.OpenQuest(quest.Quest);
+                break;
+            }
+            case DalamudLinkPayload link: {
+                break;
+            }
+        }
+    }
+
+    private void RightClickPayload(Payload payload) {
+        switch (payload) {
+            case PlayerPayload player: {
+                this.Popups.Add(player);
+                ImGui.OpenPopup(PopupId(player));
+                break;
+            }
+        }
+    }
+
+    private void DrawPlayerPopup(PlayerPayload player) {
+        var name = player.PlayerName;
+        if (player.World.IsPublic) {
+            name += $"{player.World.Name}";
+        }
+
+        ImGui.TextUnformatted(name);
+        ImGui.Separator();
+
+        if (player.World.IsPublic && ImGui.Selectable("Send Tell")) {
+            this.Log.Chat = $"/tell {player.PlayerName}@{player.World.Name} ";
+            this.Log.Activate = true;
+        }
+
+        if (ImGui.Selectable("Target")) {
+            foreach (var obj in this.Ui.Plugin.ObjectTable) {
+                if (obj is not PlayerCharacter character) {
+                    continue;
+                }
+
+                if (character.Name.TextValue != player.PlayerName) {
+                    continue;
+                }
+
+                if (player.World.IsPublic && character.HomeWorld.Id != player.World.RowId) {
+                    continue;
+                }
+
+                this.Ui.Plugin.TargetManager.SetTarget(obj);
+                break;
+            }
+        }
+    }
+
+    private static string PopupId(PlayerPayload player) {
+        return $"###player-{player.PlayerName}@{player.World}";
+    }
+}

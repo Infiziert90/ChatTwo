@@ -4,7 +4,7 @@ using Dalamud.Game.Text.SeStringHandling;
 namespace ChatTwo;
 
 internal abstract class Chunk {
-    internal Payload? Link;
+    internal Payload? Link { get; set; }
 
     protected Chunk(Payload? link) {
         this.Link = link;
@@ -32,7 +32,7 @@ internal class TextChunk : Chunk {
 }
 
 internal class IconChunk : Chunk {
-    internal BitmapFontIcon Icon;
+    internal BitmapFontIcon Icon { get; set; }
 
     public IconChunk(Payload? link, BitmapFontIcon icon) : base(link) {
         this.Icon = icon;

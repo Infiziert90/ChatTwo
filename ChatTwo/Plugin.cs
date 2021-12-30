@@ -1,6 +1,7 @@
 ﻿using Dalamud.Data;
 using Dalamud.Game;
 using Dalamud.Game.ClientState;
+using Dalamud.Game.ClientState.Objects;
 using Dalamud.Game.Command;
 using Dalamud.Game.Gui;
 using Dalamud.IoC;
@@ -21,7 +22,7 @@ public sealed class Plugin : IDalamudPlugin {
 
     [PluginService]
     internal ClientState ClientState { get; init; }
-    
+
     [PluginService]
     internal CommandManager CommandManager { get; init; }
 
@@ -32,7 +33,16 @@ public sealed class Plugin : IDalamudPlugin {
     internal Framework Framework { get; init; }
 
     [PluginService]
+    internal GameGui GameGui { get; init; }
+
+    [PluginService]
+    internal ObjectTable ObjectTable { get; init; }
+
+    [PluginService]
     internal SigScanner SigScanner { get; init; }
+
+    [PluginService]
+    internal TargetManager TargetManager { get; init; }
 
     internal Configuration Config { get; }
     internal XivCommonBase Common { get; }
@@ -78,7 +88,7 @@ public sealed class Plugin : IDalamudPlugin {
         if (!this.Config.HideChat) {
             return;
         }
-        
+
         foreach (var name in ChatAddonNames) {
             if (GameFunctions.IsAddonInteractable(name)) {
                 GameFunctions.SetAddonInteractable(name, false);

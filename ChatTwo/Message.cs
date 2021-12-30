@@ -1,6 +1,6 @@
 ﻿using ChatTwo.Code;
 
-namespace ChatTwo; 
+namespace ChatTwo;
 
 internal class Message {
     internal DateTime Date { get; }
