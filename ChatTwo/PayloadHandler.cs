@@ -16,6 +16,7 @@ internal sealed class PayloadHandler {
 
     private HashSet<PlayerPayload> Popups { get; set; } = new();
 
+    private bool _handleTooltips;
     private uint _hoveredItem;
     private uint _hoverCounter;
     private uint _lastHoverCounter;
@@ -44,10 +45,11 @@ internal sealed class PayloadHandler {
 
         this.Popups = newPopups;
 
-        if (++this._hoverCounter - this._lastHoverCounter > 1) {
+        if (this._handleTooltips && ++this._hoverCounter - this._lastHoverCounter > 1) {
             this.Ui.Plugin.Functions.CloseItemTooltip();
             this._hoveredItem = 0;
             this._hoverCounter = this._lastHoverCounter = 0;
+            this._handleTooltips = false;
         }
     }
 
@@ -74,6 +76,7 @@ internal sealed class PayloadHandler {
                 if (this.Ui.Plugin.Config.NativeItemTooltips) {
                     this.Ui.Plugin.Functions.OpenItemTooltip(item.ItemId);
 
+                    this._handleTooltips = true;
                     if (this._hoveredItem != item.ItemId) {
                         this._hoveredItem = item.ItemId;
                         this._hoverCounter = this._lastHoverCounter = 0;
