@@ -46,6 +46,7 @@ public sealed class Plugin : IDalamudPlugin {
 
     internal Configuration Config { get; }
     internal XivCommonBase Common { get; }
+    internal TextureCache TextureCache { get; }
     internal GameFunctions Functions { get; }
     internal Store Store { get; }
     internal PluginUi Ui { get; }
@@ -54,6 +55,7 @@ public sealed class Plugin : IDalamudPlugin {
     public Plugin() {
         this.Config = this.Interface!.GetPluginConfig() as Configuration ?? new Configuration();
         this.Common = new XivCommonBase();
+        this.TextureCache = new TextureCache(this.DataManager!);
         this.Functions = new GameFunctions(this);
         this.Store = new Store(this);
         this.Ui = new PluginUi(this);
@@ -69,6 +71,7 @@ public sealed class Plugin : IDalamudPlugin {
         this.Ui.Dispose();
         this.Store.Dispose();
         this.Functions.Dispose();
+        this.TextureCache.Dispose();
         this.Common.Dispose();
     }
 

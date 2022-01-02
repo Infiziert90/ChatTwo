@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Dalamud.Game.Text.SeStringHandling;
+using Dalamud.Interface;
 using ImGuiNET;
 
 namespace ChatTwo.Util;
@@ -34,14 +35,20 @@ internal static class ImGuiUtil {
             PostPayload(payload, handler);
         }
 
+        if (csText.Length == 0) {
+            return;
+        }
+
         foreach (var part in csText.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None)) {
             var bytes = Encoding.UTF8.GetBytes(part);
             fixed (byte* rawText = bytes) {
                 var text = rawText;
                 var textEnd = text + bytes.Length;
 
-                // idk how this is possible, but it is, I guess
+                // empty string
                 if (text == null) {
+                    ImGui.TextUnformatted("");
+                    ImGui.TextUnformatted("");
                     return;
                 }
 
@@ -63,6 +70,8 @@ internal static class ImGuiUtil {
 
                     endPrevLine = ImGuiNative.ImFont_CalcWordWrapPositionA(ImGui.GetFont().NativePtr, scale, text, textEnd, widthLeft);
                     if (endPrevLine == null) {
+                        ImGui.TextUnformatted("");
+                        ImGui.TextUnformatted("");
                         break;
                     }
 
@@ -70,5 +79,20 @@ internal static class ImGuiUtil {
                 }
             }
         }
+    }
+
+    internal static bool IconButton(FontAwesomeIcon icon, string? id = null) {
+        ImGui.PushFont(UiBuilder.IconFont);
+
+        var label = icon.ToIconString();
+        if (id != null) {
+            label += $"##{id}";
+        }
+
+        var ret = ImGui.Button(label);
+
+        ImGui.PopFont();
+
+        return ret;
     }
 }

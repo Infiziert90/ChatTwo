@@ -1,10 +1,15 @@
-﻿using ChatTwo.Code;
+﻿using System.Runtime.InteropServices;
+using System.Text;
+using ChatTwo.Code;
+using ChatTwo.Util;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Hooking;
 using Dalamud.Logging;
 using Dalamud.Memory;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
+using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
+using FFXIVClientStructs.FFXIV.Client.UI.Shell;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace ChatTwo;
@@ -13,21 +18,25 @@ internal unsafe class GameFunctions : IDisposable {
     private static class Signatures {
         internal const string ChatLogRefresh = "40 53 56 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 8B F0 8B FA";
         internal const string ChangeChannelName = "E8 ?? ?? ?? ?? BA ?? ?? ?? ?? 48 8D 4D B0 48 8B F8 E8 ?? ?? ?? ?? 41 8B D6";
+        internal const string ChangeChatChannel = "E8 ?? ?? ?? ?? 0F B7 44 37 ??";
     }
 
     private delegate byte ChatLogRefreshDelegate(IntPtr log, ushort eventId, AtkValue* value);
 
     private delegate IntPtr ChangeChannelNameDelegate(IntPtr agent);
 
+    private delegate IntPtr ChangeChatChannelDelegate(RaptureShellModule* shell, int channel, uint linkshellIdx, Utf8String* tellTarget, byte one);
+
     internal delegate void ChatActivatedEventDelegate(string? input);
 
     private Plugin Plugin { get; }
     private Hook<ChatLogRefreshDelegate>? ChatLogRefreshHook { get; }
     private Hook<ChangeChannelNameDelegate>? ChangeChannelNameHook { get; }
+    private readonly ChangeChatChannelDelegate? _changeChatChannel;
 
     internal event ChatActivatedEventDelegate? ChatActivated;
 
-    internal (InputChannel channel, string name) ChatChannel { get; private set; }
+    internal (InputChannel channel, List<Chunk> name) ChatChannel { get; private set; }
 
     internal GameFunctions(Plugin plugin) {
         this.Plugin = plugin;
@@ -40,6 +49,10 @@ internal unsafe class GameFunctions : IDisposable {
         if (this.Plugin.SigScanner.TryScanText(Signatures.ChangeChannelName, out var channelNamePtr)) {
             this.ChangeChannelNameHook = new Hook<ChangeChannelNameDelegate>(channelNamePtr, this.ChangeChannelNameDetour);
             this.ChangeChannelNameHook.Enable();
+        }
+
+        if (this.Plugin.SigScanner.TryScanText(Signatures.ChangeChatChannel, out var changeChannelPtr)) {
+            this._changeChatChannel = Marshal.GetDelegateForFunctionPointer<ChangeChatChannelDelegate>(changeChannelPtr);
         }
 
         this.Plugin.ClientState.Login += this.Login;
@@ -64,6 +77,23 @@ internal unsafe class GameFunctions : IDisposable {
         }
 
         this.ChangeChannelNameDetour((IntPtr) agent);
+    }
+
+    internal void SetChatChannel(InputChannel channel, string? tellTarget = null) {
+        if (this._changeChatChannel == null) {
+            return;
+        }
+
+        var bytes = Encoding.UTF8.GetBytes(tellTarget ?? "");
+        var target = new Utf8String();
+        fixed (byte* tellTargetPtr = bytes) {
+            var zero = stackalloc byte[1];
+            zero[0] = 0;
+
+            target.StringPtr = tellTargetPtr == null ? zero : tellTargetPtr;
+            target.StringLength = bytes.Length;
+            this._changeChatChannel(RaptureShellModule.Instance, (int) (channel + 1), channel.LinkshellIndex(), &target, 1);
+        }
     }
 
     internal static void SetAddonInteractable(string name, bool interactable) {
@@ -217,7 +247,12 @@ internal unsafe class GameFunctions : IDisposable {
             return ret;
         }
 
-        this.ChatChannel = ((InputChannel) channel, name.TextValue.TrimStart('\uE01E').Trim());
+        var nameChunks = ChunkUtil.ToChunks(name, null).ToList();
+        if (nameChunks.Count > 0 && nameChunks[0] is TextChunk text) {
+            text.Content = text.Content.TrimStart('\uE01E').TrimStart();
+        }
+
+        this.ChatChannel = ((InputChannel) channel, nameChunks);
 
         return ret;
     }

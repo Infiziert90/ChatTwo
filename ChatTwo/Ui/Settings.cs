@@ -9,8 +9,6 @@ namespace ChatTwo.Ui;
 internal sealed class Settings : IUiComponent {
     private PluginUi Ui { get; }
 
-    private bool _visible;
-
     private bool _hideChat;
     private bool _nativeItemTooltips;
     private float _fontSize;
@@ -29,7 +27,7 @@ internal sealed class Settings : IUiComponent {
     }
 
     private void Command(string command, string args) {
-        this._visible ^= true;
+        this.Ui.SettingsVisible ^= true;
     }
 
     private void Initialise() {
@@ -42,11 +40,11 @@ internal sealed class Settings : IUiComponent {
     }
 
     public void Draw() {
-        if (!this._visible) {
+        if (!this.Ui.SettingsVisible) {
             return;
         }
 
-        if (!ImGui.Begin($"{this.Ui.Plugin.Name} settings", ref this._visible)) {
+        if (!ImGui.Begin($"{this.Ui.Plugin.Name} settings", ref this.Ui.SettingsVisible)) {
             ImGui.End();
             return;
         }
@@ -148,13 +146,13 @@ internal sealed class Settings : IUiComponent {
 
         if (ImGui.Button("Save and close")) {
             save = true;
-            this._visible = false;
+            this.Ui.SettingsVisible = false;
         }
 
         ImGui.SameLine();
 
         if (ImGui.Button("Discard")) {
-            this._visible = false;
+            this.Ui.SettingsVisible = false;
         }
 
         ImGui.End();

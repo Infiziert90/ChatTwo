@@ -1,12 +1,16 @@
 ﻿using System.Numerics;
 using ChatTwo.Code;
 using ChatTwo.Util;
+using Dalamud.Interface;
 using ImGuiNET;
 using ImGuiScene;
+using Lumina.Excel.GeneratedSheets;
 
 namespace ChatTwo.Ui;
 
 internal sealed class ChatLog : IUiComponent {
+    private const string ChatChannelPicker = "chat-channel-picker";
+
     private PluginUi Ui { get; }
 
     internal bool Activate;
@@ -143,7 +147,39 @@ internal sealed class ChatLog : IUiComponent {
             ImGui.SetKeyboardFocusHere();
         }
 
-        ImGui.TextUnformatted(this.Ui.Plugin.Functions.ChatChannel.name);
+        ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, Vector2.Zero);
+        try {
+            this.DrawChunks(this.Ui.Plugin.Functions.ChatChannel.name);
+        } finally {
+            ImGui.PopStyleVar();
+        }
+
+        var beforeIcon = ImGui.GetCursorPos();
+
+        if (ImGuiUtil.IconButton(FontAwesomeIcon.Comment)) {
+            ImGui.OpenPopup(ChatChannelPicker);
+        }
+
+        if (ImGui.BeginPopup(ChatChannelPicker)) {
+            foreach (var channel in Enum.GetValues<InputChannel>()) {
+                var name = this.Ui.Plugin.DataManager.GetExcelSheet<LogFilter>()!
+                    .FirstOrDefault(row => row.LogKind == (byte) channel.ToChatType())
+                    ?.Name
+                    ?.RawString ?? channel.ToString();
+
+                if (ImGui.Selectable(name)) {
+                    this.Ui.Plugin.Functions.SetChatChannel(channel);
+                }
+            }
+
+            ImGui.EndPopup();
+        }
+
+        ImGui.SameLine();
+        var afterIcon = ImGui.GetCursorPos();
+
+        var buttonWidth = afterIcon.X - beforeIcon.X;
+        var inputWidth = ImGui.GetContentRegionAvail().X - buttonWidth;
 
         var inputType = this.Ui.Plugin.Functions.ChatChannel.channel.ToChatType();
         var inputColour = this.Ui.Plugin.Config.ChatColours.TryGetValue(inputType, out var inputCol)
@@ -154,7 +190,7 @@ internal sealed class ChatLog : IUiComponent {
             ImGui.PushStyleColor(ImGuiCol.Text, ColourUtil.RgbaToAbgr(inputColour.Value));
         }
 
-        ImGui.SetNextItemWidth(-1);
+        ImGui.SetNextItemWidth(inputWidth);
         const ImGuiInputTextFlags inputFlags = ImGuiInputTextFlags.EnterReturnsTrue
                                                | ImGuiInputTextFlags.CallbackAlways
                                                | ImGuiInputTextFlags.CallbackHistory;
@@ -172,6 +208,12 @@ internal sealed class ChatLog : IUiComponent {
 
         if (inputColour != null) {
             ImGui.PopStyleColor();
+        }
+
+        ImGui.SameLine();
+
+        if (ImGuiUtil.IconButton(FontAwesomeIcon.Cog)) {
+            this.Ui.SettingsVisible ^= true;
         }
 
         ImGui.End();

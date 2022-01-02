@@ -7,6 +7,7 @@ using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Logging;
 using Dalamud.Utility;
 using ImGuiNET;
+using ImGuiScene;
 
 namespace ChatTwo;
 
@@ -109,7 +110,20 @@ internal sealed class PayloadHandler {
         }
     }
 
+    private static void InlineIcon(TextureWrap icon) {
+        var lineHeight = ImGui.CalcTextSize("A").Y;
+            
+        var cursor = ImGui.GetCursorPos();
+        ImGui.Image(icon.ImGuiHandle, new Vector2(icon.Width, icon.Height));
+        ImGui.SameLine();
+        ImGui.SetCursorPos(cursor + new Vector2(icon.Width + 4, (float) icon.Height / 2 - lineHeight / 2));
+    }
+
     private void HoverStatus(StatusPayload status) {
+        if (this.Ui.Plugin.TextureCache.GetStatus(status.Status) is { } icon) {
+            InlineIcon(icon);
+        }
+
         var name = ChunkUtil.ToChunks(status.Status.Name.ToDalamudString(), null);
         this.Log.DrawChunks(name.ToList());
         ImGui.Separator();
@@ -119,6 +133,10 @@ internal sealed class PayloadHandler {
     }
 
     private void HoverItem(ItemPayload item) {
+        if (this.Ui.Plugin.TextureCache.GetItem(item.Item) is { } icon) {
+            InlineIcon(icon);
+        }
+
         var name = ChunkUtil.ToChunks(item.Item.Name.ToDalamudString(), null);
         this.Log.DrawChunks(name.ToList());
         ImGui.Separator();

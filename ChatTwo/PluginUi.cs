@@ -9,6 +9,9 @@ namespace ChatTwo;
 
 internal sealed class PluginUi : IDisposable {
     internal Plugin Plugin { get; }
+
+    internal bool SettingsVisible;
+    
     internal ImFontPtr? RegularFont { get; private set; }
     internal ImFontPtr? ItalicFont { get; private set; }
     internal Vector4 DefaultText { get; private set; }
@@ -55,7 +58,7 @@ internal sealed class PluginUi : IDisposable {
 
         var builder = new ImFontGlyphRangesBuilderPtr(ImGuiNative.ImFontGlyphRangesBuilder_ImFontGlyphRangesBuilder());
         builder.AddRanges(ImGui.GetIO().Fonts.GetGlyphRangesDefault());
-        builder.AddText("←→↑↓《》■※☀★★☆♥♡ヅツッシ☀☁☂℃℉°♀♂♠♣♦♣♧®©™€$£♯♭♪✓√◎◆◇♦■□〇●△▽▼▲‹›≤≥<«“”─");
+        builder.AddText("←→↑↓《》■※☀★★☆♥♡ヅツッシ☀☁☂℃℉°♀♂♠♣♦♣♧®©™€$£♯♭♪✓√◎◆◇♦■□〇●△▽▼▲‹›≤≥<«“”─＼～");
         builder.BuildRanges(out this._ranges);
 
         var regular = this.GetResource("ChatTwo.fonts.NotoSans-Regular.ttf");
