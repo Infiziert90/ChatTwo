@@ -11,7 +11,7 @@ internal sealed class PluginUi : IDisposable {
     internal Plugin Plugin { get; }
 
     internal bool SettingsVisible;
-    
+
     internal ImFontPtr? RegularFont { get; private set; }
     internal ImFontPtr? ItalicFont { get; private set; }
     internal Vector4 DefaultText { get; private set; }

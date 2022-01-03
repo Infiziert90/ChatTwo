@@ -2,7 +2,7 @@
 using ImGuiScene;
 using Lumina.Excel.GeneratedSheets;
 
-namespace ChatTwo; 
+namespace ChatTwo;
 
 internal class TextureCache : IDisposable {
     private DataManager Data { get; }
@@ -20,7 +20,7 @@ internal class TextureCache : IDisposable {
     public void Dispose() {
         var allIcons = this.ItemIcons.Values
             .Concat(this.StatusIcons.Values);
-        
+
         foreach (var tex in allIcons) {
             tex.Dispose();
         }
@@ -30,7 +30,7 @@ internal class TextureCache : IDisposable {
         if (dict.ContainsKey(icon)) {
             return;
         }
-        
+
         var tex = this.Data.GetImGuiTextureIcon(icon);
         if (tex != null) {
             dict[icon] = tex;

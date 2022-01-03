@@ -112,7 +112,7 @@ internal sealed class PayloadHandler {
 
     private static void InlineIcon(TextureWrap icon) {
         var lineHeight = ImGui.CalcTextSize("A").Y;
-            
+
         var cursor = ImGui.GetCursorPos();
         ImGui.Image(icon.ImGuiHandle, new Vector2(icon.Width, icon.Height));
         ImGui.SameLine();
