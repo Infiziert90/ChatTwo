@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Interface;
 using ImGuiNET;
 
@@ -12,7 +11,8 @@ internal static class ImGuiUtil {
         ImGuiMouseButton.Right,
     };
 
-    internal static void PostPayload(Payload? payload, PayloadHandler? handler) {
+    internal static void PostPayload(Chunk chunk, PayloadHandler? handler) {
+        var payload = chunk.Link;
         if (payload != null && ImGui.IsItemHovered()) {
             ImGui.SetMouseCursor(ImGuiMouseCursor.Hand);
             handler?.Hover(payload);
@@ -24,15 +24,15 @@ internal static class ImGuiUtil {
 
         foreach (var button in Buttons) {
             if (ImGui.IsItemClicked(button)) {
-                handler.Click(payload, button);
+                handler.Click(chunk, payload, button);
             }
         }
     }
 
-    internal static unsafe void WrapText(string csText, Payload? payload, PayloadHandler? handler) {
+    internal static unsafe void WrapText(string csText, Chunk chunk, PayloadHandler? handler) {
         void Text(byte* text, byte* textEnd) {
             ImGuiNative.igTextUnformatted(text, textEnd);
-            PostPayload(payload, handler);
+            PostPayload(chunk, handler);
         }
 
         if (csText.Length == 0) {

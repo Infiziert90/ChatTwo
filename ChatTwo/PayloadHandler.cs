@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Reflection;
 using ChatTwo.Ui;
 using ChatTwo.Util;
 using Dalamud.Game.ClientState.Objects.SubKinds;
@@ -54,12 +55,12 @@ internal sealed class PayloadHandler {
         }
     }
 
-    internal void Click(Payload payload, ImGuiMouseButton button) {
+    internal void Click(Chunk chunk, Payload payload, ImGuiMouseButton button) {
         PluginLog.Log($"clicked {payload} with {button}");
 
         switch (button) {
             case ImGuiMouseButton.Left:
-                this.LeftClickPayload(payload);
+                this.LeftClickPayload(chunk, payload);
                 break;
             case ImGuiMouseButton.Right:
                 this.RightClickPayload(payload);
@@ -145,7 +146,7 @@ internal sealed class PayloadHandler {
         this.Log.DrawChunks(desc.ToList());
     }
 
-    private void LeftClickPayload(Payload payload) {
+    private void LeftClickPayload(Chunk chunk, Payload payload) {
         switch (payload) {
             case MapLinkPayload map: {
                 this.Ui.Plugin.GameGui.OpenMapWithMapLink(map);
@@ -156,8 +157,35 @@ internal sealed class PayloadHandler {
                 break;
             }
             case DalamudLinkPayload link: {
+                this.ClickLinkPayload(chunk, payload, link);
                 break;
             }
+        }
+    }
+
+    private void ClickLinkPayload(Chunk chunk, Payload payload, DalamudLinkPayload link) {
+        if (chunk.Source is not { } source) {
+            return;
+        }
+
+        var start = source.Payloads.IndexOf(payload);
+        var end = source.Payloads.IndexOf(RawPayload.LinkTerminator);
+        if (start == -1 || end == -1) {
+            return;
+        }
+
+        var payloads = source.Payloads.Skip(start).Take(end - start + 1).ToList();
+
+        var chatGui = this.Ui.Plugin.ChatGui;
+        var field = chatGui.GetType().GetField("dalamudLinkHandlers", BindingFlags.Instance | BindingFlags.NonPublic);
+        if (field == null || field.GetValue(chatGui) is not Dictionary<(string PluginName, uint CommandId), Action<uint, SeString>> dict || !dict.TryGetValue((link.Plugin, link.CommandId), out var action)) {
+            return;
+        }
+
+        try {
+            action(link.CommandId, new SeString(payloads));
+        } catch (Exception ex) {
+            PluginLog.LogError(ex, "Error executing DalamudLinkPayload handler");
         }
     }
 

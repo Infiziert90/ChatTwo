@@ -94,7 +94,7 @@ internal sealed class ChatLog : IUiComponent {
 
                                 if (tab.DisplayTimestamp) {
                                     var timestamp = message.Date.ToLocalTime().ToString("t");
-                                    this.DrawChunk(new TextChunk(null, $"[{timestamp}]") {
+                                    this.DrawChunk(new TextChunk(null, null, $"[{timestamp}]") {
                                         Foreground = 0xFFFFFFFF,
                                     });
                                     ImGui.SameLine();
@@ -298,7 +298,7 @@ internal sealed class ChatLog : IUiComponent {
                 var uv0 = new Vector2(bounds.Value.X, bounds.Value.Y - 2) / texSize;
                 var uv1 = new Vector2(bounds.Value.X + bounds.Value.Z, bounds.Value.Y - 2 + bounds.Value.W) / texSize;
                 ImGui.Image(this._fontIcon.ImGuiHandle, size, uv0, uv1);
-                ImGuiUtil.PostPayload(chunk.Link, handler);
+                ImGuiUtil.PostPayload(chunk, handler);
             }
 
             return;
@@ -325,7 +325,7 @@ internal sealed class ChatLog : IUiComponent {
             ImGui.PushFont(this.Ui.ItalicFont.Value);
         }
 
-        ImGuiUtil.WrapText(text.Content, chunk.Link, handler);
+        ImGuiUtil.WrapText(text.Content, chunk, handler);
 
         if (text.Italic && this.Ui.ItalicFont.HasValue) {
             ImGui.PopFont();
