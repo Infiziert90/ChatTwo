@@ -25,7 +25,7 @@ internal unsafe class GameFunctions : IDisposable {
         // Context menu
         internal const string CurrentChatEntryOffset = "8B 77 ?? 8D 46 01 89 47 14 81 FE ?? ?? ?? ?? 72 03 FF 47";
         internal const string GetContentIdForChatEntry = "4C 8B 81 ?? ?? ?? ?? 4D 85 C0 74 17";
-        
+
         internal const string Indexer = "E8 ?? ?? ?? ?? 8B FD 8B CD";
         internal const string InviteToParty = "E8 ?? ?? ?? ?? 33 C0 EB 51";
 
@@ -114,7 +114,7 @@ internal unsafe class GameFunctions : IDisposable {
         if (this.Plugin.SigScanner.TryScanText(Signatures.InviteToNoviceNetwork, out var nnPtr)) {
             this._inviteToNoviceNetwork = Marshal.GetDelegateForFunctionPointer<InviteToNoviceNetworkDelegate>(nnPtr);
         }
-        
+
         this.Plugin.ClientState.Login += this.Login;
         this.Login(null, null);
     }

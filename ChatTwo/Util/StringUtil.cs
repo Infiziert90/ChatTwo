@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace ChatTwo.Util; 
+namespace ChatTwo.Util;
 
 internal static class StringUtil {
     internal static byte[] ToTerminatedBytes(this string s) {

@@ -231,7 +231,7 @@ internal sealed class PayloadHandler {
         if (ImGui.Selectable("Target") && this.FindCharacterForPayload(player) is { } obj) {
             this.Ui.Plugin.TargetManager.SetTarget(obj);
         }
-        
+
         // Add to Blacklist 0x1C
         // View Party Finder 0x2E
         // Reply in Selected Chat Mode 0x64
