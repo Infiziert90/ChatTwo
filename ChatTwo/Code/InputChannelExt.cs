@@ -49,4 +49,33 @@ internal static class InputChannelExt {
         InputChannel.CrossLinkshell8 => 7,
         _ => uint.MaxValue,
     };
+
+    public static string Prefix(this InputChannel channel) => channel switch {
+        InputChannel.Tell => "/tell",
+        InputChannel.Say => "/say",
+        InputChannel.Party => "/party",
+        InputChannel.Alliance => "/alliance",
+        InputChannel.Yell => "/yell",
+        InputChannel.Shout => "/shout",
+        InputChannel.FreeCompany => "/freecompany",
+        InputChannel.PvpTeam => "/pvpteam",
+        InputChannel.NoviceNetwork => "/novice",
+        InputChannel.CrossLinkshell1 => "/cwlinkshell1",
+        InputChannel.CrossLinkshell2 => "/cwlinkshell2",
+        InputChannel.CrossLinkshell3 => "/cwlinkshell3",
+        InputChannel.CrossLinkshell4 => "/cwlinkshell4",
+        InputChannel.CrossLinkshell5 => "/cwlinkshell5",
+        InputChannel.CrossLinkshell6 => "/cwlinkshell6",
+        InputChannel.CrossLinkshell7 => "/cwlinkshell7",
+        InputChannel.CrossLinkshell8 => "/cwlinkshell8",
+        InputChannel.Linkshell1 => "/linkshell1",
+        InputChannel.Linkshell2 => "/linkshell2",
+        InputChannel.Linkshell3 => "/linkshell3",
+        InputChannel.Linkshell4 => "/linkshell4",
+        InputChannel.Linkshell5 => "/linkshell5",
+        InputChannel.Linkshell6 => "/linkshell6",
+        InputChannel.Linkshell7 => "/linkshell7",
+        InputChannel.Linkshell8 => "/linkshell8",
+        _ => "",
+    };
 }

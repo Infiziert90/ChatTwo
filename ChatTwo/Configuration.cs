@@ -20,6 +20,7 @@ internal class Tab {
     public Dictionary<ChatType, ChatSource> ChatCodes = new();
     public bool DisplayUnread = true;
     public bool DisplayTimestamp = true;
+    public InputChannel? Channel;
 
     [NonSerialized]
     public uint Unread;
@@ -56,6 +57,7 @@ internal class Tab {
             ChatCodes = this.ChatCodes.ToDictionary(entry => entry.Key, entry => entry.Value),
             DisplayUnread = this.DisplayUnread,
             DisplayTimestamp = this.DisplayTimestamp,
+            Channel = this.Channel,
         };
     }
 }

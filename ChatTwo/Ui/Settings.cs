@@ -97,6 +97,21 @@ internal sealed class Settings : IUiComponent {
                         ImGui.Checkbox("Show unread count", ref tab.DisplayUnread);
                         ImGui.Checkbox("Show timestamps", ref tab.DisplayTimestamp);
 
+                        var input = tab.Channel?.ToChatType().Name() ?? "<None>";
+                        if (ImGui.BeginCombo("Input channel", input)) {
+                            if (ImGui.Selectable("<None>", tab.Channel == null)) {
+                                tab.Channel = null;
+                            }
+
+                            foreach (var channel in Enum.GetValues<InputChannel>()) {
+                                if (ImGui.Selectable(channel.ToChatType().Name() ?? "???", tab.Channel == channel)) {
+                                    tab.Channel = channel;
+                                }
+                            }
+
+                            ImGui.EndCombo();
+                        }
+
                         if (ImGui.TreeNodeEx("Channels")) {
                             foreach (var type in Enum.GetValues<ChatType>()) {
                                 var enabled = tab.ChatCodes.ContainsKey(type);

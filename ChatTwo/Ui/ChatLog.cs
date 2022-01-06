@@ -64,12 +64,14 @@ internal sealed class ChatLog : IUiComponent {
 
         var lineHeight = ImGui.CalcTextSize("A").Y;
 
+        var currentTab = -1;
         if (ImGui.BeginTabBar("##chat2-tabs")) {
             for (var tabI = 0; tabI < this.Ui.Plugin.Config.Tabs.Count; tabI++) {
                 var tab = this.Ui.Plugin.Config.Tabs[tabI];
 
                 var unread = tabI == this._lastTab || !tab.DisplayUnread || tab.Unread == 0 ? "" : $" ({tab.Unread})";
                 if (ImGui.BeginTabItem($"{tab.Name}{unread}###log-tab-{tabI}")) {
+                    currentTab = tabI;
                     var switchedTab = this._lastTab != tabI;
                     this._lastTab = tabI;
                     tab.Unread = 0;
@@ -147,17 +149,32 @@ internal sealed class ChatLog : IUiComponent {
             ImGui.SetKeyboardFocusHere();
         }
 
+        Tab? activeTab = null;
+        if (currentTab > -1) {
+            activeTab = this.Ui.Plugin.Config.Tabs[currentTab];
+        }
+
         ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, Vector2.Zero);
         try {
-            this.DrawChunks(this.Ui.Plugin.Functions.ChatChannel.name);
+            if (activeTab is { Channel: { } channel }) {
+                ImGui.TextUnformatted(channel.ToChatType().Name());
+            } else {
+                this.DrawChunks(this.Ui.Plugin.Functions.ChatChannel.name);
+            }
         } finally {
             ImGui.PopStyleVar();
         }
 
         var beforeIcon = ImGui.GetCursorPos();
 
-        if (ImGuiUtil.IconButton(FontAwesomeIcon.Comment)) {
+        if (ImGuiUtil.IconButton(FontAwesomeIcon.Comment) && activeTab is not { Channel: { } }) {
             ImGui.OpenPopup(ChatChannelPicker);
+        }
+
+        if (activeTab is { Channel: { } } && ImGui.IsItemHovered()) {
+            ImGui.BeginTooltip();
+            ImGui.TextUnformatted("Disabled for this tab.");
+            ImGui.EndTooltip();
         }
 
         if (ImGui.BeginPopup(ChatChannelPicker)) {
@@ -199,6 +216,10 @@ internal sealed class ChatLog : IUiComponent {
                 var trimmed = this.Chat.Trim();
                 this.AddBacklog(trimmed);
                 this._inputBacklogIdx = -1;
+
+                if (activeTab is { Channel: { } channel } && !trimmed.StartsWith('/')) {
+                    trimmed = $"{channel.Prefix()} {trimmed}";
+                }
 
                 this.Ui.Plugin.Common.Functions.Chat.SendMessage(trimmed);
             }
