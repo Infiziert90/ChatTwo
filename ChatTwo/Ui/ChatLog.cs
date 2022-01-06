@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using ChatTwo.Code;
 using ChatTwo.Util;
+using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface;
 using ImGuiNET;
 using ImGuiScene;
@@ -402,7 +403,18 @@ internal sealed class ChatLog : IUiComponent {
             ImGui.PushFont(this.Ui.ItalicFont.Value);
         }
 
-        ImGuiUtil.WrapText(text.Content, chunk, handler);
+        var content = text.Content;
+        if (this.Ui.ScreenshotMode) {
+            if (chunk.Link is PlayerPayload playerPayload) {
+                var hashCode = $"{this.Ui.Salt}{playerPayload.PlayerName}{playerPayload.World.RowId}".GetHashCode();
+                content = $"Player {hashCode:X8}";
+            } else if (this.Ui.Plugin.ClientState.LocalPlayer is { } player && content.Contains(player.Name.TextValue)) {
+                var hashCode = $"{this.Ui.Salt}{player.Name.TextValue}{player.HomeWorld.Id}".GetHashCode();
+                content = content.Replace(player.Name.TextValue, $"Player {hashCode:X8}");
+            }
+        }
+
+        ImGuiUtil.WrapText(content, chunk, handler);
 
         if (text.Italic && this.Ui.ItalicFont.HasValue) {
             ImGui.PopFont();

@@ -232,6 +232,10 @@ internal sealed class PayloadHandler {
             this.Ui.Plugin.TargetManager.SetTarget(obj);
         }
 
+        ImGui.Separator();
+
+        ImGui.Checkbox("Screenshot mode", ref this.Ui.ScreenshotMode);
+
         // Add to Blacklist 0x1C
         // View Party Finder 0x2E
         // Reply in Selected Chat Mode 0x64

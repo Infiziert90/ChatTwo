@@ -11,6 +11,8 @@ internal sealed class PluginUi : IDisposable {
     internal Plugin Plugin { get; }
 
     internal bool SettingsVisible;
+    internal bool ScreenshotMode;
+    internal string Salt { get; }
 
     internal ImFontPtr? RegularFont { get; private set; }
     internal ImFontPtr? ItalicFont { get; private set; }
@@ -42,6 +44,7 @@ internal sealed class PluginUi : IDisposable {
 
     internal unsafe PluginUi(Plugin plugin) {
         this.Plugin = plugin;
+        this.Salt = new Random().Next().ToString();
         this.Components = new List<IUiComponent> {
             new Settings(this),
             new ChatLog(this),
