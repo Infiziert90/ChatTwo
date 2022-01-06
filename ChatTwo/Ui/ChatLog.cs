@@ -56,94 +56,24 @@ internal sealed class ChatLog : IUiComponent {
         this._inputBacklog.Add(message);
     }
 
+    private static float GetRemainingHeightForMessageLog() {
+        var lineHeight = ImGui.CalcTextSize("A").Y;
+        return ImGui.GetContentRegionAvail().Y
+               - lineHeight * 2
+               - ImGui.GetStyle().ItemSpacing.Y * 4;
+    }
+
     public unsafe void Draw() {
         if (!ImGui.Begin($"{this.Ui.Plugin.Name}##chat", ImGuiWindowFlags.NoTitleBar)) {
             ImGui.End();
             return;
         }
 
-        var lineHeight = ImGui.CalcTextSize("A").Y;
+        var sidebar = this.Ui.Plugin.Config.SidebarTabView;
 
-        var currentTab = -1;
-        if (ImGui.BeginTabBar("##chat2-tabs")) {
-            for (var tabI = 0; tabI < this.Ui.Plugin.Config.Tabs.Count; tabI++) {
-                var tab = this.Ui.Plugin.Config.Tabs[tabI];
-
-                var unread = tabI == this._lastTab || !tab.DisplayUnread || tab.Unread == 0 ? "" : $" ({tab.Unread})";
-                if (ImGui.BeginTabItem($"{tab.Name}{unread}###log-tab-{tabI}")) {
-                    currentTab = tabI;
-                    var switchedTab = this._lastTab != tabI;
-                    this._lastTab = tabI;
-                    tab.Unread = 0;
-
-                    // var drawnHeight = 0f;
-                    // var numDrawn = 0;
-                    // var lastPos = ImGui.GetCursorPosY();
-                    var height = ImGui.GetContentRegionAvail().Y
-                                 - lineHeight * 2
-                                 - ImGui.GetStyle().ItemSpacing.Y * 4;
-                    if (ImGui.BeginChild("##chat2-messages", new Vector2(-1, height))) {
-                        ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, Vector2.Zero);
-
-                        // var clipper = new ImGuiListClipperPtr(ImGuiNative.ImGuiListClipper_ImGuiListClipper());
-                        // int numMessages;
-                        try {
-                            tab.MessagesMutex.WaitOne();
-
-                            for (var i = 0; i < tab.Messages.Count; i++) {
-                                // numDrawn += 1;
-                                var message = tab.Messages[i];
-
-                                if (tab.DisplayTimestamp) {
-                                    var timestamp = message.Date.ToLocalTime().ToString("t");
-                                    this.DrawChunk(new TextChunk(null, null, $"[{timestamp}]") {
-                                        Foreground = 0xFFFFFFFF,
-                                    });
-                                    ImGui.SameLine();
-                                }
-
-                                if (message.Sender.Count > 0) {
-                                    this.DrawChunks(message.Sender, this.PayloadHandler);
-                                    ImGui.SameLine();
-                                }
-
-                                this.DrawChunks(message.Content, this.PayloadHandler);
-
-                                // drawnHeight += ImGui.GetCursorPosY() - lastPos;
-                                // lastPos = ImGui.GetCursorPosY();
-                            }
-
-                            // numMessages = tab.Messages.Count;
-                            // may render too many items, but this is easier
-                            // clipper.Begin(numMessages, lineHeight + ImGui.GetStyle().ItemSpacing.Y);
-                            // while (clipper.Step()) {
-                            // }
-                        } finally {
-                            tab.MessagesMutex.ReleaseMutex();
-                            ImGui.PopStyleVar();
-                        }
-
-                        // PluginLog.Log($"numDrawn: {numDrawn}");
-
-                        if (switchedTab || ImGui.GetScrollY() >= ImGui.GetScrollMaxY()) {
-                            // PluginLog.Log($"drawnHeight: {drawnHeight}");
-                            // var itemPosY = clipper.StartPosY + drawnHeight;
-                            // PluginLog.Log($"itemPosY: {itemPosY}");
-                            // ImGui.SetScrollFromPosY(itemPosY - ImGui.GetWindowPos().Y);
-                            ImGui.SetScrollHereY(1f);
-                        }
-                    }
-
-                    this.PayloadHandler.Draw();
-
-                    ImGui.EndChild();
-
-                    ImGui.EndTabItem();
-                }
-            }
-
-            ImGui.EndTabBar();
-        }
+        var currentTab = sidebar
+            ? this.DrawTabSidebar()
+            : this.DrawTabBar();
 
         if (this.Activate) {
             ImGui.SetKeyboardFocusHere();
@@ -238,6 +168,134 @@ internal sealed class ChatLog : IUiComponent {
         }
 
         ImGui.End();
+    }
+
+    private void DrawMessageLog(Tab tab, float childHeight, bool switchedTab) {
+        if (ImGui.BeginChild("##chat2-messages", new Vector2(-1, childHeight))) {
+            ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, Vector2.Zero);
+
+            // var clipper = new ImGuiListClipperPtr(ImGuiNative.ImGuiListClipper_ImGuiListClipper());
+            // int numMessages;
+            try {
+                tab.MessagesMutex.WaitOne();
+
+                for (var i = 0; i < tab.Messages.Count; i++) {
+                    // numDrawn += 1;
+                    var message = tab.Messages[i];
+
+                    if (tab.DisplayTimestamp) {
+                        var timestamp = message.Date.ToLocalTime().ToString("t");
+                        this.DrawChunk(new TextChunk(null, null, $"[{timestamp}]") {
+                            Foreground = 0xFFFFFFFF,
+                        });
+                        ImGui.SameLine();
+                    }
+
+                    if (message.Sender.Count > 0) {
+                        this.DrawChunks(message.Sender, this.PayloadHandler);
+                        ImGui.SameLine();
+                    }
+
+                    this.DrawChunks(message.Content, this.PayloadHandler);
+
+                    // drawnHeight += ImGui.GetCursorPosY() - lastPos;
+                    // lastPos = ImGui.GetCursorPosY();
+                }
+
+                // numMessages = tab.Messages.Count;
+                // may render too many items, but this is easier
+                // clipper.Begin(numMessages, lineHeight + ImGui.GetStyle().ItemSpacing.Y);
+                // while (clipper.Step()) {
+                // }
+            } finally {
+                tab.MessagesMutex.ReleaseMutex();
+                ImGui.PopStyleVar();
+            }
+
+            // PluginLog.Log($"numDrawn: {numDrawn}");
+
+            if (switchedTab || ImGui.GetScrollY() >= ImGui.GetScrollMaxY()) {
+                // PluginLog.Log($"drawnHeight: {drawnHeight}");
+                // var itemPosY = clipper.StartPosY + drawnHeight;
+                // PluginLog.Log($"itemPosY: {itemPosY}");
+                // ImGui.SetScrollFromPosY(itemPosY - ImGui.GetWindowPos().Y);
+                ImGui.SetScrollHereY(1f);
+            }
+        }
+
+        this.PayloadHandler.Draw();
+
+        ImGui.EndChild();
+    }
+
+    private int DrawTabBar() {
+        var currentTab = -1;
+
+        if (!ImGui.BeginTabBar("##chat2-tabs")) {
+            return currentTab;
+        }
+
+        for (var tabI = 0; tabI < this.Ui.Plugin.Config.Tabs.Count; tabI++) {
+            var tab = this.Ui.Plugin.Config.Tabs[tabI];
+
+            var unread = tabI == this._lastTab || !tab.DisplayUnread || tab.Unread == 0 ? "" : $" ({tab.Unread})";
+            if (!ImGui.BeginTabItem($"{tab.Name}{unread}###log-tab-{tabI}")) {
+                continue;
+            }
+
+            currentTab = tabI;
+            var switchedTab = this._lastTab != tabI;
+            this._lastTab = tabI;
+            tab.Unread = 0;
+
+            this.DrawMessageLog(tab, GetRemainingHeightForMessageLog(), switchedTab);
+
+            ImGui.EndTabItem();
+        }
+
+        ImGui.EndTabBar();
+
+        return currentTab;
+    }
+
+    private int DrawTabSidebar() {
+        var currentTab = -1;
+
+        ImGui.Columns(2);
+
+        var switchedTab = false;
+        var childHeight = GetRemainingHeightForMessageLog();
+        if (ImGui.BeginChild("##chat2-tab-sidebar", new Vector2(-1, childHeight))) {
+            for (var tabI = 0; tabI < this.Ui.Plugin.Config.Tabs.Count; tabI++) {
+                var tab = this.Ui.Plugin.Config.Tabs[tabI];
+
+                var unread = tabI == this._lastTab || !tab.DisplayUnread || tab.Unread == 0 ? "" : $" ({tab.Unread})";
+                if (!ImGui.Selectable($"{tab.Name}{unread}###log-tab-{tabI}", this._lastTab == tabI)) {
+                    continue;
+                }
+
+                currentTab = tabI;
+                switchedTab = this._lastTab != tabI;
+                this._lastTab = tabI;
+            }
+        }
+
+        ImGui.EndChild();
+
+        ImGui.NextColumn();
+
+        if (currentTab == -1 && this._lastTab < this.Ui.Plugin.Config.Tabs.Count) {
+            currentTab = this._lastTab;
+            this.Ui.Plugin.Config.Tabs[currentTab].Unread = 0;
+        }
+
+        if (currentTab > -1) {
+            this.DrawMessageLog(this.Ui.Plugin.Config.Tabs[currentTab], childHeight, switchedTab);
+        }
+
+        ImGui.Columns();
+
+        return currentTab;
     }
 
     private unsafe int Callback(ImGuiInputTextCallbackData* data) {

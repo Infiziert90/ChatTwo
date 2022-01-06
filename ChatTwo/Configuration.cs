@@ -9,6 +9,7 @@ internal class Configuration : IPluginConfiguration {
 
     public bool HideChat = true;
     public bool NativeItemTooltips = true;
+    public bool SidebarTabView;
     public float FontSize = 17f;
     public Dictionary<ChatType, uint> ChatColours = new();
     public List<Tab> Tabs = new();

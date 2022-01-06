@@ -11,6 +11,7 @@ internal sealed class Settings : IUiComponent {
 
     private bool _hideChat;
     private bool _nativeItemTooltips;
+    private bool _sidebarTabView;
     private float _fontSize;
     private Dictionary<ChatType, uint> _chatColours = new();
     private List<Tab> _tabs = new();
@@ -34,6 +35,7 @@ internal sealed class Settings : IUiComponent {
         var config = this.Ui.Plugin.Config;
         this._hideChat = config.HideChat;
         this._nativeItemTooltips = config.NativeItemTooltips;
+        this._sidebarTabView = config.SidebarTabView;
         this._fontSize = config.FontSize;
         this._chatColours = config.ChatColours.ToDictionary(entry => entry.Key, entry => entry.Value);
         this._tabs = config.Tabs.Select(tab => tab.Clone()).ToList();
@@ -61,6 +63,7 @@ internal sealed class Settings : IUiComponent {
         if (ImGui.BeginChild("##chat2-settings", new Vector2(-1, height))) {
             ImGui.Checkbox("Hide chat", ref this._hideChat);
             ImGui.Checkbox("Show native item tooltips", ref this._nativeItemTooltips);
+            ImGui.Checkbox("Show tabs in a sidebar", ref this._sidebarTabView);
             ImGui.DragFloat("Font size", ref this._fontSize, .5f, 12f, 36f);
 
             if (ImGui.TreeNodeEx("Chat colours")) {
@@ -180,6 +183,7 @@ internal sealed class Settings : IUiComponent {
 
             config.HideChat = this._hideChat;
             config.NativeItemTooltips = this._nativeItemTooltips;
+            config.SidebarTabView = this._sidebarTabView;
             config.FontSize = this._fontSize;
             config.ChatColours = this._chatColours;
             config.Tabs = this._tabs;
