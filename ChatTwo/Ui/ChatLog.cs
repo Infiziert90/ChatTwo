@@ -69,9 +69,7 @@ internal sealed class ChatLog : IUiComponent {
             return;
         }
 
-        var sidebar = this.Ui.Plugin.Config.SidebarTabView;
-
-        var currentTab = sidebar
+        var currentTab = this.Ui.Plugin.Config.SidebarTabView
             ? this.DrawTabSidebar()
             : this.DrawTabBar();
 
