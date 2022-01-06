@@ -8,7 +8,9 @@ using Dalamud.Logging;
 using Dalamud.Memory;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Client.System.String;
+using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
+using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Client.UI.Shell;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
@@ -19,6 +21,17 @@ internal unsafe class GameFunctions : IDisposable {
         internal const string ChatLogRefresh = "40 53 56 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 8B F0 8B FA";
         internal const string ChangeChannelName = "E8 ?? ?? ?? ?? BA ?? ?? ?? ?? 48 8D 4D B0 48 8B F8 E8 ?? ?? ?? ?? 41 8B D6";
         internal const string ChangeChatChannel = "E8 ?? ?? ?? ?? 0F B7 44 37 ??";
+
+        // Context menu
+        internal const string CurrentChatEntryOffset = "8B 77 ?? 8D 46 01 89 47 14 81 FE ?? ?? ?? ?? 72 03 FF 47";
+        internal const string GetContentIdForChatEntry = "4C 8B 81 ?? ?? ?? ?? 4D 85 C0 74 17";
+        
+        internal const string Indexer = "E8 ?? ?? ?? ?? 8B FD 8B CD";
+        internal const string InviteToParty = "E8 ?? ?? ?? ?? 33 C0 EB 51";
+
+        internal const string FriendRequestBool = "40 53 48 83 EC 20 48 8B D9 48 8B 49 10 48 8B 01 FF 90 ?? ?? ?? ?? 48 8B 48 48";
+        internal const string AgentContextYesNo = "E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B CB E8 ?? ?? ?? ?? 84 C0 74 3A";
+        internal const string InviteToNoviceNetwork = "E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B CB E8 ?? ?? ?? ?? 45 33 C9";
     }
 
     private delegate byte ChatLogRefreshDelegate(IntPtr log, ushort eventId, AtkValue* value);
@@ -27,12 +40,31 @@ internal unsafe class GameFunctions : IDisposable {
 
     private delegate IntPtr ChangeChatChannelDelegate(RaptureShellModule* shell, int channel, uint linkshellIdx, Utf8String* tellTarget, byte one);
 
+    private delegate ulong GetContentIdForChatEntryDelegate(RaptureLogModule* log, uint index);
+
+    private delegate IntPtr InviteToPartyDelegate(IntPtr a1, ulong contentId, byte* playerName, ushort playerWorld);
+
+    private delegate IntPtr AgentContextYesNoDelegate(AgentInterface* context, uint a2, byte* playerName, ushort playerWorld, uint a5, byte a6);
+
+    private delegate byte InviteToNoviceNetworkDelegate(IntPtr a1, ulong contentId, ushort playerWorld, byte* playerName);
+
     internal delegate void ChatActivatedEventDelegate(string? input);
 
     private Plugin Plugin { get; }
     private Hook<ChatLogRefreshDelegate>? ChatLogRefreshHook { get; }
     private Hook<ChangeChannelNameDelegate>? ChangeChannelNameHook { get; }
     private readonly ChangeChatChannelDelegate? _changeChatChannel;
+
+    private readonly GetContentIdForChatEntryDelegate? _getContentIdForChatEntry;
+    private readonly int? _currentChatEntryOffset;
+
+    private readonly delegate* unmanaged<IntPtr, uint, IntPtr> _indexer;
+    private readonly InviteToPartyDelegate? _inviteToParty;
+
+    private readonly delegate* unmanaged<AgentInterface*, byte> _friendRequestBool;
+    private readonly AgentContextYesNoDelegate? _agentContextYesNo;
+
+    private readonly InviteToNoviceNetworkDelegate? _inviteToNoviceNetwork;
 
     internal event ChatActivatedEventDelegate? ChatActivated;
 
@@ -55,6 +87,34 @@ internal unsafe class GameFunctions : IDisposable {
             this._changeChatChannel = Marshal.GetDelegateForFunctionPointer<ChangeChatChannelDelegate>(changeChannelPtr);
         }
 
+        if (this.Plugin.SigScanner.TryScanText(Signatures.CurrentChatEntryOffset, out var entryOffsetPtr)) {
+            this._currentChatEntryOffset = *(byte*) (entryOffsetPtr + 2);
+        }
+
+        if (this.Plugin.SigScanner.TryScanText(Signatures.Indexer, out var indexerPtr)) {
+            this._indexer = (delegate* unmanaged<IntPtr, uint, IntPtr>) indexerPtr;
+        }
+
+        if (this.Plugin.SigScanner.TryScanText(Signatures.GetContentIdForChatEntry, out var getContentIdPtr)) {
+            this._getContentIdForChatEntry = Marshal.GetDelegateForFunctionPointer<GetContentIdForChatEntryDelegate>(getContentIdPtr);
+        }
+
+        if (this.Plugin.SigScanner.TryScanText(Signatures.InviteToParty, out var invitePtr)) {
+            this._inviteToParty = Marshal.GetDelegateForFunctionPointer<InviteToPartyDelegate>(invitePtr);
+        }
+
+        if (this.Plugin.SigScanner.TryScanText(Signatures.FriendRequestBool, out var frBoolPtr)) {
+            this._friendRequestBool = (delegate* unmanaged<AgentInterface*, byte>) frBoolPtr;
+        }
+
+        if (this.Plugin.SigScanner.TryScanText(Signatures.AgentContextYesNo, out var sendFriendRequestPtr)) {
+            this._agentContextYesNo = Marshal.GetDelegateForFunctionPointer<AgentContextYesNoDelegate>(sendFriendRequestPtr);
+        }
+
+        if (this.Plugin.SigScanner.TryScanText(Signatures.InviteToNoviceNetwork, out var nnPtr)) {
+            this._inviteToNoviceNetwork = Marshal.GetDelegateForFunctionPointer<InviteToNoviceNetworkDelegate>(nnPtr);
+        }
+        
         this.Plugin.ClientState.Login += this.Login;
         this.Login(null, null);
     }
@@ -77,6 +137,68 @@ internal unsafe class GameFunctions : IDisposable {
         }
 
         this.ChangeChannelNameDetour((IntPtr) agent);
+    }
+
+    internal uint? GetCurrentChatLogEntryIndex() {
+        if (this._currentChatEntryOffset == null) {
+            return null;
+        }
+
+        var log = (IntPtr) Framework.Instance()->GetUiModule()->GetRaptureLogModule();
+        return *(uint*) (log + this._currentChatEntryOffset.Value);
+    }
+
+    internal ulong? GetContentIdForChatLogEntry(uint index) {
+        return this._getContentIdForChatEntry?.Invoke(Framework.Instance()->GetUiModule()->GetRaptureLogModule(), index);
+    }
+
+    internal void InviteToParty(string name, ushort world) {
+        if (this._inviteToParty == null || this._indexer == null) {
+            return;
+        }
+
+        var uiModule = Framework.Instance()->GetUiModule();
+        // 6.05: 20D722
+        var func = (delegate*<UIModule*, IntPtr>) uiModule->vfunc[33];
+        var toIndex = func(uiModule);
+        var a1 = this._indexer(toIndex, 1);
+
+        fixed (byte* namePtr = name.ToTerminatedBytes()) {
+            // can specify content id if we have it, but there's no need
+            this._inviteToParty(a1, 0, namePtr, world);
+        }
+    }
+
+    internal void SendFriendRequest(string name, ushort world) {
+        if (this._agentContextYesNo == null || this._friendRequestBool == null) {
+            return;
+        }
+
+        var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.Context);
+        var a6 = this._friendRequestBool(agent);
+
+        fixed (byte* namePtr = name.ToTerminatedBytes()) {
+            // 6.05: 20DA57
+            this._agentContextYesNo(agent, 149, namePtr, world, 10_955, a6);
+        }
+    }
+
+    internal void InviteToNoviceNetwork(string name, ushort world) {
+        if (this._inviteToNoviceNetwork == null || this._indexer == null) {
+            return;
+        }
+
+        var uiModule = Framework.Instance()->GetUiModule();
+        // 6.05: 20D722
+        var func = (delegate*<UIModule*, IntPtr>) uiModule->vfunc[33];
+        var toIndex = func(uiModule);
+        // 6.05: 20E4CB
+        var a1 = this._indexer(toIndex, 0x11);
+
+        fixed (byte* namePtr = name.ToTerminatedBytes()) {
+            // can specify content id if we have it, but there's no need
+            this._inviteToNoviceNetwork(a1, 0, world, namePtr);
+        }
     }
 
     internal void SetChatChannel(InputChannel channel, string? tellTarget = null) {

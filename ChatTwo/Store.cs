@@ -1,5 +1,7 @@
-﻿using ChatTwo.Code;
+﻿using System.Collections.Concurrent;
+using ChatTwo.Code;
 using ChatTwo.Util;
+using Dalamud.Game;
 using Dalamud.Game.Text;
 using Dalamud.Game.Text.SeStringHandling;
 using Lumina.Excel.GeneratedSheets;
@@ -27,6 +29,7 @@ internal class Store : IDisposable {
 
     private Mutex MessagesMutex { get; } = new();
     private List<Message> Messages { get; } = new();
+    private ConcurrentQueue<(uint, Message)> Pending { get; } = new();
 
     private Dictionary<ChatType, NameFormatting> Formats { get; } = new();
 
@@ -34,12 +37,23 @@ internal class Store : IDisposable {
         this.Plugin = plugin;
 
         this.Plugin.ChatGui.ChatMessageUnhandled += this.ChatMessage;
+        this.Plugin.Framework.Update += this.GetMessageInfo;
     }
 
     public void Dispose() {
+        this.Plugin.Framework.Update -= this.GetMessageInfo;
         this.Plugin.ChatGui.ChatMessageUnhandled -= this.ChatMessage;
 
         this.MessagesMutex.Dispose();
+    }
+
+    private void GetMessageInfo(Framework framework) {
+        if (!this.Pending.TryDequeue(out var entry)) {
+            return;
+        }
+
+        var contentId = this.Plugin.Functions.GetContentIdForChatLogEntry(entry.Item1);
+        entry.Item2.ContentId = contentId ?? 0;
     }
 
     internal MessagesLock GetMessages() {
@@ -97,7 +111,13 @@ internal class Store : IDisposable {
 
         var messageChunks = ChunkUtil.ToChunks(message, chatCode.Type).ToList();
 
-        this.AddMessage(new Message(chatCode, senderChunks, messageChunks));
+        var msg = new Message(chatCode, senderChunks, messageChunks);
+        this.AddMessage(msg);
+
+        var idx = this.Plugin.Functions.GetCurrentChatLogEntryIndex();
+        if (idx != null) {
+            this.Pending.Enqueue((idx.Value - 1, msg));
+        }
     }
 
     internal class NameFormatting {

@@ -56,8 +56,6 @@ internal sealed class PayloadHandler {
     }
 
     internal void Click(Chunk chunk, Payload payload, ImGuiMouseButton button) {
-        PluginLog.Log($"clicked {payload} with {button}");
-
         switch (button) {
             case ImGuiMouseButton.Left:
                 this.LeftClickPayload(chunk, payload);
@@ -213,24 +211,50 @@ internal sealed class PayloadHandler {
             this.Log.Activate = true;
         }
 
-        if (ImGui.Selectable("Target")) {
-            foreach (var obj in this.Ui.Plugin.ObjectTable) {
-                if (obj is not PlayerCharacter character) {
-                    continue;
-                }
-
-                if (character.Name.TextValue != player.PlayerName) {
-                    continue;
-                }
-
-                if (player.World.IsPublic && character.HomeWorld.Id != player.World.RowId) {
-                    continue;
-                }
-
-                this.Ui.Plugin.TargetManager.SetTarget(obj);
-                break;
-            }
+        if (player.World.IsPublic && ImGui.Selectable("Invite to Party")) {
+            // FIXME: don't show if player is in your party or if you're in their party
+            // FIXME: don't show if in party and not leader
+            this.Ui.Plugin.Functions.InviteToParty(player.PlayerName, (ushort) player.World.RowId);
         }
+
+        if (player.World.IsPublic && ImGui.Selectable("Send Friend Request")) {
+            // FIXME: this shows window, clicking yes doesn't work
+            // FIXME: only show if not already friend
+            this.Ui.Plugin.Functions.SendFriendRequest(player.PlayerName, (ushort) player.World.RowId);
+        }
+
+        if (player.World.IsPublic && ImGui.Selectable("Invite to Novice Network")) {
+            // FIXME: only show if character is mentor and target is sprout/returner
+            this.Ui.Plugin.Functions.InviteToNoviceNetwork(player.PlayerName, (ushort) player.World.RowId);
+        }
+
+        if (ImGui.Selectable("Target") && this.FindCharacterForPayload(player) is { } obj) {
+            this.Ui.Plugin.TargetManager.SetTarget(obj);
+        }
+        
+        // Add to Blacklist 0x1C
+        // View Party Finder 0x2E
+        // Reply in Selected Chat Mode 0x64
+    }
+
+    private PlayerCharacter? FindCharacterForPayload(PlayerPayload payload) {
+        foreach (var obj in this.Ui.Plugin.ObjectTable) {
+            if (obj is not PlayerCharacter character) {
+                continue;
+            }
+
+            if (character.Name.TextValue != payload.PlayerName) {
+                continue;
+            }
+
+            if (payload.World.IsPublic && character.HomeWorld.Id != payload.World.RowId) {
+                continue;
+            }
+
+            return character;
+        }
+
+        return null;
     }
 
     private static string PopupId(PlayerPayload player) {

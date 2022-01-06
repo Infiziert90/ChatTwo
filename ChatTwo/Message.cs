@@ -3,6 +3,8 @@
 namespace ChatTwo;
 
 internal class Message {
+    internal ulong ContentId;
+
     internal DateTime Date { get; }
     internal ChatCode Code { get; }
     internal List<Chunk> Sender { get; }
