@@ -7,11 +7,11 @@ namespace ChatTwo;
 internal class TextureCache : IDisposable {
     private DataManager Data { get; }
 
-    private readonly Dictionary<uint, TextureWrap> _itemIcons = new();
-    private readonly Dictionary<uint, TextureWrap> _statusIcons = new();
+    private readonly Dictionary<(uint, bool), TextureWrap> _itemIcons = new();
+    private readonly Dictionary<(uint, bool), TextureWrap> _statusIcons = new();
 
-    internal IReadOnlyDictionary<uint, TextureWrap> ItemIcons => this._itemIcons;
-    internal IReadOnlyDictionary<uint, TextureWrap> StatusIcons => this._statusIcons;
+    internal IReadOnlyDictionary<(uint, bool), TextureWrap> ItemIcons => this._itemIcons;
+    internal IReadOnlyDictionary<(uint, bool), TextureWrap> StatusIcons => this._statusIcons;
 
     internal TextureCache(DataManager data) {
         this.Data = data;
@@ -26,34 +26,36 @@ internal class TextureCache : IDisposable {
         }
     }
 
-    private void AddIcon(IDictionary<uint, TextureWrap> dict, uint icon) {
-        if (dict.ContainsKey(icon)) {
+    private void AddIcon(IDictionary<(uint, bool), TextureWrap> dict, uint icon, bool hq = false) {
+        if (dict.ContainsKey((icon, hq))) {
             return;
         }
 
-        var tex = this.Data.GetImGuiTextureIcon(icon);
+        var tex = hq
+            ? this.Data.GetImGuiTextureHqIcon(icon)
+            : this.Data.GetImGuiTextureIcon(icon);
         if (tex != null) {
-            dict[icon] = tex;
+            dict[(icon, hq)] = tex;
         }
     }
 
-    internal void AddItem(Item item) {
-        this.AddIcon(this._itemIcons, item.Icon);
+    internal void AddItem(Item item, bool hq) {
+        this.AddIcon(this._itemIcons, item.Icon, hq);
     }
 
     internal void AddStatus(Status status) {
         this.AddIcon(this._statusIcons, status.Icon);
     }
 
-    internal TextureWrap? GetItem(Item item) {
-        this.AddItem(item);
-        this.ItemIcons.TryGetValue(item.Icon, out var icon);
+    internal TextureWrap? GetItem(Item item, bool hq = false) {
+        this.AddItem(item, hq);
+        this.ItemIcons.TryGetValue((item.Icon, hq), out var icon);
         return icon;
     }
 
     internal TextureWrap? GetStatus(Status status) {
         this.AddStatus(status);
-        this.StatusIcons.TryGetValue(status.Icon, out var icon);
+        this.StatusIcons.TryGetValue((status.Icon, false), out var icon);
         return icon;
     }
 }
