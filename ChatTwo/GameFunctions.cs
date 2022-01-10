@@ -32,6 +32,12 @@ internal unsafe class GameFunctions : IDisposable {
         internal const string FriendRequestBool = "40 53 48 83 EC 20 48 8B D9 48 8B 49 10 48 8B 01 FF 90 ?? ?? ?? ?? 48 8B 48 48";
         internal const string AgentContextYesNo = "E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B CB E8 ?? ?? ?? ?? 84 C0 74 3A";
         internal const string InviteToNoviceNetwork = "E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B CB E8 ?? ?? ?? ?? 45 33 C9";
+
+        internal const string TryOn = "E8 ?? ?? ?? ?? EB 35 BA";
+        internal const string LinkItem = "E8 ?? ?? ?? ?? EB 7B 49 8B 06";
+
+        internal const string ItemComparisonThing = "E8 ?? ?? ?? ?? 8B 6E 20";
+        internal const string ItemComparison = "E8 ?? ?? ?? ?? EB 3F 83 F8 FE";
     }
 
     private delegate byte ChatLogRefreshDelegate(IntPtr log, ushort eventId, AtkValue* value);
@@ -50,6 +56,14 @@ internal unsafe class GameFunctions : IDisposable {
 
     internal delegate void ChatActivatedEventDelegate(string? input);
 
+    private delegate byte TryOnDelegate(uint unknownCanEquip, uint itemBaseId, ulong stainColor, uint itemGlamourId, byte unknownByte);
+
+    private delegate IntPtr LinkItemDelegate(AgentInterface* agentChatLog, uint itemId);
+
+    private delegate IntPtr ItemComparisonDelegate(IntPtr a1, ushort a2, uint itemId, byte a4);
+
+    internal const int HqItemOffset = 1_000_000;
+
     private Plugin Plugin { get; }
     private Hook<ChatLogRefreshDelegate>? ChatLogRefreshHook { get; }
     private Hook<ChangeChannelNameDelegate>? ChangeChannelNameHook { get; }
@@ -65,6 +79,11 @@ internal unsafe class GameFunctions : IDisposable {
     private readonly AgentContextYesNoDelegate? _agentContextYesNo;
 
     private readonly InviteToNoviceNetworkDelegate? _inviteToNoviceNetwork;
+
+    private readonly TryOnDelegate? _tryOn;
+    private readonly LinkItemDelegate? _linkItem;
+    private readonly delegate* unmanaged<AgentInterface*, uint, IntPtr> _itemComparisonThing;
+    private readonly ItemComparisonDelegate? _itemComparison;
 
     internal event ChatActivatedEventDelegate? ChatActivated;
 
@@ -113,6 +132,22 @@ internal unsafe class GameFunctions : IDisposable {
 
         if (this.Plugin.SigScanner.TryScanText(Signatures.InviteToNoviceNetwork, out var nnPtr)) {
             this._inviteToNoviceNetwork = Marshal.GetDelegateForFunctionPointer<InviteToNoviceNetworkDelegate>(nnPtr);
+        }
+
+        if (this.Plugin.SigScanner.TryScanText(Signatures.TryOn, out var tryOnPtr)) {
+            this._tryOn = Marshal.GetDelegateForFunctionPointer<TryOnDelegate>(tryOnPtr);
+        }
+
+        if (this.Plugin.SigScanner.TryScanText(Signatures.LinkItem, out var linkPtr)) {
+            this._linkItem = Marshal.GetDelegateForFunctionPointer<LinkItemDelegate>(linkPtr);
+        }
+
+        if (this.Plugin.SigScanner.TryScanText(Signatures.ItemComparisonThing, out var comparisonThingPtr)) {
+            this._itemComparisonThing = (delegate* unmanaged<AgentInterface*, uint, IntPtr>) comparisonThingPtr;
+        }
+
+        if (this.Plugin.SigScanner.TryScanText(Signatures.ItemComparison, out var comparisonPtr)) {
+            this._itemComparison = Marshal.GetDelegateForFunctionPointer<ItemComparisonDelegate>(comparisonPtr);
         }
 
         this.Plugin.ClientState.Login += this.Login;
@@ -377,5 +412,28 @@ internal unsafe class GameFunctions : IDisposable {
         this.ChatChannel = ((InputChannel) channel, nameChunks);
 
         return ret;
+    }
+
+    internal void TryOn(uint itemId, byte stainId) {
+        this._tryOn?.Invoke(0xFF, itemId, stainId, 0, 0);
+    }
+
+    internal void LinkItem(uint itemId) {
+        var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.ChatLog);
+        this._linkItem?.Invoke(agent, itemId);
+    }
+
+    internal void OpenItemComparison(uint itemId) {
+        if (this._itemComparisonThing == null || this._itemComparison == null) {
+            return;
+        }
+
+        var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.ChatLog);
+        var a1 = this._itemComparisonThing(agent, 152);
+        if (a1 == IntPtr.Zero) {
+            return;
+        }
+
+        this._itemComparison(a1, 0x4D, itemId, 0);
     }
 }

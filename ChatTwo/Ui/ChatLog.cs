@@ -191,11 +191,11 @@ internal sealed class ChatLog : IUiComponent {
                     }
 
                     if (message.Sender.Count > 0) {
-                        this.DrawChunks(message.Sender, this.PayloadHandler);
+                        this.DrawChunks(message.Sender, true, this.PayloadHandler);
                         ImGui.SameLine();
                     }
 
-                    this.DrawChunks(message.Content, this.PayloadHandler);
+                    this.DrawChunks(message.Content, true, this.PayloadHandler);
 
                     // drawnHeight += ImGui.GetCursorPosY() - lastPos;
                     // lastPos = ImGui.GetCursorPosY();
@@ -354,17 +354,22 @@ internal sealed class ChatLog : IUiComponent {
         return 0;
     }
 
-    internal void DrawChunks(IReadOnlyList<Chunk> chunks, PayloadHandler? handler = null) {
-        for (var i = 0; i < chunks.Count; i++) {
-            this.DrawChunk(chunks[i], handler);
+    internal void DrawChunks(IReadOnlyList<Chunk> chunks, bool wrap = true, PayloadHandler? handler = null) {
+        ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, Vector2.Zero);
+        try {
+            for (var i = 0; i < chunks.Count; i++) {
+                this.DrawChunk(chunks[i], wrap, handler);
 
-            if (i < chunks.Count - 1) {
-                ImGui.SameLine();
+                if (i < chunks.Count - 1) {
+                    ImGui.SameLine();
+                }
             }
+        } finally {
+            ImGui.PopStyleVar();
         }
     }
 
-    private void DrawChunk(Chunk chunk, PayloadHandler? handler = null) {
+    private void DrawChunk(Chunk chunk, bool wrap = true, PayloadHandler? handler = null) {
         if (chunk is IconChunk icon && this._fontIcon != null) {
             var bounds = IconUtil.GetBounds((byte) icon.Icon);
             if (bounds != null) {
@@ -414,7 +419,12 @@ internal sealed class ChatLog : IUiComponent {
             }
         }
 
-        ImGuiUtil.WrapText(content, chunk, handler);
+        if (wrap) {
+            ImGuiUtil.WrapText(content, chunk, handler);
+        } else {
+            ImGui.TextUnformatted(content);
+            ImGuiUtil.PostPayload(chunk, handler);
+        }
 
         if (text.Italic && this.Ui.ItalicFont.HasValue) {
             ImGui.PopFont();

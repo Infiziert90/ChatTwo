@@ -16,7 +16,7 @@ internal sealed class PayloadHandler {
     private PluginUi Ui { get; }
     private ChatLog Log { get; }
 
-    private HashSet<PlayerPayload> Popups { get; set; } = new();
+    private HashSet<Payload> PopupPayloads { get; set; } = new();
 
     private bool _handleTooltips;
     private uint _hoveredItem;
@@ -29,23 +29,7 @@ internal sealed class PayloadHandler {
     }
 
     internal void Draw() {
-        var newPopups = new HashSet<PlayerPayload>();
-        foreach (var player in this.Popups) {
-            var id = PopupId(player);
-            if (!ImGui.BeginPopup(id)) {
-                continue;
-            }
-
-            newPopups.Add(player);
-            ImGui.PushID(id);
-
-            this.DrawPlayerPopup(player);
-
-            ImGui.PopID();
-            ImGui.EndPopup();
-        }
-
-        this.Popups = newPopups;
+        this.DrawPopups();
 
         if (this._handleTooltips && ++this._hoverCounter - this._lastHoverCounter > 1) {
             this.Ui.Plugin.Functions.CloseItemTooltip();
@@ -53,6 +37,39 @@ internal sealed class PayloadHandler {
             this._hoverCounter = this._lastHoverCounter = 0;
             this._handleTooltips = false;
         }
+    }
+
+    private void DrawPopups() {
+        var newPopups = new HashSet<Payload>();
+        foreach (var payload in this.PopupPayloads) {
+            var id = PopupId(payload);
+            if (id == null) {
+                continue;
+            }
+
+            if (!ImGui.BeginPopup(id)) {
+                continue;
+            }
+
+            newPopups.Add(payload);
+            ImGui.PushID(id);
+
+            switch (payload) {
+                case PlayerPayload player: {
+                    this.DrawPlayerPopup(player);
+                    break;
+                }
+                case ItemPayload item: {
+                    this.DrawItemPopup(item);
+                    break;
+                }
+            }
+
+            ImGui.PopID();
+            ImGui.EndPopup();
+        }
+
+        this.PopupPayloads = newPopups;
     }
 
     internal void Click(Chunk chunk, Payload payload, ImGuiMouseButton button) {
@@ -189,11 +206,47 @@ internal sealed class PayloadHandler {
 
     private void RightClickPayload(Payload payload) {
         switch (payload) {
-            case PlayerPayload player: {
-                this.Popups.Add(player);
-                ImGui.OpenPopup(PopupId(player));
+            case PlayerPayload:
+            case ItemPayload: {
+                this.PopupPayloads.Add(payload);
+                ImGui.OpenPopup(PopupId(payload));
                 break;
             }
+        }
+    }
+
+    private void DrawItemPopup(ItemPayload item) {
+        if (this.Ui.Plugin.TextureCache.GetItem(item.Item) is { } icon) {
+            InlineIcon(icon);
+        }
+
+        var name = item.Item.Name.ToDalamudString();
+        if (item.IsHQ) {
+            // hq symbol
+            name.Payloads.Add(new TextPayload(" "));
+        }
+
+        this.Log.DrawChunks(ChunkUtil.ToChunks(name, null).ToList(), false);
+        ImGui.Separator();
+
+        var realItemId = (uint) (item.ItemId + (item.IsHQ ? GameFunctions.HqItemOffset : 0));
+
+        if (item.Item.EquipSlotCategory.Row != 0) {
+            if (ImGui.Selectable("Try On")) {
+                this.Ui.Plugin.Functions.TryOn(realItemId, 0);
+            }
+
+            if (ImGui.Selectable("Item Comparison")) {
+                this.Ui.Plugin.Functions.OpenItemComparison(realItemId);
+            }
+        }
+
+        if (ImGui.Selectable("Link")) {
+            this.Ui.Plugin.Functions.LinkItem(realItemId);
+        }
+
+        if (ImGui.Selectable("Copy Item Name")) {
+            ImGui.SetClipboardText(name.TextValue);
         }
     }
 
@@ -206,26 +259,28 @@ internal sealed class PayloadHandler {
         ImGui.TextUnformatted(name);
         ImGui.Separator();
 
-        if (player.World.IsPublic && ImGui.Selectable("Send Tell")) {
-            this.Log.Chat = $"/tell {player.PlayerName}@{player.World.Name} ";
-            this.Log.Activate = true;
-        }
+        if (player.World.IsPublic) {
+            if (ImGui.Selectable("Send Tell")) {
+                this.Log.Chat = $"/tell {player.PlayerName}@{player.World.Name} ";
+                this.Log.Activate = true;
+            }
 
-        if (player.World.IsPublic && ImGui.Selectable("Invite to Party")) {
-            // FIXME: don't show if player is in your party or if you're in their party
-            // FIXME: don't show if in party and not leader
-            this.Ui.Plugin.Functions.InviteToParty(player.PlayerName, (ushort) player.World.RowId);
-        }
+            if (ImGui.Selectable("Invite to Party")) {
+                // FIXME: don't show if player is in your party or if you're in their party
+                // FIXME: don't show if in party and not leader
+                this.Ui.Plugin.Functions.InviteToParty(player.PlayerName, (ushort) player.World.RowId);
+            }
 
-        if (player.World.IsPublic && ImGui.Selectable("Send Friend Request")) {
-            // FIXME: this shows window, clicking yes doesn't work
-            // FIXME: only show if not already friend
-            this.Ui.Plugin.Functions.SendFriendRequest(player.PlayerName, (ushort) player.World.RowId);
-        }
+            if (ImGui.Selectable("Send Friend Request")) {
+                // FIXME: this shows window, clicking yes doesn't work
+                // FIXME: only show if not already friend
+                this.Ui.Plugin.Functions.SendFriendRequest(player.PlayerName, (ushort) player.World.RowId);
+            }
 
-        if (player.World.IsPublic && ImGui.Selectable("Invite to Novice Network")) {
-            // FIXME: only show if character is mentor and target is sprout/returner
-            this.Ui.Plugin.Functions.InviteToNoviceNetwork(player.PlayerName, (ushort) player.World.RowId);
+            if (ImGui.Selectable("Invite to Novice Network")) {
+                // FIXME: only show if character is mentor and target is sprout/returner
+                this.Ui.Plugin.Functions.InviteToNoviceNetwork(player.PlayerName, (ushort) player.World.RowId);
+            }
         }
 
         if (ImGui.Selectable("Target") && this.FindCharacterForPayload(player) is { } obj) {
@@ -261,7 +316,9 @@ internal sealed class PayloadHandler {
         return null;
     }
 
-    private static string PopupId(PlayerPayload player) {
-        return $"###player-{player.PlayerName}@{player.World}";
-    }
+    private static string? PopupId(Payload payload) => payload switch {
+        PlayerPayload player => $"###player-{player.PlayerName}@{player.World}",
+        ItemPayload item => $"###item-{item.ItemId}{item.IsHQ}",
+        _ => null,
+    };
 }
