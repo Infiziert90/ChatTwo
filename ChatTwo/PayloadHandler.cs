@@ -247,6 +247,10 @@ internal sealed class PayloadHandler {
             }
         }
 
+        if (ImGui.Selectable("Search for Item")) {
+            this.Ui.Plugin.Functions.SearchForItem(realItemId);
+        }
+
         if (ImGui.Selectable("Link")) {
             this.Ui.Plugin.Functions.LinkItem(realItemId);
         }

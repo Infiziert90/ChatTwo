@@ -32,7 +32,7 @@ internal unsafe class GameFunctions : IDisposable {
     private delegate IntPtr AgentContextYesNoDelegate(AgentInterface* context, uint a2, byte* playerName, ushort playerWorld, uint a5, byte a6);
 
     internal delegate void ChatActivatedEventDelegate(string? input);
-    
+
     #region Functions
 
     [Signature("E8 ?? ?? ?? ?? 0F B7 44 37 ??")]
@@ -65,8 +65,11 @@ internal unsafe class GameFunctions : IDisposable {
     [Signature("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 41 B4 01")]
     private readonly delegate* unmanaged<IntPtr, uint, void> _searchForRecipesUsingItem;
 
+    [Signature("E8 ?? ?? ?? ?? EB 45 45 33 C9")]
+    private readonly delegate* unmanaged<void*, uint, byte, void> _searchForItem;
+
     #endregion
-    
+
     internal const int HqItemOffset = 1_000_000;
 
     private Plugin Plugin { get; }
@@ -415,5 +418,14 @@ internal unsafe class GameFunctions : IDisposable {
         var vf35 = (delegate* unmanaged<UIModule*, IntPtr>) uiModule->vfunc[35];
         var a1 = vf35(uiModule);
         this._searchForRecipesUsingItem(a1, itemId);
+    }
+
+    internal void SearchForItem(uint itemId) {
+        if (this._searchForItem == null) {
+            return;
+        }
+
+        var itemFinder = Framework.Instance()->GetUiModule()->GetItemFinderModule();
+        this._searchForItem(itemFinder, itemId, 1);
     }
 }
