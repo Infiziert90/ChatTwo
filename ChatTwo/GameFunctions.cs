@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices;
-using System.Text;
+﻿using System.Text;
 using ChatTwo.Code;
 using ChatTwo.Util;
 using Dalamud.Game.Text.SeStringHandling;
@@ -13,6 +12,7 @@ using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Client.UI.Shell;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using Siggingway;
 
 namespace ChatTwo;
 
@@ -22,16 +22,7 @@ internal unsafe class GameFunctions : IDisposable {
         internal const string ChangeChannelName = "E8 ?? ?? ?? ?? BA ?? ?? ?? ?? 48 8D 4D B0 48 8B F8 E8 ?? ?? ?? ?? 41 8B D6";
 
         internal const string CurrentChatEntryOffset = "8B 77 ?? 8D 46 01 89 47 14 81 FE ?? ?? ?? ?? 72 03 FF 47";
-        internal const string AgentContextYesNo = "E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B CB E8 ?? ?? ?? ?? 84 C0 74 3A";
     }
-
-    private delegate byte ChatLogRefreshDelegate(IntPtr log, ushort eventId, AtkValue* value);
-
-    private delegate IntPtr ChangeChannelNameDelegate(IntPtr agent);
-
-    private delegate IntPtr AgentContextYesNoDelegate(AgentInterface* context, uint a2, byte* playerName, ushort playerWorld, uint a5, byte a6);
-
-    internal delegate void ChatActivatedEventDelegate(string? input);
 
     #region Functions
 
@@ -68,16 +59,33 @@ internal unsafe class GameFunctions : IDisposable {
     [Signature("E8 ?? ?? ?? ?? EB 45 45 33 C9")]
     private readonly delegate* unmanaged<void*, uint, byte, void> _searchForItem;
 
+    [Signature("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B CB E8 ?? ?? ?? ?? 84 C0 74 3A")]
+    private readonly delegate* unmanaged<AgentInterface*, uint, byte*, ushort, uint, byte, void> _agentContextYesNo;
+
     #endregion
+
+    #region Hooks
+
+    private delegate byte ChatLogRefreshDelegate(IntPtr log, ushort eventId, AtkValue* value);
+
+    private delegate IntPtr ChangeChannelNameDelegate(IntPtr agent);
+
+    [Signature(Signatures.ChatLogRefresh, DetourName = nameof(ChatLogRefreshDetour))]
+    private Hook<ChatLogRefreshDelegate>? ChatLogRefreshHook { get; init; }
+
+    [Signature(Signatures.ChangeChannelName, DetourName = nameof(ChangeChannelNameDetour))]
+    private Hook<ChangeChannelNameDelegate>? ChangeChannelNameHook { get; init; }
+
+    #endregion
+
+    [Signature(Signatures.CurrentChatEntryOffset, Offset = 2)]
+    private readonly byte? _currentChatEntryOffset;
 
     internal const int HqItemOffset = 1_000_000;
 
     private Plugin Plugin { get; }
-    private Hook<ChatLogRefreshDelegate>? ChatLogRefreshHook { get; }
-    private Hook<ChangeChannelNameDelegate>? ChangeChannelNameHook { get; }
 
-    private readonly int? _currentChatEntryOffset;
-    private readonly AgentContextYesNoDelegate? _agentContextYesNo;
+    internal delegate void ChatActivatedEventDelegate(string? input);
 
     internal event ChatActivatedEventDelegate? ChatActivated;
 
@@ -86,25 +94,10 @@ internal unsafe class GameFunctions : IDisposable {
     internal GameFunctions(Plugin plugin) {
         this.Plugin = plugin;
 
-        this.Plugin.SigScanner.ScanFunctions(this);
+        Siggingway.Siggingway.Initialise(this.Plugin.SigScanner, this);
 
-        if (this.Plugin.SigScanner.TryScanText(Signatures.ChatLogRefresh, out var chatLogPtr)) {
-            this.ChatLogRefreshHook = new Hook<ChatLogRefreshDelegate>(chatLogPtr, this.ChatLogRefreshDetour);
-            this.ChatLogRefreshHook.Enable();
-        }
-
-        if (this.Plugin.SigScanner.TryScanText(Signatures.ChangeChannelName, out var channelNamePtr)) {
-            this.ChangeChannelNameHook = new Hook<ChangeChannelNameDelegate>(channelNamePtr, this.ChangeChannelNameDetour);
-            this.ChangeChannelNameHook.Enable();
-        }
-
-        if (this.Plugin.SigScanner.TryScanText(Signatures.CurrentChatEntryOffset, out var entryOffsetPtr)) {
-            this._currentChatEntryOffset = *(byte*) (entryOffsetPtr + 2);
-        }
-
-        if (this.Plugin.SigScanner.TryScanText(Signatures.AgentContextYesNo, out var sendFriendRequestPtr)) {
-            this._agentContextYesNo = Marshal.GetDelegateForFunctionPointer<AgentContextYesNoDelegate>(sendFriendRequestPtr);
-        }
+        this.ChatLogRefreshHook?.Enable();
+        this.ChangeChannelNameHook?.Enable();
 
         this.Plugin.ClientState.Login += this.Login;
         this.Login(null, null);
@@ -170,7 +163,7 @@ internal unsafe class GameFunctions : IDisposable {
         }
 
         var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.Context);
-        var a6 = this._friendRequestBool(agent);
+        var a6 = this._friendRequestBool(agent) == 0 ? (byte) 1 : (byte) 0;
 
         fixed (byte* namePtr = name.ToTerminatedBytes()) {
             // 6.05: 20DA57
