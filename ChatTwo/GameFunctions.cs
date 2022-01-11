@@ -20,71 +20,61 @@ internal unsafe class GameFunctions : IDisposable {
     private static class Signatures {
         internal const string ChatLogRefresh = "40 53 56 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 8B F0 8B FA";
         internal const string ChangeChannelName = "E8 ?? ?? ?? ?? BA ?? ?? ?? ?? 48 8D 4D B0 48 8B F8 E8 ?? ?? ?? ?? 41 8B D6";
-        internal const string ChangeChatChannel = "E8 ?? ?? ?? ?? 0F B7 44 37 ??";
 
-        // Context menu
         internal const string CurrentChatEntryOffset = "8B 77 ?? 8D 46 01 89 47 14 81 FE ?? ?? ?? ?? 72 03 FF 47";
-        internal const string GetContentIdForChatEntry = "4C 8B 81 ?? ?? ?? ?? 4D 85 C0 74 17";
-
-        internal const string Indexer = "E8 ?? ?? ?? ?? 8B FD 8B CD";
-        internal const string InviteToParty = "E8 ?? ?? ?? ?? 33 C0 EB 51";
-
-        internal const string FriendRequestBool = "40 53 48 83 EC 20 48 8B D9 48 8B 49 10 48 8B 01 FF 90 ?? ?? ?? ?? 48 8B 48 48";
         internal const string AgentContextYesNo = "E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B CB E8 ?? ?? ?? ?? 84 C0 74 3A";
-        internal const string InviteToNoviceNetwork = "E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B CB E8 ?? ?? ?? ?? 45 33 C9";
-
-        internal const string TryOn = "E8 ?? ?? ?? ?? EB 35 BA";
-        internal const string LinkItem = "E8 ?? ?? ?? ?? EB 7B 49 8B 06";
-        internal const string ItemComparison = "E8 ?? ?? ?? ?? EB 3F 83 F8 FE";
-        internal const string SearchForRecipesUsingItem = "E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 41 B4 01";
     }
 
     private delegate byte ChatLogRefreshDelegate(IntPtr log, ushort eventId, AtkValue* value);
 
     private delegate IntPtr ChangeChannelNameDelegate(IntPtr agent);
 
-    private delegate IntPtr ChangeChatChannelDelegate(RaptureShellModule* shell, int channel, uint linkshellIdx, Utf8String* tellTarget, byte one);
-
-    private delegate ulong GetContentIdForChatEntryDelegate(RaptureLogModule* log, uint index);
-
-    private delegate IntPtr InviteToPartyDelegate(IntPtr a1, ulong contentId, byte* playerName, ushort playerWorld);
-
     private delegate IntPtr AgentContextYesNoDelegate(AgentInterface* context, uint a2, byte* playerName, ushort playerWorld, uint a5, byte a6);
 
-    private delegate byte InviteToNoviceNetworkDelegate(IntPtr a1, ulong contentId, ushort playerWorld, byte* playerName);
-
     internal delegate void ChatActivatedEventDelegate(string? input);
+    
+    #region Functions
 
-    private delegate byte TryOnDelegate(uint unknownCanEquip, uint itemBaseId, ulong stainColor, uint itemGlamourId, byte unknownByte);
+    [Signature("E8 ?? ?? ?? ?? 0F B7 44 37 ??")]
+    private readonly delegate* unmanaged<RaptureShellModule*, int, uint, Utf8String*, byte, void> _changeChatChannel;
 
-    private delegate IntPtr LinkItemDelegate(AgentInterface* agentChatLog, uint itemId);
+    [Signature("4C 8B 81 ?? ?? ?? ?? 4D 85 C0 74 17")]
+    private readonly delegate* unmanaged<RaptureLogModule*, uint, ulong> _getContentIdForChatEntry;
 
-    private delegate IntPtr ItemComparisonDelegate(AgentInterface* agentItemCompare, ushort a2, uint itemId, byte a4);
+    [Signature("E8 ?? ?? ?? ?? 8B FD 8B CD")]
+    private readonly delegate* unmanaged<IntPtr, uint, IntPtr> _indexer;
 
-    private delegate IntPtr SearchForRecipesUsingItemDelegate(IntPtr a1, uint itemId);
+    [Signature("E8 ?? ?? ?? ?? 33 C0 EB 51")]
+    private readonly delegate* unmanaged<IntPtr, ulong, byte*, ushort, void> _inviteToParty;
 
+    [Signature(("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B CB E8 ?? ?? ?? ?? 45 33 C9"))]
+    private readonly delegate* unmanaged<IntPtr, ulong, ushort, byte*, byte> _inviteToNoviceNetwork;
+
+    [Signature("40 53 48 83 EC 20 48 8B D9 48 8B 49 10 48 8B 01 FF 90 ?? ?? ?? ?? 48 8B 48 48")]
+    private readonly delegate* unmanaged<AgentInterface*, byte> _friendRequestBool;
+
+    [Signature("E8 ?? ?? ?? ?? EB 35 BA")]
+    private readonly delegate* unmanaged<uint, uint, ulong, uint, byte, byte> _tryOn;
+
+    [Signature("E8 ?? ?? ?? ?? EB 7B 49 8B 06")]
+    private readonly delegate* unmanaged<AgentInterface*, uint, void> _linkItem;
+
+    [Signature("E8 ?? ?? ?? ?? EB 3F 83 F8 FE")]
+    private readonly delegate* unmanaged<AgentInterface*, ushort, uint, byte, void> _itemComparison;
+
+    [Signature("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 41 B4 01")]
+    private readonly delegate* unmanaged<IntPtr, uint, void> _searchForRecipesUsingItem;
+
+    #endregion
+    
     internal const int HqItemOffset = 1_000_000;
 
     private Plugin Plugin { get; }
     private Hook<ChatLogRefreshDelegate>? ChatLogRefreshHook { get; }
     private Hook<ChangeChannelNameDelegate>? ChangeChannelNameHook { get; }
-    private readonly ChangeChatChannelDelegate? _changeChatChannel;
 
-    private readonly GetContentIdForChatEntryDelegate? _getContentIdForChatEntry;
     private readonly int? _currentChatEntryOffset;
-
-    private readonly delegate* unmanaged<IntPtr, uint, IntPtr> _indexer;
-    private readonly InviteToPartyDelegate? _inviteToParty;
-
-    private readonly delegate* unmanaged<AgentInterface*, byte> _friendRequestBool;
     private readonly AgentContextYesNoDelegate? _agentContextYesNo;
-
-    private readonly InviteToNoviceNetworkDelegate? _inviteToNoviceNetwork;
-
-    private readonly TryOnDelegate? _tryOn;
-    private readonly LinkItemDelegate? _linkItem;
-    private readonly ItemComparisonDelegate? _itemComparison;
-    private readonly SearchForRecipesUsingItemDelegate? _searchForRecipesUsingItem;
 
     internal event ChatActivatedEventDelegate? ChatActivated;
 
@@ -92,6 +82,8 @@ internal unsafe class GameFunctions : IDisposable {
 
     internal GameFunctions(Plugin plugin) {
         this.Plugin = plugin;
+
+        this.Plugin.SigScanner.ScanFunctions(this);
 
         if (this.Plugin.SigScanner.TryScanText(Signatures.ChatLogRefresh, out var chatLogPtr)) {
             this.ChatLogRefreshHook = new Hook<ChatLogRefreshDelegate>(chatLogPtr, this.ChatLogRefreshDetour);
@@ -103,52 +95,12 @@ internal unsafe class GameFunctions : IDisposable {
             this.ChangeChannelNameHook.Enable();
         }
 
-        if (this.Plugin.SigScanner.TryScanText(Signatures.ChangeChatChannel, out var changeChannelPtr)) {
-            this._changeChatChannel = Marshal.GetDelegateForFunctionPointer<ChangeChatChannelDelegate>(changeChannelPtr);
-        }
-
         if (this.Plugin.SigScanner.TryScanText(Signatures.CurrentChatEntryOffset, out var entryOffsetPtr)) {
             this._currentChatEntryOffset = *(byte*) (entryOffsetPtr + 2);
         }
 
-        if (this.Plugin.SigScanner.TryScanText(Signatures.Indexer, out var indexerPtr)) {
-            this._indexer = (delegate* unmanaged<IntPtr, uint, IntPtr>) indexerPtr;
-        }
-
-        if (this.Plugin.SigScanner.TryScanText(Signatures.GetContentIdForChatEntry, out var getContentIdPtr)) {
-            this._getContentIdForChatEntry = Marshal.GetDelegateForFunctionPointer<GetContentIdForChatEntryDelegate>(getContentIdPtr);
-        }
-
-        if (this.Plugin.SigScanner.TryScanText(Signatures.InviteToParty, out var invitePtr)) {
-            this._inviteToParty = Marshal.GetDelegateForFunctionPointer<InviteToPartyDelegate>(invitePtr);
-        }
-
-        if (this.Plugin.SigScanner.TryScanText(Signatures.FriendRequestBool, out var frBoolPtr)) {
-            this._friendRequestBool = (delegate* unmanaged<AgentInterface*, byte>) frBoolPtr;
-        }
-
         if (this.Plugin.SigScanner.TryScanText(Signatures.AgentContextYesNo, out var sendFriendRequestPtr)) {
             this._agentContextYesNo = Marshal.GetDelegateForFunctionPointer<AgentContextYesNoDelegate>(sendFriendRequestPtr);
-        }
-
-        if (this.Plugin.SigScanner.TryScanText(Signatures.InviteToNoviceNetwork, out var nnPtr)) {
-            this._inviteToNoviceNetwork = Marshal.GetDelegateForFunctionPointer<InviteToNoviceNetworkDelegate>(nnPtr);
-        }
-
-        if (this.Plugin.SigScanner.TryScanText(Signatures.TryOn, out var tryOnPtr)) {
-            this._tryOn = Marshal.GetDelegateForFunctionPointer<TryOnDelegate>(tryOnPtr);
-        }
-
-        if (this.Plugin.SigScanner.TryScanText(Signatures.LinkItem, out var linkPtr)) {
-            this._linkItem = Marshal.GetDelegateForFunctionPointer<LinkItemDelegate>(linkPtr);
-        }
-
-        if (this.Plugin.SigScanner.TryScanText(Signatures.ItemComparison, out var comparisonPtr)) {
-            this._itemComparison = Marshal.GetDelegateForFunctionPointer<ItemComparisonDelegate>(comparisonPtr);
-        }
-
-        if (this.Plugin.SigScanner.TryScanText(Signatures.SearchForRecipesUsingItem, out var searchForRecipesItemPtr)) {
-            this._searchForRecipesUsingItem = Marshal.GetDelegateForFunctionPointer<SearchForRecipesUsingItemDelegate>(searchForRecipesItemPtr);
         }
 
         this.Plugin.ClientState.Login += this.Login;
@@ -185,7 +137,11 @@ internal unsafe class GameFunctions : IDisposable {
     }
 
     internal ulong? GetContentIdForChatLogEntry(uint index) {
-        return this._getContentIdForChatEntry?.Invoke(Framework.Instance()->GetUiModule()->GetRaptureLogModule(), index);
+        if (this._getContentIdForChatEntry == null) {
+            return null;
+        }
+
+        return this._getContentIdForChatEntry(Framework.Instance()->GetUiModule()->GetRaptureLogModule(), index);
     }
 
     internal void InviteToParty(string name, ushort world) {
@@ -414,7 +370,7 @@ internal unsafe class GameFunctions : IDisposable {
 
         return ret;
     }
-    
+
     // These context menu things come from AgentChatLog.vf0 at the bottom
     // 0x10000: item comparison
     // 0x10001: try on
@@ -425,12 +381,20 @@ internal unsafe class GameFunctions : IDisposable {
 
 
     internal void TryOn(uint itemId, byte stainId) {
-        this._tryOn?.Invoke(0xFF, itemId, stainId, 0, 0);
+        if (this._tryOn == null) {
+            return;
+        }
+
+        this._tryOn(0xFF, itemId, stainId, 0, 0);
     }
 
     internal void LinkItem(uint itemId) {
+        if (this._linkItem == null) {
+            return;
+        }
+
         var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.ChatLog);
-        this._linkItem?.Invoke(agent, itemId);
+        this._linkItem(agent, itemId);
     }
 
     internal void OpenItemComparison(uint itemId) {
@@ -446,7 +410,7 @@ internal unsafe class GameFunctions : IDisposable {
         if (this._searchForRecipesUsingItem == null) {
             return;
         }
-        
+
         var uiModule = Framework.Instance()->GetUiModule();
         var vf35 = (delegate* unmanaged<UIModule*, IntPtr>) uiModule->vfunc[35];
         var a1 = vf35(uiModule);

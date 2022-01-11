@@ -47,13 +47,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="XivCommon" Version="4.0.0-alpha.2" />
+        <PackageReference Include="JetBrains.Annotations" Version="2021.3.0"/>
+        <PackageReference Include="XivCommon" Version="4.0.0"/>
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="fonts\NotoSans-Italic.ttf" />
-        <EmbeddedResource Include="fonts\NotoSans-Regular.ttf" />
-        <EmbeddedResource Include="fonts\NotoSansJP-Regular.otf" />
+        <EmbeddedResource Include="fonts\NotoSans-Italic.ttf"/>
+        <EmbeddedResource Include="fonts\NotoSans-Regular.ttf"/>
+        <EmbeddedResource Include="fonts\NotoSansJP-Regular.otf"/>
     </ItemGroup>
 
 </Project>
