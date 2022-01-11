@@ -241,6 +241,12 @@ internal sealed class PayloadHandler {
             }
         }
 
+        if (item.Item.ItemSearchCategory.Value?.Category == 3) {
+            if (ImGui.Selectable("Search Recipes Using This Material")) {
+                this.Ui.Plugin.Functions.SearchForRecipesUsingItem(item.ItemId);
+            }
+        }
+
         if (ImGui.Selectable("Link")) {
             this.Ui.Plugin.Functions.LinkItem(realItemId);
         }

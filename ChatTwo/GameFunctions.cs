@@ -35,9 +35,8 @@ internal unsafe class GameFunctions : IDisposable {
 
         internal const string TryOn = "E8 ?? ?? ?? ?? EB 35 BA";
         internal const string LinkItem = "E8 ?? ?? ?? ?? EB 7B 49 8B 06";
-
-        internal const string ItemComparisonThing = "E8 ?? ?? ?? ?? 8B 6E 20";
         internal const string ItemComparison = "E8 ?? ?? ?? ?? EB 3F 83 F8 FE";
+        internal const string SearchForRecipesUsingItem = "E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 41 B4 01";
     }
 
     private delegate byte ChatLogRefreshDelegate(IntPtr log, ushort eventId, AtkValue* value);
@@ -60,7 +59,9 @@ internal unsafe class GameFunctions : IDisposable {
 
     private delegate IntPtr LinkItemDelegate(AgentInterface* agentChatLog, uint itemId);
 
-    private delegate IntPtr ItemComparisonDelegate(IntPtr a1, ushort a2, uint itemId, byte a4);
+    private delegate IntPtr ItemComparisonDelegate(AgentInterface* agentItemCompare, ushort a2, uint itemId, byte a4);
+
+    private delegate IntPtr SearchForRecipesUsingItemDelegate(IntPtr a1, uint itemId);
 
     internal const int HqItemOffset = 1_000_000;
 
@@ -82,8 +83,8 @@ internal unsafe class GameFunctions : IDisposable {
 
     private readonly TryOnDelegate? _tryOn;
     private readonly LinkItemDelegate? _linkItem;
-    private readonly delegate* unmanaged<AgentInterface*, uint, IntPtr> _itemComparisonThing;
     private readonly ItemComparisonDelegate? _itemComparison;
+    private readonly SearchForRecipesUsingItemDelegate? _searchForRecipesUsingItem;
 
     internal event ChatActivatedEventDelegate? ChatActivated;
 
@@ -142,12 +143,12 @@ internal unsafe class GameFunctions : IDisposable {
             this._linkItem = Marshal.GetDelegateForFunctionPointer<LinkItemDelegate>(linkPtr);
         }
 
-        if (this.Plugin.SigScanner.TryScanText(Signatures.ItemComparisonThing, out var comparisonThingPtr)) {
-            this._itemComparisonThing = (delegate* unmanaged<AgentInterface*, uint, IntPtr>) comparisonThingPtr;
-        }
-
         if (this.Plugin.SigScanner.TryScanText(Signatures.ItemComparison, out var comparisonPtr)) {
             this._itemComparison = Marshal.GetDelegateForFunctionPointer<ItemComparisonDelegate>(comparisonPtr);
+        }
+
+        if (this.Plugin.SigScanner.TryScanText(Signatures.SearchForRecipesUsingItem, out var searchForRecipesItemPtr)) {
+            this._searchForRecipesUsingItem = Marshal.GetDelegateForFunctionPointer<SearchForRecipesUsingItemDelegate>(searchForRecipesItemPtr);
         }
 
         this.Plugin.ClientState.Login += this.Login;
@@ -413,6 +414,15 @@ internal unsafe class GameFunctions : IDisposable {
 
         return ret;
     }
+    
+    // These context menu things come from AgentChatLog.vf0 at the bottom
+    // 0x10000: item comparison
+    // 0x10001: try on
+    // 0x10002: search for item
+    // 0x10003: link
+    // 0x10005: copy item name
+    // 0x10006: search recipes using this material
+
 
     internal void TryOn(uint itemId, byte stainId) {
         this._tryOn?.Invoke(0xFF, itemId, stainId, 0, 0);
@@ -424,16 +434,22 @@ internal unsafe class GameFunctions : IDisposable {
     }
 
     internal void OpenItemComparison(uint itemId) {
-        if (this._itemComparisonThing == null || this._itemComparison == null) {
+        if (this._itemComparison == null) {
             return;
         }
 
-        var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.ChatLog);
-        var a1 = this._itemComparisonThing(agent, 152);
-        if (a1 == IntPtr.Zero) {
+        var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.ItemCompare);
+        this._itemComparison(agent, 0x4D, itemId, 0);
+    }
+
+    internal void SearchForRecipesUsingItem(uint itemId) {
+        if (this._searchForRecipesUsingItem == null) {
             return;
         }
-
-        this._itemComparison(a1, 0x4D, itemId, 0);
+        
+        var uiModule = Framework.Instance()->GetUiModule();
+        var vf35 = (delegate* unmanaged<UIModule*, IntPtr>) uiModule->vfunc[35];
+        var a1 = vf35(uiModule);
+        this._searchForRecipesUsingItem(a1, itemId);
     }
 }
