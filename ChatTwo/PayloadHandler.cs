@@ -175,6 +175,13 @@ internal sealed class PayloadHandler {
                 this.ClickLinkPayload(chunk, payload, link);
                 break;
             }
+            case RawPayload raw: {
+                if (Equals(raw, ChunkUtil.PeriodicRecruitmentLink)) {
+                    GameFunctions.OpenPartyFinder();
+                }
+
+                break;
+            }
         }
     }
 

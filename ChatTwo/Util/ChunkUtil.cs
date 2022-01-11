@@ -70,6 +70,8 @@ internal static class ChunkUtil {
                         glow.Pop();
                     } else if (Equals(rawPayload, RawPayload.LinkTerminator)) {
                         link = null;
+                    } else if (Equals(rawPayload, PeriodicRecruitmentLink)) {
+                        link = rawPayload;
                     }
 
                     break;
@@ -84,4 +86,8 @@ internal static class ChunkUtil {
 
         return chunks;
     }
+
+    internal static readonly RawPayload PeriodicRecruitmentLink = new(new byte[] {
+        0x02, 0x27, 0x07, 0x08, 0x01, 0x01, 0x01, 0xFF, 0x01, 0x03,
+    });
 }

@@ -428,4 +428,23 @@ internal unsafe class GameFunctions : IDisposable {
         var itemFinder = Framework.Instance()->GetUiModule()->GetItemFinderModule();
         this._searchForItem(itemFinder, itemId, 1);
     }
+
+    internal static void OpenPartyFinder() {
+        // this whole method: 6.05: 84433A
+        var lfg = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.LookingForGroup);
+        if (lfg->IsAgentActive()) {
+            var addonId = lfg->GetAddonID();
+            var atkModule = Framework.Instance()->GetUiModule()->GetRaptureAtkModule();
+            var atkModuleVtbl = (void**) atkModule->AtkModule.vtbl;
+            var vf27 = (delegate* unmanaged<RaptureAtkModule*, ulong, ulong, byte>) atkModuleVtbl[27];
+            vf27(atkModule, addonId, 1);
+        } else {
+            // 6.05: 8443DD
+            if (*(uint*) ((IntPtr) lfg + 0x2AB8) > 0) {
+                lfg->Hide();
+            } else {
+                lfg->Show();
+            }
+        }
+    }
 }
