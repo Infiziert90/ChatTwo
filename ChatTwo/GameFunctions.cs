@@ -229,7 +229,7 @@ internal unsafe class GameFunctions : IDisposable {
         }
     }
 
-    internal void SetChatInteractable(bool interactable) {
+    internal static void SetChatInteractable(bool interactable) {
         for (var i = 0; i < 4; i++) {
             SetAddonInteractable($"ChatLogPanel_{i}", interactable);
         }
@@ -249,7 +249,7 @@ internal unsafe class GameFunctions : IDisposable {
         return (*flags & (1 << 22)) == 0;
     }
 
-    internal void OpenItemTooltip(uint id) {
+    internal static void OpenItemTooltip(uint id) {
         var atkStage = AtkStage.GetSingleton();
         var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.ItemDetail);
         var addon = atkStage->RaptureAtkUnitManager->GetAddonByName("ItemDetail");
@@ -289,7 +289,7 @@ internal unsafe class GameFunctions : IDisposable {
         (*vf5)(addon, 0, 15);
     }
 
-    internal void CloseItemTooltip() {
+    internal static void CloseItemTooltip() {
         // hide addon first to prevent the "addon close" sound
         var addon = AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName("ItemDetail");
         if (addon != null) {
@@ -381,7 +381,6 @@ internal unsafe class GameFunctions : IDisposable {
     // 0x10003: link
     // 0x10005: copy item name
     // 0x10006: search recipes using this material
-
 
     internal void TryOn(uint itemId, byte stainId) {
         if (this._tryOn == null) {

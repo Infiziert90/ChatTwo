@@ -197,7 +197,7 @@ internal sealed class Settings : IUiComponent {
             }
 
             if (!this._hideChat && hideChatChanged) {
-                this.Ui.Plugin.Functions.SetChatInteractable(true);
+                GameFunctions.SetChatInteractable(true);
             }
 
             this.Initialise();

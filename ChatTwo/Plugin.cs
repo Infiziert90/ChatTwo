@@ -66,7 +66,7 @@ public sealed class Plugin : IDalamudPlugin {
 
     public void Dispose() {
         this.Framework.Update -= this.FrameworkUpdate;
-        this.Functions.SetChatInteractable(true);
+        GameFunctions.SetChatInteractable(true);
 
         this.Ui.Dispose();
         this.Store.Dispose();

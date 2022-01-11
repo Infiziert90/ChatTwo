@@ -32,7 +32,7 @@ internal sealed class PayloadHandler {
         this.DrawPopups();
 
         if (this._handleTooltips && ++this._hoverCounter - this._lastHoverCounter > 1) {
-            this.Ui.Plugin.Functions.CloseItemTooltip();
+            GameFunctions.CloseItemTooltip();
             this._hoveredItem = 0;
             this._hoverCounter = this._lastHoverCounter = 0;
             this._handleTooltips = false;
@@ -91,7 +91,7 @@ internal sealed class PayloadHandler {
             }
             case ItemPayload item: {
                 if (this.Ui.Plugin.Config.NativeItemTooltips) {
-                    this.Ui.Plugin.Functions.OpenItemTooltip(item.ItemId);
+                    GameFunctions.OpenItemTooltip(item.ItemId);
 
                     this._handleTooltips = true;
                     if (this._hoveredItem != item.ItemId) {
