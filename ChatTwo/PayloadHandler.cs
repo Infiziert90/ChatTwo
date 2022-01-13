@@ -294,7 +294,7 @@ internal sealed class PayloadHandler {
                 this.Ui.Plugin.Functions.SendFriendRequest(player.PlayerName, (ushort) player.World.RowId);
             }
 
-            if (ImGui.Selectable("Invite to Novice Network")) {
+            if (this.Ui.Plugin.Functions.IsMentor() && ImGui.Selectable("Invite to Novice Network")) {
                 // FIXME: only show if character is mentor and target is sprout/returner
                 this.Ui.Plugin.Functions.InviteToNoviceNetwork(player.PlayerName, (ushort) player.World.RowId);
             }

@@ -20,47 +20,51 @@ internal unsafe class GameFunctions : IDisposable {
     private static class Signatures {
         internal const string ChatLogRefresh = "40 53 56 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 8B F0 8B FA";
         internal const string ChangeChannelName = "E8 ?? ?? ?? ?? BA ?? ?? ?? ?? 48 8D 4D B0 48 8B F8 E8 ?? ?? ?? ?? 41 8B D6";
+        internal const string IsMentorA1 = "48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 84 C0 74 71 0F B6 86";
 
         internal const string CurrentChatEntryOffset = "8B 77 ?? 8D 46 01 89 47 14 81 FE ?? ?? ?? ?? 72 03 FF 47";
     }
 
     #region Functions
 
-    [Signature("E8 ?? ?? ?? ?? 0F B7 44 37 ??")]
-    private readonly delegate* unmanaged<RaptureShellModule*, int, uint, Utf8String*, byte, void> _changeChatChannel;
+    [Signature("E8 ?? ?? ?? ?? 0F B7 44 37 ??", Fallibility = Fallibility.Fallible)]
+    private readonly delegate* unmanaged<RaptureShellModule*, int, uint, Utf8String*, byte, void> _changeChatChannel = null!;
 
-    [Signature("4C 8B 81 ?? ?? ?? ?? 4D 85 C0 74 17")]
-    private readonly delegate* unmanaged<RaptureLogModule*, uint, ulong> _getContentIdForChatEntry;
+    [Signature("4C 8B 81 ?? ?? ?? ?? 4D 85 C0 74 17", Fallibility = Fallibility.Fallible)]
+    private readonly delegate* unmanaged<RaptureLogModule*, uint, ulong> _getContentIdForChatEntry = null!;
 
-    [Signature("E8 ?? ?? ?? ?? 8B FD 8B CD")]
-    private readonly delegate* unmanaged<IntPtr, uint, IntPtr> _indexer;
+    [Signature("E8 ?? ?? ?? ?? 8B FD 8B CD", Fallibility = Fallibility.Fallible)]
+    private readonly delegate* unmanaged<IntPtr, uint, IntPtr> _indexer = null!;
 
-    [Signature("E8 ?? ?? ?? ?? 33 C0 EB 51")]
-    private readonly delegate* unmanaged<IntPtr, ulong, byte*, ushort, void> _inviteToParty;
+    [Signature("E8 ?? ?? ?? ?? 33 C0 EB 51", Fallibility = Fallibility.Fallible)]
+    private readonly delegate* unmanaged<IntPtr, ulong, byte*, ushort, void> _inviteToParty = null!;
 
-    [Signature(("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B CB E8 ?? ?? ?? ?? 45 33 C9"))]
-    private readonly delegate* unmanaged<IntPtr, ulong, ushort, byte*, byte> _inviteToNoviceNetwork;
+    [Signature(("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B CB E8 ?? ?? ?? ?? 45 33 C9"), Fallibility = Fallibility.Fallible)]
+    private readonly delegate* unmanaged<IntPtr, ulong, ushort, byte*, byte> _inviteToNoviceNetwork = null!;
 
-    [Signature("40 53 48 83 EC 20 48 8B D9 48 8B 49 10 48 8B 01 FF 90 ?? ?? ?? ?? 48 8B 48 48")]
-    private readonly delegate* unmanaged<AgentInterface*, byte> _friendRequestBool;
+    [Signature("40 53 48 83 EC 20 48 8B D9 48 8B 49 10 48 8B 01 FF 90 ?? ?? ?? ?? 48 8B 48 48", Fallibility = Fallibility.Fallible)]
+    private readonly delegate* unmanaged<AgentInterface*, byte> _friendRequestBool = null!;
 
-    [Signature("E8 ?? ?? ?? ?? EB 35 BA")]
-    private readonly delegate* unmanaged<uint, uint, ulong, uint, byte, byte> _tryOn;
+    [Signature("E8 ?? ?? ?? ?? EB 35 BA", Fallibility = Fallibility.Fallible)]
+    private readonly delegate* unmanaged<uint, uint, ulong, uint, byte, byte> _tryOn = null!;
 
-    [Signature("E8 ?? ?? ?? ?? EB 7B 49 8B 06")]
-    private readonly delegate* unmanaged<AgentInterface*, uint, void> _linkItem;
+    [Signature("E8 ?? ?? ?? ?? EB 7B 49 8B 06", Fallibility = Fallibility.Fallible)]
+    private readonly delegate* unmanaged<AgentInterface*, uint, void> _linkItem = null!;
 
-    [Signature("E8 ?? ?? ?? ?? EB 3F 83 F8 FE")]
-    private readonly delegate* unmanaged<AgentInterface*, ushort, uint, byte, void> _itemComparison;
+    [Signature("E8 ?? ?? ?? ?? EB 3F 83 F8 FE", Fallibility = Fallibility.Fallible)]
+    private readonly delegate* unmanaged<AgentInterface*, ushort, uint, byte, void> _itemComparison = null!;
 
-    [Signature("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 41 B4 01")]
-    private readonly delegate* unmanaged<IntPtr, uint, void> _searchForRecipesUsingItem;
+    [Signature("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 41 B4 01", Fallibility = Fallibility.Fallible)]
+    private readonly delegate* unmanaged<IntPtr, uint, void> _searchForRecipesUsingItem = null!;
 
-    [Signature("E8 ?? ?? ?? ?? EB 45 45 33 C9")]
-    private readonly delegate* unmanaged<void*, uint, byte, void> _searchForItem;
+    [Signature("E8 ?? ?? ?? ?? EB 45 45 33 C9", Fallibility = Fallibility.Fallible)]
+    private readonly delegate* unmanaged<void*, uint, byte, void> _searchForItem = null!;
 
-    [Signature("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B CB E8 ?? ?? ?? ?? 84 C0 74 3A")]
-    private readonly delegate* unmanaged<AgentInterface*, uint, byte*, ushort, uint, byte, void> _agentContextYesNo;
+    [Signature("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B CB E8 ?? ?? ?? ?? 84 C0 74 3A", Fallibility = Fallibility.Fallible)]
+    private readonly delegate* unmanaged<AgentInterface*, uint, byte*, ushort, uint, byte, void> _agentContextYesNo = null!;
+    
+    [Signature("E8 ?? ?? ?? ?? 84 C0 74 0D B0 02", Fallibility = Fallibility.Fallible)]
+    private readonly delegate* unmanaged<IntPtr, byte> _isMentor = null!;
 
     #endregion
 
@@ -80,6 +84,9 @@ internal unsafe class GameFunctions : IDisposable {
 
     [Signature(Signatures.CurrentChatEntryOffset, Offset = 2)]
     private readonly byte? _currentChatEntryOffset;
+
+    [Signature(Signatures.IsMentorA1, ScanType = ScanType.StaticAddress)]
+    private readonly IntPtr? _isMentorA1;
 
     internal const int HqItemOffset = 1_000_000;
 
@@ -438,5 +445,13 @@ internal unsafe class GameFunctions : IDisposable {
                 lfg->Show();
             }
         }
+    }
+
+    internal bool IsMentor() {
+        if (this._isMentor == null || this._isMentorA1 == null || this._isMentorA1.Value == IntPtr.Zero) {
+            return false;
+        }
+
+        return this._isMentor(this._isMentorA1.Value) > 0;
     }
 }
