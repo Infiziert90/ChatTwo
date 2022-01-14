@@ -1,0 +1,16 @@
+name: Chat 2
+author: ascclemens
+punchline: Electric Boogaloo - ♪ A whole new chat, a new fantastic chat window ♪
+description: |-
+  Chat 2 is a complete rewrite of the in-game chat window as a plugin. It
+  supports:
+  
+  - Unlimited tabs
+  - Tabs that always send to a certain channel
+  - More flexible filtering
+  - RGB channel colouring
+  - Completely variable font size
+  - Sidebar tabs
+  - Unread counts
+  - Screenshot mode (obfuscate names)
+repo_url: https://git.annaclemens.io/ascclemens/ChatTwo
