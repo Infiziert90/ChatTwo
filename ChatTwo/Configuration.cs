@@ -40,7 +40,7 @@ internal class Tab {
         return this.ChatCodes.TryGetValue(message.Code.Type, out var sources) && (message.Code.Source is 0 or (ChatSource) 1 || sources.HasFlag(message.Code.Source));
     }
 
-    internal void AddMessage(Message message) {
+    internal void AddMessage(Message message, bool unread = true) {
         this.MessagesMutex.WaitOne();
         this.Messages.Add(message);
         if (this.Messages.Count > 1000) {
@@ -49,7 +49,9 @@ internal class Tab {
 
         this.MessagesMutex.ReleaseMutex();
 
-        this.Unread += 1;
+        if (unread) {
+            this.Unread += 1;
+        }
     }
 
     internal Tab Clone() {

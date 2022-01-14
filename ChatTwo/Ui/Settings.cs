@@ -2,6 +2,7 @@
 using ChatTwo.Code;
 using ChatTwo.Util;
 using Dalamud.Game.Command;
+using Dalamud.Interface;
 using ImGuiNET;
 
 namespace ChatTwo.Ui;
@@ -86,15 +87,32 @@ internal sealed class Settings : IUiComponent {
             }
 
             if (ImGui.TreeNodeEx("Tabs")) {
-                if (ImGui.Button("Add")) {
+                if (ImGuiUtil.IconButton(FontAwesomeIcon.Plus, tooltip: "Add")) {
                     this._tabs.Add(new Tab());
                 }
 
+                var toRemove = -1;
                 for (var i = 0; i < this._tabs.Count; i++) {
                     var tab = this._tabs[i];
 
                     if (ImGui.TreeNodeEx($"{tab.Name}###tab-{i}")) {
                         ImGui.PushID($"tab-{i}");
+
+                        if (ImGuiUtil.IconButton(FontAwesomeIcon.TrashAlt, tooltip: "Delete")) {
+                            toRemove = i;
+                        }
+
+                        ImGui.SameLine();
+
+                        if (ImGuiUtil.IconButton(FontAwesomeIcon.ArrowUp, tooltip: "Move up") && i > 0) {
+                            (this._tabs[i - 1], this._tabs[i]) = (this._tabs[i], this._tabs[i - 1]);
+                        }
+
+                        ImGui.SameLine();
+
+                        if (ImGuiUtil.IconButton(FontAwesomeIcon.ArrowDown, tooltip: "Move down") && i < this._tabs.Count - 1) {
+                            (this._tabs[i + 1], this._tabs[i]) = (this._tabs[i], this._tabs[i + 1]);
+                        }
 
                         ImGui.InputText("Name", ref tab.Name, 512, ImGuiInputTextFlags.EnterReturnsTrue);
                         ImGui.Checkbox("Show unread count", ref tab.DisplayUnread);
@@ -107,7 +125,7 @@ internal sealed class Settings : IUiComponent {
                             }
 
                             foreach (var channel in Enum.GetValues<InputChannel>()) {
-                                if (ImGui.Selectable(channel.ToChatType().Name() ?? "???", tab.Channel == channel)) {
+                                if (ImGui.Selectable(channel.ToChatType().Name(), tab.Channel == channel)) {
                                     tab.Channel = channel;
                                 }
                             }
@@ -151,6 +169,10 @@ internal sealed class Settings : IUiComponent {
                         ImGui.PopID();
                     }
                 }
+
+                if (toRemove > -1) {
+                    this._tabs.RemoveAt(toRemove);
+                }
             }
 
             ImGui.EndChild();
@@ -190,7 +212,7 @@ internal sealed class Settings : IUiComponent {
 
             this.Ui.Plugin.SaveConfig();
 
-            this.Ui.Plugin.Store.FilterAllTabs();
+            this.Ui.Plugin.Store.FilterAllTabs(false);
 
             if (fontSizeChanged) {
                 this.Ui.Plugin.Interface.UiBuilder.RebuildFonts();

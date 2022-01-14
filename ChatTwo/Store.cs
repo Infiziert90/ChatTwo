@@ -75,17 +75,17 @@ internal class Store : IDisposable {
         }
     }
 
-    internal void FilterAllTabs() {
+    internal void FilterAllTabs(bool unread = true) {
         foreach (var tab in this.Plugin.Config.Tabs) {
-            this.FilterTab(tab);
+            this.FilterTab(tab, unread);
         }
     }
 
-    internal void FilterTab(Tab tab) {
+    internal void FilterTab(Tab tab, bool unread) {
         using var messages = this.GetMessages();
         foreach (var message in messages.Messages) {
             if (tab.Matches(message)) {
-                tab.AddMessage(message);
+                tab.AddMessage(message, unread);
             }
         }
     }

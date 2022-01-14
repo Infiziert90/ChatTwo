@@ -81,7 +81,7 @@ internal static class ImGuiUtil {
         }
     }
 
-    internal static bool IconButton(FontAwesomeIcon icon, string? id = null) {
+    internal static bool IconButton(FontAwesomeIcon icon, string? id = null, string? tooltip = null) {
         ImGui.PushFont(UiBuilder.IconFont);
 
         var label = icon.ToIconString();
@@ -92,6 +92,12 @@ internal static class ImGuiUtil {
         var ret = ImGui.Button(label);
 
         ImGui.PopFont();
+
+        if (tooltip != null && ImGui.IsItemHovered()) {
+            ImGui.BeginTooltip();
+            ImGui.TextUnformatted(tooltip);
+            ImGui.EndTooltip();
+        }
 
         return ret;
     }
