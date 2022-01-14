@@ -32,7 +32,7 @@ internal sealed class PayloadHandler {
         this.DrawPopups();
 
         if (this._handleTooltips && ++this._hoverCounter - this._lastHoverCounter > 1) {
-            GameFunctions.CloseItemTooltip();
+            GameFunctions.GameFunctions.CloseItemTooltip();
             this._hoveredItem = 0;
             this._hoverCounter = this._lastHoverCounter = 0;
             this._handleTooltips = false;
@@ -91,7 +91,7 @@ internal sealed class PayloadHandler {
             }
             case ItemPayload item: {
                 if (this.Ui.Plugin.Config.NativeItemTooltips) {
-                    GameFunctions.OpenItemTooltip(item.ItemId);
+                    GameFunctions.GameFunctions.OpenItemTooltip(item.ItemId);
 
                     this._handleTooltips = true;
                     if (this._hoveredItem != item.ItemId) {
@@ -177,7 +177,7 @@ internal sealed class PayloadHandler {
             }
             case RawPayload raw: {
                 if (Equals(raw, ChunkUtil.PeriodicRecruitmentLink)) {
-                    GameFunctions.OpenPartyFinder();
+                    GameFunctions.GameFunctions.OpenPartyFinder();
                 }
 
                 break;
@@ -236,30 +236,30 @@ internal sealed class PayloadHandler {
         this.Log.DrawChunks(ChunkUtil.ToChunks(name, null).ToList(), false);
         ImGui.Separator();
 
-        var realItemId = (uint) (item.ItemId + (item.IsHQ ? GameFunctions.HqItemOffset : 0));
+        var realItemId = (uint) (item.ItemId + (item.IsHQ ? GameFunctions.GameFunctions.HqItemOffset : 0));
 
         if (item.Item.EquipSlotCategory.Row != 0) {
             if (ImGui.Selectable("Try On")) {
-                this.Ui.Plugin.Functions.TryOn(realItemId, 0);
+                this.Ui.Plugin.Functions.Context.TryOn(realItemId, 0);
             }
 
             if (ImGui.Selectable("Item Comparison")) {
-                this.Ui.Plugin.Functions.OpenItemComparison(realItemId);
+                this.Ui.Plugin.Functions.Context.OpenItemComparison(realItemId);
             }
         }
 
         if (item.Item.ItemSearchCategory.Value?.Category == 3) {
             if (ImGui.Selectable("Search Recipes Using This Material")) {
-                this.Ui.Plugin.Functions.SearchForRecipesUsingItem(item.ItemId);
+                this.Ui.Plugin.Functions.Context.SearchForRecipesUsingItem(item.ItemId);
             }
         }
 
         if (ImGui.Selectable("Search for Item")) {
-            this.Ui.Plugin.Functions.SearchForItem(realItemId);
+            this.Ui.Plugin.Functions.Context.SearchForItem(realItemId);
         }
 
         if (ImGui.Selectable("Link")) {
-            this.Ui.Plugin.Functions.LinkItem(realItemId);
+            this.Ui.Plugin.Functions.Context.LinkItem(realItemId);
         }
 
         if (ImGui.Selectable("Copy Item Name")) {
@@ -289,16 +289,16 @@ internal sealed class PayloadHandler {
             var isInParty = member != default;
             if (isLeader) {
                 if (!isInParty && ImGui.Selectable("Invite to Party")) {
-                    this.Ui.Plugin.Functions.InviteToParty(player.PlayerName, (ushort) player.World.RowId);
+                    this.Ui.Plugin.Functions.Party.Invite(player.PlayerName, (ushort) player.World.RowId);
                 }
 
                 if (isInParty && member != null) {
                     if (ImGui.Selectable("Promote")) {
-                        this.Ui.Plugin.Functions.Promote(player.PlayerName, (ulong) member.ContentId);
+                        this.Ui.Plugin.Functions.Party.Promote(player.PlayerName, (ulong) member.ContentId);
                     }
 
                     if (ImGui.Selectable("Kick from Party")) {
-                        this.Ui.Plugin.Functions.KickFromParty(player.PlayerName, (ulong) member.ContentId);
+                        this.Ui.Plugin.Functions.Party.Kick(player.PlayerName, (ulong) member.ContentId);
                     }
                 }
             }
@@ -309,7 +309,7 @@ internal sealed class PayloadHandler {
             }
 
             if (this.Ui.Plugin.Functions.IsMentor() && ImGui.Selectable("Invite to Novice Network")) {
-                this.Ui.Plugin.Functions.InviteToNoviceNetwork(player.PlayerName, (ushort) player.World.RowId);
+                this.Ui.Plugin.Functions.Context.InviteToNoviceNetwork(player.PlayerName, (ushort) player.World.RowId);
             }
         }
 

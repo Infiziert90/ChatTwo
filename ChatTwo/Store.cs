@@ -52,7 +52,7 @@ internal class Store : IDisposable {
             return;
         }
 
-        var contentId = this.Plugin.Functions.GetContentIdForChatLogEntry(entry.Item1);
+        var contentId = this.Plugin.Functions.Chat.GetContentIdForEntry(entry.Item1);
         entry.Item2.ContentId = contentId ?? 0;
     }
 

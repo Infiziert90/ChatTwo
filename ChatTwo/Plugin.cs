@@ -51,7 +51,7 @@ public sealed class Plugin : IDalamudPlugin {
     internal Configuration Config { get; }
     internal XivCommonBase Common { get; }
     internal TextureCache TextureCache { get; }
-    internal GameFunctions Functions { get; }
+    internal GameFunctions.GameFunctions Functions { get; }
     internal Store Store { get; }
     internal PluginUi Ui { get; }
 
@@ -60,7 +60,7 @@ public sealed class Plugin : IDalamudPlugin {
         this.Config = this.Interface!.GetPluginConfig() as Configuration ?? new Configuration();
         this.Common = new XivCommonBase();
         this.TextureCache = new TextureCache(this.DataManager!);
-        this.Functions = new GameFunctions(this);
+        this.Functions = new GameFunctions.GameFunctions(this);
         this.Store = new Store(this);
         this.Ui = new PluginUi(this);
 
@@ -70,7 +70,7 @@ public sealed class Plugin : IDalamudPlugin {
 
     public void Dispose() {
         this.Framework.Update -= this.FrameworkUpdate;
-        GameFunctions.SetChatInteractable(true);
+        GameFunctions.GameFunctions.SetChatInteractable(true);
 
         this.Ui.Dispose();
         this.Store.Dispose();
@@ -97,8 +97,8 @@ public sealed class Plugin : IDalamudPlugin {
         }
 
         foreach (var name in ChatAddonNames) {
-            if (GameFunctions.IsAddonInteractable(name)) {
-                GameFunctions.SetAddonInteractable(name, false);
+            if (GameFunctions.GameFunctions.IsAddonInteractable(name)) {
+                GameFunctions.GameFunctions.SetAddonInteractable(name, false);
             }
         }
     }

@@ -29,15 +29,15 @@ internal sealed class ChatLog : IUiComponent {
 
         this._fontIcon = this.Ui.Plugin.DataManager.GetImGuiTexture("common/font/fonticon_ps5.tex");
 
-        this.Ui.Plugin.Functions.ChatActivated += this.ChatActivated;
+        this.Ui.Plugin.Functions.Chat.Activated += this.Activated;
     }
 
     public void Dispose() {
-        this.Ui.Plugin.Functions.ChatActivated -= this.ChatActivated;
+        this.Ui.Plugin.Functions.Chat.Activated -= this.Activated;
         this._fontIcon?.Dispose();
     }
 
-    private void ChatActivated(string? input) {
+    private void Activated(string? input) {
         this.Activate = true;
         if (input != null && !this.Chat.Contains(input)) {
             this.Chat += input;
@@ -88,7 +88,7 @@ internal sealed class ChatLog : IUiComponent {
             if (activeTab is { Channel: { } channel }) {
                 ImGui.TextUnformatted(channel.ToChatType().Name());
             } else {
-                this.DrawChunks(this.Ui.Plugin.Functions.ChatChannel.name);
+                this.DrawChunks(this.Ui.Plugin.Functions.Chat.Channel.name);
             }
         } finally {
             ImGui.PopStyleVar();
@@ -114,7 +114,7 @@ internal sealed class ChatLog : IUiComponent {
                     ?.RawString ?? channel.ToString();
 
                 if (ImGui.Selectable(name)) {
-                    this.Ui.Plugin.Functions.SetChatChannel(channel);
+                    this.Ui.Plugin.Functions.Chat.SetChannel(channel);
                 }
             }
 
@@ -127,7 +127,7 @@ internal sealed class ChatLog : IUiComponent {
         var buttonWidth = afterIcon.X - beforeIcon.X;
         var inputWidth = ImGui.GetContentRegionAvail().X - buttonWidth;
 
-        var inputType = this.Ui.Plugin.Functions.ChatChannel.channel.ToChatType();
+        var inputType = this.Ui.Plugin.Functions.Chat.Channel.channel.ToChatType();
         var inputColour = this.Ui.Plugin.Config.ChatColours.TryGetValue(inputType, out var inputCol)
             ? inputCol
             : inputType.DefaultColour();
