@@ -3,7 +3,7 @@ using ChatTwo.Util;
 namespace ChatTwo.Code;
 
 internal static class ChatTypeExt {
-    internal static string? Name(this ChatType type) {
+    internal static string Name(this ChatType type) {
         return type switch {
             ChatType.Debug => "Debug",
             ChatType.Urgent => "Urgent",
@@ -206,4 +206,33 @@ internal static class ChatTypeExt {
                 return null;
         }
     }
+
+    internal static InputChannel? ToInputChannel(this ChatType type) => type switch {
+        ChatType.TellOutgoing => InputChannel.Tell,
+        ChatType.Say => InputChannel.Say,
+        ChatType.Party => InputChannel.Party,
+        ChatType.Alliance => InputChannel.Alliance,
+        ChatType.Yell => InputChannel.Yell,
+        ChatType.Shout => InputChannel.Shout,
+        ChatType.FreeCompany => InputChannel.FreeCompany,
+        ChatType.PvpTeam => InputChannel.PvpTeam,
+        ChatType.NoviceNetwork => InputChannel.NoviceNetwork,
+        ChatType.CrossLinkshell1 => InputChannel.CrossLinkshell1,
+        ChatType.CrossLinkshell2 => InputChannel.CrossLinkshell2,
+        ChatType.CrossLinkshell3 => InputChannel.CrossLinkshell3,
+        ChatType.CrossLinkshell4 => InputChannel.CrossLinkshell4,
+        ChatType.CrossLinkshell5 => InputChannel.CrossLinkshell5,
+        ChatType.CrossLinkshell6 => InputChannel.CrossLinkshell6,
+        ChatType.CrossLinkshell7 => InputChannel.CrossLinkshell7,
+        ChatType.CrossLinkshell8 => InputChannel.CrossLinkshell8,
+        ChatType.Linkshell1 => InputChannel.Linkshell1,
+        ChatType.Linkshell2 => InputChannel.Linkshell2,
+        ChatType.Linkshell3 => InputChannel.Linkshell3,
+        ChatType.Linkshell4 => InputChannel.Linkshell4,
+        ChatType.Linkshell5 => InputChannel.Linkshell5,
+        ChatType.Linkshell6 => InputChannel.Linkshell6,
+        ChatType.Linkshell7 => InputChannel.Linkshell7,
+        ChatType.Linkshell8 => InputChannel.Linkshell8,
+        _ => null,
+    };
 }

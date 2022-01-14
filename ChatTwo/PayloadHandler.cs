@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using System.Reflection;
+using ChatTwo.Code;
 using ChatTwo.Ui;
 using ChatTwo.Util;
 using Dalamud.Game.ClientState.Objects.SubKinds;
@@ -16,7 +17,7 @@ internal sealed class PayloadHandler {
     private PluginUi Ui { get; }
     private ChatLog Log { get; }
 
-    private HashSet<Payload> PopupPayloads { get; set; } = new();
+    private HashSet<(Chunk, Payload)> PopupPayloads { get; set; } = new();
 
     private bool _handleTooltips;
     private uint _hoveredItem;
@@ -40,8 +41,8 @@ internal sealed class PayloadHandler {
     }
 
     private void DrawPopups() {
-        var newPopups = new HashSet<Payload>();
-        foreach (var payload in this.PopupPayloads) {
+        var newPopups = new HashSet<(Chunk, Payload)>();
+        foreach (var (chunk, payload) in this.PopupPayloads) {
             var id = PopupId(payload);
             if (id == null) {
                 continue;
@@ -51,12 +52,12 @@ internal sealed class PayloadHandler {
                 continue;
             }
 
-            newPopups.Add(payload);
+            newPopups.Add((chunk, payload));
             ImGui.PushID(id);
 
             switch (payload) {
                 case PlayerPayload player: {
-                    this.DrawPlayerPopup(player);
+                    this.DrawPlayerPopup(chunk, player);
                     break;
                 }
                 case ItemPayload item: {
@@ -78,7 +79,7 @@ internal sealed class PayloadHandler {
                 this.LeftClickPayload(chunk, payload);
                 break;
             case ImGuiMouseButton.Right:
-                this.RightClickPayload(payload);
+                this.RightClickPayload(chunk, payload);
                 break;
         }
     }
@@ -211,11 +212,11 @@ internal sealed class PayloadHandler {
         }
     }
 
-    private void RightClickPayload(Payload payload) {
+    private void RightClickPayload(Chunk chunk, Payload payload) {
         switch (payload) {
             case PlayerPayload:
             case ItemPayload: {
-                this.PopupPayloads.Add(payload);
+                this.PopupPayloads.Add((chunk, payload));
                 ImGui.OpenPopup(PopupId(payload));
                 break;
             }
@@ -267,7 +268,7 @@ internal sealed class PayloadHandler {
         }
     }
 
-    private void DrawPlayerPopup(PlayerPayload player) {
+    private void DrawPlayerPopup(Chunk chunk, PlayerPayload player) {
         var name = player.PlayerName;
         if (player.World.IsPublic) {
             name += $"{player.World.Name}";
@@ -313,6 +314,12 @@ internal sealed class PayloadHandler {
             }
         }
 
+        var inputChannel = chunk.Message?.Code.Type.ToInputChannel();
+        if (inputChannel != null && ImGui.Selectable("Reply in Selected Chat Mode")) {
+            this.Ui.Plugin.Functions.Chat.SetChannel(inputChannel.Value);
+            this.Log.Activate = true;
+        }
+
         if (ImGui.Selectable("Target") && this.FindCharacterForPayload(player) is { } obj) {
             this.Ui.Plugin.TargetManager.SetTarget(obj);
         }
@@ -323,7 +330,6 @@ internal sealed class PayloadHandler {
 
         // Add to Blacklist 0x1C
         // View Party Finder 0x2E
-        // Reply in Selected Chat Mode 0x64
     }
 
     private PlayerCharacter? FindCharacterForPayload(PlayerPayload payload) {

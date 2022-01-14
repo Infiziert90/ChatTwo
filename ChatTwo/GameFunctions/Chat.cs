@@ -12,19 +12,26 @@ using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Client.UI.Shell;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using Siggingway;
+using ValueType = FFXIVClientStructs.FFXIV.Component.GUI.ValueType;
 
 namespace ChatTwo.GameFunctions;
 
 internal sealed unsafe class Chat : IDisposable {
+    // Functions
+
     [Signature("E8 ?? ?? ?? ?? 0F B7 44 37 ??", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<RaptureShellModule*, int, uint, Utf8String*, byte, void> _changeChatChannel = null!;
 
     [Signature("4C 8B 81 ?? ?? ?? ?? 4D 85 C0 74 17", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<RaptureLogModule*, uint, ulong> _getContentIdForChatEntry = null!;
 
+    // Hooks
+
     private delegate byte ChatLogRefreshDelegate(IntPtr log, ushort eventId, AtkValue* value);
 
     private delegate IntPtr ChangeChannelNameDelegate(IntPtr agent);
+
+    private delegate void ReplyInSelectedChatModeDelegate(AgentInterface* agent);
 
     [Signature(
         "40 53 56 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 8B F0 8B FA",
@@ -37,6 +44,23 @@ internal sealed unsafe class Chat : IDisposable {
         DetourName = nameof(ChangeChannelNameDetour)
     )]
     private Hook<ChangeChannelNameDelegate>? ChangeChannelNameHook { get; init; }
+
+    [Signature(
+        "48 89 5C 24 ?? 57 48 83 EC 30 8B B9 ?? ?? ?? ?? 48 8B D9 83 FF FE",
+        DetourName = nameof(ReplyInSelectedChatModeDetour)
+    )]
+    private Hook<ReplyInSelectedChatModeDelegate>? ReplyInSelectedChatModeHook { get; init; }
+
+    // Offsets
+
+    #pragma warning disable 0649
+
+    [Signature("8B B9 ?? ?? ?? ?? 48 8B D9 83 FF FE 0F 84", Offset = 2)]
+    private readonly int? _replyChannelOffset;
+
+    #pragma warning restore 0649
+
+    // Events
 
     internal delegate void ChatActivatedEventDelegate(string? input);
 
@@ -51,6 +75,7 @@ internal sealed unsafe class Chat : IDisposable {
 
         this.ChatLogRefreshHook?.Enable();
         this.ChangeChannelNameHook?.Enable();
+        this.ReplyInSelectedChatModeHook?.Enable();
 
         this.Plugin.ClientState.Login += this.Login;
         this.Login(null, null);
@@ -59,6 +84,7 @@ internal sealed unsafe class Chat : IDisposable {
     public void Dispose() {
         this.Plugin.ClientState.Login -= this.Login;
 
+        this.ReplyInSelectedChatModeHook?.Dispose();
         this.ChangeChannelNameHook?.Dispose();
         this.ChatLogRefreshHook?.Dispose();
 
@@ -127,27 +153,43 @@ internal sealed unsafe class Chat : IDisposable {
     }
 
     private byte ChatLogRefreshDetour(IntPtr log, ushort eventId, AtkValue* value) {
-        if (eventId == 0x31 && value != null && value->UInt is 0x05 or 0x0C) {
-            string? eventInput = null;
-
-            var str = value + 2;
-            if (str != null && str->String != null) {
-                var input = MemoryHelper.ReadStringNullTerminated((IntPtr) str->String);
-                if (input.Length > 0) {
-                    eventInput = input;
-                }
-            }
-
-            try {
-                this.Activated?.Invoke(eventInput);
-            } catch (Exception ex) {
-                PluginLog.LogError(ex, "Error in ChatActivated event");
-            }
-
-            return 0;
+        if (eventId != 0x31 || value == null || value->UInt is not (0x05 or 0x0C)) {
+            return this.ChatLogRefreshHook!.Original(log, eventId, value);
         }
 
-        return this.ChatLogRefreshHook!.Original(log, eventId, value);
+        string? eventInput = null;
+
+        var str = value + 2;
+        if (str != null && ((int) str->Type & 0xF) == (int) ValueType.String && str->String != null) {
+            var input = MemoryHelper.ReadStringNullTerminated((IntPtr) str->String);
+            if (input.Length > 0) {
+                eventInput = input;
+            }
+        }
+
+        try {
+            this.Activated?.Invoke(eventInput);
+        } catch (Exception ex) {
+            PluginLog.LogError(ex, "Error in ChatActivated event");
+        }
+
+        return 0;
+    }
+
+    private void ReplyInSelectedChatModeDetour(AgentInterface* agent) {
+        if (this._replyChannelOffset == null) {
+            goto Original;
+        }
+
+        var replyMode = *(int*) ((IntPtr) agent + this._replyChannelOffset.Value);
+        if (replyMode == -2) {
+            goto Original;
+        }
+
+        this.SetChannel((InputChannel) replyMode);
+
+        Original:
+        this.ReplyInSelectedChatModeHook!.Original(agent);
     }
 
     internal ulong? GetContentIdForEntry(uint index) {

@@ -15,5 +15,9 @@ internal class Message {
         this.Code = code;
         this.Sender = sender;
         this.Content = content;
+
+        foreach (var chunk in sender.Concat(content)) {
+            chunk.Message = this;
+        }
     }
 }

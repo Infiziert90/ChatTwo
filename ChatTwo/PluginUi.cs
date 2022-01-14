@@ -26,7 +26,7 @@ internal sealed class PluginUi : IDisposable {
     private (GCHandle, int) _jpFont;
     private (GCHandle, int) _gameSymFont;
 
-    private ImVector _ranges;
+    private readonly ImVector _ranges;
 
     private GCHandle _jpRange = GCHandle.Alloc(
         GlyphRangesJapanese.GlyphRanges,

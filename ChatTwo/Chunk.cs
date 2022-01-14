@@ -4,6 +4,7 @@ using Dalamud.Game.Text.SeStringHandling;
 namespace ChatTwo;
 
 internal abstract class Chunk {
+    internal Message? Message { get; set; }
     internal SeString? Source { get; set; }
     internal Payload? Link { get; set; }
 
