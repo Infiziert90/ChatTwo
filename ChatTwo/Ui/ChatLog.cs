@@ -172,6 +172,16 @@ internal sealed class ChatLog : IUiComponent {
     private void DrawMessageLog(Tab tab, float childHeight, bool switchedTab) {
         if (ImGui.BeginChild("##chat2-messages", new Vector2(-1, childHeight))) {
             ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, Vector2.Zero);
+            var table = tab.DisplayTimestamp && this.Ui.Plugin.Config.PrettierTimestamps;
+
+            if (table) {
+                if (!ImGui.BeginTable("timestamp-table", 2, ImGuiTableFlags.PreciseWidths)) {
+                    goto EndChild;
+                }
+
+                ImGui.TableSetupColumn("timestamps", ImGuiTableColumnFlags.WidthFixed);
+                ImGui.TableSetupColumn("messages", ImGuiTableColumnFlags.WidthStretch);
+            }
 
             // var clipper = new ImGuiListClipperPtr(ImGuiNative.ImGuiListClipper_ImGuiListClipper());
             // int numMessages;
@@ -184,10 +194,19 @@ internal sealed class ChatLog : IUiComponent {
 
                     if (tab.DisplayTimestamp) {
                         var timestamp = message.Date.ToLocalTime().ToString("t");
-                        this.DrawChunk(new TextChunk(null, null, $"[{timestamp}]") {
-                            Foreground = 0xFFFFFFFF,
-                        });
-                        ImGui.SameLine();
+                        if (table) {
+                            ImGui.TableNextColumn();
+                            ImGui.TextUnformatted(timestamp);
+                        } else {
+                            this.DrawChunk(new TextChunk(null, null, $"[{timestamp}]") {
+                                Foreground = 0xFFFFFFFF,
+                            });
+                            ImGui.SameLine();
+                        }
+                    }
+
+                    if (table) {
+                        ImGui.TableNextColumn();
                     }
 
                     if (message.Sender.Count > 0) {
@@ -220,10 +239,15 @@ internal sealed class ChatLog : IUiComponent {
                 // ImGui.SetScrollFromPosY(itemPosY - ImGui.GetWindowPos().Y);
                 ImGui.SetScrollHereY(1f);
             }
+
+            this.PayloadHandler.Draw();
+
+            if (table) {
+                ImGui.EndTable();
+            }
         }
 
-        this.PayloadHandler.Draw();
-
+        EndChild:
         ImGui.EndChild();
     }
 
@@ -421,6 +445,10 @@ internal sealed class ChatLog : IUiComponent {
         ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, Vector2.Zero);
         try {
             for (var i = 0; i < chunks.Count; i++) {
+                if (chunks[i] is TextChunk text && string.IsNullOrEmpty(text.Content)) {
+                    continue;
+                }
+
                 this.DrawChunk(chunks[i], wrap, handler);
 
                 if (i < chunks.Count - 1) {

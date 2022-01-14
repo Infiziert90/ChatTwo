@@ -13,6 +13,7 @@ internal sealed class Settings : IUiComponent {
     private bool _hideChat;
     private bool _nativeItemTooltips;
     private bool _sidebarTabView;
+    private bool _prettierTimestamps;
     private float _fontSize;
     private Dictionary<ChatType, uint> _chatColours = new();
     private List<Tab> _tabs = new();
@@ -37,6 +38,7 @@ internal sealed class Settings : IUiComponent {
         this._hideChat = config.HideChat;
         this._nativeItemTooltips = config.NativeItemTooltips;
         this._sidebarTabView = config.SidebarTabView;
+        this._prettierTimestamps = config.PrettierTimestamps;
         this._fontSize = config.FontSize;
         this._chatColours = config.ChatColours.ToDictionary(entry => entry.Key, entry => entry.Value);
         this._tabs = config.Tabs.Select(tab => tab.Clone()).ToList();
@@ -65,6 +67,7 @@ internal sealed class Settings : IUiComponent {
             ImGui.Checkbox("Hide chat", ref this._hideChat);
             ImGui.Checkbox("Show native item tooltips", ref this._nativeItemTooltips);
             ImGui.Checkbox("Show tabs in a sidebar", ref this._sidebarTabView);
+            ImGui.Checkbox("Use modern timestamp layout", ref this._prettierTimestamps);
             ImGui.DragFloat("Font size", ref this._fontSize, .0125f, 12f, 36f, "%.1f");
 
             if (ImGui.TreeNodeEx("Chat colours")) {
@@ -206,6 +209,7 @@ internal sealed class Settings : IUiComponent {
             config.HideChat = this._hideChat;
             config.NativeItemTooltips = this._nativeItemTooltips;
             config.SidebarTabView = this._sidebarTabView;
+            config.PrettierTimestamps = this._prettierTimestamps;
             config.FontSize = this._fontSize;
             config.ChatColours = this._chatColours;
             config.Tabs = this._tabs;
