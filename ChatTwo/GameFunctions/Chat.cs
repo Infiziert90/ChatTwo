@@ -213,7 +213,13 @@ internal sealed unsafe class Chat : IDisposable {
 
             target.StringPtr = tellTargetPtr == null ? zero : tellTargetPtr;
             target.StringLength = bytes.Length;
-            this._changeChatChannel(RaptureShellModule.Instance, (int) (channel + 1), channel.LinkshellIndex(), &target, 1);
+
+            var idx = channel.LinkshellIndex();
+            if (idx == uint.MaxValue) {
+                idx = 0;
+            }
+
+            this._changeChatChannel(RaptureShellModule.Instance, (int) channel, idx, &target, 1);
         }
     }
 }
