@@ -65,7 +65,7 @@ internal sealed class Settings : IUiComponent {
             ImGui.Checkbox("Hide chat", ref this._hideChat);
             ImGui.Checkbox("Show native item tooltips", ref this._nativeItemTooltips);
             ImGui.Checkbox("Show tabs in a sidebar", ref this._sidebarTabView);
-            ImGui.DragFloat("Font size", ref this._fontSize, .5f, 12f, 36f);
+            ImGui.DragFloat("Font size", ref this._fontSize, .0125f, 12f, 36f, "%.1f");
 
             if (ImGui.TreeNodeEx("Chat colours")) {
                 foreach (var type in Enum.GetValues<ChatType>()) {
