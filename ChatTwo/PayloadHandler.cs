@@ -309,6 +309,10 @@ internal sealed class PayloadHandler {
                 this.Ui.Plugin.Functions.SendFriendRequest(player.PlayerName, (ushort) player.World.RowId);
             }
 
+            if (ImGui.Selectable("Add to Blacklist")) {
+                this.Ui.Plugin.Functions.AddToBlacklist(player.PlayerName, (ushort) player.World.RowId);
+            }
+
             if (this.Ui.Plugin.Functions.IsMentor() && ImGui.Selectable("Invite to Novice Network")) {
                 this.Ui.Plugin.Functions.Context.InviteToNoviceNetwork(player.PlayerName, (ushort) player.World.RowId);
             }
@@ -328,7 +332,6 @@ internal sealed class PayloadHandler {
 
         ImGui.Checkbox("Screenshot mode", ref this.Ui.ScreenshotMode);
 
-        // Add to Blacklist 0x1C
         // View Party Finder 0x2E
     }
 

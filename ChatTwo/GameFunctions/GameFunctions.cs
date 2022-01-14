@@ -83,6 +83,14 @@ internal unsafe class GameFunctions : IDisposable {
     }
 
     internal void SendFriendRequest(string name, ushort world) {
+        this.ListCommand(name, world, "friendlist");
+    }
+
+    internal void AddToBlacklist(string name, ushort world) {
+        this.ListCommand(name, world, "blist");
+    }
+
+    private void ListCommand(string name, ushort world, string commandName) {
         var row = this.Plugin.DataManager.GetExcelSheet<World>()!.GetRow(world);
         if (row == null) {
             return;
@@ -90,7 +98,7 @@ internal unsafe class GameFunctions : IDisposable {
 
         var worldName = row.Name.RawString;
         this._replacementName = $"{name}@{worldName}";
-        this.Plugin.Common.Functions.Chat.SendMessage($"/friendlist add {this._placeholder}");
+        this.Plugin.Common.Functions.Chat.SendMessage($"/{commandName} add {this._placeholder}");
     }
 
     internal static void SetAddonInteractable(string name, bool interactable) {
