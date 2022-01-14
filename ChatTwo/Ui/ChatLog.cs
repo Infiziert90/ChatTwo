@@ -79,7 +79,7 @@ internal sealed class ChatLog : IUiComponent {
         }
 
         Tab? activeTab = null;
-        if (currentTab > -1) {
+        if (currentTab > -1 && currentTab < this.Ui.Plugin.Config.Tabs.Count - 1) {
             activeTab = this.Ui.Plugin.Config.Tabs[currentTab];
         }
 
@@ -238,7 +238,10 @@ internal sealed class ChatLog : IUiComponent {
             var tab = this.Ui.Plugin.Config.Tabs[tabI];
 
             var unread = tabI == this._lastTab || !tab.DisplayUnread || tab.Unread == 0 ? "" : $" ({tab.Unread})";
-            if (!ImGui.BeginTabItem($"{tab.Name}{unread}###log-tab-{tabI}")) {
+            var draw = ImGui.BeginTabItem($"{tab.Name}{unread}###log-tab-{tabI}");
+            this.DrawTabContextMenu(tab, tabI);
+
+            if (!draw) {
                 continue;
             }
 
@@ -260,7 +263,14 @@ internal sealed class ChatLog : IUiComponent {
     private int DrawTabSidebar() {
         var currentTab = -1;
 
-        ImGui.Columns(2);
+        if (!ImGui.BeginTable("tabs-table", 2, ImGuiTableFlags.BordersInnerV | ImGuiTableFlags.SizingStretchProp | ImGuiTableFlags.Resizable)) {
+            return -1;
+        }
+
+        ImGui.TableSetupColumn("tabs", ImGuiTableColumnFlags.None, 1);
+        ImGui.TableSetupColumn("chat", ImGuiTableColumnFlags.None, 4);
+
+        ImGui.TableNextColumn();
 
         var switchedTab = false;
         var childHeight = GetRemainingHeightForMessageLog();
@@ -269,7 +279,10 @@ internal sealed class ChatLog : IUiComponent {
                 var tab = this.Ui.Plugin.Config.Tabs[tabI];
 
                 var unread = tabI == this._lastTab || !tab.DisplayUnread || tab.Unread == 0 ? "" : $" ({tab.Unread})";
-                if (!ImGui.Selectable($"{tab.Name}{unread}###log-tab-{tabI}", this._lastTab == tabI)) {
+                var clicked = ImGui.Selectable($"{tab.Name}{unread}###log-tab-{tabI}", this._lastTab == tabI);
+                this.DrawTabContextMenu(tab, tabI);
+
+                if (!clicked) {
                     continue;
                 }
 
@@ -281,7 +294,7 @@ internal sealed class ChatLog : IUiComponent {
 
         ImGui.EndChild();
 
-        ImGui.NextColumn();
+        ImGui.TableNextColumn();
 
         if (currentTab == -1 && this._lastTab < this.Ui.Plugin.Config.Tabs.Count) {
             currentTab = this._lastTab;
@@ -292,9 +305,59 @@ internal sealed class ChatLog : IUiComponent {
             this.DrawMessageLog(this.Ui.Plugin.Config.Tabs[currentTab], childHeight, switchedTab);
         }
 
-        ImGui.Columns();
+        ImGui.EndTable();
 
         return currentTab;
+    }
+
+    private void DrawTabContextMenu(Tab tab, int i) {
+        if (!ImGui.BeginPopupContextItem()) {
+            return;
+        }
+
+        var tabs = this.Ui.Plugin.Config.Tabs;
+        var anyChanged = false;
+
+        ImGui.PushID($"tab-context-menu-{i}");
+
+        ImGui.SetNextItemWidth(250f);
+        if (ImGui.InputText("##tab-name", ref tab.Name, 128)) {
+            anyChanged = true;
+        }
+
+        if (ImGuiUtil.IconButton(FontAwesomeIcon.TrashAlt, tooltip: "Delete tab")) {
+            tabs.RemoveAt(i);
+            anyChanged = true;
+        }
+
+        ImGui.SameLine();
+
+        var (leftIcon, leftTooltip) = this.Ui.Plugin.Config.SidebarTabView
+            ? (FontAwesomeIcon.ArrowUp, "Move up")
+            : ((FontAwesomeIcon) 61536, "Move left");
+        if (ImGuiUtil.IconButton(leftIcon, tooltip: leftTooltip) && i > 0) {
+            (tabs[i - 1], tabs[i]) = (tabs[i], tabs[i - 1]);
+            ImGui.CloseCurrentPopup();
+            anyChanged = true;
+        }
+
+        ImGui.SameLine();
+
+        var (rightIcon, rightTooltip) = this.Ui.Plugin.Config.SidebarTabView
+            ? (FontAwesomeIcon.ArrowDown, "Move down")
+            : (FontAwesomeIcon.ArrowRight, "Move right");
+        if (ImGuiUtil.IconButton(rightIcon, tooltip: rightTooltip) && i < tabs.Count - 1) {
+            (tabs[i + 1], tabs[i]) = (tabs[i], tabs[i + 1]);
+            ImGui.CloseCurrentPopup();
+            anyChanged = true;
+        }
+
+        if (anyChanged) {
+            this.Ui.Plugin.SaveConfig();
+        }
+
+        ImGui.PopID();
+        ImGui.EndPopup();
     }
 
     private unsafe int Callback(ImGuiInputTextCallbackData* data) {
