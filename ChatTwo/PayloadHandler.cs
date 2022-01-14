@@ -282,20 +282,33 @@ internal sealed class PayloadHandler {
                 this.Log.Activate = true;
             }
 
-            if (ImGui.Selectable("Invite to Party")) {
-                // FIXME: don't show if player is in your party or if you're in their party
-                // FIXME: don't show if in party and not leader
-                this.Ui.Plugin.Functions.InviteToParty(player.PlayerName, (ushort) player.World.RowId);
+            var party = this.Ui.Plugin.PartyList;
+            var leader = (ulong?) party[(int) party.PartyLeaderIndex]?.ContentId;
+            var isLeader = party.Length == 0 || this.Ui.Plugin.ClientState.LocalContentId == leader;
+            var member = party.FirstOrDefault(member => member.Name.TextValue == player.PlayerName && member.World.Id == player.World.RowId);
+            var isInParty = member != default;
+            if (isLeader) {
+                if (!isInParty && ImGui.Selectable("Invite to Party")) {
+                    this.Ui.Plugin.Functions.InviteToParty(player.PlayerName, (ushort) player.World.RowId);
+                }
+
+                if (isInParty && member != null) {
+                    if (ImGui.Selectable("Promote")) {
+                        this.Ui.Plugin.Functions.Promote(player.PlayerName, (ulong) member.ContentId);
+                    }
+
+                    if (ImGui.Selectable("Kick from Party")) {
+                        this.Ui.Plugin.Functions.KickFromParty(player.PlayerName, (ulong) member.ContentId);
+                    }
+                }
             }
 
-            if (ImGui.Selectable("Send Friend Request")) {
-                // FIXME: this shows window, clicking yes doesn't work
-                // FIXME: only show if not already friend
+            var isFriend = this.Ui.Plugin.Common.Functions.FriendList.List.Any(friend => friend.Name.TextValue == player.PlayerName && friend.HomeWorld == player.World.RowId);
+            if (!isFriend && ImGui.Selectable("Send Friend Request")) {
                 this.Ui.Plugin.Functions.SendFriendRequest(player.PlayerName, (ushort) player.World.RowId);
             }
 
             if (this.Ui.Plugin.Functions.IsMentor() && ImGui.Selectable("Invite to Novice Network")) {
-                // FIXME: only show if character is mentor and target is sprout/returner
                 this.Ui.Plugin.Functions.InviteToNoviceNetwork(player.PlayerName, (ushort) player.World.RowId);
             }
         }

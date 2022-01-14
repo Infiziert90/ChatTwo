@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Runtime.InteropServices;
+using System.Text;
 using ChatTwo.Code;
 using ChatTwo.Util;
 using Dalamud.Game.Text.SeStringHandling;
@@ -12,6 +13,7 @@ using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Client.UI.Shell;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using Lumina.Excel.GeneratedSheets;
 using Siggingway;
 
 namespace ChatTwo;
@@ -21,6 +23,7 @@ internal unsafe class GameFunctions : IDisposable {
         internal const string ChatLogRefresh = "40 53 56 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 8B F0 8B FA";
         internal const string ChangeChannelName = "E8 ?? ?? ?? ?? BA ?? ?? ?? ?? 48 8D 4D B0 48 8B F8 E8 ?? ?? ?? ?? 41 8B D6";
         internal const string IsMentorA1 = "48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 84 C0 74 71 0F B6 86";
+        internal const string ResolveTextCommandPlaceholder = "E8 ?? ?? ?? ?? 49 8D 4F 18 4C 8B E0";
 
         internal const string CurrentChatEntryOffset = "8B 77 ?? 8D 46 01 89 47 14 81 FE ?? ?? ?? ?? 72 03 FF 47";
     }
@@ -39,11 +42,8 @@ internal unsafe class GameFunctions : IDisposable {
     [Signature("E8 ?? ?? ?? ?? 33 C0 EB 51", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<IntPtr, ulong, byte*, ushort, void> _inviteToParty = null!;
 
-    [Signature(("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B CB E8 ?? ?? ?? ?? 45 33 C9"), Fallibility = Fallibility.Fallible)]
+    [Signature("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B CB E8 ?? ?? ?? ?? 45 33 C9", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<IntPtr, ulong, ushort, byte*, byte> _inviteToNoviceNetwork = null!;
-
-    [Signature("40 53 48 83 EC 20 48 8B D9 48 8B 49 10 48 8B 01 FF 90 ?? ?? ?? ?? 48 8B 48 48", Fallibility = Fallibility.Fallible)]
-    private readonly delegate* unmanaged<AgentInterface*, byte> _friendRequestBool = null!;
 
     [Signature("E8 ?? ?? ?? ?? EB 35 BA", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<uint, uint, ulong, uint, byte, byte> _tryOn = null!;
@@ -60,11 +60,14 @@ internal unsafe class GameFunctions : IDisposable {
     [Signature("E8 ?? ?? ?? ?? EB 45 45 33 C9", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<void*, uint, byte, void> _searchForItem = null!;
 
-    [Signature("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B CB E8 ?? ?? ?? ?? 84 C0 74 3A", Fallibility = Fallibility.Fallible)]
-    private readonly delegate* unmanaged<AgentInterface*, uint, byte*, ushort, uint, byte, void> _agentContextYesNo = null!;
-    
     [Signature("E8 ?? ?? ?? ?? 84 C0 74 0D B0 02", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<IntPtr, byte> _isMentor = null!;
+
+    [Signature("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 49 8B 56 20", Fallibility = Fallibility.Fallible)]
+    private readonly delegate* unmanaged<AgentInterface*, byte*, ushort, ulong, void> _promote = null!;
+
+    [Signature("E8 ?? ?? ?? ?? EB 66 49 8B 4E 20", Fallibility = Fallibility.Fallible)]
+    private readonly delegate* unmanaged<AgentInterface*, byte*, ushort, ulong, void> _kick = null!;
 
     #endregion
 
@@ -74,19 +77,28 @@ internal unsafe class GameFunctions : IDisposable {
 
     private delegate IntPtr ChangeChannelNameDelegate(IntPtr agent);
 
+    private delegate IntPtr ResolveTextCommandPlaceholderDelegate(IntPtr a1, byte* placeholderText, byte a3, byte a4);
+
     [Signature(Signatures.ChatLogRefresh, DetourName = nameof(ChatLogRefreshDetour))]
     private Hook<ChatLogRefreshDelegate>? ChatLogRefreshHook { get; init; }
 
     [Signature(Signatures.ChangeChannelName, DetourName = nameof(ChangeChannelNameDetour))]
     private Hook<ChangeChannelNameDelegate>? ChangeChannelNameHook { get; init; }
 
+    [Signature(Signatures.ResolveTextCommandPlaceholder, DetourName = nameof(ResolveTextCommandPlaceholderDetour))]
+    private Hook<ResolveTextCommandPlaceholderDelegate>? ResolveTextCommandPlaceholderHook { get; init; }
+
     #endregion
+
+    #pragma warning disable 0649
 
     [Signature(Signatures.CurrentChatEntryOffset, Offset = 2)]
     private readonly byte? _currentChatEntryOffset;
 
     [Signature(Signatures.IsMentorA1, ScanType = ScanType.StaticAddress)]
     private readonly IntPtr? _isMentorA1;
+
+    #pragma warning restore 0649
 
     internal const int HqItemOffset = 1_000_000;
 
@@ -105,6 +117,7 @@ internal unsafe class GameFunctions : IDisposable {
 
         this.ChatLogRefreshHook?.Enable();
         this.ChangeChannelNameHook?.Enable();
+        this.ResolveTextCommandPlaceholderHook?.Enable();
 
         this.Plugin.ClientState.Login += this.Login;
         this.Login(null, null);
@@ -112,9 +125,12 @@ internal unsafe class GameFunctions : IDisposable {
 
     public void Dispose() {
         this.Plugin.ClientState.Login -= this.Login;
+        this.ResolveTextCommandPlaceholderHook?.Dispose();
         this.ChangeChannelNameHook?.Dispose();
         this.ChatLogRefreshHook?.Dispose();
         this.ChatActivated = null;
+
+        Marshal.FreeHGlobal(this._placeholderNamePtr);
     }
 
     private void Login(object? sender, EventArgs? e) {
@@ -165,17 +181,14 @@ internal unsafe class GameFunctions : IDisposable {
     }
 
     internal void SendFriendRequest(string name, ushort world) {
-        if (this._agentContextYesNo == null || this._friendRequestBool == null) {
+        var row = this.Plugin.DataManager.GetExcelSheet<World>()!.GetRow(world);
+        if (row == null) {
             return;
         }
 
-        var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.Context);
-        var a6 = this._friendRequestBool(agent) == 0 ? (byte) 1 : (byte) 0;
-
-        fixed (byte* namePtr = name.ToTerminatedBytes()) {
-            // 6.05: 20DA57
-            this._agentContextYesNo(agent, 149, namePtr, world, 10_955, a6);
-        }
+        var worldName = row.Name.RawString;
+        this._replacementName = $"{name}@{worldName}";
+        this.Plugin.Common.Functions.Chat.SendMessage($"/friendlist add {this._placeholder}");
     }
 
     internal void InviteToNoviceNetwork(string name, ushort world) {
@@ -453,5 +466,58 @@ internal unsafe class GameFunctions : IDisposable {
         }
 
         return this._isMentor(this._isMentorA1.Value) > 0;
+    }
+
+    internal void KickFromParty(string name, ulong contentId) {
+        if (this._kick == null) {
+            return;
+        }
+
+        var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.SocialPartyMember);
+        if (agent == null) {
+            return;
+        }
+
+        fixed (byte* namePtr = name.ToTerminatedBytes()) {
+            this._kick(agent, namePtr, 0, contentId);
+        }
+    }
+
+    internal void Promote(string name, ulong contentId) {
+        if (this._promote == null) {
+            return;
+        }
+
+        var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.SocialPartyMember);
+        if (agent == null) {
+            return;
+        }
+
+        fixed (byte* namePtr = name.ToTerminatedBytes()) {
+            this._promote(agent, namePtr, 0, contentId);
+        }
+    }
+
+    private readonly IntPtr _placeholderNamePtr = Marshal.AllocHGlobal(128);
+    private readonly string _placeholder = $"<{Guid.NewGuid():N}>";
+    private string? _replacementName;
+
+    private IntPtr ResolveTextCommandPlaceholderDetour(IntPtr a1, byte* placeholderText, byte a3, byte a4) {
+        if (this._replacementName == null) {
+            goto Original;
+        }
+
+        var placeholder = MemoryHelper.ReadStringNullTerminated((IntPtr) placeholderText);
+        if (placeholder != this._placeholder) {
+            goto Original;
+        }
+
+        MemoryHelper.WriteString(this._placeholderNamePtr, this._replacementName);
+        this._replacementName = null;
+
+        return this._placeholderNamePtr;
+
+        Original:
+        return this.ResolveTextCommandPlaceholderHook!.Original(a1, placeholderText, a3, a4);
     }
 }

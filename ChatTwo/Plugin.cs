@@ -2,6 +2,7 @@
 using Dalamud.Game;
 using Dalamud.Game.ClientState;
 using Dalamud.Game.ClientState.Objects;
+using Dalamud.Game.ClientState.Party;
 using Dalamud.Game.Command;
 using Dalamud.Game.Gui;
 using Dalamud.IoC;
@@ -37,6 +38,9 @@ public sealed class Plugin : IDalamudPlugin {
 
     [PluginService]
     internal ObjectTable ObjectTable { get; init; }
+
+    [PluginService]
+    internal PartyList PartyList { get; init; }
 
     [PluginService]
     internal SigScanner SigScanner { get; init; }
