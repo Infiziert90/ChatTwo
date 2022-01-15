@@ -97,7 +97,7 @@ internal sealed class Settings : IUiComponent {
             var config = this.Ui.Plugin.Config;
 
             var hideChatChanged = this.Mutable.HideChat != this.Ui.Plugin.Config.HideChat;
-            var fontSizeChanged = Math.Abs(this.Mutable.FontSize - this.Ui.Plugin.Config.FontSize) > float.Epsilon;
+            var fontSizeChanged = Math.Abs(this.Mutable.FontSize - this.Ui.Plugin.Config.FontSize) > 0.001;
 
             config.UpdateFrom(this.Mutable);
 
