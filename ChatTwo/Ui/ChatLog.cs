@@ -174,6 +174,13 @@ internal sealed class ChatLog : IUiComponent {
             ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, Vector2.Zero);
             var table = tab.DisplayTimestamp && this.Ui.Plugin.Config.PrettierTimestamps;
 
+            if (this.Ui.Plugin.Config.MoreCompactPretty) {
+                var padding = ImGui.GetStyle().CellPadding;
+                padding.Y = 0;
+
+                ImGui.PushStyleVar(ImGuiStyleVar.CellPadding, padding);
+            }
+            
             if (table) {
                 if (!ImGui.BeginTable("timestamp-table", 2, ImGuiTableFlags.PreciseWidths)) {
                     goto EndChild;
@@ -227,7 +234,7 @@ internal sealed class ChatLog : IUiComponent {
                 // }
             } finally {
                 tab.MessagesMutex.ReleaseMutex();
-                ImGui.PopStyleVar();
+                ImGui.PopStyleVar(this.Ui.Plugin.Config.MoreCompactPretty ? 2 : 1);
             }
 
             // PluginLog.Log($"numDrawn: {numDrawn}");
