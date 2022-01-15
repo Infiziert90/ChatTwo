@@ -16,6 +16,7 @@ internal class Configuration : IPluginConfiguration {
     public bool CanResize = true;
     public bool ShowTitleBar;
     public float FontSize = 17f;
+    public float WindowAlpha = 1f;
     public Dictionary<ChatType, uint> ChatColours = new();
     public List<Tab> Tabs = new();
 
@@ -29,6 +30,7 @@ internal class Configuration : IPluginConfiguration {
         this.CanResize = other.CanResize;
         this.ShowTitleBar = other.ShowTitleBar;
         this.FontSize = other.FontSize;
+        this.WindowAlpha = other.WindowAlpha;
         this.ChatColours = other.ChatColours.ToDictionary(entry => entry.Key, entry => entry.Value);
         this.Tabs = other.Tabs.Select(t => t.Clone()).ToList();
     }

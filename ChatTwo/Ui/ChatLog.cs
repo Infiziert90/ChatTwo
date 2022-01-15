@@ -96,6 +96,8 @@ internal sealed class ChatLog : IUiComponent {
                - ImGui.GetStyle().ItemSpacing.Y * 4;
     }
 
+    private unsafe ImGuiViewport* _lastViewport;
+
     public unsafe void Draw() {
         var flags = ImGuiWindowFlags.None;
         if (!this.Ui.Plugin.Config.CanMove) {
@@ -110,10 +112,17 @@ internal sealed class ChatLog : IUiComponent {
             flags |= ImGuiWindowFlags.NoTitleBar;
         }
 
+        if (this._lastViewport == ImGuiHelpers.MainViewport.NativePtr) {
+            ImGui.SetNextWindowBgAlpha(this.Ui.Plugin.Config.WindowAlpha);
+        }
+
         if (!ImGui.Begin($"{this.Ui.Plugin.Name}##chat", flags)) {
+            this._lastViewport = ImGui.GetWindowViewport().NativePtr;
             ImGui.End();
             return;
         }
+
+        this._lastViewport = ImGui.GetWindowViewport().NativePtr;
 
         var currentTab = this.Ui.Plugin.Config.SidebarTabView
             ? this.DrawTabSidebar()

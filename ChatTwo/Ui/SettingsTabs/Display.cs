@@ -21,7 +21,18 @@ internal sealed class Display : ISettingsTab {
             ImGui.Checkbox("More compact modern layout", ref this.Mutable.MoreCompactPretty);
         }
 
-        ImGui.DragFloat("Font size", ref this.Mutable.FontSize, .0125f, 12f, 36f, "%.1f");
+        ImGui.DragFloat("Font size", ref this.Mutable.FontSize, .0125f, 12f, 36f, $"{this.Mutable.FontSize:N1}");
+        if (ImGui.DragFloat("Window opacity", ref this.Mutable.WindowAlpha, .0025f, 0f, 1f, $"{this.Mutable.WindowAlpha * 100f:N2}%%")) {
+            switch (this.Mutable.WindowAlpha) {
+                case > 1f and <= 100f:
+                    this.Mutable.WindowAlpha /= 100f;
+                    break;
+                case < 0f or > 100f:
+                    this.Mutable.WindowAlpha = 1f;
+                    break;
+            }
+        }
+
         ImGui.Checkbox("Allow moving main window", ref this.Mutable.CanMove);
         ImGui.Checkbox("Allow resizing main window", ref this.Mutable.CanResize);
         ImGui.Checkbox("Show title bar for main window", ref this.Mutable.ShowTitleBar);
