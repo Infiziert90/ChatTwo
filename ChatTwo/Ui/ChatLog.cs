@@ -79,7 +79,7 @@ internal sealed class ChatLog : IUiComponent {
         }
 
         Tab? activeTab = null;
-        if (currentTab > -1 && currentTab < this.Ui.Plugin.Config.Tabs.Count - 1) {
+        if (currentTab > -1 && currentTab < this.Ui.Plugin.Config.Tabs.Count) {
             activeTab = this.Ui.Plugin.Config.Tabs[currentTab];
         }
 
