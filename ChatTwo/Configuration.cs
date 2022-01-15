@@ -12,9 +12,26 @@ internal class Configuration : IPluginConfiguration {
     public bool PrettierTimestamps = true;
     public bool MoreCompactPretty;
     public bool SidebarTabView;
+    public bool CanMove = true;
+    public bool CanResize = true;
+    public bool ShowTitleBar;
     public float FontSize = 17f;
     public Dictionary<ChatType, uint> ChatColours = new();
     public List<Tab> Tabs = new();
+
+    internal void UpdateFrom(Configuration other) {
+        this.HideChat = other.HideChat;
+        this.NativeItemTooltips = other.NativeItemTooltips;
+        this.PrettierTimestamps = other.PrettierTimestamps;
+        this.MoreCompactPretty = other.MoreCompactPretty;
+        this.SidebarTabView = other.SidebarTabView;
+        this.CanMove = other.CanMove;
+        this.CanResize = other.CanResize;
+        this.ShowTitleBar = other.ShowTitleBar;
+        this.FontSize = other.FontSize;
+        this.ChatColours = other.ChatColours.ToDictionary(entry => entry.Key, entry => entry.Value);
+        this.Tabs = other.Tabs.Select(t => t.Clone()).ToList();
+    }
 }
 
 [Serializable]

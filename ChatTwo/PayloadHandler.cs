@@ -87,7 +87,7 @@ internal sealed class PayloadHandler {
 
     internal void Hover(Payload payload) {
         var hoverSize = 250f * ImGuiHelpers.GlobalScale;
-        
+
         switch (payload) {
             case StatusPayload status: {
                 this.DoHover(() => this.HoverStatus(status), hoverSize);

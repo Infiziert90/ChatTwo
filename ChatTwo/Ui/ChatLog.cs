@@ -65,7 +65,20 @@ internal sealed class ChatLog : IUiComponent {
     }
 
     public unsafe void Draw() {
-        if (!ImGui.Begin($"{this.Ui.Plugin.Name}##chat", ImGuiWindowFlags.NoTitleBar)) {
+        var flags = ImGuiWindowFlags.None;
+        if (!this.Ui.Plugin.Config.CanMove) {
+            flags |= ImGuiWindowFlags.NoMove;
+        }
+
+        if (!this.Ui.Plugin.Config.CanResize) {
+            flags |= ImGuiWindowFlags.NoResize;
+        }
+
+        if (!this.Ui.Plugin.Config.ShowTitleBar) {
+            flags |= ImGuiWindowFlags.NoTitleBar;
+        }
+
+        if (!ImGui.Begin($"{this.Ui.Plugin.Name}##chat", flags)) {
             ImGui.End();
             return;
         }
@@ -180,7 +193,7 @@ internal sealed class ChatLog : IUiComponent {
 
                 ImGui.PushStyleVar(ImGuiStyleVar.CellPadding, padding);
             }
-            
+
             if (table) {
                 if (!ImGui.BeginTable("timestamp-table", 2, ImGuiTableFlags.PreciseWidths)) {
                     goto EndChild;
