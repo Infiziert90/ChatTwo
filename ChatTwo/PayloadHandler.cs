@@ -6,6 +6,7 @@ using ChatTwo.Util;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
+using Dalamud.Interface;
 using Dalamud.Logging;
 using Dalamud.Utility;
 using ImGuiNET;
@@ -85,9 +86,11 @@ internal sealed class PayloadHandler {
     }
 
     internal void Hover(Payload payload) {
+        var hoverSize = 250f * ImGuiHelpers.GlobalScale;
+        
         switch (payload) {
             case StatusPayload status: {
-                this.DoHover(() => this.HoverStatus(status), 250f);
+                this.DoHover(() => this.HoverStatus(status), hoverSize);
                 break;
             }
             case ItemPayload item: {
@@ -105,7 +108,7 @@ internal sealed class PayloadHandler {
                     break;
                 }
 
-                this.DoHover(() => this.HoverItem(item), 250f);
+                this.DoHover(() => this.HoverItem(item), hoverSize);
                 break;
             }
         }
@@ -131,9 +134,10 @@ internal sealed class PayloadHandler {
         var lineHeight = ImGui.CalcTextSize("A").Y;
 
         var cursor = ImGui.GetCursorPos();
-        ImGui.Image(icon.ImGuiHandle, new Vector2(icon.Width, icon.Height));
+        var size = new Vector2(icon.Width, icon.Height) * ImGuiHelpers.GlobalScale;
+        ImGui.Image(icon.ImGuiHandle, size);
         ImGui.SameLine();
-        ImGui.SetCursorPos(cursor + new Vector2(icon.Width + 4, (float) icon.Height / 2 - lineHeight / 2));
+        ImGui.SetCursorPos(cursor + new Vector2(size.X + 4, size.Y / 2 - lineHeight / 2));
     }
 
     private void HoverStatus(StatusPayload status) {

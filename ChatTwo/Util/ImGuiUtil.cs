@@ -52,9 +52,8 @@ internal static class ImGuiUtil {
                     return;
                 }
 
-                const float scale = 1.0f;
                 var widthLeft = ImGui.GetContentRegionAvail().X;
-                var endPrevLine = ImGuiNative.ImFont_CalcWordWrapPositionA(ImGui.GetFont().NativePtr, scale, text, textEnd, widthLeft);
+                var endPrevLine = ImGuiNative.ImFont_CalcWordWrapPositionA(ImGui.GetFont().NativePtr, ImGuiHelpers.GlobalScale, text, textEnd, widthLeft);
                 if (endPrevLine == null) {
                     return;
                 }
@@ -68,7 +67,7 @@ internal static class ImGuiUtil {
                         ++text;
                     } // skip a space at start of line
 
-                    endPrevLine = ImGuiNative.ImFont_CalcWordWrapPositionA(ImGui.GetFont().NativePtr, scale, text, textEnd, widthLeft);
+                    endPrevLine = ImGuiNative.ImFont_CalcWordWrapPositionA(ImGui.GetFont().NativePtr, ImGuiHelpers.GlobalScale, text, textEnd, widthLeft);
                     if (endPrevLine == null) {
                         ImGui.TextUnformatted("");
                         ImGui.TextUnformatted("");

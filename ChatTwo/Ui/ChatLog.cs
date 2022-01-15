@@ -351,7 +351,7 @@ internal sealed class ChatLog : IUiComponent {
 
         ImGui.PushID($"tab-context-menu-{i}");
 
-        ImGui.SetNextItemWidth(250f);
+        ImGui.SetNextItemWidth(250f * ImGuiHelpers.GlobalScale);
         if (ImGui.InputText("##tab-name", ref tab.Name, 128)) {
             anyChanged = true;
         }
@@ -474,7 +474,7 @@ internal sealed class ChatLog : IUiComponent {
                 var texSize = new Vector2(this._fontIcon.Width, this._fontIcon.Height);
 
                 var sizeRatio = this.Ui.Plugin.Config.FontSize / bounds.Value.W;
-                var size = new Vector2(bounds.Value.Z, bounds.Value.W) * sizeRatio;
+                var size = new Vector2(bounds.Value.Z, bounds.Value.W) * sizeRatio * ImGuiHelpers.GlobalScale;
 
                 var uv0 = new Vector2(bounds.Value.X, bounds.Value.Y - 2) / texSize;
                 var uv1 = new Vector2(bounds.Value.X + bounds.Value.Z, bounds.Value.Y - 2 + bounds.Value.W) / texSize;
