@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using ChatTwo.Code;
 using ChatTwo.Util;
+using Dalamud.Game.Command;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface;
 using ImGuiNET;
@@ -26,6 +27,9 @@ internal sealed class ChatLog : IUiComponent {
     internal ChatLog(PluginUi ui) {
         this.Ui = ui;
         this.PayloadHandler = new PayloadHandler(this.Ui, this);
+        this.Ui.Plugin.CommandManager.AddHandler("/clearlog2", new CommandInfo(this.ClearLog) {
+            HelpMessage = "Clears the Chat 2 chat log",
+        });
 
         this._fontIcon = this.Ui.Plugin.DataManager.GetImGuiTexture("common/font/fonticon_ps5.tex");
 
@@ -35,12 +39,40 @@ internal sealed class ChatLog : IUiComponent {
     public void Dispose() {
         this.Ui.Plugin.Functions.Chat.Activated -= this.Activated;
         this._fontIcon?.Dispose();
+        this.Ui.Plugin.CommandManager.RemoveHandler("/clearlog2");
     }
 
     private void Activated(string? input) {
         this.Activate = true;
         if (input != null && !this.Chat.Contains(input)) {
             this.Chat += input;
+        }
+    }
+
+    private void ClearLog(string command, string arguments) {
+        switch (arguments) {
+            case "all":
+                using (var messages = this.Ui.Plugin.Store.GetMessages()) {
+                    messages.Messages.Clear();
+                }
+
+                foreach (var tab in this.Ui.Plugin.Config.Tabs) {
+                    tab.Clear();
+                }
+
+                break;
+            case "help":
+                this.Ui.Plugin.ChatGui.Print("- /clearlog2: clears the active tab's log");
+                this.Ui.Plugin.ChatGui.Print("- /clearlog2 all: clears all tabs' logs and the global history");
+                this.Ui.Plugin.ChatGui.Print("- /clearlog2 help: shows this help");
+
+                break;
+            default:
+                if (this._lastTab > -1 && this._lastTab < this.Ui.Plugin.Config.Tabs.Count) {
+                    this.Ui.Plugin.Config.Tabs[this._lastTab].Clear();
+                }
+
+                break;
         }
     }
 

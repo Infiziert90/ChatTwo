@@ -73,6 +73,12 @@ internal class Tab {
         }
     }
 
+    internal void Clear() {
+        this.MessagesMutex.WaitOne();
+        this.Messages.Clear();
+        this.MessagesMutex.ReleaseMutex();
+    }
+
     internal Tab Clone() {
         return new Tab {
             Name = this.Name,
