@@ -65,9 +65,20 @@ internal static class ChunkUtil {
                     break;
                 case PayloadType.Unknown:
                     var rawPayload = (RawPayload) payload;
-                    if (rawPayload.Data[1] == 0x13) {
+                    if (rawPayload.Data.Length > 1 && rawPayload.Data[1] == 0x13) {
                         foreground.Pop();
                         glow.Pop();
+                    } else if (rawPayload.Data.Length > 7 && rawPayload.Data[1] == 0x27 && rawPayload.Data[3] == 0x0A) {
+                        // pf payload
+                        unsafe {
+                            fixed (byte* data = rawPayload.Data) {
+                                var id = *(uint*) (data + 4) >> 8;
+                                id = ((id & 0xFF) << 16)
+                                     | (id & 0xFF00)
+                                     | (id & 0xFF0000) >> 16;
+                                link = new PartyFinderPayload(id);
+                            }
+                        }
                     } else if (Equals(rawPayload, RawPayload.LinkTerminator)) {
                         link = null;
                     } else if (Equals(rawPayload, PeriodicRecruitmentLink)) {

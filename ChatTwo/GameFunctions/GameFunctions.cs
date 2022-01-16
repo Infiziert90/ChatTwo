@@ -26,6 +26,9 @@ internal unsafe class GameFunctions : IDisposable {
     [Signature("E8 ?? ?? ?? ?? 84 C0 74 0D B0 02", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<IntPtr, byte> _isMentor = null!;
 
+    [Signature("48 89 5C 24 ?? 57 48 83 EC 20 48 8B FA 48 8B D9 E8 ?? ?? ?? ?? 48 8B 8B ?? ?? ?? ?? 48 85 C9", Fallibility = Fallibility.Fallible)]
+    private readonly delegate* unmanaged<AgentInterface*, ulong, byte> _openPartyFinder = null!;
+
     #endregion
 
     #region Hooks
@@ -215,6 +218,17 @@ internal unsafe class GameFunctions : IDisposable {
         }
 
         return this._isMentor(this._isMentorA1.Value) > 0;
+    }
+
+    internal void OpenPartyFinder(uint id) {
+        if (this._openPartyFinder == null) {
+            return;
+        }
+
+        var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.LookingForGroup);
+        if (agent != null) {
+            this._openPartyFinder(agent, id);
+        }
     }
 
     private readonly IntPtr _placeholderNamePtr = Marshal.AllocHGlobal(128);
