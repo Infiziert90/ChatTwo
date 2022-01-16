@@ -67,7 +67,12 @@ internal static class ImGuiUtil {
                         ++text;
                     } // skip a space at start of line
 
-                    endPrevLine = ImGuiNative.ImFont_CalcWordWrapPositionA(ImGui.GetFont().NativePtr, ImGuiHelpers.GlobalScale, text, textEnd, widthLeft);
+                    var newEnd = ImGuiNative.ImFont_CalcWordWrapPositionA(ImGui.GetFont().NativePtr, ImGuiHelpers.GlobalScale, text, textEnd, widthLeft);
+                    if (newEnd == endPrevLine) {
+                        break;
+                    }
+
+                    endPrevLine = newEnd;
                     if (endPrevLine == null) {
                         ImGui.TextUnformatted("");
                         ImGui.TextUnformatted("");
