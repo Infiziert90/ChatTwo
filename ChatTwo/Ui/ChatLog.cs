@@ -181,7 +181,7 @@ internal sealed class ChatLog : IUiComponent {
         var buttonWidth = afterIcon.X - beforeIcon.X;
         var inputWidth = ImGui.GetContentRegionAvail().X - buttonWidth;
 
-        var inputType = this.Ui.Plugin.Functions.Chat.Channel.channel.ToChatType();
+        var inputType = activeTab?.Channel?.ToChatType() ?? this.Ui.Plugin.Functions.Chat.Channel.channel.ToChatType();
         var inputColour = this.Ui.Plugin.Config.ChatColours.TryGetValue(inputType, out var inputCol)
             ? inputCol
             : inputType.DefaultColour();
