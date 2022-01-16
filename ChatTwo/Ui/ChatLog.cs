@@ -182,6 +182,21 @@ internal sealed class ChatLog : IUiComponent {
         var inputWidth = ImGui.GetContentRegionAvail().X - buttonWidth;
 
         var inputType = activeTab?.Channel?.ToChatType() ?? this.Ui.Plugin.Functions.Chat.Channel.channel.ToChatType();
+        if (this.Chat.Trim().StartsWith('/')) {
+            var command = this.Chat.Split(' ')[0];
+            foreach (var input in Enum.GetValues<InputChannel>()) {
+                var anyMatches = input.TextCommands(this.Ui.Plugin.DataManager)
+                                     ?.Any(cmd => cmd.Command == command || cmd.ShortCommand == command || cmd.Alias == command || cmd.ShortAlias == command)
+                                 ?? false;
+                if (!anyMatches) {
+                    continue;
+                }
+
+                inputType = input.ToChatType();
+                break;
+            }
+        }
+
         var inputColour = this.Ui.Plugin.Config.ChatColours.TryGetValue(inputType, out var inputCol)
             ? inputCol
             : inputType.DefaultColour();

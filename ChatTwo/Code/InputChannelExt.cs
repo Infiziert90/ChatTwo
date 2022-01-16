@@ -1,4 +1,7 @@
-﻿namespace ChatTwo.Code;
+﻿using Dalamud.Data;
+using Lumina.Excel.GeneratedSheets;
+
+namespace ChatTwo.Code;
 
 internal static class InputChannelExt {
     internal static ChatType ToChatType(this InputChannel input) => input switch {
@@ -78,4 +81,49 @@ internal static class InputChannelExt {
         InputChannel.Linkshell8 => "/linkshell8",
         _ => "",
     };
+
+    public static IEnumerable<TextCommand>? TextCommands(this InputChannel channel, DataManager data) {
+        var ids = channel switch {
+            InputChannel.Tell => new uint[] { 104, 118 },
+            InputChannel.Say => new uint[] { 102 },
+            InputChannel.Party => new uint[] { 105 },
+            InputChannel.Alliance => new uint[] { 119 },
+            InputChannel.Yell => new uint[] { 117 },
+            InputChannel.Shout => new uint[] { 103 },
+            InputChannel.FreeCompany => new uint[] { 115 },
+            InputChannel.PvpTeam => new uint[] { 91 },
+            InputChannel.NoviceNetwork => new uint[] { 224 },
+            InputChannel.CrossLinkshell1 => new uint[] { 13 },
+            InputChannel.CrossLinkshell2 => new uint[] { 14 },
+            InputChannel.CrossLinkshell3 => new uint[] { 15 },
+            InputChannel.CrossLinkshell4 => new uint[] { 16 },
+            InputChannel.CrossLinkshell5 => new uint[] { 17 },
+            InputChannel.CrossLinkshell6 => new uint[] { 18 },
+            InputChannel.CrossLinkshell7 => new uint[] { 19 },
+            InputChannel.CrossLinkshell8 => new uint[] { 20 },
+            InputChannel.Linkshell1 => new uint[] { 107 },
+            InputChannel.Linkshell2 => new uint[] { 108 },
+            InputChannel.Linkshell3 => new uint[] { 109 },
+            InputChannel.Linkshell4 => new uint[] { 110 },
+            InputChannel.Linkshell5 => new uint[] { 111 },
+            InputChannel.Linkshell6 => new uint[] { 112 },
+            InputChannel.Linkshell7 => new uint[] { 113 },
+            InputChannel.Linkshell8 => new uint[] { 114 },
+            _ => Array.Empty<uint>(),
+        };
+
+        if (ids.Length == 0) {
+            return null;
+        }
+
+        var cmds = data.GetExcelSheet<TextCommand>();
+        if (cmds == null) {
+            return null;
+        }
+
+        return ids
+            .Select(id => cmds.GetRow(id))
+            .Where(id => id != null)
+            .Cast<TextCommand>();
+    }
 }
