@@ -23,10 +23,14 @@ internal sealed class ChatLog : IUiComponent {
     private int _lastTab;
 
     private PayloadHandler PayloadHandler { get; }
+    private Dictionary<string, ChatType> TextCommandChannels { get; } = new();
 
     internal ChatLog(PluginUi ui) {
         this.Ui = ui;
         this.PayloadHandler = new PayloadHandler(this.Ui, this);
+
+        this.SetUpTextCommandChannels();
+
         this.Ui.Plugin.CommandManager.AddHandler("/clearlog2", new CommandInfo(this.ClearLog) {
             HelpMessage = "Clears the Chat 2 chat log",
         });
@@ -74,6 +78,34 @@ internal sealed class ChatLog : IUiComponent {
 
                 break;
         }
+    }
+
+    private void SetUpTextCommandChannels() {
+        this.TextCommandChannels.Clear();
+
+        foreach (var input in Enum.GetValues<InputChannel>()) {
+            var commands = input.TextCommands(this.Ui.Plugin.DataManager);
+            if (commands == null) {
+                continue;
+            }
+
+            var type = input.ToChatType();
+            foreach (var command in commands) {
+                this.AddTextCommandChannel(command, type);
+            }
+        }
+
+        var echo = this.Ui.Plugin.DataManager.GetExcelSheet<TextCommand>()?.GetRow(116);
+        if (echo != null) {
+            this.AddTextCommandChannel(echo, ChatType.Echo);
+        }
+    }
+
+    private void AddTextCommandChannel(TextCommand command, ChatType type) {
+        this.TextCommandChannels[command.Command] = type;
+        this.TextCommandChannels[command.ShortCommand] = type;
+        this.TextCommandChannels[command.Alias] = type;
+        this.TextCommandChannels[command.ShortAlias] = type;
     }
 
     private void AddBacklog(string message) {
@@ -184,16 +216,8 @@ internal sealed class ChatLog : IUiComponent {
         var inputType = activeTab?.Channel?.ToChatType() ?? this.Ui.Plugin.Functions.Chat.Channel.channel.ToChatType();
         if (this.Chat.Trim().StartsWith('/')) {
             var command = this.Chat.Split(' ')[0];
-            foreach (var input in Enum.GetValues<InputChannel>()) {
-                var anyMatches = input.TextCommands(this.Ui.Plugin.DataManager)
-                                     ?.Any(cmd => cmd.Command == command || cmd.ShortCommand == command || cmd.Alias == command || cmd.ShortAlias == command)
-                                 ?? false;
-                if (!anyMatches) {
-                    continue;
-                }
-
-                inputType = input.ToChatType();
-                break;
+            if (this.TextCommandChannels.TryGetValue(command, out var channel)) {
+                inputType = channel;
             }
         }
 
