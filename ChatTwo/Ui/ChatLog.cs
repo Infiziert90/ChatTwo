@@ -4,6 +4,8 @@ using ChatTwo.Util;
 using Dalamud.Game.Command;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface;
+using Dalamud.Memory;
+using Dalamud.Utility;
 using ImGuiNET;
 using ImGuiScene;
 using Lumina.Excel.GeneratedSheets;
@@ -21,6 +23,8 @@ internal sealed class ChatLog : IUiComponent {
     private readonly List<string> _inputBacklog = new();
     private int _inputBacklogIdx = -1;
     private int _lastTab;
+    private InputChannel? _tempChannel;
+    private (string, string)? _tellTarget;
 
     private PayloadHandler PayloadHandler { get; }
     private Dictionary<string, ChatType> TextCommandChannels { get; } = new();
@@ -46,11 +50,17 @@ internal sealed class ChatLog : IUiComponent {
         this.Ui.Plugin.CommandManager.RemoveHandler("/clearlog2");
     }
 
-    private void Activated(string? input) {
+    private void Activated(string? input, InputChannel? channel, (string, string)? tellTarget) {
         this.Activate = true;
         if (input != null && !this.Chat.Contains(input)) {
             this.Chat += input;
         }
+
+        if (channel != null && this.Ui.Plugin.Functions.Chat.Channel.channel != channel) {
+            this._tempChannel = channel;
+        }
+
+        this._tellTarget = tellTarget;
     }
 
     private void ClearLog(string command, string arguments) {
@@ -171,7 +181,13 @@ internal sealed class ChatLog : IUiComponent {
 
         ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, Vector2.Zero);
         try {
-            if (activeTab is { Channel: { } channel }) {
+            if (this._tempChannel != null) {
+                if (this._tellTarget != null) {
+                    ImGui.TextUnformatted($"Tell {this._tellTarget.Value.Item1}@{this._tellTarget.Value.Item2}");
+                } else {
+                    ImGui.TextUnformatted(this._tempChannel.Value.ToChatType().Name());
+                }
+            } else if (activeTab is { Channel: { } channel }) {
                 ImGui.TextUnformatted(channel.ToChatType().Name());
             } else {
                 this.DrawChunks(this.Ui.Plugin.Functions.Chat.Channel.name);
@@ -213,7 +229,7 @@ internal sealed class ChatLog : IUiComponent {
         var buttonWidth = afterIcon.X - beforeIcon.X;
         var inputWidth = ImGui.GetContentRegionAvail().X - buttonWidth;
 
-        var inputType = activeTab?.Channel?.ToChatType() ?? this.Ui.Plugin.Functions.Chat.Channel.channel.ToChatType();
+        var inputType = this._tempChannel?.ToChatType() ?? activeTab?.Channel?.ToChatType() ?? this.Ui.Plugin.Functions.Chat.Channel.channel.ToChatType();
         if (this.Chat.Trim().StartsWith('/')) {
             var command = this.Chat.Split(' ')[0];
             if (this.TextCommandChannels.TryGetValue(command, out var channel)) {
@@ -239,7 +255,13 @@ internal sealed class ChatLog : IUiComponent {
                 this.AddBacklog(trimmed);
                 this._inputBacklogIdx = -1;
 
-                if (activeTab is { Channel: { } channel } && !trimmed.StartsWith('/')) {
+                if (this._tempChannel != null) {
+                    if (this._tellTarget != null) {
+                        trimmed = $"{this._tempChannel.Value.Prefix()} {this._tellTarget.Value.Item1}@{this._tellTarget.Value.Item2} {trimmed}";
+                    } else {
+                        trimmed = $"{this._tempChannel.Value.Prefix()} {trimmed}";
+                    }
+                } else if (activeTab is { Channel: { } channel } && !trimmed.StartsWith('/')) {
                     trimmed = $"{channel.Prefix()} {trimmed}";
                 }
 
@@ -247,6 +269,10 @@ internal sealed class ChatLog : IUiComponent {
             }
 
             this.Chat = string.Empty;
+        }
+
+        if (!this.Activate && !ImGui.IsItemActive()) {
+            this._tempChannel = null;
         }
 
         if (inputColour != null) {

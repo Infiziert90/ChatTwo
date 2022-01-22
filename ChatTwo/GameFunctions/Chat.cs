@@ -58,11 +58,14 @@ internal sealed unsafe class Chat : IDisposable {
     [Signature("8B B9 ?? ?? ?? ?? 48 8B D9 83 FF FE 0F 84", Offset = 2)]
     private readonly int? _replyChannelOffset;
 
+    [Signature("89 83 ?? ?? ?? ?? 48 8B 01 83 FE 13 7C 05 41 8B D4 EB 03 83 CA FF FF 90", Offset = 2)]
+    private readonly int? _shellChannelOffset;
+
     #pragma warning restore 0649
 
     // Events
 
-    internal delegate void ChatActivatedEventDelegate(string? input);
+    internal delegate void ChatActivatedEventDelegate(string? input, InputChannel? channel, (string, string)? tellTarget);
 
     internal event ChatActivatedEventDelegate? Activated;
 
@@ -121,7 +124,10 @@ internal sealed unsafe class Chat : IDisposable {
             return ret;
         }
 
-        var channel = *(uint*) (shellModule + 0xFD0);
+        var channel = 0u;
+        if (this._shellChannelOffset != null) {
+            channel = *(uint*) (shellModule + this._shellChannelOffset.Value);
+        }
 
         // var channel = *(uint*) (agent + 0x40);
         if (channel is 17 or 18) {
@@ -157,6 +163,24 @@ internal sealed unsafe class Chat : IDisposable {
             return this.ChatLogRefreshHook!.Original(log, eventId, value);
         }
 
+        InputChannel? channel = null;
+        (string, string)? tellTarget = null;
+        // if (this._shellChannelOffset != null) {
+        //     var shell = (IntPtr) Framework.Instance()->GetUiModule()->GetRaptureShellModule();
+        //
+        //     channel = (InputChannel) (*(uint*) (shell + this._shellChannelOffset.Value));
+        //     if ((int) channel is 17 or 18) {
+        //         channel = InputChannel.Tell;
+        //
+        //         var targetPtr = *(byte**) (shell + 0xFD8);
+        //         var targetWorldPtr = *(byte**) (shell + 0x1040);
+        //
+        //         var target = MemoryHelper.ReadStringNullTerminated((IntPtr) targetPtr);
+        //         var targetWorld = MemoryHelper.ReadStringNullTerminated((IntPtr) targetWorldPtr);
+        //         tellTarget = (target, targetWorld);
+        //     }
+        // }
+
         string? eventInput = null;
 
         var str = value + 2;
@@ -168,12 +192,20 @@ internal sealed unsafe class Chat : IDisposable {
         }
 
         try {
-            this.Activated?.Invoke(eventInput);
+            this.Activated?.Invoke(eventInput, channel, tellTarget);
         } catch (Exception ex) {
             PluginLog.LogError(ex, "Error in ChatActivated event");
         }
 
-        return 0;
+        // var ret = this.ChatLogRefreshHook!.Original(log, eventId, value);
+        // if (this._clearFocus != null) {
+        //     this._clearFocus(AtkStage.GetSingleton());
+        // }
+
+        // return ret;
+
+        // return this.ChatLogRefreshHook!.Original(log, eventId, value);
+        return 1;
     }
 
     private void ReplyInSelectedChatModeDetour(AgentInterface* agent) {
