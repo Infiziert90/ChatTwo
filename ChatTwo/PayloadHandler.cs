@@ -298,7 +298,7 @@ internal sealed class PayloadHandler {
             var isInParty = member != default;
             if (isLeader) {
                 if (!isInParty && ImGui.Selectable("Invite to Party")) {
-                    this.Ui.Plugin.Functions.Party.Invite(player.PlayerName, (ushort) player.World.RowId);
+                    this.Ui.Plugin.Functions.Party.Invite(player.PlayerName, (ushort) player.World.RowId, chunk.Message?.ContentId ?? 0);
                 }
 
                 if (isInParty && member != null) {
