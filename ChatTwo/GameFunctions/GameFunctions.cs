@@ -174,7 +174,7 @@ internal unsafe class GameFunctions : IDisposable {
         agent->AddonId = (uint) addon->ID;
 
         // vcall from E8 ?? ?? ?? ?? 0F B7 C0 48 83 C4 60
-        var vf5 = (delegate*<AtkUnitBase*, byte, uint, void>*) ((IntPtr) addon->VTable + 40);
+        var vf5 = (delegate* unmanaged<AtkUnitBase*, byte, uint, void>*) ((IntPtr) addon->VTable + 40);
         // E8872D: lets vf5 actually run
         *(byte*) ((IntPtr) atkStage + 0x2B4) |= 2;
         (*vf5)(addon, 0, 15);

@@ -31,7 +31,7 @@ internal sealed unsafe class Party {
 
         var uiModule = Framework.Instance()->GetUiModule();
         // 6.05: 20D722
-        var func = (delegate*<UIModule*, IntPtr>) uiModule->vfunc[33];
+        var func = (delegate* unmanaged<UIModule*, IntPtr>) uiModule->vfunc[33];
         var toIndex = func(uiModule);
         var a1 = this.Plugin.Functions.Indexer(toIndex, 1);
 

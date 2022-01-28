@@ -40,7 +40,7 @@ internal sealed unsafe class Context {
 
         var uiModule = Framework.Instance()->GetUiModule();
         // 6.05: 20D722
-        var func = (delegate*<UIModule*, IntPtr>) uiModule->vfunc[33];
+        var func = (delegate* unmanaged<UIModule*, IntPtr>) uiModule->vfunc[33];
         var toIndex = func(uiModule);
         // 6.05: 20E4CB
         var a1 = this.Plugin.Functions.Indexer(toIndex, 0x11);
