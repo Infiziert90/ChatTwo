@@ -36,6 +36,15 @@ internal sealed unsafe class Chat : IDisposable {
     [Signature("44 8B 89 ?? ?? ?? ?? 4C 8B C1")]
     private readonly delegate* unmanaged<void*, int, IntPtr> _getTellHistory = null!;
 
+    [Signature("E8 ?? ?? ?? ?? B8 ?? ?? ?? ?? 48 8D 4D 50")]
+    private readonly delegate* unmanaged<RaptureLogModule*, ushort, Utf8String*, Utf8String*, ulong, ushort, byte, int, byte, void> _printTell = null!;
+
+    [Signature("E8 ?? ?? ?? ?? 48 8D 4C 24 ?? E8 ?? ?? ?? ?? 48 8D 8C 24 ?? ?? ?? ?? E8 ?? ?? ?? ?? B0 01")]
+    private readonly delegate* unmanaged<IntPtr, ulong, ushort, Utf8String*, Utf8String*, byte, ulong, byte> _sendTell = null!;
+
+    [Signature("E8 ?? ?? ?? ?? F6 43 0A 40")]
+    private readonly delegate* unmanaged<Framework*, IntPtr> _getNetworkModule = null!;
+
     // Hooks
 
     private delegate byte ChatLogRefreshDelegate(IntPtr log, ushort eventId, AtkValue* value);
@@ -84,7 +93,7 @@ internal sealed unsafe class Chat : IDisposable {
 
     // Events
 
-    internal delegate void ChatActivatedEventDelegate(string? input, ChannelSwitchInfo info);
+    internal delegate void ChatActivatedEventDelegate(string? input, ChannelSwitchInfo info, TellReason? reason, TellTarget? target);
 
     internal event ChatActivatedEventDelegate? Activated;
 
@@ -279,7 +288,7 @@ internal sealed unsafe class Chat : IDisposable {
             }
 
             try {
-                this.Activated?.Invoke(null, info);
+                this.Activated?.Invoke(null, info, TellReason.Reply, null);
             } catch (Exception ex) {
                 PluginLog.LogError(ex, "Error in chat Activated event");
             }
@@ -315,7 +324,7 @@ internal sealed unsafe class Chat : IDisposable {
         }
 
         try {
-            this.Activated?.Invoke(eventInput, new ChannelSwitchInfo(null));
+            this.Activated?.Invoke(eventInput, new ChannelSwitchInfo(null), null, null);
         } catch (Exception ex) {
             PluginLog.LogError(ex, "Error in chat Activated event");
         }
@@ -393,7 +402,12 @@ internal sealed unsafe class Chat : IDisposable {
 
     private byte SetChatLogTellTargetDetour(IntPtr a1, Utf8String* name, Utf8String* a3, ushort world, ulong contentId, ushort reason, byte a7) {
         if (name != null) {
-            PluginLog.Log($"{name->ToString()}@{world} ({contentId}) {(TellReason) reason}");
+            try {
+                var target = new TellTarget(name->ToString(), world, contentId, (TellReason) reason);
+                this.Activated?.Invoke(null, new ChannelSwitchInfo(InputChannel.Tell), (TellReason) reason, target);
+            } catch (Exception ex) {
+                PluginLog.LogError(ex, "Error in chat Activated event");
+            }
         }
 
         return this.SetChatLogTellTargetHook!.Original(a1, name, a3, world, contentId, reason, a7);
@@ -486,5 +500,17 @@ internal sealed unsafe class Chat : IDisposable {
         var contentId = *(ulong*) (ptr + 0xD8);
 
         return new TellHistoryInfo(name, world, contentId);
+    }
+
+    internal void SendTell(TellReason reason, ulong contentId, string name, ushort homeWorld, string message) {
+        var uName = Utf8String.FromString(name);
+        var uMessage = Utf8String.FromString(message);
+
+        var networkModule = this._getNetworkModule(Framework.Instance());
+        var a1 = *(IntPtr*) (networkModule + 8);
+        var logModule = Framework.Instance()->GetUiModule()->GetRaptureLogModule();
+
+        this._printTell(logModule, 33, uName, uMessage, contentId, homeWorld, 255, 0, 0);
+        this._sendTell(a1, contentId, homeWorld, uName, uMessage, (byte) reason, homeWorld);
     }
 }
