@@ -1,6 +1,7 @@
 ﻿using Dalamud.Data;
 using Dalamud.Game;
 using Dalamud.Game.ClientState;
+using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.ClientState.Objects;
 using Dalamud.Game.ClientState.Party;
 using Dalamud.Game.Command;
@@ -35,6 +36,9 @@ public sealed class Plugin : IDalamudPlugin {
 
     [PluginService]
     internal GameGui GameGui { get; init; }
+    
+    [PluginService]
+    internal KeyState KeyState { get; init; }
 
     [PluginService]
     internal ObjectTable ObjectTable { get; init; }

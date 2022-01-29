@@ -1,11 +1,12 @@
 ﻿using System.Numerics;
 using ChatTwo.Code;
+using ChatTwo.GameFunctions.Types;
 using ChatTwo.Util;
+using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.Command;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface;
-using Dalamud.Memory;
-using Dalamud.Utility;
+using Dalamud.Logging;
 using ImGuiNET;
 using ImGuiScene;
 using Lumina.Excel.GeneratedSheets;
@@ -24,7 +25,8 @@ internal sealed class ChatLog : IUiComponent {
     private int _inputBacklogIdx = -1;
     private int _lastTab;
     private InputChannel? _tempChannel;
-    private (string, string)? _tellTarget;
+    private (string, string, ulong)? _tellTarget;
+    private int _tellIdx;
 
     private PayloadHandler PayloadHandler { get; }
     private Dictionary<string, ChatType> TextCommandChannels { get; } = new();
@@ -50,17 +52,44 @@ internal sealed class ChatLog : IUiComponent {
         this.Ui.Plugin.CommandManager.RemoveHandler("/clearlog2");
     }
 
-    private void Activated(string? input, InputChannel? channel, (string, string)? tellTarget) {
+    private void Activated(string? input, ChannelSwitchInfo info) {
         this.Activate = true;
         if (input != null && !this.Chat.Contains(input)) {
             this.Chat += input;
         }
 
-        if (channel != null && this.Ui.Plugin.Functions.Chat.Channel.channel != channel) {
-            this._tempChannel = channel;
+        if (info.Channel != null) {
+            var prevTemp = this._tempChannel;
+
+            if (info.Permanent) {
+                this.Ui.Plugin.Functions.Chat.SetChannel(info.Channel.Value);
+            } else {
+                this._tempChannel = info.Channel.Value;
+            }
+
+            if (info.Channel is InputChannel.Tell && info.Rotate != RotateMode.None) {
+                this._tellIdx = prevTemp != InputChannel.Tell
+                    ? 0
+                    : info.Rotate == RotateMode.Reverse
+                        ? -1
+                        : 1;
+
+                var tellInfo = this.Ui.Plugin.Functions.Chat.GetTellHistoryInfo(this._tellIdx);
+                if (tellInfo != null) {
+                    var world = this.Ui.Plugin.DataManager.GetExcelSheet<World>()?.GetRow(tellInfo.World);
+                    if (world != null) {
+                        this._tellTarget = (tellInfo.Name, world.Name, tellInfo.ContentId);
+                    }
+                }
+            } else {
+                this._tellIdx = 0;
+                this._tellTarget = null;
+            }
         }
 
-        this._tellTarget = tellTarget;
+        if (info.Text != null && this.Chat.Length == 0) {
+            this.Chat = info.Text;
+        }
     }
 
     private void ClearLog(string command, string arguments) {
@@ -139,6 +168,55 @@ internal sealed class ChatLog : IUiComponent {
     }
 
     private unsafe ImGuiViewport* _lastViewport;
+
+    private void HandleKeybinds() {
+        var modifierState = (ModifierFlag) 0;
+        if (ImGui.GetIO().KeyAlt) {
+            modifierState |= ModifierFlag.Alt;
+        }
+
+        if (ImGui.GetIO().KeyCtrl) {
+            modifierState |= ModifierFlag.Ctrl;
+        }
+
+        if (ImGui.GetIO().KeyShift) {
+            modifierState |= ModifierFlag.Shift;
+        }
+
+        var turnedOff = new Dictionary<VirtualKey, (uint, string)>();
+        foreach (var (toIntercept, keybind) in this.Ui.Plugin.Functions.Chat.Keybinds) {
+            if (toIntercept is "CMD_CHAT" or "CMD_COMMAND") {
+                continue;
+            }
+
+            void Intercept(VirtualKey key, ModifierFlag modifier) {
+                if (!ImGui.IsKeyPressed((int) key) || !modifierState.HasFlag(modifier)) {
+                    return;
+                }
+
+                var bits = NumUtil.NumberOfSetBits((uint) modifier);
+                if (!turnedOff.TryGetValue(key, out var previousBits) || previousBits.Item1 < bits) {
+                    turnedOff[key] = (bits, toIntercept);
+                }
+            }
+
+            Intercept(keybind.Key1, keybind.Modifier1);
+            Intercept(keybind.Key2, keybind.Modifier2);
+        }
+
+        foreach (var (_, (_, keybind)) in turnedOff) {
+            PluginLog.Log($"intercepting {keybind}");
+            if (!GameFunctions.Chat.KeybindsToIntercept.TryGetValue(keybind, out var info)) {
+                continue;
+            }
+
+            try {
+                this.Activated(null, info);
+            } catch (Exception ex) {
+                PluginLog.LogError(ex, "Error in chat Activated event");
+            }
+        }
+    }
 
     public unsafe void Draw() {
         var flags = ImGuiWindowFlags.None;
@@ -271,8 +349,13 @@ internal sealed class ChatLog : IUiComponent {
             this.Chat = string.Empty;
         }
 
+        if (ImGui.IsItemActive()) {
+            this.HandleKeybinds();
+        }
+
         if (!this.Activate && !ImGui.IsItemActive()) {
             this._tempChannel = null;
+            this._tellIdx = 0;
         }
 
         if (inputColour != null) {

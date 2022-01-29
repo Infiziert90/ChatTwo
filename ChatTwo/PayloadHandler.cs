@@ -154,6 +154,10 @@ internal sealed class PayloadHandler {
     }
 
     private void HoverItem(ItemPayload item) {
+        if (item.Item == null) {
+            return;
+        }
+
         if (this.Ui.Plugin.TextureCache.GetItem(item.Item, item.IsHQ) is { } icon) {
             InlineIcon(icon);
         }
@@ -232,6 +236,10 @@ internal sealed class PayloadHandler {
     }
 
     private void DrawItemPopup(ItemPayload item) {
+        if (item.Item == null) {
+            return;
+        }
+
         if (this.Ui.Plugin.TextureCache.GetItem(item.Item, item.IsHQ) is { } icon) {
             InlineIcon(icon);
         }
