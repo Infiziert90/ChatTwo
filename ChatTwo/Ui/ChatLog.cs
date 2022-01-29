@@ -313,6 +313,8 @@ internal sealed class ChatLog : IUiComponent {
 
                 if (ImGui.Selectable(name)) {
                     this.Ui.Plugin.Functions.Chat.SetChannel(channel);
+                    this._tellIdx = 0;
+                    this._tellTarget = null;
                 }
             }
 
@@ -363,6 +365,10 @@ internal sealed class ChatLog : IUiComponent {
                         this.Ui.Plugin.Functions.Chat.SendTell(reason, target.ContentId, target.Name, (ushort) world.RowId, trimmed);
                     }
 
+                    if (this._tempChannel is InputChannel.Tell) {
+                        this._tellTarget = null;
+                    }
+
                     goto Skip;
                 }
 
@@ -384,6 +390,10 @@ internal sealed class ChatLog : IUiComponent {
         }
 
         if (!this.Activate && !ImGui.IsItemActive()) {
+            if (this._tempChannel is InputChannel.Tell) {
+                this._tellTarget = null;
+            }
+
             this._tempChannel = null;
             this._tellIdx = 0;
         }
