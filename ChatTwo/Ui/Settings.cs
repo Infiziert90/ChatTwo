@@ -1,5 +1,7 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics;
+using System.Numerics;
 using ChatTwo.Ui.SettingsTabs;
+using ChatTwo.Util;
 using Dalamud.Game.Command;
 using ImGuiNET;
 
@@ -89,6 +91,26 @@ internal sealed class Settings : IUiComponent {
 
         if (ImGui.Button("Discard")) {
             this.Ui.SettingsVisible = false;
+        }
+
+        var buttonLabel = $"Support {this.Ui.Plugin.Name} on Ko-Fi";
+
+        ImGui.PushStyleColor(ImGuiCol.Button, ColourUtil.RgbaToAbgr(0xFF5E5BFF));
+        ImGui.PushStyleColor(ImGuiCol.ButtonHovered, ColourUtil.RgbaToAbgr(0xFF7775FF));
+        ImGui.PushStyleColor(ImGuiCol.ButtonActive, ColourUtil.RgbaToAbgr(0xFF4542FF));
+        ImGui.PushStyleColor(ImGuiCol.Text, 0xFFFFFFFF);
+
+        try {
+            var buttonWidth = ImGui.CalcTextSize(buttonLabel).X + ImGui.GetStyle().FramePadding.X * 2;
+            ImGui.SameLine(ImGui.GetContentRegionAvail().X - buttonWidth);
+
+            if (ImGui.Button(buttonLabel)) {
+                Process.Start(new ProcessStartInfo("https://ko-fi.com/ascclemens") {
+                    UseShellExecute = true,
+                });
+            }
+        } finally {
+            ImGui.PopStyleColor(4);
         }
 
         ImGui.End();
