@@ -212,7 +212,6 @@ internal sealed class ChatLog : IUiComponent {
         }
 
         foreach (var (_, (_, keybind)) in turnedOff) {
-            PluginLog.Log($"intercepting {keybind}");
             if (!GameFunctions.Chat.KeybindsToIntercept.TryGetValue(keybind, out var info)) {
                 continue;
             }

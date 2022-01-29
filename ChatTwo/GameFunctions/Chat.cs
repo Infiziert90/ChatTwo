@@ -280,7 +280,6 @@ internal sealed unsafe class Chat : IDisposable {
         }
 
         foreach (var (key, (_, keybind)) in turnedOff) {
-            PluginLog.Log($"intercepting {keybind}");
             this.Plugin.KeyState[key] = false;
 
             if (!KeybindsToIntercept.TryGetValue(keybind, out var info)) {
