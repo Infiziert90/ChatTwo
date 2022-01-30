@@ -176,7 +176,7 @@ internal sealed class ChatLog : IUiComponent {
 
     private unsafe ImGuiViewport* _lastViewport;
 
-    private void HandleKeybinds() {
+    private void HandleKeybinds(bool modifiersOnly = false) {
         var modifierState = (ModifierFlag) 0;
         if (ImGui.GetIO().KeyAlt) {
             modifierState |= ModifierFlag.Alt;
@@ -197,7 +197,7 @@ internal sealed class ChatLog : IUiComponent {
             }
 
             void Intercept(VirtualKey key, ModifierFlag modifier) {
-                if (!ImGui.IsKeyPressed((int) key) || !modifierState.HasFlag(modifier)) {
+                if (!ImGui.IsKeyPressed((int) key) || !modifierState.HasFlag(modifier) || modifier == 0 && modifiersOnly) {
                     return;
                 }
 
@@ -385,7 +385,7 @@ internal sealed class ChatLog : IUiComponent {
         }
 
         if (ImGui.IsItemActive()) {
-            this.HandleKeybinds();
+            this.HandleKeybinds(true);
         }
 
         if (!this.Activate && !ImGui.IsItemActive()) {
