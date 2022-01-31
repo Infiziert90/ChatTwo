@@ -21,7 +21,7 @@ internal unsafe class GameFunctions : IDisposable {
     #region Functions
 
     [Signature("E8 ?? ?? ?? ?? 8B FD 8B CD", Fallibility = Fallibility.Fallible)]
-    internal readonly delegate* unmanaged<IntPtr, uint, IntPtr> Indexer = null!;
+    private readonly delegate* unmanaged<IntPtr, uint, IntPtr> _getInfoProxyByIndex = null!;
 
     [Signature("E8 ?? ?? ?? ?? 84 C0 74 0D B0 02", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<IntPtr, byte> _isMentor = null!;
@@ -74,6 +74,17 @@ internal unsafe class GameFunctions : IDisposable {
         this.ResolveTextCommandPlaceholderHook?.Dispose();
 
         Marshal.FreeHGlobal(this._placeholderNamePtr);
+    }
+
+    private static IntPtr GetInfoModule() {
+        var uiModule = Framework.Instance()->GetUiModule();
+        var getInfoModule = (delegate* unmanaged<UIModule*, IntPtr>) uiModule->vfunc[33];
+        return getInfoModule(uiModule);
+    }
+
+    internal IntPtr GetInfoProxyByIndex(uint idx) {
+        var infoModule = GetInfoModule();
+        return infoModule == IntPtr.Zero ? IntPtr.Zero : this._getInfoProxyByIndex(infoModule, idx);
     }
 
     internal uint? GetCurrentChatLogEntryIndex() {

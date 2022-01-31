@@ -45,6 +45,9 @@ internal sealed unsafe class Chat : IDisposable {
     [Signature("E8 ?? ?? ?? ?? F6 43 0A 40")]
     private readonly delegate* unmanaged<Framework*, IntPtr> _getNetworkModule = null!;
 
+    [Signature("E8 ?? ?? ?? ?? 48 8B C8 E8 ?? ?? ?? ?? 45 8D 46 FB")]
+    private readonly delegate* unmanaged<IntPtr, uint, Utf8String*> _getLinkshellName = null!;
+
     // Hooks
 
     private delegate byte ChatLogRefreshDelegate(IntPtr log, ushort eventId, AtkValue* value);
@@ -124,6 +127,16 @@ internal sealed unsafe class Chat : IDisposable {
         this.ChatLogRefreshHook?.Dispose();
 
         this.Activated = null;
+    }
+
+    internal string? GetLinkshellName(uint idx) {
+        var infoProxy = this.Plugin.Functions.GetInfoProxyByIndex(26);
+        if (infoProxy == IntPtr.Zero) {
+            return null;
+        }
+
+        var utf = this._getLinkshellName(infoProxy, idx);
+        return utf == null ? null : utf->ToString();
     }
 
     private readonly Dictionary<string, Keybind> _keybinds = new();

@@ -34,16 +34,12 @@ internal sealed unsafe class Context {
     }
 
     internal void InviteToNoviceNetwork(string name, ushort world) {
-        if (this._inviteToNoviceNetwork == null || this.Plugin.Functions.Indexer == null) {
+        if (this._inviteToNoviceNetwork == null) {
             return;
         }
 
-        var uiModule = Framework.Instance()->GetUiModule();
-        // 6.05: 20D722
-        var func = (delegate* unmanaged<UIModule*, IntPtr>) uiModule->vfunc[33];
-        var toIndex = func(uiModule);
         // 6.05: 20E4CB
-        var a1 = this.Plugin.Functions.Indexer(toIndex, 0x11);
+        var a1 = this.Plugin.Functions.GetInfoProxyByIndex(0x11);
 
         fixed (byte* namePtr = name.ToTerminatedBytes()) {
             // can specify content id if we have it, but there's no need

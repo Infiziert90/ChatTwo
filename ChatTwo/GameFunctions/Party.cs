@@ -1,6 +1,5 @@
 ﻿using ChatTwo.Util;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
-using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using Siggingway;
@@ -28,15 +27,12 @@ internal sealed unsafe class Party {
     }
 
     internal void Invite(string name, ushort world, ulong contentId) {
-        if (this._inviteToParty == null || this.Plugin.Functions.Indexer == null) {
+        if (this._inviteToParty == null) {
             return;
         }
 
-        var uiModule = Framework.Instance()->GetUiModule();
         // 6.05: 20D722
-        var func = (delegate* unmanaged<UIModule*, IntPtr>) uiModule->vfunc[33];
-        var toIndex = func(uiModule);
-        var a1 = this.Plugin.Functions.Indexer(toIndex, 1);
+        var a1 = this.Plugin.Functions.GetInfoProxyByIndex(1);
 
         if (contentId != 0) {
             // third param is world, but it requires a specific world
