@@ -36,7 +36,7 @@ public sealed class Plugin : IDalamudPlugin {
 
     [PluginService]
     internal GameGui GameGui { get; init; }
-    
+
     [PluginService]
     internal KeyState KeyState { get; init; }
 

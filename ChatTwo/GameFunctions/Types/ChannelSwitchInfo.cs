@@ -1,6 +1,6 @@
 ﻿using ChatTwo.Code;
 
-namespace ChatTwo.GameFunctions.Types; 
+namespace ChatTwo.GameFunctions.Types;
 
 internal class ChannelSwitchInfo {
     internal InputChannel? Channel { get; }

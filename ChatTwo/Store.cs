@@ -10,7 +10,7 @@ namespace ChatTwo;
 
 internal class Store : IDisposable {
     internal const int MessagesLimit = 10_000;
-    
+
     internal sealed class MessagesLock : IDisposable {
         private Mutex Mutex { get; }
         internal List<Message> Messages { get; }

@@ -1,4 +1,4 @@
-﻿namespace ChatTwo.Util; 
+﻿namespace ChatTwo.Util;
 
 internal static class NumUtil {
     internal static uint NumberOfSetBits(uint i) {
