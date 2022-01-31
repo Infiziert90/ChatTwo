@@ -473,30 +473,40 @@ internal sealed class ChatLog : IUiComponent {
                         message.IsVisible = false;
                     }
 
+                    // go to next row
+                    if (table) {
+                        ImGui.TableNextColumn();
+                    }
+
                     // message has rendered once
                     if (message.Height.HasValue) {
                         // message isn't visible, so render dummy
                         if (!message.IsVisible) {
-                            // skip columns
-                            if (table) {
-                                if (tab.DisplayTimestamp) {
-                                    ImGui.TableNextColumn();
-                                }
+                            var beforeDummy = ImGui.GetCursorPos();
 
+                            if (table) {
+                                // skip to the message column for vis test
                                 ImGui.TableNextColumn();
                             }
 
-                            ImGui.Dummy(new Vector2(1f, message.Height.Value));
+                            ImGui.Dummy(new Vector2(10f, message.Height.Value));
                             message.IsVisible = ImGui.IsItemVisible();
 
-                            goto UpdateMessage;
+                            if (message.IsVisible) {
+                                if (table) {
+                                    ImGui.TableSetColumnIndex(0);
+                                }
+
+                                ImGui.SetCursorPos(beforeDummy);
+                            } else {
+                                goto UpdateMessage;
+                            }
                         }
                     }
 
                     if (tab.DisplayTimestamp) {
                         var timestamp = message.Date.ToLocalTime().ToString("t");
                         if (table) {
-                            ImGui.TableNextColumn();
                             ImGui.TextUnformatted(timestamp);
                         } else {
                             this.DrawChunk(new TextChunk(null, null, $"[{timestamp}]") {
