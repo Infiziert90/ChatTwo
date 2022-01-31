@@ -70,13 +70,9 @@ internal static class ChunkUtil {
                         glow.Pop();
                     } else if (rawPayload.Data.Length > 7 && rawPayload.Data[1] == 0x27 && rawPayload.Data[3] == 0x0A) {
                         // pf payload
-                        unsafe {
-                            fixed (byte* data = rawPayload.Data) {
-                                var reader = new BinaryReader(new MemoryStream(rawPayload.Data[4..]));
-                                var id = GetInteger(reader);
-                                link = new PartyFinderPayload(id);
-                            }
-                        }
+                        var reader = new BinaryReader(new MemoryStream(rawPayload.Data[4..]));
+                        var id = GetInteger(reader);
+                        link = new PartyFinderPayload(id);
                     } else if (Equals(rawPayload, RawPayload.LinkTerminator)) {
                         link = null;
                     } else if (Equals(rawPayload, PeriodicRecruitmentLink)) {
