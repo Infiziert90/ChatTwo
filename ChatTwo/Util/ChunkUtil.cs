@@ -72,10 +72,8 @@ internal static class ChunkUtil {
                         // pf payload
                         unsafe {
                             fixed (byte* data = rawPayload.Data) {
-                                var id = *(uint*) (data + 4) >> 8;
-                                id = ((id & 0xFF) << 16)
-                                     | (id & 0xFF00)
-                                     | (id & 0xFF0000) >> 16;
+                                var reader = new BinaryReader(new MemoryStream(rawPayload.Data[4..]));
+                                var id = GetInteger(reader);
                                 link = new PartyFinderPayload(id);
                             }
                         }
@@ -101,4 +99,19 @@ internal static class ChunkUtil {
     internal static readonly RawPayload PeriodicRecruitmentLink = new(new byte[] {
         0x02, 0x27, 0x07, 0x08, 0x01, 0x01, 0x01, 0xFF, 0x01, 0x03,
     });
+
+    private static uint GetInteger(BinaryReader input) {
+        var num1 = (uint) input.ReadByte();
+        if (num1 < 208U) {
+            return num1 - 1U;
+        }
+
+        var num2 = (uint) ((int) num1 + 1 & 15);
+        var numArray = new byte[4];
+        for (var index = 3; index >= 0; --index) {
+            numArray[index] = (num2 & 1 << index) == 0L ? (byte) 0 : input.ReadByte();
+        }
+
+        return BitConverter.ToUInt32(numArray, 0);
+    }
 }
