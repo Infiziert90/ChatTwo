@@ -27,7 +27,6 @@ internal sealed class ChatLog : IUiComponent {
     private int _lastTab;
     private InputChannel? _tempChannel;
     private TellTarget? _tellTarget;
-    private int _tellIdx;
 
     private PayloadHandler PayloadHandler { get; }
     private Dictionary<string, ChatType> TextCommandChannels { get; } = new();
@@ -70,18 +69,17 @@ internal sealed class ChatLog : IUiComponent {
 
             if (info.Channel is InputChannel.Tell) {
                 if (info.Rotate != RotateMode.None) {
-                    this._tellIdx = prevTemp != InputChannel.Tell
+                    var idx = prevTemp != InputChannel.Tell
                         ? 0
                         : info.Rotate == RotateMode.Reverse
                             ? -1
                             : 1;
 
-                    var tellInfo = this.Ui.Plugin.Functions.Chat.GetTellHistoryInfo(this._tellIdx);
+                    var tellInfo = this.Ui.Plugin.Functions.Chat.GetTellHistoryInfo(idx);
                     if (tellInfo != null && reason != null) {
                         this._tellTarget = new TellTarget(tellInfo.Name, (ushort) tellInfo.World, tellInfo.ContentId, reason.Value);
                     }
                 } else {
-                    this._tellIdx = 0;
                     this._tellTarget = null;
 
                     if (target != null) {
@@ -89,8 +87,19 @@ internal sealed class ChatLog : IUiComponent {
                     }
                 }
             } else {
-                this._tellIdx = 0;
                 this._tellTarget = null;
+            }
+
+            var mode = prevTemp == null
+                ? RotateMode.None
+                : info.Rotate;
+
+            if (info.Channel is InputChannel.Linkshell1 && info.Rotate != RotateMode.None) {
+                var idx = this.Ui.Plugin.Functions.Chat.RotateLinkshellHistory(mode);
+                this._tempChannel = info.Channel.Value + (uint) idx;
+            } else if (info.Channel is InputChannel.CrossLinkshell1 && info.Rotate != RotateMode.None) {
+                var idx = this.Ui.Plugin.Functions.Chat.RotateCrossLinkshellHistory(mode);
+                this._tempChannel = info.Channel.Value + (uint) idx;
             }
         }
 
@@ -266,19 +275,27 @@ internal sealed class ChatLog : IUiComponent {
 
         ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, Vector2.Zero);
         try {
-            if (this._tempChannel != null) {
-                if (this._tellTarget != null) {
-                    var world = this.Ui.Plugin.DataManager.GetExcelSheet<World>()
-                        ?.GetRow(this._tellTarget.World)
-                        ?.Name
-                        ?.RawString ?? "???";
+            if (this._tellTarget != null) {
+                var world = this.Ui.Plugin.DataManager.GetExcelSheet<World>()
+                    ?.GetRow(this._tellTarget.World)
+                    ?.Name
+                    ?.RawString ?? "???";
 
-                    this.DrawChunks(new List<Chunk> {
-                        new TextChunk(null, null, "Tell "),
-                        new TextChunk(null, null, this._tellTarget.Name),
-                        new IconChunk(null, null, BitmapFontIcon.CrossWorld),
-                        new TextChunk(null, null, world),
-                    });
+                this.DrawChunks(new Chunk[] {
+                    new TextChunk(null, null, "Tell "),
+                    new TextChunk(null, null, this._tellTarget.Name),
+                    new IconChunk(null, null, BitmapFontIcon.CrossWorld),
+                    new TextChunk(null, null, world),
+                });
+            } else if (this._tempChannel != null) {
+                if (this._tempChannel.Value.IsLinkshell()) {
+                    var idx = (uint) this._tempChannel.Value - (uint) InputChannel.Linkshell1;
+                    var lsName = this.Ui.Plugin.Functions.Chat.GetLinkshellName(idx);
+                    ImGui.TextUnformatted($"LS #{idx + 1}: {lsName}");
+                } else if (this._tempChannel.Value.IsCrossLinkshell()) {
+                    var idx = (uint) this._tempChannel.Value - (uint) InputChannel.CrossLinkshell1;
+                    var cwlsName = this.Ui.Plugin.Functions.Chat.GetCrossLinkshellName(idx);
+                    ImGui.TextUnformatted($"CWLS [{idx + 1}]: {cwlsName}");
                 } else {
                     ImGui.TextUnformatted(this._tempChannel.Value.ToChatType().Name());
                 }
@@ -312,7 +329,6 @@ internal sealed class ChatLog : IUiComponent {
 
                 if (ImGui.Selectable(name)) {
                     this.Ui.Plugin.Functions.Chat.SetChannel(channel);
-                    this._tellIdx = 0;
                     this._tellTarget = null;
                 }
             }
@@ -394,7 +410,6 @@ internal sealed class ChatLog : IUiComponent {
             }
 
             this._tempChannel = null;
-            this._tellIdx = 0;
         }
 
         if (inputColour != null) {

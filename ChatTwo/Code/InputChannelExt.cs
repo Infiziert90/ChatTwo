@@ -126,4 +126,28 @@ internal static class InputChannelExt {
             .Where(id => id != null)
             .Cast<TextCommand>();
     }
+
+    internal static bool IsLinkshell(this InputChannel channel) => channel switch {
+        InputChannel.Linkshell1 => true,
+        InputChannel.Linkshell2 => true,
+        InputChannel.Linkshell3 => true,
+        InputChannel.Linkshell4 => true,
+        InputChannel.Linkshell5 => true,
+        InputChannel.Linkshell6 => true,
+        InputChannel.Linkshell7 => true,
+        InputChannel.Linkshell8 => true,
+        _ => false,
+    };
+
+    internal static bool IsCrossLinkshell(this InputChannel channel) => channel switch {
+        InputChannel.CrossLinkshell1 => true,
+        InputChannel.CrossLinkshell2 => true,
+        InputChannel.CrossLinkshell3 => true,
+        InputChannel.CrossLinkshell4 => true,
+        InputChannel.CrossLinkshell5 => true,
+        InputChannel.CrossLinkshell6 => true,
+        InputChannel.CrossLinkshell7 => true,
+        InputChannel.CrossLinkshell8 => true,
+        _ => false,
+    };
 }

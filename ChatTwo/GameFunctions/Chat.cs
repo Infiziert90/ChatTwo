@@ -9,6 +9,7 @@ using Dalamud.Logging;
 using Dalamud.Memory;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Client.System.String;
+using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Client.UI.Shell;
@@ -46,7 +47,13 @@ internal sealed unsafe class Chat : IDisposable {
     private readonly delegate* unmanaged<Framework*, IntPtr> _getNetworkModule = null!;
 
     [Signature("E8 ?? ?? ?? ?? 48 8B C8 E8 ?? ?? ?? ?? 45 8D 46 FB")]
-    private readonly delegate* unmanaged<IntPtr, uint, Utf8String*> _getLinkshellName = null!;
+    private readonly delegate* unmanaged<IntPtr, uint, Utf8String*> _getCrossLinkshellName = null!;
+
+    [Signature("3B 51 10 73 0F 8B C2 48 83 C0 0B")]
+    private readonly delegate* unmanaged<IntPtr, uint, ulong*> _getLinkshellInfo = null!;
+
+    [Signature("E8 ?? ?? ?? ?? 4C 8B C0 FF C3")]
+    private readonly delegate* unmanaged<IntPtr, ulong, byte*> _getLinkshellName = null!;
 
     // Hooks
 
@@ -92,6 +99,9 @@ internal sealed unsafe class Chat : IDisposable {
     [Signature("89 83 ?? ?? ?? ?? 48 8B 01 83 FE 13 7C 05 41 8B D4 EB 03 83 CA FF FF 90", Offset = 2)]
     private readonly int? _shellChannelOffset;
 
+    [Signature("4C 8D B6 ?? ?? ?? ?? 41 8B 1E 45 85 E4 74 7A 33 FF 8B EF 66 0F 1F 44 00", Offset = 3)]
+    private readonly int? _linkshellCycleOffset;
+
     #pragma warning restore 0649
 
     // Events
@@ -130,13 +140,52 @@ internal sealed unsafe class Chat : IDisposable {
     }
 
     internal string? GetLinkshellName(uint idx) {
+        var infoProxy = this.Plugin.Functions.GetInfoProxyByIndex(2);
+        if (infoProxy == IntPtr.Zero) {
+            return null;
+        }
+
+        var lsInfo = this._getLinkshellInfo(infoProxy, idx);
+        if (lsInfo == null) {
+            return null;
+        }
+
+        var utf = this._getLinkshellName(infoProxy, *lsInfo);
+        return utf == null ? null : MemoryHelper.ReadStringNullTerminated((IntPtr) utf);
+    }
+
+    internal string? GetCrossLinkshellName(uint idx) {
         var infoProxy = this.Plugin.Functions.GetInfoProxyByIndex(26);
         if (infoProxy == IntPtr.Zero) {
             return null;
         }
 
-        var utf = this._getLinkshellName(infoProxy, idx);
+        var utf = this._getCrossLinkshellName(infoProxy, idx);
         return utf == null ? null : utf->ToString();
+    }
+
+    internal ulong RotateLinkshellHistory(RotateMode mode) {
+        if (mode == RotateMode.None && this._linkshellCycleOffset != null) {
+            // for the branch at 6.08: 5E1680
+            var uiModule = (IntPtr) Framework.Instance()->GetUiModule();
+            *(int*) (uiModule + this._linkshellCycleOffset.Value) = -1;
+        }
+
+        return RotateLinkshellHistoryInternal(189, mode);
+    }
+
+    internal ulong RotateCrossLinkshellHistory(RotateMode mode) => RotateLinkshellHistoryInternal(191, mode);
+
+    private static ulong RotateLinkshellHistoryInternal(int vfunc, RotateMode mode) {
+        var idx = mode switch {
+            RotateMode.Forward => 1,
+            RotateMode.Reverse => -1,
+            _ => 0,
+        };
+
+        var uiModule = Framework.Instance()->GetUiModule();
+        var cycleFunc = (delegate* unmanaged<UIModule*, int, ulong>) uiModule->vfunc[vfunc];
+        return cycleFunc(uiModule, idx);
     }
 
     private readonly Dictionary<string, Keybind> _keybinds = new();
