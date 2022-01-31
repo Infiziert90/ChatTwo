@@ -64,7 +64,7 @@ internal class Tab {
     internal void AddMessage(Message message, bool unread = true) {
         this.MessagesMutex.WaitOne();
         this.Messages.Add(message);
-        if (this.Messages.Count > 1000) {
+        while (this.Messages.Count > Store.MessagesLimit) {
             this.Messages.RemoveAt(0);
         }
 

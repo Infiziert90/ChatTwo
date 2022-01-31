@@ -9,6 +9,8 @@ using Lumina.Excel.GeneratedSheets;
 namespace ChatTwo;
 
 internal class Store : IDisposable {
+    internal const int MessagesLimit = 10_000;
+    
     internal sealed class MessagesLock : IDisposable {
         private Mutex Mutex { get; }
         internal List<Message> Messages { get; }
@@ -64,7 +66,7 @@ internal class Store : IDisposable {
         using var messages = this.GetMessages();
         messages.Messages.Add(message);
 
-        if (messages.Messages.Count > 1_000) {
+        while (messages.Messages.Count > MessagesLimit) {
             messages.Messages.RemoveAt(0);
         }
 
