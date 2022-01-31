@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics;
+using System.Numerics;
 using ChatTwo.Code;
 using ChatTwo.GameFunctions.Types;
 using ChatTwo.Util;
@@ -27,6 +28,8 @@ internal sealed class ChatLog : IUiComponent {
     private int _lastTab;
     private InputChannel? _tempChannel;
     private TellTarget? _tellTarget;
+    private Vector2 _lastWindowSize = Vector2.Zero;
+    private readonly Stopwatch _lastResize = new();
 
     private PayloadHandler PayloadHandler { get; }
     private Dictionary<string, ChatType> TextCommandChannels { get; } = new();
@@ -258,6 +261,13 @@ internal sealed class ChatLog : IUiComponent {
             return;
         }
 
+        var resized = this._lastWindowSize != ImGui.GetWindowSize();
+        this._lastWindowSize = ImGui.GetWindowSize();
+
+        if (resized) {
+            this._lastResize.Restart();
+        }
+
         this._lastViewport = ImGui.GetWindowViewport().NativePtr;
 
         var currentTab = this.Ui.Plugin.Config.SidebarTabView
@@ -446,14 +456,42 @@ internal sealed class ChatLog : IUiComponent {
                 ImGui.TableSetupColumn("messages", ImGuiTableColumnFlags.WidthStretch);
             }
 
-            // var clipper = new ImGuiListClipperPtr(ImGuiNative.ImGuiListClipper_ImGuiListClipper());
-            // int numMessages;
             try {
                 tab.MessagesMutex.WaitOne();
 
-                for (var i = 0; i < tab.Messages.Count; i++) {
-                    // numDrawn += 1;
-                    var message = tab.Messages[i];
+                var reset = false;
+                if (this._lastResize.IsRunning && this._lastResize.Elapsed.TotalSeconds > 0.25) {
+                    this._lastResize.Stop();
+                    this._lastResize.Reset();
+                    reset = true;
+                }
+
+                var lastPos = ImGui.GetCursorPosY();
+                foreach (var message in tab.Messages) {
+                    if (reset) {
+                        message.Height = null;
+                        message.IsVisible = false;
+                    }
+
+                    // message has rendered once
+                    if (message.Height.HasValue) {
+                        // message isn't visible, so render dummy
+                        if (!message.IsVisible) {
+                            // skip columns
+                            if (table) {
+                                if (tab.DisplayTimestamp) {
+                                    ImGui.TableNextColumn();
+                                }
+
+                                ImGui.TableNextColumn();
+                            }
+
+                            ImGui.Dummy(new Vector2(1f, message.Height.Value));
+                            message.IsVisible = ImGui.IsItemVisible();
+
+                            goto UpdateMessage;
+                        }
+                    }
 
                     if (tab.DisplayTimestamp) {
                         var timestamp = message.Date.ToLocalTime().ToString("t");
@@ -472,34 +510,27 @@ internal sealed class ChatLog : IUiComponent {
                         ImGui.TableNextColumn();
                     }
 
+                    var beforeDraw = ImGui.GetCursorScreenPos();
                     if (message.Sender.Count > 0) {
                         this.DrawChunks(message.Sender, true, this.PayloadHandler);
                         ImGui.SameLine();
                     }
 
                     this.DrawChunks(message.Content, true, this.PayloadHandler);
+                    var afterDraw = ImGui.GetCursorScreenPos();
 
-                    // drawnHeight += ImGui.GetCursorPosY() - lastPos;
-                    // lastPos = ImGui.GetCursorPosY();
+                    message.Height = ImGui.GetCursorPosY() - lastPos;
+                    message.IsVisible = ImGui.IsRectVisible(beforeDraw, afterDraw);
+
+                    UpdateMessage:
+                    lastPos = ImGui.GetCursorPosY();
                 }
-
-                // numMessages = tab.Messages.Count;
-                // may render too many items, but this is easier
-                // clipper.Begin(numMessages, lineHeight + ImGui.GetStyle().ItemSpacing.Y);
-                // while (clipper.Step()) {
-                // }
             } finally {
                 tab.MessagesMutex.ReleaseMutex();
                 ImGui.PopStyleVar(this.Ui.Plugin.Config.MoreCompactPretty ? 2 : 1);
             }
 
-            // PluginLog.Log($"numDrawn: {numDrawn}");
-
             if (switchedTab || ImGui.GetScrollY() >= ImGui.GetScrollMaxY()) {
-                // PluginLog.Log($"drawnHeight: {drawnHeight}");
-                // var itemPosY = clipper.StartPosY + drawnHeight;
-                // PluginLog.Log($"itemPosY: {itemPosY}");
-                // ImGui.SetScrollFromPosY(itemPosY - ImGui.GetWindowPos().Y);
                 ImGui.SetScrollHereY(1f);
             }
 

@@ -4,6 +4,8 @@ namespace ChatTwo;
 
 internal class Message {
     internal ulong ContentId;
+    internal float? Height;
+    internal bool IsVisible;
 
     internal DateTime Date { get; }
     internal ChatCode Code { get; }
