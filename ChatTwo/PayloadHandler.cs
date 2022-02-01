@@ -11,6 +11,8 @@ using Dalamud.Logging;
 using Dalamud.Utility;
 using ImGuiNET;
 using ImGuiScene;
+using Lumina.Excel.GeneratedSheets;
+using Action = System.Action;
 
 namespace ChatTwo;
 
@@ -95,11 +97,11 @@ internal sealed class PayloadHandler {
             }
             case ItemPayload item: {
                 if (this.Ui.Plugin.Config.NativeItemTooltips) {
-                    GameFunctions.GameFunctions.OpenItemTooltip(item.ItemId);
+                    GameFunctions.GameFunctions.OpenItemTooltip(item.RawItemId);
 
                     this._handleTooltips = true;
-                    if (this._hoveredItem != item.ItemId) {
-                        this._hoveredItem = item.ItemId;
+                    if (this._hoveredItem != item.RawItemId) {
+                        this._hoveredItem = item.RawItemId;
                         this._hoverCounter = this._lastHoverCounter = 0;
                     } else {
                         this._lastHoverCounter = this._hoverCounter;
@@ -235,27 +237,37 @@ internal sealed class PayloadHandler {
         }
     }
 
-    private void DrawItemPopup(ItemPayload item) {
-        if (item.Item == null) {
+    private void DrawItemPopup(ItemPayload payload) {
+        if (payload.Kind == ItemPayload.ItemKind.EventItem) {
+            this.DrawEventItemPopup(payload);
             return;
         }
 
-        if (this.Ui.Plugin.TextureCache.GetItem(item.Item, item.IsHQ) is { } icon) {
+        var item = this.Ui.Plugin.DataManager.GetExcelSheet<Item>()?.GetRow(payload.ItemId);
+        if (item == null) {
+            return;
+        }
+
+        var hq = payload.Kind == ItemPayload.ItemKind.Hq;
+
+        if (this.Ui.Plugin.TextureCache.GetItem(item, hq) is { } icon) {
             InlineIcon(icon);
         }
 
-        var name = item.Item.Name.ToDalamudString();
-        if (item.IsHQ) {
+        var name = item.Name.ToDalamudString();
+        if (hq) {
             // hq symbol
             name.Payloads.Add(new TextPayload(" "));
+        } else if (payload.Kind == ItemPayload.ItemKind.Collectible) {
+            name.Payloads.Add(new TextPayload(" "));
         }
 
         this.Log.DrawChunks(ChunkUtil.ToChunks(name, null).ToList(), false);
         ImGui.Separator();
 
-        var realItemId = (uint) (item.ItemId + (item.IsHQ ? GameFunctions.GameFunctions.HqItemOffset : 0));
+        var realItemId = payload.RawItemId;
 
-        if (item.Item.EquipSlotCategory.Row != 0) {
+        if (item.EquipSlotCategory.Row != 0) {
             if (ImGui.Selectable("Try On")) {
                 this.Ui.Plugin.Functions.Context.TryOn(realItemId, 0);
             }
@@ -265,15 +277,44 @@ internal sealed class PayloadHandler {
             }
         }
 
-        if (item.Item.ItemSearchCategory.Value?.Category == 3) {
+        if (item.ItemSearchCategory.Value?.Category == 3) {
             if (ImGui.Selectable("Search Recipes Using This Material")) {
-                this.Ui.Plugin.Functions.Context.SearchForRecipesUsingItem(item.ItemId);
+                this.Ui.Plugin.Functions.Context.SearchForRecipesUsingItem(payload.ItemId);
             }
         }
 
         if (ImGui.Selectable("Search for Item")) {
             this.Ui.Plugin.Functions.Context.SearchForItem(realItemId);
         }
+
+        if (ImGui.Selectable("Link")) {
+            this.Ui.Plugin.Functions.Context.LinkItem(realItemId);
+        }
+
+        if (ImGui.Selectable("Copy Item Name")) {
+            ImGui.SetClipboardText(name.TextValue);
+        }
+    }
+
+    private void DrawEventItemPopup(ItemPayload payload) {
+        if (payload.Kind != ItemPayload.ItemKind.EventItem) {
+            return;
+        }
+
+        var item = this.Ui.Plugin.DataManager.GetExcelSheet<EventItem>()?.GetRow(payload.ItemId);
+        if (item == null) {
+            return;
+        }
+
+        if (this.Ui.Plugin.TextureCache.GetEventItem(item) is { } icon) {
+            InlineIcon(icon);
+        }
+
+        var name = item.Name.ToDalamudString();
+        this.Log.DrawChunks(ChunkUtil.ToChunks(name, null).ToList(), false);
+        ImGui.Separator();
+
+        var realItemId = payload.RawItemId;
 
         if (ImGui.Selectable("Link")) {
             this.Ui.Plugin.Functions.Context.LinkItem(realItemId);
@@ -373,7 +414,7 @@ internal sealed class PayloadHandler {
 
     private static string? PopupId(Payload payload) => payload switch {
         PlayerPayload player => $"###player-{player.PlayerName}@{player.World}",
-        ItemPayload item => $"###item-{item.ItemId}{item.IsHQ}",
+        ItemPayload item => $"###item-{item.RawItemId}",
         _ => null,
     };
 }

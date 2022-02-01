@@ -9,9 +9,11 @@ internal class TextureCache : IDisposable {
 
     private readonly Dictionary<(uint, bool), TextureWrap> _itemIcons = new();
     private readonly Dictionary<(uint, bool), TextureWrap> _statusIcons = new();
+    private readonly Dictionary<(uint, bool), TextureWrap> _eventItemIcons = new();
 
     internal IReadOnlyDictionary<(uint, bool), TextureWrap> ItemIcons => this._itemIcons;
     internal IReadOnlyDictionary<(uint, bool), TextureWrap> StatusIcons => this._statusIcons;
+    internal IReadOnlyDictionary<(uint, bool), TextureWrap> EventItemIcons => this._eventItemIcons;
 
     internal TextureCache(DataManager data) {
         this.Data = data;
@@ -47,6 +49,10 @@ internal class TextureCache : IDisposable {
         this.AddIcon(this._statusIcons, status.Icon);
     }
 
+    internal void AddEventItem(EventItem item) {
+        this.AddIcon(this._eventItemIcons, item.Icon);
+    }
+
     internal TextureWrap? GetItem(Item item, bool hq = false) {
         this.AddItem(item, hq);
         this.ItemIcons.TryGetValue((item.Icon, hq), out var icon);
@@ -56,6 +62,12 @@ internal class TextureCache : IDisposable {
     internal TextureWrap? GetStatus(Status status) {
         this.AddStatus(status);
         this.StatusIcons.TryGetValue((status.Icon, false), out var icon);
+        return icon;
+    }
+
+    internal TextureWrap? GetEventItem(EventItem item) {
+        this.AddEventItem(item);
+        this.EventItemIcons.TryGetValue((item.Icon, false), out var icon);
         return icon;
     }
 }
