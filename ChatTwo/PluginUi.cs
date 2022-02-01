@@ -88,10 +88,16 @@ internal sealed class PluginUi : IDisposable {
             gameSym.Length
         );
 
-        this.Plugin.Interface.UiBuilder.BuildFonts += this.BuildFonts;
-        this.Plugin.Interface.UiBuilder.Draw += this.Draw;
+        var uiBuilder = this.Plugin.Interface.UiBuilder;
+        uiBuilder.DisableAutomaticUiHide = true;
+        uiBuilder.DisableCutsceneUiHide = true;
+        uiBuilder.DisableGposeUiHide = true;
+        uiBuilder.DisableUserUiHide = true;
 
-        this.Plugin.Interface.UiBuilder.RebuildFonts();
+        uiBuilder.BuildFonts += this.BuildFonts;
+        uiBuilder.Draw += this.Draw;
+
+        uiBuilder.RebuildFonts();
     }
 
     public void Dispose() {

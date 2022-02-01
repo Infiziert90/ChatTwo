@@ -3,6 +3,7 @@ using System.Numerics;
 using ChatTwo.Code;
 using ChatTwo.GameFunctions.Types;
 using ChatTwo.Util;
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.Command;
 using Dalamud.Game.Text.SeStringHandling;
@@ -237,7 +238,55 @@ internal sealed class ChatLog : IUiComponent {
         }
     }
 
+    private bool CutsceneActive {
+        get {
+            var condition = this.Ui.Plugin.Condition;
+            return condition[ConditionFlag.OccupiedInCutSceneEvent]
+                   || condition[ConditionFlag.WatchingCutscene78];
+        }
+    }
+
+    private bool GposeActive {
+        get {
+            var condition = this.Ui.Plugin.Condition;
+            return condition[ConditionFlag.WatchingCutscene];
+        }
+    }
+
+    private enum HideState {
+        None,
+        Cutscene,
+        CutsceneOverride,
+        User,
+    }
+
+    private HideState _hideState = HideState.None;
+
     public unsafe void Draw() {
+        // if the chat has no hide state and in a cutscene, set the hide state to cutscene
+        if (this.Ui.Plugin.Config.HideDuringCutscenes && this._hideState == HideState.None && (this.CutsceneActive || this.GposeActive)) {
+            this._hideState = HideState.Cutscene;
+        }
+        
+        // if the chat is hidden because of a cutscene and no longer in a cutscene, set the hide state to none
+        if (this._hideState is HideState.Cutscene or HideState.CutsceneOverride && !this.CutsceneActive && !this.GposeActive) {
+            this._hideState = HideState.None;
+        }
+
+        // if the chat is hidden because of a cutscene and the chat has been activated, show chat
+        if (this._hideState == HideState.Cutscene && this.Activate) {
+            this._hideState = HideState.CutsceneOverride;
+        }
+
+        // if the user hid the chat and is now activating chat, reset the hide state
+        if (this._hideState == HideState.User && this.Activate) {
+            this._hideState = HideState.None;
+        }
+
+        if (this._hideState is HideState.Cutscene or HideState.User) {
+            return;
+        }
+
         var flags = ImGuiWindowFlags.None;
         if (!this.Ui.Plugin.Config.CanMove) {
             flags |= ImGuiWindowFlags.NoMove;
@@ -360,6 +409,8 @@ internal sealed class ChatLog : IUiComponent {
             }
         }
 
+        var normalColour = *ImGui.GetStyleColorVec4(ImGuiCol.Text);
+
         var inputColour = this.Ui.Plugin.Config.ChatColours.TryGetValue(inputType, out var inputCol)
             ? inputCol
             : inputType.DefaultColour();
@@ -420,6 +471,20 @@ internal sealed class ChatLog : IUiComponent {
             }
 
             this._tempChannel = null;
+        }
+
+        if (ImGui.BeginPopupContextItem()) {
+            ImGui.PushStyleColor(ImGuiCol.Text, normalColour);
+
+            try {
+                if (ImGui.Selectable("Hide chat")) {
+                    this._hideState = HideState.User;
+                }
+            } finally {
+                ImGui.PopStyleColor();
+            }
+
+            ImGui.EndPopup();
         }
 
         if (inputColour != null) {

@@ -1,6 +1,7 @@
 ﻿using Dalamud.Data;
 using Dalamud.Game;
 using Dalamud.Game.ClientState;
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.ClientState.Objects;
 using Dalamud.Game.ClientState.Party;
@@ -27,6 +28,9 @@ public sealed class Plugin : IDalamudPlugin {
 
     [PluginService]
     internal CommandManager CommandManager { get; init; }
+
+    [PluginService]
+    internal Condition Condition { get; init; }
 
     [PluginService]
     internal DataManager DataManager { get; init; }

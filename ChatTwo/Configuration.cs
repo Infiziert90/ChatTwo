@@ -8,6 +8,7 @@ internal class Configuration : IPluginConfiguration {
     public int Version { get; set; } = 1;
 
     public bool HideChat = true;
+    public bool HideDuringCutscenes = true;
     public bool NativeItemTooltips = true;
     public bool PrettierTimestamps = true;
     public bool MoreCompactPretty;

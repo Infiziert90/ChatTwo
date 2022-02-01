@@ -12,7 +12,8 @@ internal sealed class Display : ISettingsTab {
     }
 
     public void Draw() {
-        ImGui.Checkbox("Hide chat", ref this.Mutable.HideChat);
+        ImGui.Checkbox("Hide vanilla chat", ref this.Mutable.HideChat);
+        ImGui.Checkbox("Hide chat during cutscenes", ref this.Mutable.HideDuringCutscenes);
         ImGui.Checkbox("Show native item tooltips", ref this.Mutable.NativeItemTooltips);
         ImGui.Checkbox("Show tabs in a sidebar", ref this.Mutable.SidebarTabView);
         ImGui.Checkbox("Use modern timestamp layout", ref this.Mutable.PrettierTimestamps);
