@@ -513,7 +513,8 @@ internal sealed class ChatLog : IUiComponent {
             ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, Vector2.Zero);
             var table = tab.DisplayTimestamp && this.Ui.Plugin.Config.PrettierTimestamps;
 
-            if (this.Ui.Plugin.Config.MoreCompactPretty) {
+            var oldCellPaddingY = ImGui.GetStyle().CellPadding.Y;
+            if (this.Ui.Plugin.Config.PrettierTimestamps && this.Ui.Plugin.Config.MoreCompactPretty) {
                 var padding = ImGui.GetStyle().CellPadding;
                 padding.Y = 0;
 
@@ -603,6 +604,12 @@ internal sealed class ChatLog : IUiComponent {
                     var afterDraw = ImGui.GetCursorScreenPos();
 
                     message.Height = ImGui.GetCursorPosY() - lastPos;
+                    if (this.Ui.Plugin.Config.PrettierTimestamps && !this.Ui.Plugin.Config.MoreCompactPretty) {
+                        message.Height -= oldCellPaddingY * 2;
+                        beforeDraw.Y += oldCellPaddingY;
+                        afterDraw.Y -= oldCellPaddingY;
+                    }
+
                     message.IsVisible = ImGui.IsRectVisible(beforeDraw, afterDraw);
 
                     UpdateMessage:
@@ -610,7 +617,7 @@ internal sealed class ChatLog : IUiComponent {
                 }
             } finally {
                 tab.MessagesMutex.ReleaseMutex();
-                ImGui.PopStyleVar(this.Ui.Plugin.Config.MoreCompactPretty ? 2 : 1);
+                ImGui.PopStyleVar(this.Ui.Plugin.Config.PrettierTimestamps && this.Ui.Plugin.Config.MoreCompactPretty ? 2 : 1);
             }
 
             if (switchedTab || ImGui.GetScrollY() >= ImGui.GetScrollMaxY()) {
