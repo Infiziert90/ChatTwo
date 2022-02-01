@@ -7,6 +7,7 @@ using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Hooking;
 using Dalamud.Logging;
 using Dalamud.Memory;
+using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Client.UI;
@@ -14,7 +15,6 @@ using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Client.UI.Shell;
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using Siggingway;
 using ValueType = FFXIVClientStructs.FFXIV.Component.GUI.ValueType;
 
 namespace ChatTwo.GameFunctions;
@@ -119,7 +119,7 @@ internal sealed unsafe class Chat : IDisposable {
 
     internal Chat(Plugin plugin) {
         this.Plugin = plugin;
-        Siggingway.Siggingway.Initialise(this.Plugin.SigScanner, this);
+        SignatureHelper.Initialise(this);
 
         this.ChatLogRefreshHook?.Enable();
         this.ChangeChannelNameHook?.Enable();

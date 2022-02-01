@@ -1,12 +1,12 @@
 ﻿using System.Runtime.InteropServices;
 using Dalamud.Hooking;
 using Dalamud.Memory;
+using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using Lumina.Excel.GeneratedSheets;
-using Siggingway;
 
 namespace ChatTwo.GameFunctions;
 
@@ -63,7 +63,7 @@ internal unsafe class GameFunctions : IDisposable {
         this.Chat = new Chat(this.Plugin);
         this.Context = new Context(this.Plugin);
 
-        Siggingway.Siggingway.Initialise(this.Plugin.SigScanner, this);
+        SignatureHelper.Initialise(this);
 
         this.ResolveTextCommandPlaceholderHook?.Enable();
     }

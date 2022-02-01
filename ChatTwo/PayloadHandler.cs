@@ -326,12 +326,15 @@ internal sealed class PayloadHandler {
     }
 
     private void DrawPlayerPopup(Chunk chunk, PlayerPayload player) {
-        var name = player.PlayerName;
+        var name = new List<Chunk> { new TextChunk(null, null, player.PlayerName) };
         if (player.World.IsPublic) {
-            name += $"{player.World.Name}";
+            name.AddRange(new Chunk[] {
+                new IconChunk(null, null, BitmapFontIcon.CrossWorld),
+                new TextChunk(null, null, player.World.Name),
+            });
         }
 
-        ImGui.TextUnformatted(name);
+        this.Log.DrawChunks(name, false);
         ImGui.Separator();
 
         if (player.World.IsPublic) {
@@ -346,8 +349,16 @@ internal sealed class PayloadHandler {
             var member = party.FirstOrDefault(member => member.Name.TextValue == player.PlayerName && member.World.Id == player.World.RowId);
             var isInParty = member != default;
             if (isLeader) {
-                if (!isInParty && ImGui.Selectable("Invite to Party")) {
-                    this.Ui.Plugin.Functions.Party.Invite(player.PlayerName, (ushort) player.World.RowId, chunk.Message?.ContentId ?? 0);
+                if (!isInParty && ImGui.BeginMenu("Invite to Party")) {
+                    if (ImGui.Selectable("Same world")) {
+                        this.Ui.Plugin.Functions.Party.InviteSameWorld(player.PlayerName, (ushort) player.World.RowId, chunk.Message?.ContentId ?? 0);
+                    }
+
+                    if (chunk.Message?.ContentId is not null or 0 && ImGui.Selectable("Different world")) {
+                        this.Ui.Plugin.Functions.Party.InviteOtherWorld(chunk.Message!.ContentId);
+                    }
+
+                    ImGui.EndMenu();
                 }
 
                 if (isInParty && member != null) {

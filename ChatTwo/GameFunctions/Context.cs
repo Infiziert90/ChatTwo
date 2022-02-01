@@ -1,9 +1,9 @@
 ﻿using ChatTwo.Util;
+using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using Siggingway;
 
 namespace ChatTwo.GameFunctions;
 
@@ -30,7 +30,7 @@ internal sealed unsafe class Context {
 
     internal Context(Plugin plugin) {
         this.Plugin = plugin;
-        Siggingway.Siggingway.Initialise(this.Plugin.SigScanner, this);
+        SignatureHelper.Initialise(this);
     }
 
     internal void InviteToNoviceNetwork(string name, ushort world) {

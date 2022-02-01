@@ -1,8 +1,8 @@
 ﻿using ChatTwo.Util;
+using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using Siggingway;
 
 namespace ChatTwo.GameFunctions;
 
@@ -23,28 +23,35 @@ internal sealed unsafe class Party {
 
     internal Party(Plugin plugin) {
         this.Plugin = plugin;
-        Siggingway.Siggingway.Initialise(this.Plugin.SigScanner, this);
+        SignatureHelper.Initialise(this);
     }
 
-    internal void Invite(string name, ushort world, ulong contentId) {
+    internal void InviteSameWorld(string name, ushort world, ulong contentId) {
         if (this._inviteToParty == null) {
             return;
         }
 
         // 6.05: 20D722
         var a1 = this.Plugin.Functions.GetInfoProxyByIndex(1);
+        fixed (byte* namePtr = name.ToTerminatedBytes()) {
+            // this only works if target is on the same world
+            this._inviteToParty(a1, contentId, namePtr, world);
+        }
+    }
 
+    internal void InviteOtherWorld(ulong contentId) {
+        if (this._inviteToPartyContentId != null) {
+            return;
+        }
+
+        // 6.05: 20D722
+        var a1 = this.Plugin.Functions.GetInfoProxyByIndex(1);
         if (contentId != 0) {
             // third param is world, but it requires a specific world
             // if they're not on that world, it will fail
             // pass 0 and it will work on any world EXCEPT for the world the
             // current player is on
             this._inviteToPartyContentId(a1, contentId, 0);
-        }
-
-        fixed (byte* namePtr = name.ToTerminatedBytes()) {
-            // this only works if target is on the same world
-            this._inviteToParty(a1, contentId, namePtr, world);
         }
     }
 
