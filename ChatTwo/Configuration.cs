@@ -23,6 +23,7 @@ internal class Configuration : IPluginConfiguration {
 
     internal void UpdateFrom(Configuration other) {
         this.HideChat = other.HideChat;
+        this.HideDuringCutscenes = other.HideDuringCutscenes;
         this.NativeItemTooltips = other.NativeItemTooltips;
         this.PrettierTimestamps = other.PrettierTimestamps;
         this.MoreCompactPretty = other.MoreCompactPretty;
