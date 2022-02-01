@@ -56,11 +56,17 @@ internal sealed class ChatLog : IUiComponent {
         this.Ui.Plugin.CommandManager.RemoveHandler("/clearlog2");
     }
 
-    private void Activated(string? input, ChannelSwitchInfo info, TellReason? reason, TellTarget? target) {
+    private void Activated(ChatActivatedArgs args) {
         this.Activate = true;
-        if (input != null && !this.Chat.Contains(input)) {
-            this.Chat += input;
+        if (args.AddIfNotPresent != null && !this.Chat.Contains(args.AddIfNotPresent)) {
+            this.Chat += args.AddIfNotPresent;
         }
+
+        if (args.Input != null) {
+            this.Chat += args.Input;
+        }
+
+        var (info, reason, target) = (args.ChannelSwitchInfo, args.TellReason, args.TellTarget);
 
         if (info.Channel != null) {
             var prevTemp = this._tempChannel;
@@ -231,7 +237,9 @@ internal sealed class ChatLog : IUiComponent {
 
             try {
                 TellReason? reason = info.Channel == InputChannel.Tell ? TellReason.Reply : null;
-                this.Activated(null, info, reason, null);
+                this.Activated(new ChatActivatedArgs(info) {
+                    TellReason = reason,
+                });
             } catch (Exception ex) {
                 PluginLog.LogError(ex, "Error in chat Activated event");
             }
@@ -267,7 +275,7 @@ internal sealed class ChatLog : IUiComponent {
         if (this.Ui.Plugin.Config.HideDuringCutscenes && this._hideState == HideState.None && (this.CutsceneActive || this.GposeActive)) {
             this._hideState = HideState.Cutscene;
         }
-        
+
         // if the chat is hidden because of a cutscene and no longer in a cutscene, set the hide state to none
         if (this._hideState is HideState.Cutscene or HideState.CutsceneOverride && !this.CutsceneActive && !this.GposeActive) {
             this._hideState = HideState.None;

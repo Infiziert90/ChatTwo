@@ -104,9 +104,13 @@ internal sealed unsafe class Chat : IDisposable {
 
     #pragma warning restore 0649
 
+    // Pointers
+    [Signature("48 8D 15 ?? ?? ?? ?? 0F B6 C8 48 8D 05", ScanType = ScanType.StaticAddress)]
+    private readonly char* _currentCharacter = null!;
+
     // Events
 
-    internal delegate void ChatActivatedEventDelegate(string? input, ChannelSwitchInfo info, TellReason? reason, TellTarget? target);
+    internal delegate void ChatActivatedEventDelegate(ChatActivatedArgs args);
 
     internal event ChatActivatedEventDelegate? Activated;
 
@@ -349,7 +353,9 @@ internal sealed unsafe class Chat : IDisposable {
             }
 
             try {
-                this.Activated?.Invoke(null, info, TellReason.Reply, null);
+                this.Activated?.Invoke(new ChatActivatedArgs(info) {
+                    TellReason = TellReason.Reply,
+                });
             } catch (Exception ex) {
                 PluginLog.LogError(ex, "Error in chat Activated event");
             }
@@ -374,18 +380,35 @@ internal sealed unsafe class Chat : IDisposable {
             return this.ChatLogRefreshHook!.Original(log, eventId, value);
         }
 
-        string? eventInput = null;
+        string? input = null;
+        var option = Framework.Instance()->GetUiModule()->GetConfigModule()->GetValueById(572);
+        if (option != null) {
+            var directChat = option->Int > 0;
+            if (directChat && this._currentCharacter != null) {
+                // FIXME: this whole system sucks
+                var c = *this._currentCharacter;
+                if (c != '\0' && !char.IsControl(c)) {
+                    input = c.ToString();
+                }
+            }
+        }
+
+        string? addIfNotPresent = null;
 
         var str = value + 2;
         if (str != null && ((int) str->Type & 0xF) == (int) ValueType.String && str->String != null) {
-            var input = MemoryHelper.ReadStringNullTerminated((IntPtr) str->String);
-            if (input.Length > 0) {
-                eventInput = input;
+            var add = MemoryHelper.ReadStringNullTerminated((IntPtr) str->String);
+            if (add.Length > 0) {
+                addIfNotPresent = add;
             }
         }
 
         try {
-            this.Activated?.Invoke(eventInput, new ChannelSwitchInfo(null), null, null);
+            var args = new ChatActivatedArgs(new ChannelSwitchInfo(null)) {
+                AddIfNotPresent = addIfNotPresent,
+                Input = input,
+            };
+            this.Activated?.Invoke(args);
         } catch (Exception ex) {
             PluginLog.LogError(ex, "Error in chat Activated event");
         }
@@ -465,7 +488,10 @@ internal sealed unsafe class Chat : IDisposable {
         if (name != null) {
             try {
                 var target = new TellTarget(name->ToString(), world, contentId, (TellReason) reason);
-                this.Activated?.Invoke(null, new ChannelSwitchInfo(InputChannel.Tell), (TellReason) reason, target);
+                this.Activated?.Invoke(new ChatActivatedArgs(new ChannelSwitchInfo(InputChannel.Tell)) {
+                    TellReason = (TellReason) reason,
+                    TellTarget = target,
+                });
             } catch (Exception ex) {
                 PluginLog.LogError(ex, "Error in chat Activated event");
             }
