@@ -93,7 +93,7 @@ internal sealed class Settings : IUiComponent {
             this.Ui.SettingsVisible = false;
         }
 
-        var buttonLabel = $"Support {this.Ui.Plugin.Name} on Ko-Fi";
+        var buttonLabel = $"Support {this.Ui.Plugin.Name} on Ko-fi";
 
         ImGui.PushStyleColor(ImGuiCol.Button, ColourUtil.RgbaToAbgr(0xFF5E5BFF));
         ImGui.PushStyleColor(ImGuiCol.ButtonHovered, ColourUtil.RgbaToAbgr(0xFF7775FF));
