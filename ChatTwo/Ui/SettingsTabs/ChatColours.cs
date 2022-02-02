@@ -1,22 +1,32 @@
 ﻿using ChatTwo.Code;
 using ChatTwo.Util;
+using Dalamud.Interface;
 using ImGuiNET;
 
 namespace ChatTwo.Ui.SettingsTabs;
 
 internal sealed class ChatColours : ISettingsTab {
     private Configuration Mutable { get; }
+    private Plugin Plugin { get; }
 
     public string Name => "Chat colours";
 
-    internal ChatColours(Configuration mutable) {
+    internal ChatColours(Configuration mutable, Plugin plugin) {
         this.Mutable = mutable;
+        this.Plugin = plugin;
     }
 
     public void Draw() {
         foreach (var type in Enum.GetValues<ChatType>()) {
-            if (ImGui.Button($"Default##{type}")) {
+            if (ImGuiUtil.IconButton(FontAwesomeIcon.UndoAlt, $"{type}", "Reset to default")) {
                 this.Mutable.ChatColours.Remove(type);
+            }
+
+            ImGui.SameLine();
+
+            if (ImGuiUtil.IconButton(FontAwesomeIcon.LongArrowAltDown, $"{type}", "Import from game")) {
+                var gameColour = this.Plugin.Functions.Chat.GetChannelColour(type);
+                this.Mutable.ChatColours[type] = gameColour ?? type.DefaultColour() ?? 0;
             }
 
             ImGui.SameLine();

@@ -55,6 +55,9 @@ internal sealed unsafe class Chat : IDisposable {
     [Signature("E8 ?? ?? ?? ?? 4C 8B C0 FF C3")]
     private readonly delegate* unmanaged<IntPtr, ulong, byte*> _getLinkshellName = null!;
 
+    [Signature("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 48 83 EC 20 8B F2 48 8D B9")]
+    private readonly delegate* unmanaged<IntPtr, uint, IntPtr> _getColourInfo = null!;
+
     // Hooks
 
     private delegate byte ChatLogRefreshDelegate(IntPtr log, ushort eventId, AtkValue* value);
@@ -105,8 +108,12 @@ internal sealed unsafe class Chat : IDisposable {
     #pragma warning restore 0649
 
     // Pointers
+
     [Signature("48 8D 15 ?? ?? ?? ?? 0F B6 C8 48 8D 05", ScanType = ScanType.StaticAddress)]
     private readonly char* _currentCharacter = null!;
+
+    [Signature("48 8D 0D ?? ?? ?? ?? 8B 14 ?? 85 D2 7E ?? 48 8B 0D ?? ?? ?? ?? 48 83 C1 10 E8 ?? ?? ?? ?? 8B 70 ?? 41 8D 4D", ScanType = ScanType.StaticAddress)]
+    private IntPtr ColourLookup { get; init; }
 
     // Events
 
@@ -190,6 +197,41 @@ internal sealed unsafe class Chat : IDisposable {
         var uiModule = Framework.Instance()->GetUiModule();
         var cycleFunc = (delegate* unmanaged<UIModule*, int, ulong>) uiModule->vfunc[vfunc];
         return cycleFunc(uiModule, idx);
+    }
+
+    // This function looks up a channel's user-defined colour.
+    //
+    // If this function would ever return 0, it returns null instead.
+    internal uint? GetChannelColour(ChatType type) {
+        if (this._getColourInfo == null || this.ColourLookup == IntPtr.Zero) {
+            return null;
+        }
+
+        // Colours are retrieved by looking up their code in a lookup table. Some codes share a colour, so they're lumped into a parent code here.
+        // Only codes >= 10 (say) have configurable colours.
+        // After getting the lookup value for the code, it is passed into a function with a handler which returns a pointer.
+        // This pointer + 32 is the RGB value. This functions returns RGBA with A always max.
+
+        var parent = new ChatCode((ushort) type).Parent();
+
+        switch (parent) {
+            case ChatType.Debug:
+            case ChatType.Urgent:
+            case ChatType.Notice:
+                return type.DefaultColour();
+        }
+
+        var framework = (IntPtr) Framework.Instance();
+
+        var lookupResult = *(uint*) (this.ColourLookup + (int) parent * 4);
+        var info = this._getColourInfo(framework + 16, lookupResult);
+        var rgb = *(uint*) (info + 32) & 0xFFFFFF;
+
+        if (rgb == 0) {
+            return null;
+        }
+
+        return 0xFF | (rgb << 8);
     }
 
     private readonly Dictionary<string, Keybind> _keybinds = new();

@@ -50,8 +50,6 @@ internal unsafe class GameFunctions : IDisposable {
 
     #pragma warning restore 0649
 
-    internal const int HqItemOffset = 1_000_000;
-
     private Plugin Plugin { get; }
     internal Party Party { get; }
     internal Chat Chat { get; }

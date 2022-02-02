@@ -19,7 +19,7 @@ internal sealed class Settings : IUiComponent {
 
         this.Tabs = new List<ISettingsTab> {
             new Display(this.Mutable),
-            new ChatColours(this.Mutable),
+            new ChatColours(this.Mutable, this.Ui.Plugin),
             new Tabs(this.Mutable),
         };
 
