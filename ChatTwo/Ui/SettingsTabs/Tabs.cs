@@ -43,8 +43,23 @@ internal sealed class Tabs : ISettingsTab {
                 }
 
                 ImGui.InputText("Name", ref tab.Name, 512, ImGuiInputTextFlags.EnterReturnsTrue);
-                ImGui.Checkbox("Show unread count", ref tab.DisplayUnread);
                 ImGui.Checkbox("Show timestamps", ref tab.DisplayTimestamp);
+
+                if (ImGui.BeginCombo("Unread mode", tab.UnreadMode.ToString())) {
+                    foreach (var mode in Enum.GetValues<UnreadMode>()) {
+                        if (ImGui.Selectable(mode.ToString(), tab.UnreadMode == mode)) {
+                            tab.UnreadMode = mode;
+                        }
+
+                        if (mode.Tooltip() is { } tooltip && ImGui.IsItemHovered()) {
+                            ImGui.BeginTooltip();
+                            ImGui.TextUnformatted(tooltip);
+                            ImGui.EndTooltip();
+                        }
+                    }
+
+                    ImGui.EndCombo();
+                }
 
                 var input = tab.Channel?.ToChatType().Name() ?? "<None>";
                 if (ImGui.BeginCombo("Input channel", input)) {

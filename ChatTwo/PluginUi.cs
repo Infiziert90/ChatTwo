@@ -18,6 +18,17 @@ internal sealed class PluginUi : IDisposable {
     internal ImFontPtr? ItalicFont { get; private set; }
     internal Vector4 DefaultText { get; private set; }
 
+    internal Tab? CurrentTab {
+        get {
+            var i = this._chatLog.LastTab;
+            if (i > -1 && i < this.Plugin.Config.Tabs.Count) {
+                return this.Plugin.Config.Tabs[i];
+            }
+
+            return null;
+        }
+    }
+
     private List<IUiComponent> Components { get; }
     private ImFontConfigPtr _fontCfg;
     private ImFontConfigPtr _fontCfgMerge;
@@ -42,12 +53,16 @@ internal sealed class PluginUi : IDisposable {
         GCHandleType.Pinned
     );
 
+    private readonly ChatLog _chatLog;
+
     internal unsafe PluginUi(Plugin plugin) {
         this.Plugin = plugin;
         this.Salt = new Random().Next().ToString();
+
+        this._chatLog = new ChatLog(this);
         this.Components = new List<IUiComponent> {
             new Settings(this),
-            new ChatLog(this),
+            this._chatLog,
         };
 
         this._fontCfg = new ImFontConfigPtr(ImGuiNative.ImFontConfig_ImFontConfig()) {

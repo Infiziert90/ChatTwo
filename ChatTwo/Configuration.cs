@@ -5,7 +5,7 @@ namespace ChatTwo;
 
 [Serializable]
 internal class Configuration : IPluginConfiguration {
-    public int Version { get; set; } = 1;
+    public int Version { get; set; } = 2;
 
     public bool HideChat = true;
     public bool HideDuringCutscenes = true;
@@ -36,13 +36,45 @@ internal class Configuration : IPluginConfiguration {
         this.ChatColours = other.ChatColours.ToDictionary(entry => entry.Key, entry => entry.Value);
         this.Tabs = other.Tabs.Select(t => t.Clone()).ToList();
     }
+
+    public void Migrate() {
+        if (this.Version == 1) {
+            this.Version = 2;
+
+            foreach (var tab in this.Tabs) {
+                #pragma warning disable CS0618
+                tab.UnreadMode = tab.DisplayUnread ? UnreadMode.Unseen : UnreadMode.None;
+                #pragma warning restore CS0618
+            }
+        }
+    }
+}
+
+[Serializable]
+internal enum UnreadMode {
+    All,
+    Unseen,
+    None,
+}
+
+internal static class UnreadModeExt {
+    internal static string? Tooltip(this UnreadMode mode) => mode switch {
+        UnreadMode.All => "Always show unread indicators.",
+        UnreadMode.Unseen => "Only show unread indicators for messages you haven't seen.",
+        UnreadMode.None => "Never show unread indicators.",
+        _ => null,
+    };
 }
 
 [Serializable]
 internal class Tab {
     public string Name = "New tab";
     public Dictionary<ChatType, ChatSource> ChatCodes = new();
+
+    [Obsolete("Use UnreadMode instead")]
     public bool DisplayUnread = true;
+
+    public UnreadMode UnreadMode = UnreadMode.Unseen;
     public bool DisplayTimestamp = true;
     public InputChannel? Channel;
 
@@ -87,7 +119,10 @@ internal class Tab {
         return new Tab {
             Name = this.Name,
             ChatCodes = this.ChatCodes.ToDictionary(entry => entry.Key, entry => entry.Value),
+            #pragma warning disable CS0618
             DisplayUnread = this.DisplayUnread,
+            #pragma warning restore CS0618
+            UnreadMode = this.UnreadMode,
             DisplayTimestamp = this.DisplayTimestamp,
             Channel = this.Channel,
         };

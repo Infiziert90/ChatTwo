@@ -66,6 +66,7 @@ public sealed class Plugin : IDalamudPlugin {
     #pragma warning disable CS8618
     public Plugin() {
         this.Config = this.Interface!.GetPluginConfig() as Configuration ?? new Configuration();
+        this.Config.Migrate();
         this.Common = new XivCommonBase();
         this.TextureCache = new TextureCache(this.DataManager!);
         this.Functions = new GameFunctions.GameFunctions(this);

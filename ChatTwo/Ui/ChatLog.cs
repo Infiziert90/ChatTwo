@@ -26,7 +26,7 @@ internal sealed class ChatLog : IUiComponent {
     private readonly TextureWrap? _fontIcon;
     private readonly List<string> _inputBacklog = new();
     private int _inputBacklogIdx = -1;
-    private int _lastTab;
+    internal int LastTab { get; private set; }
     private InputChannel? _tempChannel;
     private TellTarget? _tellTarget;
     private Vector2 _lastWindowSize = Vector2.Zero;
@@ -137,8 +137,8 @@ internal sealed class ChatLog : IUiComponent {
 
                 break;
             default:
-                if (this._lastTab > -1 && this._lastTab < this.Ui.Plugin.Config.Tabs.Count) {
-                    this.Ui.Plugin.Config.Tabs[this._lastTab].Clear();
+                if (this.LastTab > -1 && this.LastTab < this.Ui.Plugin.Config.Tabs.Count) {
+                    this.Ui.Plugin.Config.Tabs[this.LastTab].Clear();
                 }
 
                 break;
@@ -645,7 +645,7 @@ internal sealed class ChatLog : IUiComponent {
         for (var tabI = 0; tabI < this.Ui.Plugin.Config.Tabs.Count; tabI++) {
             var tab = this.Ui.Plugin.Config.Tabs[tabI];
 
-            var unread = tabI == this._lastTab || !tab.DisplayUnread || tab.Unread == 0 ? "" : $" ({tab.Unread})";
+            var unread = tabI == this.LastTab || tab.UnreadMode == UnreadMode.None || tab.Unread == 0 ? "" : $" ({tab.Unread})";
             var draw = ImGui.BeginTabItem($"{tab.Name}{unread}###log-tab-{tabI}");
             this.DrawTabContextMenu(tab, tabI);
 
@@ -654,8 +654,8 @@ internal sealed class ChatLog : IUiComponent {
             }
 
             currentTab = tabI;
-            var switchedTab = this._lastTab != tabI;
-            this._lastTab = tabI;
+            var switchedTab = this.LastTab != tabI;
+            this.LastTab = tabI;
             tab.Unread = 0;
 
             this.DrawMessageLog(tab, GetRemainingHeightForMessageLog(), switchedTab);
@@ -686,8 +686,8 @@ internal sealed class ChatLog : IUiComponent {
             for (var tabI = 0; tabI < this.Ui.Plugin.Config.Tabs.Count; tabI++) {
                 var tab = this.Ui.Plugin.Config.Tabs[tabI];
 
-                var unread = tabI == this._lastTab || !tab.DisplayUnread || tab.Unread == 0 ? "" : $" ({tab.Unread})";
-                var clicked = ImGui.Selectable($"{tab.Name}{unread}###log-tab-{tabI}", this._lastTab == tabI);
+                var unread = tabI == this.LastTab || tab.UnreadMode == UnreadMode.None || tab.Unread == 0 ? "" : $" ({tab.Unread})";
+                var clicked = ImGui.Selectable($"{tab.Name}{unread}###log-tab-{tabI}", this.LastTab == tabI);
                 this.DrawTabContextMenu(tab, tabI);
 
                 if (!clicked) {
@@ -695,8 +695,8 @@ internal sealed class ChatLog : IUiComponent {
                 }
 
                 currentTab = tabI;
-                switchedTab = this._lastTab != tabI;
-                this._lastTab = tabI;
+                switchedTab = this.LastTab != tabI;
+                this.LastTab = tabI;
             }
         }
 
@@ -704,8 +704,8 @@ internal sealed class ChatLog : IUiComponent {
 
         ImGui.TableNextColumn();
 
-        if (currentTab == -1 && this._lastTab < this.Ui.Plugin.Config.Tabs.Count) {
-            currentTab = this._lastTab;
+        if (currentTab == -1 && this.LastTab < this.Ui.Plugin.Config.Tabs.Count) {
+            currentTab = this.LastTab;
             this.Ui.Plugin.Config.Tabs[currentTab].Unread = 0;
         }
 

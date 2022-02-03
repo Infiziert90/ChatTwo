@@ -62,7 +62,7 @@ internal class Store : IDisposable {
         return new MessagesLock(this.Messages, this.MessagesMutex);
     }
 
-    internal void AddMessage(Message message) {
+    internal void AddMessage(Message message, Tab? currentTab) {
         using var messages = this.GetMessages();
         messages.Messages.Add(message);
 
@@ -70,9 +70,13 @@ internal class Store : IDisposable {
             messages.Messages.RemoveAt(0);
         }
 
+        var currentMatches = currentTab?.Matches(message) ?? false;
+
         foreach (var tab in this.Plugin.Config.Tabs) {
+            var unread = !(tab.UnreadMode == UnreadMode.Unseen && currentTab != tab && currentMatches);
+
             if (tab.Matches(message)) {
-                tab.AddMessage(message);
+                tab.AddMessage(message, unread);
             }
         }
     }
@@ -114,7 +118,7 @@ internal class Store : IDisposable {
         var messageChunks = ChunkUtil.ToChunks(message, chatCode.Type).ToList();
 
         var msg = new Message(chatCode, senderChunks, messageChunks);
-        this.AddMessage(msg);
+        this.AddMessage(msg, this.Plugin.Ui.CurrentTab);
 
         var idx = this.Plugin.Functions.GetCurrentChatLogEntryIndex();
         if (idx != null) {
