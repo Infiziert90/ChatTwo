@@ -52,7 +52,7 @@ internal sealed class PayloadHandler {
 
         var (chunk, payload) = this.Popup.Value;
 
-        if (PopupId == null || !ImGui.BeginPopup(PopupId)) {
+        if (!ImGui.BeginPopup(PopupId)) {
             this.Popup = null;
             return;
         }
