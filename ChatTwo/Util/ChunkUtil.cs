@@ -73,6 +73,11 @@ internal static class ChunkUtil {
                         var reader = new BinaryReader(new MemoryStream(rawPayload.Data[4..]));
                         var id = GetInteger(reader);
                         link = new PartyFinderPayload(id);
+                    } else if (rawPayload.Data.Length > 5 && rawPayload.Data[1] == 0x27 && rawPayload.Data[3] == 0x06) {
+                        // achievement payload
+                        var reader = new BinaryReader(new MemoryStream(rawPayload.Data[4..]));
+                        var id = GetInteger(reader);
+                        link = new AchievementPayload(id);
                     } else if (Equals(rawPayload, RawPayload.LinkTerminator)) {
                         link = null;
                     } else if (Equals(rawPayload, PeriodicRecruitmentLink)) {

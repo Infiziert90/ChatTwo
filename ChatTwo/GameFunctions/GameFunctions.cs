@@ -29,6 +29,9 @@ internal unsafe class GameFunctions : IDisposable {
     [Signature("48 89 5C 24 ?? 57 48 83 EC 20 48 8B FA 48 8B D9 E8 ?? ?? ?? ?? 48 8B 8B ?? ?? ?? ?? 48 85 C9", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<AgentInterface*, ulong, byte> _openPartyFinder = null!;
 
+    [Signature("E8 ?? ?? ?? ?? EB 42 48 8B 47 30", Fallibility = Fallibility.Fallible)]
+    private readonly delegate* unmanaged<AgentInterface*, uint, void> _openAchievement = null!;
+
     #endregion
 
     #region Hooks
@@ -237,6 +240,17 @@ internal unsafe class GameFunctions : IDisposable {
         var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.LookingForGroup);
         if (agent != null) {
             this._openPartyFinder(agent, id);
+        }
+    }
+
+    internal void OpenAchievement(uint id) {
+        if (this._openAchievement == null) {
+            return;
+        }
+
+        var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.Achievement);
+        if (agent != null) {
+            this._openAchievement(agent, id);
         }
     }
 

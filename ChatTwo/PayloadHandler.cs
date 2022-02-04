@@ -190,6 +190,10 @@ internal sealed class PayloadHandler {
                 this.Ui.Plugin.Functions.OpenPartyFinder(pf.Id);
                 break;
             }
+            case AchievementPayload achievement: {
+                this.Ui.Plugin.Functions.OpenAchievement(achievement.Id);
+                break;
+            }
             case RawPayload raw: {
                 if (Equals(raw, ChunkUtil.PeriodicRecruitmentLink)) {
                     GameFunctions.GameFunctions.OpenPartyFinder();
