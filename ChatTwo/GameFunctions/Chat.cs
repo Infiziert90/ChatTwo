@@ -314,21 +314,19 @@ internal sealed unsafe class Chat : IDisposable {
             }
         }
 
-        var focus = this._getFocus(AtkStage.GetSingleton());
-        if (focus == IntPtr.Zero) {
+        // 6.08: CB8F27
+        var isTextInputActivePtr = *(bool**) ((IntPtr) AtkStage.GetSingleton() + 0x28) + 0x188E;
+        if (isTextInputActivePtr == null) {
             Decrement();
             return;
         }
 
-        var node = (AtkResNode*) focus;
-        var parent = node->ParentNode;
-        if (parent == null || (uint) parent->Type is not (1002 or 1003 or 1005 or 1007 or 1010 or 1011)) {
+        if (*isTextInputActivePtr) {
+            this._inputFocused = true;
+            this._graceFrames = 60;
+        } else {
             Decrement();
-            return;
         }
-
-        this._inputFocused = true;
-        this._graceFrames = 60;
     }
 
     private void UpdateKeybinds() {
