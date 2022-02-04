@@ -379,12 +379,17 @@ internal sealed class PayloadHandler {
         this.Log.DrawChunks(name, false);
         ImGui.Separator();
 
-        if (player.World.IsPublic) {
-            if (ImGui.Selectable("Send Tell")) {
-                this.Log.Chat = $"/tell {player.PlayerName}@{player.World.Name} ";
-                this.Log.Activate = true;
+        if (ImGui.Selectable("Send Tell")) {
+            this.Log.Chat = $"/tell {player.PlayerName}";
+            if (player.World.IsPublic) {
+                this.Log.Chat += $"@{player.World.Name}";
             }
 
+            this.Log.Chat += " ";
+            this.Log.Activate = true;
+        }
+
+        if (player.World.IsPublic) {
             var party = this.Ui.Plugin.PartyList;
             var leader = (ulong?) party[(int) party.PartyLeaderIndex]?.ContentId;
             var isLeader = party.Length == 0 || this.Ui.Plugin.ClientState.LocalContentId == leader;
