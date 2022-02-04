@@ -7,6 +7,7 @@ using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using Lumina.Excel.GeneratedSheets;
+using ValueType = FFXIVClientStructs.FFXIV.Component.GUI.ValueType;
 
 namespace ChatTwo.GameFunctions;
 
@@ -252,6 +253,18 @@ internal unsafe class GameFunctions : IDisposable {
         if (agent != null) {
             this._openAchievement(agent, id);
         }
+    }
+
+    internal void ClickNoviceNetworkButton() {
+        var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.ChatLog);
+        // case 3
+        var value = new AtkValue {
+            Type = ValueType.Int,
+            Int = 3,
+        };
+        int result = 0;
+        var vf0 = *(delegate* unmanaged<AgentInterface*, int*, AtkValue*, ulong, ulong, int*>*) agent->VTable;
+        vf0(agent, &result, &value, 0, 0);
     }
 
     private readonly IntPtr _placeholderNamePtr = Marshal.AllocHGlobal(128);
