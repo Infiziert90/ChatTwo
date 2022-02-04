@@ -102,7 +102,7 @@ internal sealed class PayloadHandler {
                     "##chat2-copy",
                     ref text,
                     (uint) text.Length,
-                    new Vector2(250, 150) * ImGuiHelpers.GlobalScale,
+                    new Vector2(350, 100) * ImGuiHelpers.GlobalScale,
                     ImGuiInputTextFlags.ReadOnly
                 );
                 ImGui.EndMenu();
