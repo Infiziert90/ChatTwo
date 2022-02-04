@@ -48,7 +48,6 @@
 
     <ItemGroup>
         <PackageReference Include="DalamudPackager" Version="2.1.5"/>
-        <PackageReference Include="JetBrains.Annotations" Version="2021.3.0"/>
         <PackageReference Include="XivCommon" Version="5.0.0"/>
     </ItemGroup>
 
