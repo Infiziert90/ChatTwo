@@ -18,7 +18,7 @@ internal static class ImGuiUtil {
             handler?.Hover(payload);
         }
 
-        if (payload == null || handler == null) {
+        if (handler == null) {
             return;
         }
 

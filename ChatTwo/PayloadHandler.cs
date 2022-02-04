@@ -17,10 +17,12 @@ using Action = System.Action;
 namespace ChatTwo;
 
 internal sealed class PayloadHandler {
+    private const string PopupId = "chat2-context-popup";
+
     private PluginUi Ui { get; }
     private ChatLog Log { get; }
 
-    private HashSet<(Chunk, Payload)> PopupPayloads { get; set; } = new();
+    private (Chunk, Payload?)? Popup { get; set; }
 
     private bool _handleTooltips;
     private uint _hoveredItem;
@@ -44,39 +46,75 @@ internal sealed class PayloadHandler {
     }
 
     private void DrawPopups() {
-        var newPopups = new HashSet<(Chunk, Payload)>();
-        foreach (var (chunk, payload) in this.PopupPayloads) {
-            var id = PopupId(payload);
-            if (id == null) {
-                continue;
-            }
-
-            if (!ImGui.BeginPopup(id)) {
-                continue;
-            }
-
-            newPopups.Add((chunk, payload));
-            ImGui.PushID(id);
-
-            switch (payload) {
-                case PlayerPayload player: {
-                    this.DrawPlayerPopup(chunk, player);
-                    break;
-                }
-                case ItemPayload item: {
-                    this.DrawItemPopup(item);
-                    break;
-                }
-            }
-
-            ImGui.PopID();
-            ImGui.EndPopup();
+        if (this.Popup == null) {
+            return;
         }
 
-        this.PopupPayloads = newPopups;
+        var (chunk, payload) = this.Popup.Value;
+
+        if (PopupId == null || !ImGui.BeginPopup(PopupId)) {
+            this.Popup = null;
+            return;
+        }
+
+        ImGui.PushID(PopupId);
+
+        var drawn = false;
+        switch (payload) {
+            case PlayerPayload player: {
+                this.DrawPlayerPopup(chunk, player);
+                drawn = true;
+                break;
+            }
+            case ItemPayload item: {
+                this.DrawItemPopup(item);
+                drawn = true;
+                break;
+            }
+        }
+
+        this.ContextFooter(drawn, chunk);
+
+        ImGui.PopID();
+        ImGui.EndPopup();
     }
 
-    internal void Click(Chunk chunk, Payload payload, ImGuiMouseButton button) {
+    private void ContextFooter(bool separator, Chunk chunk) {
+        if (separator) {
+            ImGui.Separator();
+        }
+
+        if (!ImGui.BeginMenu(this.Ui.Plugin.Name)) {
+            return;
+        }
+
+        ImGui.Checkbox("Screenshot mode", ref this.Ui.ScreenshotMode);
+
+        if (chunk.Message is { } message) {
+            if (ImGui.BeginMenu("Copy")) {
+                var text = message.Sender
+                    .Concat(message.Content)
+                    .Where(chunk => chunk is TextChunk)
+                    .Cast<TextChunk>()
+                    .Select(text => text.Content)
+                    .Aggregate(string.Concat);
+                ImGui.InputTextMultiline("##chat2-copy", ref text, (uint) text.Length, new Vector2(250, 150), ImGuiInputTextFlags.ReadOnly);
+                ImGui.EndMenu();
+            }
+
+            var col = ImGui.GetStyle().Colors[(int) ImGuiCol.TextDisabled];
+            ImGui.PushStyleColor(ImGuiCol.Text, col);
+            try {
+                ImGui.TextUnformatted(message.Code.Type.Name());
+            } finally {
+                ImGui.PopStyleColor();
+            }
+        }
+
+        ImGui.EndMenu();
+    }
+
+    internal void Click(Chunk chunk, Payload? payload, ImGuiMouseButton button) {
         switch (button) {
             case ImGuiMouseButton.Left:
                 this.LeftClickPayload(chunk, payload);
@@ -172,7 +210,7 @@ internal sealed class PayloadHandler {
         this.Log.DrawChunks(desc.ToList());
     }
 
-    private void LeftClickPayload(Chunk chunk, Payload payload) {
+    private void LeftClickPayload(Chunk chunk, Payload? payload) {
         switch (payload) {
             case MapLinkPayload map: {
                 this.Ui.Plugin.GameGui.OpenMapWithMapLink(map);
@@ -230,15 +268,9 @@ internal sealed class PayloadHandler {
         }
     }
 
-    private void RightClickPayload(Chunk chunk, Payload payload) {
-        switch (payload) {
-            case PlayerPayload:
-            case ItemPayload: {
-                this.PopupPayloads.Add((chunk, payload));
-                ImGui.OpenPopup(PopupId(payload));
-                break;
-            }
-        }
+    private void RightClickPayload(Chunk chunk, Payload? payload) {
+        this.Popup = (chunk, payload);
+        ImGui.OpenPopup(PopupId);
     }
 
     private void DrawItemPopup(ItemPayload payload) {
@@ -400,10 +432,6 @@ internal sealed class PayloadHandler {
             this.Ui.Plugin.TargetManager.SetTarget(obj);
         }
 
-        ImGui.Separator();
-
-        ImGui.Checkbox("Screenshot mode", ref this.Ui.ScreenshotMode);
-
         // View Party Finder 0x2E
     }
 
@@ -426,10 +454,4 @@ internal sealed class PayloadHandler {
 
         return null;
     }
-
-    private static string? PopupId(Payload payload) => payload switch {
-        PlayerPayload player => $"###player-{player.PlayerName}@{player.World}",
-        ItemPayload item => $"###item-{item.RawItemId}",
-        _ => null,
-    };
 }
