@@ -90,6 +90,10 @@ internal sealed class PayloadHandler {
 
         ImGui.Checkbox("Screenshot mode", ref this.Ui.ScreenshotMode);
 
+        if (ImGui.Selectable("Hide chat")) {
+            this.Log.UserHide();
+        }
+
         if (chunk.Message is { } message) {
             if (ImGui.BeginMenu("Copy")) {
                 var text = message.Sender

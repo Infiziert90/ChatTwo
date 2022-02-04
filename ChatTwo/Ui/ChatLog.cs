@@ -487,7 +487,7 @@ internal sealed class ChatLog : IUiComponent {
 
             try {
                 if (ImGui.Selectable("Hide chat")) {
-                    this._hideState = HideState.User;
+                    this.UserHide();
                 }
             } finally {
                 ImGui.PopStyleColor();
@@ -515,6 +515,10 @@ internal sealed class ChatLog : IUiComponent {
         }
 
         ImGui.End();
+    }
+
+    internal void UserHide() {
+        this._hideState = HideState.User;
     }
 
     private void DrawMessageLog(Tab tab, float childHeight, bool switchedTab) {
