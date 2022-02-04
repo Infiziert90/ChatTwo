@@ -58,4 +58,19 @@
         <EmbeddedResource Include="fonts\NotoSansJP-Regular.otf"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <Compile Update="Resources\Language.Designer.cs">
+            <DesignTime>True</DesignTime>
+            <AutoGen>True</AutoGen>
+            <DependentUpon>Language.resx</DependentUpon>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Update="Resources\Language.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>Language.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+    </ItemGroup>
+
 </Project>

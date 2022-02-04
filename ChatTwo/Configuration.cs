@@ -1,4 +1,5 @@
 ﻿using ChatTwo.Code;
+using ChatTwo.Resources;
 using Dalamud.Configuration;
 
 namespace ChatTwo;
@@ -61,16 +62,16 @@ internal enum UnreadMode {
 
 internal static class UnreadModeExt {
     internal static string? Tooltip(this UnreadMode mode) => mode switch {
-        UnreadMode.All => "Always show unread indicators.",
-        UnreadMode.Unseen => "Only show unread indicators for messages you haven't seen.",
-        UnreadMode.None => "Never show unread indicators.",
+        UnreadMode.All => Language.UnreadMode_All_Tooltip,
+        UnreadMode.Unseen => Language.UnreadMode_Unseen_Tooltip,
+        UnreadMode.None => Language.UnreadMode_None_Tooltip,
         _ => null,
     };
 }
 
 [Serializable]
 internal class Tab {
-    public string Name = "New tab";
+    public string Name = Language.Tab_DefaultName;
     public Dictionary<ChatType, ChatSource> ChatCodes = new();
 
     [Obsolete("Use UnreadMode instead")]

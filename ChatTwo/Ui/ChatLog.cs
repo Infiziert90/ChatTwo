@@ -2,6 +2,7 @@
 using System.Numerics;
 using ChatTwo.Code;
 using ChatTwo.GameFunctions.Types;
+using ChatTwo.Resources;
 using ChatTwo.Util;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Keys;
@@ -383,7 +384,7 @@ internal sealed class ChatLog : IUiComponent {
 
         if (activeTab is { Channel: { } } && ImGui.IsItemHovered()) {
             ImGui.BeginTooltip();
-            ImGui.TextUnformatted("Disabled for this tab.");
+            ImGui.TextUnformatted(Language.ChatLog_SwitcherDisabled);
             ImGui.EndTooltip();
         }
 
@@ -486,7 +487,7 @@ internal sealed class ChatLog : IUiComponent {
             ImGui.PushStyleColor(ImGuiCol.Text, normalColour);
 
             try {
-                if (ImGui.Selectable("Hide chat")) {
+                if (ImGui.Selectable(Language.ChatLog_HideChat)) {
                     this.UserHide();
                 }
             } finally {
@@ -754,8 +755,8 @@ internal sealed class ChatLog : IUiComponent {
         ImGui.SameLine();
 
         var (leftIcon, leftTooltip) = this.Ui.Plugin.Config.SidebarTabView
-            ? (FontAwesomeIcon.ArrowUp, "Move up")
-            : ((FontAwesomeIcon) 61536, "Move left");
+            ? (FontAwesomeIcon.ArrowUp, Language.ChatLog_Tabs_MoveUp)
+            : (FontAwesomeIcon.ArrowLeft, Language.ChatLog_Tabs_MoveLeft);
         if (ImGuiUtil.IconButton(leftIcon, tooltip: leftTooltip) && i > 0) {
             (tabs[i - 1], tabs[i]) = (tabs[i], tabs[i - 1]);
             ImGui.CloseCurrentPopup();
@@ -765,8 +766,8 @@ internal sealed class ChatLog : IUiComponent {
         ImGui.SameLine();
 
         var (rightIcon, rightTooltip) = this.Ui.Plugin.Config.SidebarTabView
-            ? (FontAwesomeIcon.ArrowDown, "Move down")
-            : (FontAwesomeIcon.ArrowRight, "Move right");
+            ? (FontAwesomeIcon.ArrowDown, Language.ChatLog_Tabs_MoveDown)
+            : (FontAwesomeIcon.ArrowRight, Language.ChatLog_Tabs_MoveRight);
         if (ImGuiUtil.IconButton(rightIcon, tooltip: rightTooltip) && i < tabs.Count - 1) {
             (tabs[i + 1], tabs[i]) = (tabs[i], tabs[i + 1]);
             ImGui.CloseCurrentPopup();

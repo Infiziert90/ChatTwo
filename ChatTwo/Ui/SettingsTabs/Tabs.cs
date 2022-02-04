@@ -1,4 +1,5 @@
 ﻿using ChatTwo.Code;
+using ChatTwo.Resources;
 using ChatTwo.Util;
 using Dalamud.Interface;
 using ImGuiNET;
@@ -8,14 +9,14 @@ namespace ChatTwo.Ui.SettingsTabs;
 internal sealed class Tabs : ISettingsTab {
     private Configuration Mutable { get; }
 
-    public string Name => "Tabs";
+    public string Name => Language.Options_Tabs_Tab;
 
     internal Tabs(Configuration mutable) {
         this.Mutable = mutable;
     }
 
     public void Draw() {
-        if (ImGuiUtil.IconButton(FontAwesomeIcon.Plus, tooltip: "Add")) {
+        if (ImGuiUtil.IconButton(FontAwesomeIcon.Plus, tooltip: Language.Options_Tabs_Add)) {
             this.Mutable.Tabs.Add(new Tab());
         }
 
@@ -26,26 +27,26 @@ internal sealed class Tabs : ISettingsTab {
             if (ImGui.TreeNodeEx($"{tab.Name}###tab-{i}")) {
                 ImGui.PushID($"tab-{i}");
 
-                if (ImGuiUtil.IconButton(FontAwesomeIcon.TrashAlt, tooltip: "Delete")) {
+                if (ImGuiUtil.IconButton(FontAwesomeIcon.TrashAlt, tooltip: Language.Options_Tabs_Delete)) {
                     toRemove = i;
                 }
 
                 ImGui.SameLine();
 
-                if (ImGuiUtil.IconButton(FontAwesomeIcon.ArrowUp, tooltip: "Move up") && i > 0) {
+                if (ImGuiUtil.IconButton(FontAwesomeIcon.ArrowUp, tooltip: Language.Options_Tabs_MoveUp) && i > 0) {
                     (this.Mutable.Tabs[i - 1], this.Mutable.Tabs[i]) = (this.Mutable.Tabs[i], this.Mutable.Tabs[i - 1]);
                 }
 
                 ImGui.SameLine();
 
-                if (ImGuiUtil.IconButton(FontAwesomeIcon.ArrowDown, tooltip: "Move down") && i < this.Mutable.Tabs.Count - 1) {
+                if (ImGuiUtil.IconButton(FontAwesomeIcon.ArrowDown, tooltip: Language.Options_Tabs_MoveDown) && i < this.Mutable.Tabs.Count - 1) {
                     (this.Mutable.Tabs[i + 1], this.Mutable.Tabs[i]) = (this.Mutable.Tabs[i], this.Mutable.Tabs[i + 1]);
                 }
 
-                ImGui.InputText("Name", ref tab.Name, 512, ImGuiInputTextFlags.EnterReturnsTrue);
-                ImGui.Checkbox("Show timestamps", ref tab.DisplayTimestamp);
+                ImGui.InputText(Language.Options_Tabs_Name, ref tab.Name, 512, ImGuiInputTextFlags.EnterReturnsTrue);
+                ImGui.Checkbox(Language.Options_Tabs_ShowTimestamps, ref tab.DisplayTimestamp);
 
-                if (ImGui.BeginCombo("Unread mode", tab.UnreadMode.ToString())) {
+                if (ImGui.BeginCombo(Language.Options_Tabs_UnreadMode, tab.UnreadMode.ToString())) {
                     foreach (var mode in Enum.GetValues<UnreadMode>()) {
                         if (ImGui.Selectable(mode.ToString(), tab.UnreadMode == mode)) {
                             tab.UnreadMode = mode;
@@ -61,9 +62,9 @@ internal sealed class Tabs : ISettingsTab {
                     ImGui.EndCombo();
                 }
 
-                var input = tab.Channel?.ToChatType().Name() ?? "<None>";
-                if (ImGui.BeginCombo("Input channel", input)) {
-                    if (ImGui.Selectable("<None>", tab.Channel == null)) {
+                var input = tab.Channel?.ToChatType().Name() ?? Language.Options_Tabs_NoInputChannel;
+                if (ImGui.BeginCombo(Language.Options_Tabs_InputChannel, input)) {
+                    if (ImGui.Selectable(Language.Options_Tabs_NoInputChannel, tab.Channel == null)) {
                         tab.Channel = null;
                     }
 
@@ -76,7 +77,7 @@ internal sealed class Tabs : ISettingsTab {
                     ImGui.EndCombo();
                 }
 
-                if (ImGui.TreeNodeEx("Channels")) {
+                if (ImGui.TreeNodeEx(Language.Options_Tabs_Channels)) {
                     foreach (var type in Enum.GetValues<ChatType>()) {
                         var enabled = tab.ChatCodes.ContainsKey(type);
                         if (ImGui.Checkbox($"##{type.Name()}-{i}", ref enabled)) {

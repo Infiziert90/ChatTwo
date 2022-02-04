@@ -1,4 +1,6 @@
-﻿using Dalamud.Data;
+﻿using System.Globalization;
+using ChatTwo.Resources;
+using Dalamud.Data;
 using Dalamud.Game;
 using Dalamud.Game.ClientState;
 using Dalamud.Game.ClientState.Conditions;
@@ -65,6 +67,8 @@ public sealed class Plugin : IDalamudPlugin {
 
     #pragma warning disable CS8618
     public Plugin() {
+        LanguageChanged(this.Interface!.UiLanguage);
+
         this.Config = this.Interface!.GetPluginConfig() as Configuration ?? new Configuration();
         this.Config.Migrate();
         this.Common = new XivCommonBase();
@@ -74,10 +78,12 @@ public sealed class Plugin : IDalamudPlugin {
         this.Ui = new PluginUi(this);
 
         this.Framework!.Update += this.FrameworkUpdate;
+        this.Interface.LanguageChanged += LanguageChanged;
     }
     #pragma warning restore CS8618
 
     public void Dispose() {
+        this.Interface.LanguageChanged -= LanguageChanged;
         this.Framework.Update -= this.FrameworkUpdate;
         GameFunctions.GameFunctions.SetChatInteractable(true);
 
@@ -90,6 +96,10 @@ public sealed class Plugin : IDalamudPlugin {
 
     internal void SaveConfig() {
         this.Interface.SavePluginConfig(this.Config);
+    }
+
+    private static void LanguageChanged(string langCode) {
+        Language.Culture = new CultureInfo(langCode);
     }
 
     private static readonly string[] ChatAddonNames = {

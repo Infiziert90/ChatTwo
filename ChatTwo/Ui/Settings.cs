@@ -1,8 +1,10 @@
 ﻿using System.Diagnostics;
 using System.Numerics;
+using ChatTwo.Resources;
 using ChatTwo.Ui.SettingsTabs;
 using ChatTwo.Util;
 using Dalamud.Game.Command;
+using Dalamud.Interface;
 using ImGuiNET;
 
 namespace ChatTwo.Ui;
@@ -45,7 +47,9 @@ internal sealed class Settings : IUiComponent {
             return;
         }
 
-        if (!ImGui.Begin($"{this.Ui.Plugin.Name} settings", ref this.Ui.SettingsVisible)) {
+        ImGui.SetNextWindowSize(new Vector2(500, 650) * ImGuiHelpers.GlobalScale, ImGuiCond.FirstUseEver);
+
+        if (!ImGui.Begin(string.Format(Language.Settings_Title, this.Ui.Plugin.Name), ref this.Ui.SettingsVisible)) {
             ImGui.End();
             return;
         }
@@ -78,22 +82,22 @@ internal sealed class Settings : IUiComponent {
 
         ImGui.Separator();
 
-        var save = ImGui.Button("Save");
+        var save = ImGui.Button(Language.Settings_Save);
 
         ImGui.SameLine();
 
-        if (ImGui.Button("Save and close")) {
+        if (ImGui.Button(Language.Settings_SaveAndClose)) {
             save = true;
             this.Ui.SettingsVisible = false;
         }
 
         ImGui.SameLine();
 
-        if (ImGui.Button("Discard")) {
+        if (ImGui.Button(Language.Settings_Discard)) {
             this.Ui.SettingsVisible = false;
         }
 
-        var buttonLabel = $"Support {this.Ui.Plugin.Name} on Ko-fi";
+        var buttonLabel = string.Format(Language.Settings_Kofi, this.Ui.Plugin.Name);
 
         ImGui.PushStyleColor(ImGuiCol.Button, ColourUtil.RgbaToAbgr(0xFF5E5BFF));
         ImGui.PushStyleColor(ImGuiCol.ButtonHovered, ColourUtil.RgbaToAbgr(0xFF7775FF));

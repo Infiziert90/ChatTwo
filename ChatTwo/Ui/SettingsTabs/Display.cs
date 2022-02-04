@@ -1,31 +1,35 @@
-﻿using ImGuiNET;
+﻿using ChatTwo.Resources;
+using ChatTwo.Util;
+using ImGuiNET;
 
 namespace ChatTwo.Ui.SettingsTabs;
 
 internal sealed class Display : ISettingsTab {
     private Configuration Mutable { get; }
 
-    public string Name => "Display";
+    public string Name => Language.Options_Display_Tab;
 
     internal Display(Configuration mutable) {
         this.Mutable = mutable;
     }
 
     public void Draw() {
-        ImGui.Checkbox("Hide vanilla chat", ref this.Mutable.HideChat);
-        ImGui.Checkbox("Hide chat during cutscenes", ref this.Mutable.HideDuringCutscenes);
-        ImGui.Checkbox("Show native item tooltips", ref this.Mutable.NativeItemTooltips);
-        ImGui.Checkbox("Show tabs in a sidebar", ref this.Mutable.SidebarTabView);
-        ImGui.Checkbox("Use modern timestamp layout", ref this.Mutable.PrettierTimestamps);
+        ImGuiUtil.OptionCheckbox(ref this.Mutable.HideChat, Language.Options_HideChat_Name, Language.Options_HideChat_Description);
+        ImGuiUtil.OptionCheckbox(ref this.Mutable.HideDuringCutscenes, Language.Options_HideDuringCutscenes_Name, Language.Options_HideDuringCutscenes_Description);
+        ImGuiUtil.OptionCheckbox(ref this.Mutable.NativeItemTooltips, Language.Options_NativeItemTooltips_Name, Language.Options_NativeItemTooltips_Description);
+        ImGuiUtil.OptionCheckbox(ref this.Mutable.SidebarTabView, Language.Options_SidebarTabView_Name, Language.Options_SidebarTabView_Description);
+        ImGuiUtil.OptionCheckbox(ref this.Mutable.PrettierTimestamps, Language.Options_PrettierTimestamps_Name, Language.Options_PrettierTimestamps_Description);
 
         if (this.Mutable.PrettierTimestamps) {
-            ImGui.Checkbox("More compact modern layout", ref this.Mutable.MoreCompactPretty);
+            ImGui.TreePush();
+            ImGuiUtil.OptionCheckbox(ref this.Mutable.MoreCompactPretty, Language.Options_MoreCompactPretty_Name, Language.Options_MoreCompactPretty_Description);
+            ImGui.TreePop();
         }
 
-        ImGui.Checkbox("Show Novice Network join button", ref this.Mutable.ShowNoviceNetwork);
+        ImGuiUtil.OptionCheckbox(ref this.Mutable.ShowNoviceNetwork, Language.Options_ShowNoviceNetwork_Name, Language.Options_ShowNoviceNetwork_Description);
 
-        ImGui.DragFloat("Font size", ref this.Mutable.FontSize, .0125f, 12f, 36f, $"{this.Mutable.FontSize:N1}");
-        if (ImGui.DragFloat("Window opacity", ref this.Mutable.WindowAlpha, .0025f, 0f, 1f, $"{this.Mutable.WindowAlpha * 100f:N2}%%")) {
+        ImGui.DragFloat(Language.Options_FontSize_Name, ref this.Mutable.FontSize, .0125f, 12f, 36f, $"{this.Mutable.FontSize:N1}");
+        if (ImGui.DragFloat(Language.Options_WindowOpacity_Name, ref this.Mutable.WindowAlpha, .0025f, 0f, 1f, $"{this.Mutable.WindowAlpha * 100f:N2}%%")) {
             switch (this.Mutable.WindowAlpha) {
                 case > 1f and <= 100f:
                     this.Mutable.WindowAlpha /= 100f;
@@ -36,8 +40,8 @@ internal sealed class Display : ISettingsTab {
             }
         }
 
-        ImGui.Checkbox("Allow moving main window", ref this.Mutable.CanMove);
-        ImGui.Checkbox("Allow resizing main window", ref this.Mutable.CanResize);
-        ImGui.Checkbox("Show title bar for main window", ref this.Mutable.ShowTitleBar);
+        ImGuiUtil.OptionCheckbox(ref this.Mutable.CanMove, Language.Options_CanMove_Name);
+        ImGuiUtil.OptionCheckbox(ref this.Mutable.CanResize, Language.Options_CanResize_Name);
+        ImGuiUtil.OptionCheckbox(ref this.Mutable.ShowTitleBar, Language.Options_ShowTitleBar_Name);
     }
 }

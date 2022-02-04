@@ -105,4 +105,23 @@ internal static class ImGuiUtil {
 
         return ret;
     }
+
+    internal static bool OptionCheckbox(ref bool value, string label, string? description = null) {
+        var ret = ImGui.Checkbox(label, ref value);
+
+        if (description != null) {
+            var colour = ImGui.GetStyle().Colors[(int) ImGuiCol.TextDisabled];
+            ImGui.PushStyleColor(ImGuiCol.Text, colour);
+            ImGui.PushTextWrapPos();
+
+            try {
+                ImGui.TextUnformatted(description);
+            } finally {
+                ImGui.PopTextWrapPos();
+                ImGui.PopStyleColor();
+            }
+        }
+
+        return ret;
+    }
 }
