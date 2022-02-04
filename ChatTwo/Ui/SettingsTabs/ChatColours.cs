@@ -10,7 +10,7 @@ internal sealed class ChatColours : ISettingsTab {
     private Configuration Mutable { get; }
     private Plugin Plugin { get; }
 
-    public string Name => Language.Options_ChatColours_Tab;
+    public string Name => Language.Options_ChatColours_Tab + "###tabs-chat-colours";
 
     internal ChatColours(Configuration mutable, Plugin plugin) {
         this.Mutable = mutable;

@@ -9,7 +9,7 @@ namespace ChatTwo.Ui.SettingsTabs;
 internal sealed class Tabs : ISettingsTab {
     private Configuration Mutable { get; }
 
-    public string Name => Language.Options_Tabs_Tab;
+    public string Name => Language.Options_Tabs_Tab + "###tabs-tabs";
 
     internal Tabs(Configuration mutable) {
         this.Mutable = mutable;

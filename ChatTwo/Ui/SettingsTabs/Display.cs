@@ -7,7 +7,7 @@ namespace ChatTwo.Ui.SettingsTabs;
 internal sealed class Display : ISettingsTab {
     private Configuration Mutable { get; }
 
-    public string Name => Language.Options_Display_Tab;
+    public string Name => Language.Options_Display_Tab + "###tabs-display";
 
     internal Display(Configuration mutable) {
         this.Mutable = mutable;
