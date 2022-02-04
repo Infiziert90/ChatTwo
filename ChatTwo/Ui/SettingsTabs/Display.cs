@@ -22,6 +22,8 @@ internal sealed class Display : ISettingsTab {
             ImGui.Checkbox("More compact modern layout", ref this.Mutable.MoreCompactPretty);
         }
 
+        ImGui.Checkbox("Show Novice Network join button", ref this.Mutable.ShowNoviceNetwork);
+
         ImGui.DragFloat("Font size", ref this.Mutable.FontSize, .0125f, 12f, 36f, $"{this.Mutable.FontSize:N1}");
         if (ImGui.DragFloat("Window opacity", ref this.Mutable.WindowAlpha, .0025f, 0f, 1f, $"{this.Mutable.WindowAlpha * 100f:N2}%%")) {
             switch (this.Mutable.WindowAlpha) {

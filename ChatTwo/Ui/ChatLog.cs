@@ -407,7 +407,8 @@ internal sealed class ChatLog : IUiComponent {
         var afterIcon = ImGui.GetCursorPos();
 
         var buttonWidth = afterIcon.X - beforeIcon.X;
-        var inputWidth = ImGui.GetContentRegionAvail().X - buttonWidth * 2;
+        var showNovice = this.Ui.Plugin.Config.ShowNoviceNetwork && this.Ui.Plugin.Functions.IsMentor();
+        var inputWidth = ImGui.GetContentRegionAvail().X - buttonWidth * (showNovice ? 2 : 1);
 
         var inputType = this._tempChannel?.ToChatType() ?? activeTab?.Channel?.ToChatType() ?? this.Ui.Plugin.Functions.Chat.Channel.channel.ToChatType();
         if (this.Chat.Trim().StartsWith('/')) {
@@ -505,10 +506,12 @@ internal sealed class ChatLog : IUiComponent {
             this.Ui.SettingsVisible ^= true;
         }
 
-        ImGui.SameLine();
+        if (showNovice) {
+            ImGui.SameLine();
 
-        if (ImGuiUtil.IconButton(FontAwesomeIcon.Leaf)) {
-            this.Ui.Plugin.Functions.ClickNoviceNetworkButton();
+            if (ImGuiUtil.IconButton(FontAwesomeIcon.Leaf)) {
+                this.Ui.Plugin.Functions.ClickNoviceNetworkButton();
+            }
         }
 
         ImGui.End();

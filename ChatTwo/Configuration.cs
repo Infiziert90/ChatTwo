@@ -12,6 +12,7 @@ internal class Configuration : IPluginConfiguration {
     public bool NativeItemTooltips = true;
     public bool PrettierTimestamps = true;
     public bool MoreCompactPretty;
+    public bool ShowNoviceNetwork;
     public bool SidebarTabView;
     public bool CanMove = true;
     public bool CanResize = true;
@@ -27,6 +28,7 @@ internal class Configuration : IPluginConfiguration {
         this.NativeItemTooltips = other.NativeItemTooltips;
         this.PrettierTimestamps = other.PrettierTimestamps;
         this.MoreCompactPretty = other.MoreCompactPretty;
+        this.ShowNoviceNetwork = other.ShowNoviceNetwork;
         this.SidebarTabView = other.SidebarTabView;
         this.CanMove = other.CanMove;
         this.CanResize = other.CanResize;
