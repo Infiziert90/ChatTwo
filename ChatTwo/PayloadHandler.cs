@@ -98,7 +98,13 @@ internal sealed class PayloadHandler {
                     .Cast<TextChunk>()
                     .Select(text => text.Content)
                     .Aggregate(string.Concat);
-                ImGui.InputTextMultiline("##chat2-copy", ref text, (uint) text.Length, new Vector2(250, 150), ImGuiInputTextFlags.ReadOnly);
+                ImGui.InputTextMultiline(
+                    "##chat2-copy",
+                    ref text,
+                    (uint) text.Length,
+                    new Vector2(250, 150) * ImGuiHelpers.GlobalScale,
+                    ImGuiInputTextFlags.ReadOnly
+                );
                 ImGui.EndMenu();
             }
 
