@@ -129,7 +129,9 @@ internal sealed class Settings : IUiComponent {
 
             config.UpdateFrom(this.Mutable);
 
-            this.Ui.Plugin.SaveConfig();
+            // save after 60 frames have passed, which should hopefully not
+            // commit any changes that cause a crash
+            this.Ui.Plugin.DeferredSaveFrames = 60;
 
             this.Ui.Plugin.Store.FilterAllTabs(false);
 

@@ -53,9 +53,6 @@ public sealed class Plugin : IDalamudPlugin {
     internal PartyList PartyList { get; init; }
 
     [PluginService]
-    internal SigScanner SigScanner { get; init; }
-
-    [PluginService]
     internal TargetManager TargetManager { get; init; }
 
     internal Configuration Config { get; }
@@ -65,11 +62,13 @@ public sealed class Plugin : IDalamudPlugin {
     internal Store Store { get; }
     internal PluginUi Ui { get; }
 
+    internal int DeferredSaveFrames = -1;
+
     #pragma warning disable CS8618
     public Plugin() {
         LanguageChanged(this.Interface!.UiLanguage);
 
-        this.Config = this.Interface!.GetPluginConfig() as Configuration ?? new Configuration();
+        this.Config = this.Interface.GetPluginConfig() as Configuration ?? new Configuration();
         this.Config.Migrate();
         this.Common = new XivCommonBase();
         this.TextureCache = new TextureCache(this.DataManager!);
@@ -111,6 +110,10 @@ public sealed class Plugin : IDalamudPlugin {
     };
 
     private void FrameworkUpdate(Framework framework) {
+        if (this.DeferredSaveFrames >= 0 && this.DeferredSaveFrames-- == 0) {
+            this.SaveConfig();
+        }
+
         if (!this.Config.HideChat) {
             return;
         }
