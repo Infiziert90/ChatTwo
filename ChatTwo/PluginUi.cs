@@ -127,12 +127,6 @@ internal sealed class PluginUi : IDisposable {
             }
         } else {
             fontData = Fonts.GetFont(this.Plugin.Config.GlobalFont, true);
-            if (fontData != null) {
-                File.WriteAllBytes(@"D:\font.ttf", fontData.Regular.Data);
-                if (fontData.Italic != null) {
-                    File.WriteAllBytes(@"D:\font_italic.ttf", fontData.Italic.Data);
-                }
-            }
         }
 
         if (fontData == null) {

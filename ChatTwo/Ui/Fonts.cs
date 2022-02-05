@@ -1,5 +1,4 @@
 ﻿using System.Runtime.InteropServices;
-using Dalamud.Logging;
 using SharpDX.DirectWrite;
 using FontStyle = SharpDX.DirectWrite.FontStyle;
 
@@ -43,7 +42,6 @@ internal static class Fonts {
         using var collection = factory.GetSystemFontCollection(false);
         for (var i = 0; i < collection.FontFamilyCount; i++) {
             using var family = collection.GetFontFamily(i);
-            PluginLog.Log(family.FamilyNames.GetString(0));
             var anyItalic = false;
             for (var j = 0; j < family.FontCount; j++) {
                 using var font = family.GetFont(j);
