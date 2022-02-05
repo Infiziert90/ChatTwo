@@ -1,5 +1,6 @@
 ﻿using ChatTwo.Code;
 using ChatTwo.Resources;
+using ChatTwo.Ui;
 using Dalamud.Configuration;
 
 namespace ChatTwo;
@@ -18,7 +19,11 @@ internal class Configuration : IPluginConfiguration {
     public bool CanMove = true;
     public bool CanResize = true;
     public bool ShowTitleBar;
+
     public float FontSize = 17f;
+    public string GlobalFont = Fonts.GlobalFonts[0].Name;
+    public string JapaneseFont = Fonts.JapaneseFonts[0].Item1;
+
     public float WindowAlpha = 1f;
     public Dictionary<ChatType, uint> ChatColours = new();
     public List<Tab> Tabs = new();
@@ -35,6 +40,8 @@ internal class Configuration : IPluginConfiguration {
         this.CanResize = other.CanResize;
         this.ShowTitleBar = other.ShowTitleBar;
         this.FontSize = other.FontSize;
+        this.GlobalFont = other.GlobalFont;
+        this.JapaneseFont = other.JapaneseFont;
         this.WindowAlpha = other.WindowAlpha;
         this.ChatColours = other.ChatColours.ToDictionary(entry => entry.Key, entry => entry.Value);
         this.Tabs = other.Tabs.Select(t => t.Clone()).ToList();

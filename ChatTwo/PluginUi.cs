@@ -79,23 +79,7 @@ internal sealed class PluginUi : IDisposable {
         builder.AddText("←→↑↓《》■※☀★★☆♥♡ヅツッシ☀☁☂℃℉°♀♂♠♣♦♣♧®©™€$£♯♭♪✓√◎◆◇♦■□〇●△▽▼▲‹›≤≥<«“”─＼～Œœ");
         builder.BuildRanges(out this._ranges);
 
-        var regular = this.GetResource("ChatTwo.fonts.NotoSans-Regular.ttf");
-        this._regularFont = (
-            GCHandle.Alloc(regular, GCHandleType.Pinned),
-            regular.Length
-        );
-
-        var italic = this.GetResource("ChatTwo.fonts.NotoSans-Italic.ttf");
-        this._italicFont = (
-            GCHandle.Alloc(italic, GCHandleType.Pinned),
-            italic.Length
-        );
-
-        var jp = this.GetResource("ChatTwo.fonts.NotoSansJP-Regular.otf");
-        this._jpFont = (
-            GCHandle.Alloc(jp, GCHandleType.Pinned),
-            jp.Length
-        );
+        this.SetUpUserFonts();
 
         var gameSym = File.ReadAllBytes(Path.Combine(this.Plugin.Interface.DalamudAssetDirectory.FullName, "UIRes", "gamesym.ttf"));
         this._gameSymFont = (
@@ -132,6 +116,69 @@ internal sealed class PluginUi : IDisposable {
         this._fontCfgMerge.Destroy();
     }
 
+    private void SetUpUserFonts() {
+        FontData? fontData = null;
+        if (this.Plugin.Config.GlobalFont.StartsWith(Fonts.IncludedIndicator)) {
+            var globalFont = Fonts.GlobalFonts.FirstOrDefault(font => font.Name == this.Plugin.Config.GlobalFont);
+            if (globalFont != null) {
+                fontData = new FontData(this.GetResource(globalFont.ResourcePath), this.GetResource(globalFont.ResourcePathItalic));
+            }
+        } else {
+            fontData = Fonts.GetFont(this.Plugin.Config.GlobalFont, true);
+        }
+
+        if (fontData == null) {
+            PluginLog.Warning("global fallback");
+            var globalFont = Fonts.GlobalFonts[0];
+            fontData = new FontData(this.GetResource(globalFont.ResourcePath), this.GetResource(globalFont.ResourcePathItalic));
+        }
+
+        if (this._regularFont.Item1.IsAllocated) {
+            this._regularFont.Item1.Free();
+        }
+
+        if (this._italicFont.Item1.IsAllocated) {
+            this._italicFont.Item1.Free();
+        }
+
+        this._regularFont = (
+            GCHandle.Alloc(fontData.Regular, GCHandleType.Pinned),
+            fontData.Regular.Length
+        );
+
+        this._italicFont = (
+            GCHandle.Alloc(fontData.Italic, GCHandleType.Pinned),
+            fontData.Italic.Length
+        );
+
+        FontData? jpFontData = null;
+        if (this.Plugin.Config.JapaneseFont.StartsWith(Fonts.IncludedIndicator)) {
+            var jpFont = Fonts.JapaneseFonts.FirstOrDefault(item => item.Item1 == this.Plugin.Config.JapaneseFont);
+            if (jpFont != default) {
+                jpFontData = new FontData(this.GetResource(jpFont.Item2), Array.Empty<byte>());
+            }
+        }
+        // else {
+        //     jpFontData = Fonts.GetFont(this.Plugin.Config.JapaneseFont, false, CharacterSet.SHIFTJIS_CHARSET);
+        //     PluginLog.Log($"data.Regular.Length: {jpFontData?.Regular.Length}");
+        // }
+
+        if (jpFontData == null) {
+            PluginLog.Warning("jp fallback");
+            var jpFont = Fonts.JapaneseFonts[0];
+            jpFontData = new FontData(this.GetResource(jpFont.Item2), Array.Empty<byte>());
+        }
+
+        if (this._jpFont.Item1.IsAllocated) {
+            this._jpFont.Item1.Free();
+        }
+
+        this._jpFont = (
+            GCHandle.Alloc(jpFontData.Regular, GCHandleType.Pinned),
+            jpFontData.Regular.Length
+        );
+    }
+
     private void Draw() {
         this.DefaultText = ImGui.GetStyle().Colors[(int) ImGuiCol.Text];
 
@@ -164,6 +211,8 @@ internal sealed class PluginUi : IDisposable {
     private void BuildFonts() {
         this.RegularFont = null;
         this.ItalicFont = null;
+
+        this.SetUpUserFonts();
 
         // load regular noto sans and merge in jp + game icons
         this.RegularFont = ImGui.GetIO().Fonts.AddFontFromMemoryTTF(

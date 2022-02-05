@@ -123,6 +123,8 @@ internal sealed class Settings : IUiComponent {
             var config = this.Ui.Plugin.Config;
 
             var hideChatChanged = this.Mutable.HideChat != this.Ui.Plugin.Config.HideChat;
+            var fontChanged = this.Mutable.GlobalFont != this.Ui.Plugin.Config.GlobalFont
+                              || this.Mutable.JapaneseFont != this.Ui.Plugin.Config.JapaneseFont;
             var fontSizeChanged = Math.Abs(this.Mutable.FontSize - this.Ui.Plugin.Config.FontSize) > 0.001;
 
             config.UpdateFrom(this.Mutable);
@@ -131,7 +133,7 @@ internal sealed class Settings : IUiComponent {
 
             this.Ui.Plugin.Store.FilterAllTabs(false);
 
-            if (fontSizeChanged) {
+            if (fontChanged || fontSizeChanged) {
                 this.Ui.Plugin.Interface.UiBuilder.RebuildFonts();
             }
 

@@ -48,6 +48,8 @@
 
     <ItemGroup>
         <PackageReference Include="DalamudPackager" Version="2.1.5"/>
+        <PackageReference Include="System.Drawing.Common" Version="6.0.0"/>
+        <PackageReference Include="Vanara.PInvoke.Gdi32" Version="3.3.15"/>
         <PackageReference Include="XivCommon" Version="5.0.0"/>
     </ItemGroup>
 
@@ -55,6 +57,12 @@
         <EmbeddedResource Include="fonts\NotoSans-Italic.ttf"/>
         <EmbeddedResource Include="fonts\NotoSans-Regular.ttf"/>
         <EmbeddedResource Include="fonts\NotoSansJP-Regular.otf"/>
+        <EmbeddedResource Include="fonts\NotoSerif-Italic.ttf"/>
+        <EmbeddedResource Include="fonts\NotoSerif-Regular.ttf"/>
+        <EmbeddedResource Include="fonts\OpenSans-Italic.ttf"/>
+        <EmbeddedResource Include="fonts\OpenSans-Regular.ttf"/>
+        <EmbeddedResource Include="fonts\Roboto-Italic.ttf"/>
+        <EmbeddedResource Include="fonts\Roboto-Regular.ttf"/>
     </ItemGroup>
 
     <ItemGroup>
