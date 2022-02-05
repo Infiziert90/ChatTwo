@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using System.Drawing.Text;
 using ChatTwo.Resources;
 using ChatTwo.Util;
