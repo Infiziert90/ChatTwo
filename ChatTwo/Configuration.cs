@@ -95,7 +95,7 @@ internal class Tab {
     }
 
     internal bool Matches(Message message) {
-        return this.ChatCodes.TryGetValue(message.Code.Type, out var sources) && (message.Code.Source is 0 or (ChatSource) 1 || sources.HasFlag(message.Code.Source));
+        return message.Code.Type.IsGm() || this.ChatCodes.TryGetValue(message.Code.Type, out var sources) && (message.Code.Source is 0 or (ChatSource) 1 || sources.HasFlag(message.Code.Source));
     }
 
     internal void AddMessage(Message message, bool unread = true) {

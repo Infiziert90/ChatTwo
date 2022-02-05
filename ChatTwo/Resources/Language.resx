@@ -269,4 +269,13 @@
     <data name="ChatLog_Tabs_MoveRight" xml:space="preserve">
         <value>Move right</value>
     </data>
+    <data name="Options_Tabs_ChannelTypes_Chat" xml:space="preserve">
+        <value>Chat</value>
+    </data>
+    <data name="Options_Tabs_ChannelTypes_Battle" xml:space="preserve">
+        <value>Battle</value>
+    </data>
+    <data name="Options_Tabs_ChannelTypes_Announcements" xml:space="preserve">
+        <value>Announcements</value>
+    </data>
 </root>

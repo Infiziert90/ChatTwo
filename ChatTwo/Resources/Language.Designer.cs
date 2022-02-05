@@ -39,7 +39,7 @@ namespace ChatTwo.Resources {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ChatTwo.resources.Language", typeof(Language).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ChatTwo.Resources.Language", typeof(Language).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -327,6 +327,33 @@ namespace ChatTwo.Resources {
         internal static string Options_Tabs_Channels {
             get {
                 return ResourceManager.GetString("Options_Tabs_Channels", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Announcements.
+        /// </summary>
+        internal static string Options_Tabs_ChannelTypes_Announcements {
+            get {
+                return ResourceManager.GetString("Options_Tabs_ChannelTypes_Announcements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Battle.
+        /// </summary>
+        internal static string Options_Tabs_ChannelTypes_Battle {
+            get {
+                return ResourceManager.GetString("Options_Tabs_ChannelTypes_Battle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chat.
+        /// </summary>
+        internal static string Options_Tabs_ChannelTypes_Chat {
+            get {
+                return ResourceManager.GetString("Options_Tabs_ChannelTypes_Chat", resourceCulture);
             }
         }
         

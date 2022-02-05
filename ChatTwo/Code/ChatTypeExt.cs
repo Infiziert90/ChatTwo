@@ -1,8 +1,80 @@
+using ChatTwo.Resources;
 using ChatTwo.Util;
 
 namespace ChatTwo.Code;
 
 internal static class ChatTypeExt {
+    internal static readonly (string, ChatType[])[] SortOrder = {
+        (Language.Options_Tabs_ChannelTypes_Chat, new[] {
+            ChatType.Say,
+            ChatType.Yell,
+            ChatType.Shout,
+            ChatType.TellIncoming,
+            ChatType.TellOutgoing,
+            ChatType.Party,
+            ChatType.CrossParty,
+            ChatType.Alliance,
+            ChatType.FreeCompany,
+            ChatType.PvpTeam,
+            ChatType.CrossLinkshell1,
+            ChatType.CrossLinkshell2,
+            ChatType.CrossLinkshell3,
+            ChatType.CrossLinkshell4,
+            ChatType.CrossLinkshell5,
+            ChatType.CrossLinkshell6,
+            ChatType.CrossLinkshell7,
+            ChatType.CrossLinkshell8,
+            ChatType.Linkshell1,
+            ChatType.Linkshell2,
+            ChatType.Linkshell3,
+            ChatType.Linkshell4,
+            ChatType.Linkshell5,
+            ChatType.Linkshell6,
+            ChatType.Linkshell7,
+            ChatType.Linkshell8,
+            ChatType.NoviceNetwork,
+            ChatType.StandardEmote,
+            ChatType.CustomEmote,
+        }),
+        (Language.Options_Tabs_ChannelTypes_Battle, new[] {
+            ChatType.Damage,
+            ChatType.Miss,
+            ChatType.Action,
+            ChatType.Item,
+            ChatType.Healing,
+            ChatType.GainBuff,
+            ChatType.LoseBuff,
+            ChatType.GainDebuff,
+            ChatType.LoseDebuff,
+        }),
+        (Language.Options_Tabs_ChannelTypes_Announcements, new[] {
+            ChatType.System,
+            ChatType.BattleSystem,
+            ChatType.GatheringSystem,
+            ChatType.Error,
+            ChatType.Echo,
+            ChatType.NoviceNetworkSystem,
+            ChatType.FreeCompanyAnnouncement,
+            ChatType.PvpTeamAnnouncement,
+            ChatType.FreeCompanyLoginLogout,
+            ChatType.PvpTeamLoginLogout,
+            ChatType.RetainerSale,
+            ChatType.NpcDialogue,
+            ChatType.NpcAnnouncement,
+            ChatType.LootNotice,
+            ChatType.Progress,
+            ChatType.LootRoll,
+            ChatType.Crafting,
+            ChatType.Gathering,
+            ChatType.PeriodicRecruitmentNotification,
+            ChatType.Sign,
+            ChatType.RandomNumber,
+            ChatType.Orchestrion,
+            ChatType.MessageBook,
+            ChatType.Alarm,
+        }),
+    };
+
     internal static string Name(this ChatType type) {
         return type switch {
             ChatType.Debug => "Debug",
@@ -234,5 +306,44 @@ internal static class ChatTypeExt {
         ChatType.Linkshell7 => InputChannel.Linkshell7,
         ChatType.Linkshell8 => InputChannel.Linkshell8,
         _ => null,
+    };
+
+    internal static bool IsGm(this ChatType type) => type switch {
+        ChatType.GmTell => true,
+        ChatType.GmSay => true,
+        ChatType.GmShout => true,
+        ChatType.GmYell => true,
+        ChatType.GmParty => true,
+        ChatType.GmFreeCompany => true,
+        ChatType.GmLinkshell1 => true,
+        ChatType.GmLinkshell2 => true,
+        ChatType.GmLinkshell3 => true,
+        ChatType.GmLinkshell4 => true,
+        ChatType.GmLinkshell5 => true,
+        ChatType.GmLinkshell6 => true,
+        ChatType.GmLinkshell7 => true,
+        ChatType.GmLinkshell8 => true,
+        ChatType.GmNoviceNetwork => true,
+        _ => false,
+    };
+
+    internal static bool HasSource(this ChatType type) => type switch {
+        // Battle
+        ChatType.Damage => true,
+        ChatType.Miss => true,
+        ChatType.Action => true,
+        ChatType.Item => true,
+        ChatType.Healing => true,
+        ChatType.GainBuff => true,
+        ChatType.LoseBuff => true,
+        ChatType.GainDebuff => true,
+        ChatType.LoseDebuff => true,
+
+        // Announcements
+        ChatType.Progress => true,
+        ChatType.LootRoll => true,
+        ChatType.Crafting => true,
+        ChatType.Gathering => true,
+        _ => false,
     };
 }

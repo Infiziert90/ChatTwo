@@ -78,32 +78,45 @@ internal sealed class Tabs : ISettingsTab {
                 }
 
                 if (ImGui.TreeNodeEx(Language.Options_Tabs_Channels)) {
-                    foreach (var type in Enum.GetValues<ChatType>()) {
-                        var enabled = tab.ChatCodes.ContainsKey(type);
-                        if (ImGui.Checkbox($"##{type.Name()}-{i}", ref enabled)) {
-                            if (enabled) {
-                                tab.ChatCodes[type] = ChatSourceExt.All;
-                            } else {
-                                tab.ChatCodes.Remove(type);
-                            }
-                        }
+                    foreach (var (header, types) in ChatTypeExt.SortOrder) {
+                        if (ImGui.TreeNodeEx(header + $"##{i}")) {
+                            foreach (var type in types) {
+                                if (type.IsGm()) {
+                                    continue;
+                                }
 
-                        ImGui.SameLine();
+                                var enabled = tab.ChatCodes.ContainsKey(type);
+                                if (ImGui.Checkbox($"##{type.Name()}-{i}", ref enabled)) {
+                                    if (enabled) {
+                                        tab.ChatCodes[type] = ChatSourceExt.All;
+                                    } else {
+                                        tab.ChatCodes.Remove(type);
+                                    }
+                                }
 
-                        if (ImGui.TreeNodeEx($"{type.Name()}##{i}")) {
-                            tab.ChatCodes.TryGetValue(type, out var sourcesEnum);
-                            var sources = (uint) sourcesEnum;
+                                ImGui.SameLine();
 
-                            foreach (var source in Enum.GetValues<ChatSource>()) {
-                                if (ImGui.CheckboxFlags(source.ToString(), ref sources, (uint) source)) {
-                                    tab.ChatCodes[type] = (ChatSource) sources;
+                                if (type.HasSource()) {
+                                    if (ImGui.TreeNodeEx($"{type.Name()}##{i}")) {
+                                        tab.ChatCodes.TryGetValue(type, out var sourcesEnum);
+                                        var sources = (uint) sourcesEnum;
+
+                                        foreach (var source in Enum.GetValues<ChatSource>()) {
+                                            if (ImGui.CheckboxFlags(source.ToString(), ref sources, (uint) source)) {
+                                                tab.ChatCodes[type] = (ChatSource) sources;
+                                            }
+                                        }
+
+                                        ImGui.TreePop();
+                                    }
+                                } else {
+                                    ImGui.TextUnformatted(type.Name());
                                 }
                             }
 
                             ImGui.TreePop();
                         }
                     }
-
 
                     ImGui.TreePop();
                 }
