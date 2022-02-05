@@ -61,6 +61,13 @@ internal enum UnreadMode {
 }
 
 internal static class UnreadModeExt {
+    internal static string Name(this UnreadMode mode) => mode switch {
+        UnreadMode.All => Language.UnreadMode_All,
+        UnreadMode.Unseen => Language.UnreadMode_Unseen,
+        UnreadMode.None => Language.UnreadMode_None,
+        _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null),
+    };
+
     internal static string? Tooltip(this UnreadMode mode) => mode switch {
         UnreadMode.All => Language.UnreadMode_All_Tooltip,
         UnreadMode.Unseen => Language.UnreadMode_Unseen_Tooltip,

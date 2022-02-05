@@ -115,6 +115,105 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Alliance Member.
+        /// </summary>
+        internal static string ChatSource_AllianceMember {
+            get {
+                return ResourceManager.GetString("ChatSource_AllianceMember", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pet (Alliance member).
+        /// </summary>
+        internal static string ChatSource_AlliancePet {
+            get {
+                return ResourceManager.GetString("ChatSource_AlliancePet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Engaged Enemy.
+        /// </summary>
+        internal static string ChatSource_EngagedEnemy {
+            get {
+                return ResourceManager.GetString("ChatSource_EngagedEnemy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Friendly NPC.
+        /// </summary>
+        internal static string ChatSource_FriendlyNpc {
+            get {
+                return ResourceManager.GetString("ChatSource_FriendlyNpc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Other.
+        /// </summary>
+        internal static string ChatSource_Other {
+            get {
+                return ResourceManager.GetString("ChatSource_Other", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pet (Other).
+        /// </summary>
+        internal static string ChatSource_OtherPet {
+            get {
+                return ResourceManager.GetString("ChatSource_OtherPet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Party Member.
+        /// </summary>
+        internal static string ChatSource_PartyMember {
+            get {
+                return ResourceManager.GetString("ChatSource_PartyMember", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pet (Party).
+        /// </summary>
+        internal static string ChatSource_PartyPet {
+            get {
+                return ResourceManager.GetString("ChatSource_PartyPet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Self.
+        /// </summary>
+        internal static string ChatSource_Self {
+            get {
+                return ResourceManager.GetString("ChatSource_Self", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Pet (Self).
+        /// </summary>
+        internal static string ChatSource_SelfPet {
+            get {
+                return ResourceManager.GetString("ChatSource_SelfPet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unengaged Enemy.
+        /// </summary>
+        internal static string ChatSource_UnengagedEnemy {
+            get {
+                return ResourceManager.GetString("ChatSource_UnengagedEnemy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Allow moving chat.
         /// </summary>
         internal static string Options_CanMove_Name {
@@ -502,6 +601,15 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All.
+        /// </summary>
+        internal static string UnreadMode_All {
+            get {
+                return ResourceManager.GetString("UnreadMode_All", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Always show unread indicators..
         /// </summary>
         internal static string UnreadMode_All_Tooltip {
@@ -511,11 +619,29 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to None.
+        /// </summary>
+        internal static string UnreadMode_None {
+            get {
+                return ResourceManager.GetString("UnreadMode_None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Never show unread indicators..
         /// </summary>
         internal static string UnreadMode_None_Tooltip {
             get {
                 return ResourceManager.GetString("UnreadMode_None_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unseen.
+        /// </summary>
+        internal static string UnreadMode_Unseen {
+            get {
+                return ResourceManager.GetString("UnreadMode_Unseen", resourceCulture);
             }
         }
         

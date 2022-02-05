@@ -278,4 +278,46 @@
     <data name="Options_Tabs_ChannelTypes_Announcements" xml:space="preserve">
         <value>Announcements</value>
     </data>
+    <data name="UnreadMode_All" xml:space="preserve">
+        <value>All</value>
+    </data>
+    <data name="UnreadMode_Unseen" xml:space="preserve">
+        <value>Unseen</value>
+    </data>
+    <data name="UnreadMode_None" xml:space="preserve">
+        <value>None</value>
+    </data>
+    <data name="ChatSource_Self" xml:space="preserve">
+        <value>Self</value>
+    </data>
+    <data name="ChatSource_PartyMember" xml:space="preserve">
+        <value>Party Member</value>
+    </data>
+    <data name="ChatSource_AllianceMember" xml:space="preserve">
+        <value>Alliance Member</value>
+    </data>
+    <data name="ChatSource_Other" xml:space="preserve">
+        <value>Other</value>
+    </data>
+    <data name="ChatSource_EngagedEnemy" xml:space="preserve">
+        <value>Engaged Enemy</value>
+    </data>
+    <data name="ChatSource_UnengagedEnemy" xml:space="preserve">
+        <value>Unengaged Enemy</value>
+    </data>
+    <data name="ChatSource_FriendlyNpc" xml:space="preserve">
+        <value>Friendly NPC</value>
+    </data>
+    <data name="ChatSource_SelfPet" xml:space="preserve">
+        <value>Pet (Self)</value>
+    </data>
+    <data name="ChatSource_PartyPet" xml:space="preserve">
+        <value>Pet (Party)</value>
+    </data>
+    <data name="ChatSource_AlliancePet" xml:space="preserve">
+        <value>Pet (Alliance member)</value>
+    </data>
+    <data name="ChatSource_OtherPet" xml:space="preserve">
+        <value>Pet (Other)</value>
+    </data>
 </root>

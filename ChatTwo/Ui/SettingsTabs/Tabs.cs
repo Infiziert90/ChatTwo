@@ -48,7 +48,7 @@ internal sealed class Tabs : ISettingsTab {
 
                 if (ImGui.BeginCombo(Language.Options_Tabs_UnreadMode, tab.UnreadMode.ToString())) {
                     foreach (var mode in Enum.GetValues<UnreadMode>()) {
-                        if (ImGui.Selectable(mode.ToString(), tab.UnreadMode == mode)) {
+                        if (ImGui.Selectable(mode.Name(), tab.UnreadMode == mode)) {
                             tab.UnreadMode = mode;
                         }
 
@@ -102,7 +102,7 @@ internal sealed class Tabs : ISettingsTab {
                                         var sources = (uint) sourcesEnum;
 
                                         foreach (var source in Enum.GetValues<ChatSource>()) {
-                                            if (ImGui.CheckboxFlags(source.ToString(), ref sources, (uint) source)) {
+                                            if (ImGui.CheckboxFlags(source.Name(), ref sources, (uint) source)) {
                                                 tab.ChatCodes[type] = (ChatSource) sources;
                                             }
                                         }
