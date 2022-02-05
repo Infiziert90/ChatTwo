@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Dalamud.Interface;
+using Dalamud.Interface.Style;
 using ImGuiNET;
 
 namespace ChatTwo.Util;
@@ -110,18 +111,36 @@ internal static class ImGuiUtil {
         var ret = ImGui.Checkbox(label, ref value);
 
         if (description != null) {
-            var colour = ImGui.GetStyle().Colors[(int) ImGuiCol.TextDisabled];
-            ImGui.PushStyleColor(ImGuiCol.Text, colour);
-            ImGui.PushTextWrapPos();
-
-            try {
-                ImGui.TextUnformatted(description);
-            } finally {
-                ImGui.PopTextWrapPos();
-                ImGui.PopStyleColor();
-            }
+            HelpText(description);
         }
 
         return ret;
+    }
+
+    internal static void HelpText(string text) {
+        var colour = ImGui.GetStyle().Colors[(int) ImGuiCol.TextDisabled];
+        ImGui.PushStyleColor(ImGuiCol.Text, colour);
+        ImGui.PushTextWrapPos();
+
+        try {
+            ImGui.TextUnformatted(text);
+        } finally {
+            ImGui.PopTextWrapPos();
+            ImGui.PopStyleColor();
+        }
+    }
+
+    internal static void WarningText(string text) {
+        var style = StyleModel.GetConfiguredStyle() ?? StyleModel.GetFromCurrent();
+        var dalamudOrange = style.BuiltInColors?.DalamudOrange;
+        if (dalamudOrange != null) {
+            ImGui.PushStyleColor(ImGuiCol.Text, dalamudOrange.Value);
+        }
+
+        ImGui.TextUnformatted(text);
+
+        if (dalamudOrange != null) {
+            ImGui.PopStyleColor();
+        }
     }
 }

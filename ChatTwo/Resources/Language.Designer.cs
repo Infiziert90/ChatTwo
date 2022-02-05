@@ -268,6 +268,33 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The font Chat 2 will use to display non-Japanese text..
+        /// </summary>
+        internal static string Options_Font_Description {
+            get {
+                return ResourceManager.GetString("Options_Font_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Font.
+        /// </summary>
+        internal static string Options_Font_Name {
+            get {
+                return ResourceManager.GetString("Options_Font_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Using certain system fonts may crash your game. You have been warned..
+        /// </summary>
+        internal static string Options_Font_Warning {
+            get {
+                return ResourceManager.GetString("Options_Font_Warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Font size.
         /// </summary>
         internal static string Options_FontSize_Name {
@@ -309,6 +336,24 @@ namespace ChatTwo.Resources {
         internal static string Options_HideDuringCutscenes_Name {
             get {
                 return ResourceManager.GetString("Options_HideDuringCutscenes_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The font Chat 2 will use to display Japanese text..
+        /// </summary>
+        internal static string Options_JapaneseFont_Description {
+            get {
+                return ResourceManager.GetString("Options_JapaneseFont_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Japanese font.
+        /// </summary>
+        internal static string Options_JapaneseFont_Name {
+            get {
+                return ResourceManager.GetString("Options_JapaneseFont_Name", resourceCulture);
             }
         }
         

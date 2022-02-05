@@ -320,4 +320,19 @@
     <data name="ChatSource_OtherPet" xml:space="preserve">
         <value>Pet (Other)</value>
     </data>
+    <data name="Options_Font_Name" xml:space="preserve">
+        <value>Font</value>
+    </data>
+    <data name="Options_JapaneseFont_Name" xml:space="preserve">
+        <value>Japanese font</value>
+    </data>
+    <data name="Options_Font_Description" xml:space="preserve">
+        <value>The font Chat 2 will use to display non-Japanese text.</value>
+    </data>
+    <data name="Options_Font_Warning" xml:space="preserve">
+        <value>Using certain system fonts may crash your game. You have been warned.</value>
+    </data>
+    <data name="Options_JapaneseFont_Description" xml:space="preserve">
+        <value>The font Chat 2 will use to display Japanese text.</value>
+    </data>
 </root>
