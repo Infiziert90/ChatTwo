@@ -128,7 +128,9 @@ internal sealed class PluginUi : IDisposable {
         }
 
         if (fontData == null) {
-            PluginLog.Warning("global fallback");
+            this.Plugin.Config.GlobalFont = Fonts.GlobalFonts[0].Name;
+            this.Plugin.SaveConfig();
+
             var globalFont = Fonts.GlobalFonts[0];
             fontData = new FontData(this.GetResource(globalFont.ResourcePath), this.GetResource(globalFont.ResourcePathItalic));
         }
@@ -164,7 +166,9 @@ internal sealed class PluginUi : IDisposable {
         // }
 
         if (jpFontData == null) {
-            PluginLog.Warning("jp fallback");
+            this.Plugin.Config.JapaneseFont = Fonts.JapaneseFonts[0].Item1;
+            this.Plugin.SaveConfig();
+
             var jpFont = Fonts.JapaneseFonts[0];
             jpFontData = new FontData(this.GetResource(jpFont.Item2), Array.Empty<byte>());
         }
