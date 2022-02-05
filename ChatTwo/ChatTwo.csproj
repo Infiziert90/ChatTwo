@@ -48,8 +48,7 @@
 
     <ItemGroup>
         <PackageReference Include="DalamudPackager" Version="2.1.5"/>
-        <PackageReference Include="System.Drawing.Common" Version="6.0.0"/>
-        <PackageReference Include="Vanara.PInvoke.Gdi32" Version="3.3.15"/>
+        <PackageReference Include="SharpDX.Direct2D1" Version="4.2.0"/>
         <PackageReference Include="XivCommon" Version="5.0.0"/>
     </ItemGroup>
 

@@ -1,5 +1,3 @@
-using System.Drawing;
-using System.Drawing.Text;
 using ChatTwo.Resources;
 using ChatTwo.Util;
 using ImGuiNET;
@@ -8,7 +6,7 @@ namespace ChatTwo.Ui.SettingsTabs;
 
 internal sealed class Display : ISettingsTab {
     private Configuration Mutable { get; }
-    private List<FontFamily> Fonts { get; } = new();
+    private List<string> Fonts { get; set; } = new();
     private List<string> JpFonts { get; set; } = new();
 
     public string Name => Language.Options_Display_Tab + "###tabs-display";
@@ -19,13 +17,7 @@ internal sealed class Display : ISettingsTab {
     }
 
     private void UpdateFonts() {
-        this.Fonts.Clear();
-
-        var fonts = new InstalledFontCollection();
-        foreach (var font in fonts.Families) {
-            this.Fonts.Add(font);
-        }
-
+        this.Fonts = Ui.Fonts.GetFonts();
         this.JpFonts = Ui.Fonts.GetJpFonts();
     }
 
@@ -74,16 +66,12 @@ internal sealed class Display : ISettingsTab {
 
             ImGui.Separator();
 
-            foreach (var family in this.Fonts) {
-                if (!family.IsStyleAvailable(FontStyle.Italic)) {
-                    continue;
+            foreach (var name in this.Fonts) {
+                if (ImGui.Selectable(name, this.Mutable.GlobalFont == name)) {
+                    this.Mutable.GlobalFont = name;
                 }
 
-                if (ImGui.Selectable(family.Name, this.Mutable.GlobalFont == family.Name)) {
-                    this.Mutable.GlobalFont = family.Name;
-                }
-
-                if (ImGui.IsWindowAppearing() && this.Mutable.GlobalFont == family.Name) {
+                if (ImGui.IsWindowAppearing() && this.Mutable.GlobalFont == name) {
                     ImGui.SetScrollHereY(0.5f);
                 }
             }

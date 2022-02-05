@@ -32,9 +32,9 @@ internal sealed class PluginUi : IDisposable {
     private List<IUiComponent> Components { get; }
     private ImFontConfigPtr _fontCfg;
     private ImFontConfigPtr _fontCfgMerge;
-    private (GCHandle, int) _regularFont;
-    private (GCHandle, int) _italicFont;
-    private (GCHandle, int) _jpFont;
+    private (GCHandle, int, float) _regularFont;
+    private (GCHandle, int, float) _italicFont;
+    private (GCHandle, int, float) _jpFont;
     private (GCHandle, int) _gameSymFont;
 
     private readonly ImVector _ranges;
@@ -121,10 +121,18 @@ internal sealed class PluginUi : IDisposable {
         if (this.Plugin.Config.GlobalFont.StartsWith(Fonts.IncludedIndicator)) {
             var globalFont = Fonts.GlobalFonts.FirstOrDefault(font => font.Name == this.Plugin.Config.GlobalFont);
             if (globalFont != null) {
-                fontData = new FontData(this.GetResource(globalFont.ResourcePath), this.GetResource(globalFont.ResourcePathItalic));
+                var regular = new FaceData(this.GetResource(globalFont.ResourcePath), 1f);
+                var italic = new FaceData(this.GetResource(globalFont.ResourcePathItalic), 1f);
+                fontData = new FontData(regular, italic);
             }
         } else {
             fontData = Fonts.GetFont(this.Plugin.Config.GlobalFont, true);
+            if (fontData != null) {
+                File.WriteAllBytes(@"D:\font.ttf", fontData.Regular.Data);
+                if (fontData.Italic != null) {
+                    File.WriteAllBytes(@"D:\font_italic.ttf", fontData.Italic.Data);
+                }
+            }
         }
 
         if (fontData == null) {
@@ -132,7 +140,9 @@ internal sealed class PluginUi : IDisposable {
             this.Plugin.SaveConfig();
 
             var globalFont = Fonts.GlobalFonts[0];
-            fontData = new FontData(this.GetResource(globalFont.ResourcePath), this.GetResource(globalFont.ResourcePathItalic));
+            var regular = new FaceData(this.GetResource(globalFont.ResourcePath), 1f);
+            var italic = new FaceData(this.GetResource(globalFont.ResourcePathItalic), 1f);
+            fontData = new FontData(regular, italic);
         }
 
         if (this._regularFont.Item1.IsAllocated) {
@@ -144,20 +154,25 @@ internal sealed class PluginUi : IDisposable {
         }
 
         this._regularFont = (
-            GCHandle.Alloc(fontData.Regular, GCHandleType.Pinned),
-            fontData.Regular.Length
+            GCHandle.Alloc(fontData.Regular.Data, GCHandleType.Pinned),
+            fontData.Regular.Data.Length,
+            fontData.Regular.Ratio
         );
 
         this._italicFont = (
-            GCHandle.Alloc(fontData.Italic, GCHandleType.Pinned),
-            fontData.Italic.Length
+            GCHandle.Alloc(fontData.Italic!.Data, GCHandleType.Pinned),
+            fontData.Italic.Data.Length,
+            fontData.Italic.Ratio
         );
 
         FontData? jpFontData = null;
         if (this.Plugin.Config.JapaneseFont.StartsWith(Fonts.IncludedIndicator)) {
             var jpFont = Fonts.JapaneseFonts.FirstOrDefault(item => item.Item1 == this.Plugin.Config.JapaneseFont);
             if (jpFont != default) {
-                jpFontData = new FontData(this.GetResource(jpFont.Item2), Array.Empty<byte>());
+                jpFontData = new FontData(
+                    new FaceData(this.GetResource(jpFont.Item2), 1f),
+                    null
+                );
             }
         }
         // else {
@@ -170,7 +185,10 @@ internal sealed class PluginUi : IDisposable {
             this.Plugin.SaveConfig();
 
             var jpFont = Fonts.JapaneseFonts[0];
-            jpFontData = new FontData(this.GetResource(jpFont.Item2), Array.Empty<byte>());
+            jpFontData = new FontData(
+                new FaceData(this.GetResource(jpFont.Item2), 1f),
+                null
+            );
         }
 
         if (this._jpFont.Item1.IsAllocated) {
@@ -178,8 +196,9 @@ internal sealed class PluginUi : IDisposable {
         }
 
         this._jpFont = (
-            GCHandle.Alloc(jpFontData.Regular, GCHandleType.Pinned),
-            jpFontData.Regular.Length
+            GCHandle.Alloc(jpFontData.Regular.Data, GCHandleType.Pinned),
+            jpFontData.Regular.Data.Length,
+            jpFontData.Regular.Ratio
         );
     }
 
