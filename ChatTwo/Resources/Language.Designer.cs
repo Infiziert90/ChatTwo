@@ -619,11 +619,29 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to New tab.
+        /// </summary>
+        internal static string Options_Tabs_NewTab {
+            get {
+                return ResourceManager.GetString("Options_Tabs_NewTab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;None&gt;.
         /// </summary>
         internal static string Options_Tabs_NoInputChannel {
             get {
                 return ResourceManager.GetString("Options_Tabs_NoInputChannel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Preset: {0}.
+        /// </summary>
+        internal static string Options_Tabs_Preset {
+            get {
+                return ResourceManager.GetString("Options_Tabs_Preset", resourceCulture);
             }
         }
         
@@ -714,6 +732,24 @@ namespace ChatTwo.Resources {
         internal static string Tab_DefaultName {
             get {
                 return ResourceManager.GetString("Tab_DefaultName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Event.
+        /// </summary>
+        internal static string Tabs_Presets_Event {
+            get {
+                return ResourceManager.GetString("Tabs_Presets_Event", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to General.
+        /// </summary>
+        internal static string Tabs_Presets_General {
+            get {
+                return ResourceManager.GetString("Tabs_Presets_General", resourceCulture);
             }
         }
         

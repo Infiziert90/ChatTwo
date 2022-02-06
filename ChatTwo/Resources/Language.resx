@@ -359,4 +359,16 @@
     <data name="Options_HideWhenNotLoggedIn_Description" xml:space="preserve">
         <value>Hide {0} when you are not logged in to a character.</value>
     </data>
+    <data name="Tabs_Presets_General" xml:space="preserve">
+        <value>General</value>
+    </data>
+    <data name="Options_Tabs_Preset" xml:space="preserve">
+        <value>Preset: {0}</value>
+    </data>
+    <data name="Tabs_Presets_Event" xml:space="preserve">
+        <value>Event</value>
+    </data>
+    <data name="Options_Tabs_NewTab" xml:space="preserve">
+        <value>New tab</value>
+    </data>
 </root>

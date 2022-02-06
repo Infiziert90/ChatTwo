@@ -16,8 +16,28 @@ internal sealed class Tabs : ISettingsTab {
     }
 
     public void Draw() {
+        const string addTabPopup = "add-tab-popup";
+
         if (ImGuiUtil.IconButton(FontAwesomeIcon.Plus, tooltip: Language.Options_Tabs_Add)) {
-            this.Mutable.Tabs.Add(new Tab());
+            ImGui.OpenPopup(addTabPopup);
+        }
+
+        if (ImGui.BeginPopup(addTabPopup)) {
+            if (ImGui.Selectable(Language.Options_Tabs_NewTab)) {
+                this.Mutable.Tabs.Add(new Tab());
+            }
+
+            ImGui.Separator();
+
+            if (ImGui.Selectable(string.Format(Language.Options_Tabs_Preset, Language.Tabs_Presets_General))) {
+                this.Mutable.Tabs.Add(TabsUtil.VanillaGeneral);
+            }
+
+            if (ImGui.Selectable(string.Format(Language.Options_Tabs_Preset, Language.Tabs_Presets_Event))) {
+                this.Mutable.Tabs.Add(TabsUtil.VanillaEvent);
+            }
+
+            ImGui.EndPopup();
         }
 
         var toRemove = -1;
