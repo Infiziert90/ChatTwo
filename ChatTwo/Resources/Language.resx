@@ -350,4 +350,7 @@
     <data name="Options_SymbolsFontSize_Description" xml:space="preserve">
         <value>The font size to use for game symbols.</value>
     </data>
+    <data name="ChatLog_Tabs_Delete" xml:space="preserve">
+        <value>Delete tab</value>
+    </data>
 </root>

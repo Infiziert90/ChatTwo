@@ -313,7 +313,9 @@ internal sealed class ChatLog : IUiComponent {
             ImGui.SetNextWindowBgAlpha(this.Ui.Plugin.Config.WindowAlpha);
         }
 
-        if (!ImGui.Begin($"{this.Ui.Plugin.Name}##chat", flags)) {
+        ImGui.SetNextWindowSize(new Vector2(500, 250) * ImGuiHelpers.GlobalScale, ImGuiCond.FirstUseEver);
+
+        if (!ImGui.Begin($"{this.Ui.Plugin.Name}###chat2", flags)) {
             this._lastViewport = ImGui.GetWindowViewport().NativePtr;
             ImGui.End();
             return;
@@ -747,7 +749,7 @@ internal sealed class ChatLog : IUiComponent {
             anyChanged = true;
         }
 
-        if (ImGuiUtil.IconButton(FontAwesomeIcon.TrashAlt, tooltip: "Delete tab")) {
+        if (ImGuiUtil.IconButton(FontAwesomeIcon.TrashAlt, tooltip: Language.ChatLog_Tabs_Delete)) {
             tabs.RemoveAt(i);
             anyChanged = true;
         }

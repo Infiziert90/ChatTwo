@@ -46,7 +46,7 @@ internal sealed class Tabs : ISettingsTab {
                 ImGui.InputText(Language.Options_Tabs_Name, ref tab.Name, 512, ImGuiInputTextFlags.EnterReturnsTrue);
                 ImGui.Checkbox(Language.Options_Tabs_ShowTimestamps, ref tab.DisplayTimestamp);
 
-                if (ImGui.BeginCombo(Language.Options_Tabs_UnreadMode, tab.UnreadMode.ToString())) {
+                if (ImGui.BeginCombo(Language.Options_Tabs_UnreadMode, tab.UnreadMode.Name())) {
                     foreach (var mode in Enum.GetValues<UnreadMode>()) {
                         if (ImGui.Selectable(mode.Name(), tab.UnreadMode == mode)) {
                             tab.UnreadMode = mode;

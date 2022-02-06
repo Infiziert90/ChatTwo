@@ -4,7 +4,7 @@ using ChatTwo.Util;
 namespace ChatTwo.Code;
 
 internal static class ChatTypeExt {
-    internal static readonly (string, ChatType[])[] SortOrder = {
+    internal static IEnumerable<(string, ChatType[])> SortOrder => new[] {
         (Language.Options_Tabs_ChannelTypes_Special, new[] {
             ChatType.Debug,
             ChatType.Urgent,

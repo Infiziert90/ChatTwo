@@ -79,6 +79,15 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete tab.
+        /// </summary>
+        internal static string ChatLog_Tabs_Delete {
+            get {
+                return ResourceManager.GetString("ChatLog_Tabs_Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Move down.
         /// </summary>
         internal static string ChatLog_Tabs_MoveDown {
