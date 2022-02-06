@@ -5,6 +5,11 @@ namespace ChatTwo.Code;
 
 internal static class ChatTypeExt {
     internal static readonly (string, ChatType[])[] SortOrder = {
+        (Language.Options_Tabs_ChannelTypes_Special, new[] {
+            ChatType.Debug,
+            ChatType.Urgent,
+            ChatType.Notice,
+        }),
         (Language.Options_Tabs_ChannelTypes_Chat, new[] {
             ChatType.Say,
             ChatType.Yell,

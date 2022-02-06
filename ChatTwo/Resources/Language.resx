@@ -335,4 +335,7 @@
     <data name="Options_JapaneseFont_Description" xml:space="preserve">
         <value>The font Chat 2 will use to display Japanese text.</value>
     </data>
+    <data name="Options_Tabs_ChannelTypes_Special" xml:space="preserve">
+        <value>Special</value>
+    </data>
 </root>

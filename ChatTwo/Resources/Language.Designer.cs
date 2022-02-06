@@ -502,6 +502,15 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Special.
+        /// </summary>
+        internal static string Options_Tabs_ChannelTypes_Special {
+            get {
+                return ResourceManager.GetString("Options_Tabs_ChannelTypes_Special", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete.
         /// </summary>
         internal static string Options_Tabs_Delete {
