@@ -75,7 +75,7 @@ internal static class Fonts {
             var probablyJp = false;
             for (var j = 0; j < family.FontCount; j++) {
                 using var font = family.GetFont(j);
-                if (!font.HasCharacter('日') || font.IsSymbolFont) {
+                if (!font.HasCharacter('気') || font.IsSymbolFont) {
                     continue;
                 }
 
