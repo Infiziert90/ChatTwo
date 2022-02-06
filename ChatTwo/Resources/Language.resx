@@ -132,19 +132,19 @@
     <value>Hide chat during cutscenes</value>
   </data>
     <data name="Options_HideDuringCutscenes_Description" xml:space="preserve">
-    <value>Hide Chat 2 during cutscenes.</value>
+    <value>Hide {0} during cutscenes.</value>
   </data>
     <data name="Options_NativeItemTooltips_Name" xml:space="preserve">
     <value>Show native item tooltips</value>
   </data>
     <data name="Options_NativeItemTooltips_Description" xml:space="preserve">
-    <value>Show in-game item tooltips when hovering over items in Chat 2.</value>
+    <value>Show in-game item tooltips when hovering over items in {0}.</value>
   </data>
     <data name="Options_SidebarTabView_Name" xml:space="preserve">
     <value>Show tabs in a sidebar</value>
   </data>
     <data name="Options_SidebarTabView_Description" xml:space="preserve">
-    <value>Show tabs in Chat 2 as a sidebar instead of a bar at the top.</value>
+    <value>Show tabs in {0} as a sidebar instead of a bar at the top.</value>
   </data>
     <data name="Options_PrettierTimestamps_Name" xml:space="preserve">
     <value>Use modern timestamp layout</value>
@@ -327,13 +327,13 @@
         <value>Japanese font</value>
     </data>
     <data name="Options_Font_Description" xml:space="preserve">
-        <value>The font Chat 2 will use to display non-Japanese text.</value>
+        <value>The font {0} will use to display non-Japanese text.</value>
     </data>
     <data name="Options_Font_Warning" xml:space="preserve">
         <value>Using certain system fonts may crash your game. You have been warned.</value>
     </data>
     <data name="Options_JapaneseFont_Description" xml:space="preserve">
-        <value>The font Chat 2 will use to display Japanese text.</value>
+        <value>The font {0} will use to display Japanese text.</value>
     </data>
     <data name="Options_Tabs_ChannelTypes_Special" xml:space="preserve">
         <value>Special</value>
@@ -357,6 +357,6 @@
         <value>Hide when not logged in</value>
     </data>
     <data name="Options_HideWhenNotLoggedIn_Description" xml:space="preserve">
-        <value>Hide the chat when you are not logged in to a character.</value>
+        <value>Hide {0} when you are not logged in to a character.</value>
     </data>
 </root>

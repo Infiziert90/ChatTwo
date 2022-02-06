@@ -54,7 +54,7 @@ public class Fonts : ISettingsTab {
             ImGui.EndCombo();
         }
 
-        ImGuiUtil.HelpText(Language.Options_Font_Description);
+        ImGuiUtil.HelpText(string.Format(Language.Options_Font_Description, Plugin.PluginName));
         ImGuiUtil.WarningText(Language.Options_Font_Warning);
         ImGui.Spacing();
 
@@ -84,7 +84,7 @@ public class Fonts : ISettingsTab {
             ImGui.EndCombo();
         }
 
-        ImGuiUtil.HelpText(Language.Options_JapaneseFont_Description);
+        ImGuiUtil.HelpText(string.Format(Language.Options_JapaneseFont_Description, Plugin.PluginName));
         ImGui.Spacing();
 
         const float speed = .0125f;

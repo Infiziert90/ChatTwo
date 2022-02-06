@@ -19,16 +19,32 @@ internal sealed class Display : ISettingsTab {
         ImGuiUtil.OptionCheckbox(ref this.Mutable.HideChat, Language.Options_HideChat_Name, Language.Options_HideChat_Description);
         ImGui.Spacing();
 
-        ImGuiUtil.OptionCheckbox(ref this.Mutable.HideDuringCutscenes, Language.Options_HideDuringCutscenes_Name, Language.Options_HideDuringCutscenes_Description);
+        ImGuiUtil.OptionCheckbox(
+            ref this.Mutable.HideDuringCutscenes,
+            Language.Options_HideDuringCutscenes_Name,
+            string.Format(Language.Options_HideDuringCutscenes_Description, Plugin.PluginName)
+        );
         ImGui.Spacing();
 
-        ImGuiUtil.OptionCheckbox(ref this.Mutable.HideWhenNotLoggedIn, Language.Options_HideWhenNotLoggedIn_Name, Language.Options_HideWhenNotLoggedIn_Description);
+        ImGuiUtil.OptionCheckbox(
+            ref this.Mutable.HideWhenNotLoggedIn,
+            Language.Options_HideWhenNotLoggedIn_Name,
+            string.Format(Language.Options_HideWhenNotLoggedIn_Description, Plugin.PluginName)
+        );
         ImGui.Spacing();
 
-        ImGuiUtil.OptionCheckbox(ref this.Mutable.NativeItemTooltips, Language.Options_NativeItemTooltips_Name, Language.Options_NativeItemTooltips_Description);
+        ImGuiUtil.OptionCheckbox(
+            ref this.Mutable.NativeItemTooltips,
+            Language.Options_NativeItemTooltips_Name,
+            string.Format(Language.Options_NativeItemTooltips_Description, Plugin.PluginName)
+        );
         ImGui.Spacing();
 
-        ImGuiUtil.OptionCheckbox(ref this.Mutable.SidebarTabView, Language.Options_SidebarTabView_Name, Language.Options_SidebarTabView_Description);
+        ImGuiUtil.OptionCheckbox(
+            ref this.Mutable.SidebarTabView,
+            Language.Options_SidebarTabView_Name,
+            string.Format(Language.Options_SidebarTabView_Description, Plugin.PluginName)
+        );
         ImGui.Spacing();
 
         ImGuiUtil.OptionCheckbox(ref this.Mutable.PrettierTimestamps, Language.Options_PrettierTimestamps_Name, Language.Options_PrettierTimestamps_Description);

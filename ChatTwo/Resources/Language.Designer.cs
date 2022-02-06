@@ -277,7 +277,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The font Chat 2 will use to display non-Japanese text..
+        ///   Looks up a localized string similar to The font {0} will use to display non-Japanese text..
         /// </summary>
         internal static string Options_Font_Description {
             get {
@@ -340,7 +340,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hide Chat 2 during cutscenes..
+        ///   Looks up a localized string similar to Hide {0} during cutscenes..
         /// </summary>
         internal static string Options_HideDuringCutscenes_Description {
             get {
@@ -358,7 +358,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hide the chat when you are not logged in to a character..
+        ///   Looks up a localized string similar to Hide {0} when you are not logged in to a character..
         /// </summary>
         internal static string Options_HideWhenNotLoggedIn_Description {
             get {
@@ -376,7 +376,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The font Chat 2 will use to display Japanese text..
+        ///   Looks up a localized string similar to The font {0} will use to display Japanese text..
         /// </summary>
         internal static string Options_JapaneseFont_Description {
             get {
@@ -421,7 +421,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show in-game item tooltips when hovering over items in Chat 2..
+        ///   Looks up a localized string similar to Show in-game item tooltips when hovering over items in {0}..
         /// </summary>
         internal static string Options_NativeItemTooltips_Description {
             get {
@@ -484,7 +484,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show tabs in Chat 2 as a sidebar instead of a bar at the top..
+        ///   Looks up a localized string similar to Show tabs in {0} as a sidebar instead of a bar at the top..
         /// </summary>
         internal static string Options_SidebarTabView_Description {
             get {
