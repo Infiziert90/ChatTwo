@@ -2,12 +2,15 @@
 using ChatTwo.Resources;
 using ChatTwo.Ui;
 using Dalamud.Configuration;
+using Dalamud.Logging;
 
 namespace ChatTwo;
 
 [Serializable]
 internal class Configuration : IPluginConfiguration {
-    public int Version { get; set; } = 2;
+    private const int LatestVersion = 3;
+
+    public int Version { get; set; } = LatestVersion;
 
     public bool HideChat = true;
     public bool HideDuringCutscenes = true;
@@ -21,6 +24,8 @@ internal class Configuration : IPluginConfiguration {
     public bool ShowTitleBar;
 
     public float FontSize = 17f;
+    public float JapaneseFontSize = 17f;
+    public float SymbolsFontSize = 17f;
     public string GlobalFont = Fonts.GlobalFonts[0].Name;
     public string JapaneseFont = Fonts.JapaneseFonts[0].Item1;
 
@@ -40,6 +45,8 @@ internal class Configuration : IPluginConfiguration {
         this.CanResize = other.CanResize;
         this.ShowTitleBar = other.ShowTitleBar;
         this.FontSize = other.FontSize;
+        this.JapaneseFontSize = other.JapaneseFontSize;
+        this.SymbolsFontSize = other.SymbolsFontSize;
         this.GlobalFont = other.GlobalFont;
         this.JapaneseFont = other.JapaneseFont;
         this.WindowAlpha = other.WindowAlpha;
@@ -48,13 +55,28 @@ internal class Configuration : IPluginConfiguration {
     }
 
     public void Migrate() {
-        if (this.Version == 1) {
-            this.Version = 2;
+        while (this.Version < LatestVersion) {
+            switch (this.Version) {
+                case 1: {
+                    this.Version = 2;
 
-            foreach (var tab in this.Tabs) {
-                #pragma warning disable CS0618
-                tab.UnreadMode = tab.DisplayUnread ? UnreadMode.Unseen : UnreadMode.None;
-                #pragma warning restore CS0618
+                    foreach (var tab in this.Tabs) {
+                        #pragma warning disable CS0618
+                        tab.UnreadMode = tab.DisplayUnread ? UnreadMode.Unseen : UnreadMode.None;
+                        #pragma warning restore CS0618
+                    }
+
+                    break;
+                }
+                case 2:
+                    this.Version = 3;
+
+                    this.JapaneseFontSize = this.FontSize;
+                    this.SymbolsFontSize = this.FontSize;
+                    break;
+                default:
+                    PluginLog.Warning($"Couldn't migrate config version {this.Version}");
+                    break;
             }
         }
     }

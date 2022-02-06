@@ -6,26 +6,14 @@ namespace ChatTwo.Ui.SettingsTabs;
 
 internal sealed class Display : ISettingsTab {
     private Configuration Mutable { get; }
-    private List<string> Fonts { get; set; } = new();
-    private List<string> JpFonts { get; set; } = new();
 
     public string Name => Language.Options_Display_Tab + "###tabs-display";
 
     internal Display(Configuration mutable) {
         this.Mutable = mutable;
-        this.UpdateFonts();
-    }
-
-    private void UpdateFonts() {
-        this.Fonts = Ui.Fonts.GetFonts();
-        this.JpFonts = Ui.Fonts.GetJpFonts();
     }
 
     public void Draw() {
-        if (ImGui.IsWindowAppearing()) {
-            this.UpdateFonts();
-        }
-
         ImGui.PushTextWrapPos();
 
         ImGuiUtil.OptionCheckbox(ref this.Mutable.HideChat, Language.Options_HideChat_Name, Language.Options_HideChat_Description);
@@ -53,66 +41,6 @@ internal sealed class Display : ISettingsTab {
         ImGuiUtil.OptionCheckbox(ref this.Mutable.ShowNoviceNetwork, Language.Options_ShowNoviceNetwork_Name, Language.Options_ShowNoviceNetwork_Description);
         ImGui.Spacing();
 
-        if (ImGui.BeginCombo(Language.Options_Font_Name, this.Mutable.GlobalFont)) {
-            foreach (var font in Ui.Fonts.GlobalFonts) {
-                if (ImGui.Selectable(font.Name, this.Mutable.GlobalFont == font.Name)) {
-                    this.Mutable.GlobalFont = font.Name;
-                }
-
-                if (ImGui.IsWindowAppearing() && this.Mutable.GlobalFont == font.Name) {
-                    ImGui.SetScrollHereY(0.5f);
-                }
-            }
-
-            ImGui.Separator();
-
-            foreach (var name in this.Fonts) {
-                if (ImGui.Selectable(name, this.Mutable.GlobalFont == name)) {
-                    this.Mutable.GlobalFont = name;
-                }
-
-                if (ImGui.IsWindowAppearing() && this.Mutable.GlobalFont == name) {
-                    ImGui.SetScrollHereY(0.5f);
-                }
-            }
-
-            ImGui.EndCombo();
-        }
-
-        ImGuiUtil.HelpText(Language.Options_Font_Description);
-        ImGuiUtil.WarningText(Language.Options_Font_Warning);
-        ImGui.Spacing();
-
-        if (ImGui.BeginCombo(Language.Options_JapaneseFont_Name, this.Mutable.JapaneseFont)) {
-            foreach (var (name, _) in Ui.Fonts.JapaneseFonts) {
-                if (ImGui.Selectable(name, this.Mutable.JapaneseFont == name)) {
-                    this.Mutable.JapaneseFont = name;
-                }
-
-                if (ImGui.IsWindowAppearing() && this.Mutable.JapaneseFont == name) {
-                    ImGui.SetScrollHereY(0.5f);
-                }
-            }
-
-            // ImGui.Separator();
-            //
-            // foreach (var family in this.JpFonts) {
-            //     if (ImGui.Selectable(family, this.Mutable.JapaneseFont == family)) {
-            //         this.Mutable.JapaneseFont = family;
-            //     }
-            //
-            //     if (ImGui.IsWindowAppearing() && this.Mutable.JapaneseFont == family) {
-            //         ImGui.SetScrollHereY(0.5f);
-            //     }
-            // }
-
-            ImGui.EndCombo();
-        }
-
-        ImGuiUtil.HelpText(Language.Options_JapaneseFont_Description);
-        ImGui.Spacing();
-
-        ImGui.DragFloat(Language.Options_FontSize_Name, ref this.Mutable.FontSize, .0125f, 12f, 36f, $"{this.Mutable.FontSize:N1}");
         if (ImGui.DragFloat(Language.Options_WindowOpacity_Name, ref this.Mutable.WindowAlpha, .0025f, 0f, 1f, $"{this.Mutable.WindowAlpha * 100f:N2}%%")) {
             switch (this.Mutable.WindowAlpha) {
                 case > 1f and <= 100f:
@@ -123,8 +51,6 @@ internal sealed class Display : ISettingsTab {
                     break;
             }
         }
-
-        ImGui.Spacing();
 
         ImGuiUtil.OptionCheckbox(ref this.Mutable.CanMove, Language.Options_CanMove_Name);
         ImGui.Spacing();

@@ -243,7 +243,7 @@ internal sealed class PluginUi : IDisposable {
         ImGui.GetIO().Fonts.AddFontFromMemoryTTF(
             this._jpFont.Item1.AddrOfPinnedObject(),
             this._jpFont.Item2,
-            this.Plugin.Config.FontSize,
+            this.Plugin.Config.JapaneseFontSize,
             this._fontCfgMerge,
             this._jpRange.AddrOfPinnedObject()
         );
@@ -251,7 +251,7 @@ internal sealed class PluginUi : IDisposable {
         ImGui.GetIO().Fonts.AddFontFromMemoryTTF(
             this._gameSymFont.Item1.AddrOfPinnedObject(),
             this._gameSymFont.Item2,
-            this.Plugin.Config.FontSize,
+            this.Plugin.Config.SymbolsFontSize,
             this._fontCfgMerge,
             this._symRange.AddrOfPinnedObject()
         );
@@ -268,7 +268,7 @@ internal sealed class PluginUi : IDisposable {
         ImGui.GetIO().Fonts.AddFontFromMemoryTTF(
             this._jpFont.Item1.AddrOfPinnedObject(),
             this._jpFont.Item2,
-            this.Plugin.Config.FontSize,
+            this.Plugin.Config.JapaneseFontSize,
             this._fontCfgMerge,
             this._jpRange.AddrOfPinnedObject()
         );
@@ -276,7 +276,7 @@ internal sealed class PluginUi : IDisposable {
         ImGui.GetIO().Fonts.AddFontFromMemoryTTF(
             this._gameSymFont.Item1.AddrOfPinnedObject(),
             this._gameSymFont.Item2,
-            this.Plugin.Config.FontSize,
+            this.Plugin.Config.SymbolsFontSize,
             this._fontCfgMerge,
             this._symRange.AddrOfPinnedObject()
         );

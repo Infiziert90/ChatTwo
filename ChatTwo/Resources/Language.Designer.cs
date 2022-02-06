@@ -295,6 +295,15 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fonts.
+        /// </summary>
+        internal static string Options_Fonts_Tab {
+            get {
+                return ResourceManager.GetString("Options_Fonts_Tab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Font size.
         /// </summary>
         internal static string Options_FontSize_Name {
@@ -354,6 +363,15 @@ namespace ChatTwo.Resources {
         internal static string Options_JapaneseFont_Name {
             get {
                 return ResourceManager.GetString("Options_JapaneseFont_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Japanese font size.
+        /// </summary>
+        internal static string Options_JapaneseFontSize_Name {
+            get {
+                return ResourceManager.GetString("Options_JapaneseFontSize_Name", resourceCulture);
             }
         }
         
@@ -453,6 +471,24 @@ namespace ChatTwo.Resources {
         internal static string Options_SidebarTabView_Name {
             get {
                 return ResourceManager.GetString("Options_SidebarTabView_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The font size to use for game symbols..
+        /// </summary>
+        internal static string Options_SymbolsFontSize_Description {
+            get {
+                return ResourceManager.GetString("Options_SymbolsFontSize_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Symbols font size.
+        /// </summary>
+        internal static string Options_SymbolsFontSize_Name {
+            get {
+                return ResourceManager.GetString("Options_SymbolsFontSize_Name", resourceCulture);
             }
         }
         

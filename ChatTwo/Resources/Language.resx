@@ -338,4 +338,16 @@
     <data name="Options_Tabs_ChannelTypes_Special" xml:space="preserve">
         <value>Special</value>
     </data>
+    <data name="Options_Fonts_Tab" xml:space="preserve">
+        <value>Fonts</value>
+    </data>
+    <data name="Options_SymbolsFontSize_Name" xml:space="preserve">
+        <value>Symbols font size</value>
+    </data>
+    <data name="Options_JapaneseFontSize_Name" xml:space="preserve">
+        <value>Japanese font size</value>
+    </data>
+    <data name="Options_SymbolsFontSize_Description" xml:space="preserve">
+        <value>The font size to use for game symbols.</value>
+    </data>
 </root>
