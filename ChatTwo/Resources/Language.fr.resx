@@ -122,235 +122,235 @@
         </value>
   </resheader>
   <data name="Options_HideChat_Name" xml:space="preserve">
-    <value>Ocultar chat del juego por defecto</value>
+    <value>Cacher le chat standard</value>
   </data>
   <data name="Options_HideChat_Description" xml:space="preserve">
-    <value>Oculta la ventana de chat del juego cuando el plug-in está activo.</value>
+    <value>Masque la fenêtre de chat du jeu lorsque le plugin est affiché.</value>
   </data>
   <data name="Options_HideDuringCutscenes_Name" xml:space="preserve">
-    <value>Ocultar la interfaz del plug-in durante las cinemáticas</value>
+    <value>Cacher le chat durant les cinématiques</value>
   </data>
   <data name="Options_HideDuringCutscenes_Description" xml:space="preserve">
-    <value>Ocultar Chat 2 durante las cinemáticas.</value>
+    <value>Cache Chat 2 durant les cinématiques.</value>
   </data>
   <data name="Options_NativeItemTooltips_Name" xml:space="preserve">
-    <value>Mostrar descripción del ítem</value>
+    <value>Afficher les détails natifs des objets</value>
   </data>
   <data name="Options_NativeItemTooltips_Description" xml:space="preserve">
-    <value>Mostrar descripción del ítem cuando el cursor pase sobre el objeto en el Chat 2.</value>
+    <value>Affiche les détails des objets natifs lorsque vous survolez les liens d'objets dans Chat 2.</value>
   </data>
   <data name="Options_SidebarTabView_Name" xml:space="preserve">
-    <value>Mostrar pestañas en la barra lateral</value>
+    <value>Afficher les onglets dans une barre latérale</value>
   </data>
   <data name="Options_SidebarTabView_Description" xml:space="preserve">
-    <value>Mostrar pestañas en Chat 2 como barra lateral en lugar de una barra en la parte superior.</value>
+    <value>Affiche les onglets de Chat 2 dans une barre latérale au lieu d'une barre horizontale en haut.</value>
   </data>
   <data name="Options_PrettierTimestamps_Name" xml:space="preserve">
-    <value>Usar diseño de marca de tiempo</value>
+    <value>Utiliser une mise en page moderne pour l'horodatage</value>
   </data>
   <data name="Options_PrettierTimestamps_Description" xml:space="preserve">
-    <value>Utilice un estilo más moderno para mostrar mensajes.</value>
+    <value>Utilise un style plus moderne pour l'affichage des messages.</value>
   </data>
   <data name="Options_MoreCompactPretty_Name" xml:space="preserve">
-    <value>Diseño moderno y compacto</value>
+    <value>Mise en page moderne et davantage compacte</value>
   </data>
   <data name="Options_MoreCompactPretty_Description" xml:space="preserve">
-    <value>Reduce el espacio entre mensajes.</value>
+    <value>Réduit l'espacement entre les messages.</value>
   </data>
   <data name="Options_ShowNoviceNetwork_Name" xml:space="preserve">
-    <value>Mostrar botón de unirse a la red de novato</value>
+    <value>Afficher le bouton pour rejoindre le Réseau des Novices</value>
   </data>
   <data name="Options_ShowNoviceNetwork_Description" xml:space="preserve">
-    <value>Mostrar el botón de unirse a la Red de Novatos junto al botón de configuración si se conecta como mentor.</value>
+    <value>Afficher le bouton pour rejoindre le Réseau des Novices à côté du bouton des paramètres si vous êtes mentor.</value>
   </data>
   <data name="Options_FontSize_Name" xml:space="preserve">
-    <value>Tamaño de fuente</value>
+    <value>Taille de la police</value>
   </data>
   <data name="Options_WindowOpacity_Name" xml:space="preserve">
-    <value>Opacidad de la ventana</value>
+    <value>Opacité de la fenêtre</value>
   </data>
   <data name="Options_CanMove_Name" xml:space="preserve">
-    <value>Permitir mover chat</value>
+    <value>Permettre le déplacement du chat</value>
   </data>
   <data name="Options_CanResize_Name" xml:space="preserve">
-    <value>Permitir cambiar el tamaño del chat</value>
+    <value>Permettre le redimensionnement du chat</value>
   </data>
   <data name="Options_ShowTitleBar_Name" xml:space="preserve">
-    <value>Mostrar la barra de título en la parte superior izquierda del chat</value>
+    <value>Afficher la barre de titre du chat</value>
   </data>
   <data name="Options_Display_Tab" xml:space="preserve">
-    <value>General</value>
+    <value>Affichage</value>
   </data>
   <data name="Options_ChatColours_Tab" xml:space="preserve">
-    <value>Color del chat</value>
+    <value>Couleurs du chat</value>
   </data>
   <data name="Options_ChatColours_Reset" xml:space="preserve">
-    <value>Restablecer por defecto</value>
+    <value>Réinitialiser aux couleurs par défaut</value>
   </data>
   <data name="Options_ChatColours_Import" xml:space="preserve">
-    <value>Importar desde el juego</value>
+    <value>Importer depuis le jeu</value>
   </data>
   <data name="Options_Tabs_Tab" xml:space="preserve">
-    <value>Pestañas</value>
+    <value>Onglets</value>
   </data>
   <data name="Options_Tabs_Add" xml:space="preserve">
-    <value>Añadir</value>
+    <value>Ajouter</value>
   </data>
   <data name="Options_Tabs_Delete" xml:space="preserve">
-    <value>Borrar</value>
+    <value>Supprimer</value>
   </data>
   <data name="Options_Tabs_MoveUp" xml:space="preserve">
-    <value>Mover hacia arriba</value>
+    <value>Remonter</value>
   </data>
   <data name="Options_Tabs_MoveDown" xml:space="preserve">
-    <value>Mover hacia abajo</value>
+    <value>Descendre</value>
   </data>
   <data name="Options_Tabs_Name" xml:space="preserve">
-    <value>Nombre</value>
+    <value>Nom</value>
   </data>
   <data name="Options_Tabs_ShowTimestamps" xml:space="preserve">
-    <value>Mostrar hora</value>
+    <value>Afficher l'heure des messages</value>
   </data>
   <data name="Options_Tabs_UnreadMode" xml:space="preserve">
-    <value>Modo no leído</value>
+    <value>Mode non-lu</value>
   </data>
   <data name="Options_Tabs_NoInputChannel" xml:space="preserve">
-    <value>&lt;Ninguno&gt;</value>
+    <value>&lt;Aucun&gt;</value>
   </data>
   <data name="Options_Tabs_InputChannel" xml:space="preserve">
-    <value>Canal de entrada</value>
+    <value>Canal de saisie</value>
   </data>
   <data name="Options_Tabs_Channels" xml:space="preserve">
-    <value>Canales</value>
+    <value>Canaux</value>
   </data>
   <data name="UnreadMode_All_Tooltip" xml:space="preserve">
-    <value>Siempre mostrar indicadores no leídos.</value>
+    <value>Toujours afficher les indicateurs de non-lecture.</value>
   </data>
   <data name="UnreadMode_Unseen_Tooltip" xml:space="preserve">
-    <value>Mostrar solo los indicadores no leídos para los mensajes que no ha visto.</value>
+    <value>N'afficher que les indicateurs de messages non-lus pour ceux que vous n'avez pas vu.</value>
   </data>
   <data name="UnreadMode_None_Tooltip" xml:space="preserve">
-    <value>Siempre mostrar indicadores no leídos.</value>
+    <value>Ne jamais afficher les indicateurs de non-lecture.</value>
   </data>
   <data name="Tab_DefaultName" xml:space="preserve">
-    <value>Nueva pestaña</value>
+    <value>Nouvel onglet</value>
   </data>
   <data name="Settings_Kofi" xml:space="preserve">
-    <value>Apóyame en Ko-fi</value>
+    <value>Soutenir {0} sur Ko-fi</value>
   </data>
   <data name="Settings_SaveAndClose" xml:space="preserve">
-    <value>Guardar y cerrar</value>
+    <value>Sauvegarder et fermer</value>
   </data>
   <data name="Settings_Save" xml:space="preserve">
-    <value>Guardar</value>
+    <value>Sauvegarder</value>
   </data>
   <data name="Settings_Discard" xml:space="preserve">
-    <value>Descartar</value>
+    <value>Annuler</value>
   </data>
   <data name="Settings_Title" xml:space="preserve">
-    <value>Configuración de {0}</value>
+    <value>Paramètres de {0}</value>
   </data>
   <data name="ChatLog_SwitcherDisabled" xml:space="preserve">
-    <value>Desactivado para esta pestaña.</value>
+    <value>Désactivé pour cet onglet.</value>
   </data>
   <data name="ChatLog_HideChat" xml:space="preserve">
-    <value>Ocultar chat</value>
+    <value>Masquer le chat</value>
   </data>
   <data name="ChatLog_Tabs_MoveUp" xml:space="preserve">
-    <value>Mover hacia arriba</value>
+    <value>Remonter</value>
   </data>
   <data name="ChatLog_Tabs_MoveLeft" xml:space="preserve">
-    <value>Mover a la izquierda</value>
+    <value>Déplacer vers la gauche</value>
   </data>
   <data name="ChatLog_Tabs_MoveDown" xml:space="preserve">
-    <value>Mover hacia abajo</value>
+    <value>Descendre</value>
   </data>
   <data name="ChatLog_Tabs_MoveRight" xml:space="preserve">
-    <value>Mover a la derecha</value>
+    <value>Déplacer vers la droite</value>
   </data>
   <data name="Options_Tabs_ChannelTypes_Chat" xml:space="preserve">
     <value>Chat</value>
   </data>
   <data name="Options_Tabs_ChannelTypes_Battle" xml:space="preserve">
-    <value>Combate</value>
+    <value>Combat</value>
   </data>
   <data name="Options_Tabs_ChannelTypes_Announcements" xml:space="preserve">
-    <value>Anuncios</value>
+    <value>Annonces</value>
   </data>
   <data name="UnreadMode_All" xml:space="preserve">
-    <value>Todos</value>
+    <value>Tout</value>
   </data>
   <data name="UnreadMode_Unseen" xml:space="preserve">
-    <value>No vistos</value>
+    <value>Non lu</value>
   </data>
   <data name="UnreadMode_None" xml:space="preserve">
-    <value>Ninguno</value>
+    <value>Aucun</value>
   </data>
   <data name="ChatSource_Self" xml:space="preserve">
-    <value>Uno mismo</value>
+    <value>Soi-même</value>
   </data>
   <data name="ChatSource_PartyMember" xml:space="preserve">
-    <value>Miembros de grupo</value>
+    <value>Membre d'Équipe</value>
   </data>
   <data name="ChatSource_AllianceMember" xml:space="preserve">
-    <value>Miembros de la alianza</value>
+    <value>Membre d'Alliance</value>
   </data>
   <data name="ChatSource_Other" xml:space="preserve">
-    <value>Otros</value>
+    <value>Autre</value>
   </data>
   <data name="ChatSource_EngagedEnemy" xml:space="preserve">
-    <value>Enemigo Atraido</value>
+    <value>Ennemi Engagé</value>
   </data>
   <data name="ChatSource_UnengagedEnemy" xml:space="preserve">
-    <value>Enemigo sin atraer</value>
+    <value>Ennemi non engagé</value>
   </data>
   <data name="ChatSource_FriendlyNpc" xml:space="preserve">
-    <value>NPC amistoso</value>
+    <value>NPC Amical</value>
   </data>
   <data name="ChatSource_SelfPet" xml:space="preserve">
-    <value>Mascota (Yo)</value>
+    <value>Familier (Soi-même)</value>
   </data>
   <data name="ChatSource_PartyPet" xml:space="preserve">
-    <value>Mascota (Grupo)</value>
+    <value>Familier (Équipe)</value>
   </data>
   <data name="ChatSource_AlliancePet" xml:space="preserve">
-    <value>Mascota (Miembro de la Alianza)</value>
+    <value>Familier (Alliance)</value>
   </data>
   <data name="ChatSource_OtherPet" xml:space="preserve">
-    <value>Mascota (Otros)</value>
+    <value>Familier (Autres)</value>
   </data>
   <data name="Options_Font_Name" xml:space="preserve">
-    <value>Tipo de fuente</value>
+    <value>Police</value>
   </data>
   <data name="Options_JapaneseFont_Name" xml:space="preserve">
-    <value>Fuente japonesa</value>
+    <value>Police Japonaise</value>
   </data>
   <data name="Options_Font_Description" xml:space="preserve">
-    <value>La fuente Chat 2 se utilizará para mostrar texto no japonés.</value>
+    <value>La police que Chat 2 utilisera pour afficher du texte non-Japonais.</value>
   </data>
   <data name="Options_Font_Warning" xml:space="preserve">
-    <value>El uso de ciertas fuentes del sistema puede fallar en su juego. Se le ha advertido.</value>
+    <value>L'utilisation de certaines polices système peut faire planter votre jeu. Vous avez été prévenu.</value>
   </data>
   <data name="Options_JapaneseFont_Description" xml:space="preserve">
-    <value>La fuente Chat 2 se utilizará para mostrar el texto japonés.</value>
+    <value>La police que Chat 2 utilisera pour afficher du texte Japonais.</value>
   </data>
   <data name="Options_Tabs_ChannelTypes_Special" xml:space="preserve">
-    <value>Especiales</value>
+    <value>Spéciaux</value>
   </data>
   <data name="Options_Fonts_Tab" xml:space="preserve">
-    <value>Fuentes</value>
+    <value>Polices</value>
   </data>
   <data name="Options_SymbolsFontSize_Name" xml:space="preserve">
-    <value>Tamaño de Símbolos</value>
+    <value>Taille de police des symboles</value>
   </data>
   <data name="Options_JapaneseFontSize_Name" xml:space="preserve">
-    <value>Tamaño de la fuente japonesa</value>
+    <value>Taille de police Japonaise</value>
   </data>
   <data name="Options_SymbolsFontSize_Description" xml:space="preserve">
-    <value>El tamaño de fuente a usar para símbolos del juego.</value>
+    <value>La taille de police à utiliser pour les symboles du jeu.</value>
   </data>
   <data name="ChatLog_Tabs_Delete" xml:space="preserve">
-    <value>Eliminar Pestaña</value>
+    <value>Supprimer l'onglet</value>
     <comment>ChatLog_Tabs_Delete
 Tooltip shown for a button in a tab context menu to delete the tab.</comment>
   </data>

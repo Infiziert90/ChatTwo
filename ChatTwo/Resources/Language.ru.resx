@@ -122,235 +122,235 @@
         </value>
   </resheader>
   <data name="Options_HideChat_Name" xml:space="preserve">
-    <value>Ocultar chat del juego por defecto</value>
+    <value>Скрыть стандартный чат</value>
   </data>
   <data name="Options_HideChat_Description" xml:space="preserve">
-    <value>Oculta la ventana de chat del juego cuando el plug-in está activo.</value>
+    <value>Скрыть окно стандартного чата, когда плагин активен.</value>
   </data>
   <data name="Options_HideDuringCutscenes_Name" xml:space="preserve">
-    <value>Ocultar la interfaz del plug-in durante las cinemáticas</value>
+    <value>Скрыть чат во время катсцен</value>
   </data>
   <data name="Options_HideDuringCutscenes_Description" xml:space="preserve">
-    <value>Ocultar Chat 2 durante las cinemáticas.</value>
+    <value>Скрыть Chat 2 во время катсцен.</value>
   </data>
   <data name="Options_NativeItemTooltips_Name" xml:space="preserve">
-    <value>Mostrar descripción del ítem</value>
+    <value>Показывать подсказки для предметов</value>
   </data>
   <data name="Options_NativeItemTooltips_Description" xml:space="preserve">
-    <value>Mostrar descripción del ítem cuando el cursor pase sobre el objeto en el Chat 2.</value>
+    <value>Показывать подсказки при наведении курсора на предметы в Chat 2.</value>
   </data>
   <data name="Options_SidebarTabView_Name" xml:space="preserve">
-    <value>Mostrar pestañas en la barra lateral</value>
+    <value>Отображать вкладки в боковой панели</value>
   </data>
   <data name="Options_SidebarTabView_Description" xml:space="preserve">
-    <value>Mostrar pestañas en Chat 2 como barra lateral en lugar de una barra en la parte superior.</value>
+    <value>Показывать вкладки в Chat 2 как боковую панель вместо полосы в верхней части чата.</value>
   </data>
   <data name="Options_PrettierTimestamps_Name" xml:space="preserve">
-    <value>Usar diseño de marca de tiempo</value>
+    <value>Использовать современный формат времени</value>
   </data>
   <data name="Options_PrettierTimestamps_Description" xml:space="preserve">
-    <value>Utilice un estilo más moderno para mostrar mensajes.</value>
+    <value>Более современный стиль отображения сообщений.</value>
   </data>
   <data name="Options_MoreCompactPretty_Name" xml:space="preserve">
-    <value>Diseño moderno y compacto</value>
+    <value>Более компактный вид чата</value>
   </data>
   <data name="Options_MoreCompactPretty_Description" xml:space="preserve">
-    <value>Reduce el espacio entre mensajes.</value>
+    <value>Уменьшить промежуток между строками.</value>
   </data>
   <data name="Options_ShowNoviceNetwork_Name" xml:space="preserve">
-    <value>Mostrar botón de unirse a la red de novato</value>
+    <value>Показать кнопку "Присоединиться к Novice Network"</value>
   </data>
   <data name="Options_ShowNoviceNetwork_Description" xml:space="preserve">
-    <value>Mostrar el botón de unirse a la Red de Novatos junto al botón de configuración si se conecta como mentor.</value>
+    <value>Показать кнопку "Присоединиться к Novice Network" рядом с настройками, если вы вошли в систему как наставник.</value>
   </data>
   <data name="Options_FontSize_Name" xml:space="preserve">
-    <value>Tamaño de fuente</value>
+    <value>Размер шрифта</value>
   </data>
   <data name="Options_WindowOpacity_Name" xml:space="preserve">
-    <value>Opacidad de la ventana</value>
+    <value>Прозрачность окна</value>
   </data>
   <data name="Options_CanMove_Name" xml:space="preserve">
-    <value>Permitir mover chat</value>
+    <value>Разрешить перемещение окна чата</value>
   </data>
   <data name="Options_CanResize_Name" xml:space="preserve">
-    <value>Permitir cambiar el tamaño del chat</value>
+    <value>Разрешить изменение размера окна чата</value>
   </data>
   <data name="Options_ShowTitleBar_Name" xml:space="preserve">
-    <value>Mostrar la barra de título en la parte superior izquierda del chat</value>
+    <value>Показывать заголовок для окна чата</value>
   </data>
   <data name="Options_Display_Tab" xml:space="preserve">
-    <value>General</value>
+    <value>Отображать</value>
   </data>
   <data name="Options_ChatColours_Tab" xml:space="preserve">
-    <value>Color del chat</value>
+    <value>Цвет чата</value>
   </data>
   <data name="Options_ChatColours_Reset" xml:space="preserve">
-    <value>Restablecer por defecto</value>
+    <value>Сбросить настройки</value>
   </data>
   <data name="Options_ChatColours_Import" xml:space="preserve">
-    <value>Importar desde el juego</value>
+    <value>Импортировать из игры</value>
   </data>
   <data name="Options_Tabs_Tab" xml:space="preserve">
-    <value>Pestañas</value>
+    <value>Вкладки</value>
   </data>
   <data name="Options_Tabs_Add" xml:space="preserve">
-    <value>Añadir</value>
+    <value>Добавить</value>
   </data>
   <data name="Options_Tabs_Delete" xml:space="preserve">
-    <value>Borrar</value>
+    <value>Удалить</value>
   </data>
   <data name="Options_Tabs_MoveUp" xml:space="preserve">
-    <value>Mover hacia arriba</value>
+    <value>Поднять</value>
   </data>
   <data name="Options_Tabs_MoveDown" xml:space="preserve">
-    <value>Mover hacia abajo</value>
+    <value>Опустить</value>
   </data>
   <data name="Options_Tabs_Name" xml:space="preserve">
-    <value>Nombre</value>
+    <value>Имя</value>
   </data>
   <data name="Options_Tabs_ShowTimestamps" xml:space="preserve">
-    <value>Mostrar hora</value>
+    <value>Показывать временные метки</value>
   </data>
   <data name="Options_Tabs_UnreadMode" xml:space="preserve">
-    <value>Modo no leído</value>
+    <value>Режим непрочитанных</value>
   </data>
   <data name="Options_Tabs_NoInputChannel" xml:space="preserve">
-    <value>&lt;Ninguno&gt;</value>
+    <value>&lt;Не выбран&gt;</value>
   </data>
   <data name="Options_Tabs_InputChannel" xml:space="preserve">
-    <value>Canal de entrada</value>
+    <value>Канал ввода</value>
   </data>
   <data name="Options_Tabs_Channels" xml:space="preserve">
-    <value>Canales</value>
+    <value>Каналы</value>
   </data>
   <data name="UnreadMode_All_Tooltip" xml:space="preserve">
-    <value>Siempre mostrar indicadores no leídos.</value>
+    <value>Всегда отображать метки непрочитанных сообщений.</value>
   </data>
   <data name="UnreadMode_Unseen_Tooltip" xml:space="preserve">
-    <value>Mostrar solo los indicadores no leídos para los mensajes que no ha visto.</value>
+    <value>Показывать индикаторы непрочитанных только для сообщений, которые вы не видели.</value>
   </data>
   <data name="UnreadMode_None_Tooltip" xml:space="preserve">
-    <value>Siempre mostrar indicadores no leídos.</value>
+    <value>Не отображать метки непрочитанных сообщений.</value>
   </data>
   <data name="Tab_DefaultName" xml:space="preserve">
-    <value>Nueva pestaña</value>
+    <value>Новая вкладка</value>
   </data>
   <data name="Settings_Kofi" xml:space="preserve">
-    <value>Apóyame en Ko-fi</value>
+    <value>Поддержать {0} через Ko-fi</value>
   </data>
   <data name="Settings_SaveAndClose" xml:space="preserve">
-    <value>Guardar y cerrar</value>
+    <value>Сохранить и закрыть</value>
   </data>
   <data name="Settings_Save" xml:space="preserve">
-    <value>Guardar</value>
+    <value>Сохранить</value>
   </data>
   <data name="Settings_Discard" xml:space="preserve">
-    <value>Descartar</value>
+    <value>Отменить</value>
   </data>
   <data name="Settings_Title" xml:space="preserve">
-    <value>Configuración de {0}</value>
+    <value>Настройки {0}</value>
   </data>
   <data name="ChatLog_SwitcherDisabled" xml:space="preserve">
-    <value>Desactivado para esta pestaña.</value>
+    <value>Отключено для этой вкладки.</value>
   </data>
   <data name="ChatLog_HideChat" xml:space="preserve">
-    <value>Ocultar chat</value>
+    <value>Cкрыть чат</value>
   </data>
   <data name="ChatLog_Tabs_MoveUp" xml:space="preserve">
-    <value>Mover hacia arriba</value>
+    <value>Поднять</value>
   </data>
   <data name="ChatLog_Tabs_MoveLeft" xml:space="preserve">
-    <value>Mover a la izquierda</value>
+    <value>Сдвинуть влево</value>
   </data>
   <data name="ChatLog_Tabs_MoveDown" xml:space="preserve">
-    <value>Mover hacia abajo</value>
+    <value>Опустить</value>
   </data>
   <data name="ChatLog_Tabs_MoveRight" xml:space="preserve">
-    <value>Mover a la derecha</value>
+    <value>Сдвинуть вправо</value>
   </data>
   <data name="Options_Tabs_ChannelTypes_Chat" xml:space="preserve">
-    <value>Chat</value>
+    <value>Чат</value>
   </data>
   <data name="Options_Tabs_ChannelTypes_Battle" xml:space="preserve">
-    <value>Combate</value>
+    <value>Бой</value>
   </data>
   <data name="Options_Tabs_ChannelTypes_Announcements" xml:space="preserve">
-    <value>Anuncios</value>
+    <value>Оповещения</value>
   </data>
   <data name="UnreadMode_All" xml:space="preserve">
-    <value>Todos</value>
+    <value>Все</value>
   </data>
   <data name="UnreadMode_Unseen" xml:space="preserve">
-    <value>No vistos</value>
+    <value>Непрочитанные</value>
   </data>
   <data name="UnreadMode_None" xml:space="preserve">
-    <value>Ninguno</value>
+    <value>Не выбран</value>
   </data>
   <data name="ChatSource_Self" xml:space="preserve">
-    <value>Uno mismo</value>
+    <value>Свой</value>
   </data>
   <data name="ChatSource_PartyMember" xml:space="preserve">
-    <value>Miembros de grupo</value>
+    <value>Участники группы</value>
   </data>
   <data name="ChatSource_AllianceMember" xml:space="preserve">
-    <value>Miembros de la alianza</value>
+    <value>Участники альянса</value>
   </data>
   <data name="ChatSource_Other" xml:space="preserve">
-    <value>Otros</value>
+    <value>Прочие</value>
   </data>
   <data name="ChatSource_EngagedEnemy" xml:space="preserve">
-    <value>Enemigo Atraido</value>
+    <value>Захваченные враги</value>
   </data>
   <data name="ChatSource_UnengagedEnemy" xml:space="preserve">
-    <value>Enemigo sin atraer</value>
+    <value>Незахваченные враги</value>
   </data>
   <data name="ChatSource_FriendlyNpc" xml:space="preserve">
-    <value>NPC amistoso</value>
+    <value>Дружественные NPC</value>
   </data>
   <data name="ChatSource_SelfPet" xml:space="preserve">
-    <value>Mascota (Yo)</value>
+    <value>Пет (свой)</value>
   </data>
   <data name="ChatSource_PartyPet" xml:space="preserve">
-    <value>Mascota (Grupo)</value>
+    <value>Пет (группа)</value>
   </data>
   <data name="ChatSource_AlliancePet" xml:space="preserve">
-    <value>Mascota (Miembro de la Alianza)</value>
+    <value>Пет (альянс)</value>
   </data>
   <data name="ChatSource_OtherPet" xml:space="preserve">
-    <value>Mascota (Otros)</value>
+    <value>Пет (прочие)</value>
   </data>
   <data name="Options_Font_Name" xml:space="preserve">
-    <value>Tipo de fuente</value>
+    <value>Шрифт</value>
   </data>
   <data name="Options_JapaneseFont_Name" xml:space="preserve">
-    <value>Fuente japonesa</value>
+    <value>Японский шрифт</value>
   </data>
   <data name="Options_Font_Description" xml:space="preserve">
-    <value>La fuente Chat 2 se utilizará para mostrar texto no japonés.</value>
+    <value>Шрифт Chat 2 для всех языков кроме японского.</value>
   </data>
   <data name="Options_Font_Warning" xml:space="preserve">
-    <value>El uso de ciertas fuentes del sistema puede fallar en su juego. Se le ha advertido.</value>
+    <value>Использование некоторых шрифтов может привести к крашу игры. Вы были предупреждены.</value>
   </data>
   <data name="Options_JapaneseFont_Description" xml:space="preserve">
-    <value>La fuente Chat 2 se utilizará para mostrar el texto japonés.</value>
+    <value>Шрифт Chat 2 для отображения японского текста.</value>
   </data>
   <data name="Options_Tabs_ChannelTypes_Special" xml:space="preserve">
-    <value>Especiales</value>
+    <value>Особые</value>
   </data>
   <data name="Options_Fonts_Tab" xml:space="preserve">
-    <value>Fuentes</value>
+    <value>Шрифты</value>
   </data>
   <data name="Options_SymbolsFontSize_Name" xml:space="preserve">
-    <value>Tamaño de Símbolos</value>
+    <value>Размер шрифта символов</value>
   </data>
   <data name="Options_JapaneseFontSize_Name" xml:space="preserve">
-    <value>Tamaño de la fuente japonesa</value>
+    <value>Размер японского шрифта</value>
   </data>
   <data name="Options_SymbolsFontSize_Description" xml:space="preserve">
-    <value>El tamaño de fuente a usar para símbolos del juego.</value>
+    <value>Размер шрифта для игровых символов.</value>
   </data>
   <data name="ChatLog_Tabs_Delete" xml:space="preserve">
-    <value>Eliminar Pestaña</value>
+    <value>Удалить вкладку</value>
     <comment>ChatLog_Tabs_Delete
 Tooltip shown for a button in a tab context menu to delete the tab.</comment>
   </data>
