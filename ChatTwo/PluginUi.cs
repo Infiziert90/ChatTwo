@@ -116,6 +116,35 @@ internal sealed class PluginUi : IDisposable {
         this._fontCfgMerge.Destroy();
     }
 
+    private void Draw() {
+        this.DefaultText = ImGui.GetStyle().Colors[(int) ImGuiCol.Text];
+
+        var font = this.RegularFont.HasValue;
+
+        if (font) {
+            ImGui.PushFont(this.RegularFont!.Value);
+        }
+
+        foreach (var component in this.Components) {
+            try {
+                component.Draw();
+            } catch (Exception ex) {
+                PluginLog.LogError(ex, "Error drawing component");
+            }
+        }
+
+        if (font) {
+            ImGui.PopFont();
+        }
+    }
+
+    private byte[] GetResource(string name) {
+        var stream = this.GetType().Assembly.GetManifestResourceStream(name)!;
+        var memory = new MemoryStream();
+        stream.CopyTo(memory);
+        return memory.ToArray();
+    }
+
     private void SetUpUserFonts() {
         FontData? fontData = null;
         if (this.Plugin.Config.GlobalFont.StartsWith(Fonts.IncludedIndicator)) {
@@ -192,35 +221,6 @@ internal sealed class PluginUi : IDisposable {
             jpFontData.Regular.Data.Length,
             jpFontData.Regular.Ratio
         );
-    }
-
-    private void Draw() {
-        this.DefaultText = ImGui.GetStyle().Colors[(int) ImGuiCol.Text];
-
-        var font = this.RegularFont.HasValue;
-
-        if (font) {
-            ImGui.PushFont(this.RegularFont!.Value);
-        }
-
-        foreach (var component in this.Components) {
-            try {
-                component.Draw();
-            } catch (Exception ex) {
-                PluginLog.LogError(ex, "Error drawing component");
-            }
-        }
-
-        if (font) {
-            ImGui.PopFont();
-        }
-    }
-
-    private byte[] GetResource(string name) {
-        var stream = this.GetType().Assembly.GetManifestResourceStream(name)!;
-        var memory = new MemoryStream();
-        stream.CopyTo(memory);
-        return memory.ToArray();
     }
 
     private void BuildFonts() {
