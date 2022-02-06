@@ -69,17 +69,17 @@ public class Fonts : ISettingsTab {
                 }
             }
 
-            // ImGui.Separator();
-            //
-            // foreach (var family in this.JpFonts) {
-            //     if (ImGui.Selectable(family, this.Mutable.JapaneseFont == family)) {
-            //         this.Mutable.JapaneseFont = family;
-            //     }
-            //
-            //     if (ImGui.IsWindowAppearing() && this.Mutable.JapaneseFont == family) {
-            //         ImGui.SetScrollHereY(0.5f);
-            //     }
-            // }
+            ImGui.Separator();
+
+            foreach (var family in this.JpFonts) {
+                if (ImGui.Selectable(family, this.Mutable.JapaneseFont == family)) {
+                    this.Mutable.JapaneseFont = family;
+                }
+
+                if (ImGui.IsWindowAppearing() && this.Mutable.JapaneseFont == family) {
+                    ImGui.SetScrollHereY(0.5f);
+                }
+            }
 
             ImGui.EndCombo();
         }

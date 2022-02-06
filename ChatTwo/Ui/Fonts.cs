@@ -45,7 +45,7 @@ internal static class Fonts {
             var anyItalic = false;
             for (var j = 0; j < family.FontCount; j++) {
                 using var font = family.GetFont(j);
-                if (font.Style is not (FontStyle.Italic or FontStyle.Oblique)) {
+                if (font.IsSymbolFont || font.Style is not (FontStyle.Italic or FontStyle.Oblique)) {
                     continue;
                 }
 
@@ -67,16 +67,31 @@ internal static class Fonts {
 
     internal static List<string> GetJpFonts() {
         var fonts = new List<string>();
-        // using var g = Graphics.FromImage(new Bitmap(1, 1));
-        // foreach (var (lpelfe, _, fontType) in Gdi32.EnumFontFamiliesEx(g.GetHdc(), CharacterSet.SHIFTJIS_CHARSET)) {
-        //     var name = lpelfe.elfEnumLogfontEx.elfLogFont.lfFaceName;
-        //     if (name.StartsWith("@")) {
-        //         continue;
-        //     }
-        //
-        //     fonts.Add(name);
-        // }
 
+        using var factory = new Factory();
+        using var collection = factory.GetSystemFontCollection(false);
+        for (var i = 0; i < collection.FontFamilyCount; i++) {
+            using var family = collection.GetFontFamily(i);
+            var probablyJp = false;
+            for (var j = 0; j < family.FontCount; j++) {
+                using var font = family.GetFont(j);
+                if (!font.HasCharacter('日') || font.IsSymbolFont) {
+                    continue;
+                }
+
+                probablyJp = true;
+                break;
+            }
+
+            if (!probablyJp) {
+                continue;
+            }
+
+            var name = family.FamilyNames.GetString(0);
+            fonts.Add(name);
+        }
+
+        fonts.Sort();
         return fonts;
     }
 

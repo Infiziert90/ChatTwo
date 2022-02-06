@@ -168,11 +168,9 @@ internal sealed class PluginUi : IDisposable {
                     null
                 );
             }
+        } else {
+            jpFontData = Fonts.GetFont(this.Plugin.Config.JapaneseFont, false);
         }
-        // else {
-        //     jpFontData = Fonts.GetFont(this.Plugin.Config.JapaneseFont, false, CharacterSet.SHIFTJIS_CHARSET);
-        //     PluginLog.Log($"data.Regular.Length: {jpFontData?.Regular.Length}");
-        // }
 
         if (jpFontData == null) {
             this.Plugin.Config.JapaneseFont = Fonts.JapaneseFonts[0].Item1;
