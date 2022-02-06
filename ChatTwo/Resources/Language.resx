@@ -353,4 +353,10 @@
     <data name="ChatLog_Tabs_Delete" xml:space="preserve">
         <value>Delete tab</value>
     </data>
+    <data name="Options_HideWhenNotLoggedIn_Name" xml:space="preserve">
+        <value>Hide when not logged in</value>
+    </data>
+    <data name="Options_HideWhenNotLoggedIn_Description" xml:space="preserve">
+        <value>Hide the chat when you are not logged in to a character.</value>
+    </data>
 </root>

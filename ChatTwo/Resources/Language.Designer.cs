@@ -358,6 +358,24 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hide the chat when you are not logged in to a character..
+        /// </summary>
+        internal static string Options_HideWhenNotLoggedIn_Description {
+            get {
+                return ResourceManager.GetString("Options_HideWhenNotLoggedIn_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hide when not logged in.
+        /// </summary>
+        internal static string Options_HideWhenNotLoggedIn_Name {
+            get {
+                return ResourceManager.GetString("Options_HideWhenNotLoggedIn_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The font Chat 2 will use to display Japanese text..
         /// </summary>
         internal static string Options_JapaneseFont_Description {

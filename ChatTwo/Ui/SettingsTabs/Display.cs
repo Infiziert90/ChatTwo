@@ -22,6 +22,9 @@ internal sealed class Display : ISettingsTab {
         ImGuiUtil.OptionCheckbox(ref this.Mutable.HideDuringCutscenes, Language.Options_HideDuringCutscenes_Name, Language.Options_HideDuringCutscenes_Description);
         ImGui.Spacing();
 
+        ImGuiUtil.OptionCheckbox(ref this.Mutable.HideWhenNotLoggedIn, Language.Options_HideWhenNotLoggedIn_Name, Language.Options_HideWhenNotLoggedIn_Description);
+        ImGui.Spacing();
+
         ImGuiUtil.OptionCheckbox(ref this.Mutable.NativeItemTooltips, Language.Options_NativeItemTooltips_Name, Language.Options_NativeItemTooltips_Description);
         ImGui.Spacing();
 

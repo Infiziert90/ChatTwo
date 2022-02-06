@@ -14,6 +14,7 @@ internal class Configuration : IPluginConfiguration {
 
     public bool HideChat = true;
     public bool HideDuringCutscenes = true;
+    public bool HideWhenNotLoggedIn = true;
     public bool NativeItemTooltips = true;
     public bool PrettierTimestamps = true;
     public bool MoreCompactPretty;
@@ -36,6 +37,7 @@ internal class Configuration : IPluginConfiguration {
     internal void UpdateFrom(Configuration other) {
         this.HideChat = other.HideChat;
         this.HideDuringCutscenes = other.HideDuringCutscenes;
+        this.HideWhenNotLoggedIn = other.HideWhenNotLoggedIn;
         this.NativeItemTooltips = other.NativeItemTooltips;
         this.PrettierTimestamps = other.PrettierTimestamps;
         this.MoreCompactPretty = other.MoreCompactPretty;

@@ -296,6 +296,10 @@ internal sealed class ChatLog : IUiComponent {
             return;
         }
 
+        if (this.Ui.Plugin.Config.HideWhenNotLoggedIn && !this.Ui.Plugin.ClientState.IsLoggedIn) {
+            return;
+        }
+
         var flags = ImGuiWindowFlags.None;
         if (!this.Ui.Plugin.Config.CanMove) {
             flags |= ImGuiWindowFlags.NoMove;
