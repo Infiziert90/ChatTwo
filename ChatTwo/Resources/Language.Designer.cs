@@ -466,6 +466,24 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hide {0} when the game UI is hidden..
+        /// </summary>
+        internal static string Options_HideWhenUiHidden_Description {
+            get {
+                return ResourceManager.GetString("Options_HideWhenUiHidden_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hide when game UI is hidden.
+        /// </summary>
+        internal static string Options_HideWhenUiHidden_Name {
+            get {
+                return ResourceManager.GetString("Options_HideWhenUiHidden_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The font {0} will use to display Japanese text..
         /// </summary>
         internal static string Options_JapaneseFont_Description {

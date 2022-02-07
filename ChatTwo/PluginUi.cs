@@ -88,10 +88,8 @@ internal sealed class PluginUi : IDisposable {
         );
 
         var uiBuilder = this.Plugin.Interface.UiBuilder;
-        uiBuilder.DisableAutomaticUiHide = true;
         uiBuilder.DisableCutsceneUiHide = true;
         uiBuilder.DisableGposeUiHide = true;
-        uiBuilder.DisableUserUiHide = true;
 
         uiBuilder.BuildFonts += this.BuildFonts;
         uiBuilder.Draw += this.Draw;
@@ -117,6 +115,7 @@ internal sealed class PluginUi : IDisposable {
     }
 
     private void Draw() {
+        this.Plugin.Interface.UiBuilder.DisableUserUiHide = !this.Plugin.Config.HideWhenUiHidden;
         this.DefaultText = ImGui.GetStyle().Colors[(int) ImGuiCol.Text];
 
         var font = this.RegularFont.HasValue;

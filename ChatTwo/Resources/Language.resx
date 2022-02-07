@@ -401,4 +401,10 @@
     <data name="Options_CommandHelpSide_Description" xml:space="preserve">
         <value>The side of {0} to display help for commands on.</value>
     </data>
+    <data name="Options_HideWhenUiHidden_Name" xml:space="preserve">
+        <value>Hide when game UI is hidden</value>
+    </data>
+    <data name="Options_HideWhenUiHidden_Description" xml:space="preserve">
+        <value>Hide {0} when the game UI is hidden.</value>
+    </data>
 </root>
