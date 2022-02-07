@@ -340,7 +340,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The side of Chat 2 to display help for commands on..
+        ///   Looks up a localized string similar to The side of {0} to display help for commands on..
         /// </summary>
         internal static string Options_CommandHelpSide_Description {
             get {
