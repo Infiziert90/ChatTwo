@@ -59,7 +59,8 @@ internal class Configuration : IPluginConfiguration {
     }
 
     public void Migrate() {
-        while (this.Version < LatestVersion) {
+        var loop = true;
+        while (loop && this.Version < LatestVersion) {
             switch (this.Version) {
                 case 1: {
                     this.Version = 2;
@@ -80,6 +81,7 @@ internal class Configuration : IPluginConfiguration {
                     break;
                 default:
                     PluginLog.Warning($"Couldn't migrate config version {this.Version}");
+                    loop = false;
                     break;
             }
         }
