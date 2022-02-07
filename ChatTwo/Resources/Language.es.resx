@@ -146,10 +146,10 @@
     <value>Mostrar pestañas en {0} como barra lateral en lugar de una barra en la parte superior.</value>
   </data>
     <data name="Options_PrettierTimestamps_Name" xml:space="preserve">
-    <value>Usar diseño de marca de tiempo</value>
+    <value>Usar diseño de marca de tiempo moderno</value>
   </data>
     <data name="Options_PrettierTimestamps_Description" xml:space="preserve">
-    <value>Utilice un estilo más moderno para mostrar mensajes.</value>
+    <value>Usar un estilo más moderno para mostrar mensajes.</value>
   </data>
     <data name="Options_MoreCompactPretty_Name" xml:space="preserve">
     <value>Diseño moderno y compacto</value>
@@ -158,7 +158,7 @@
     <value>Reduce el espacio entre mensajes.</value>
   </data>
     <data name="Options_ShowNoviceNetwork_Name" xml:space="preserve">
-    <value>Mostrar botón de unirse a la red de novato</value>
+    <value>Mostrar botón de unirse a la Red de Novatos</value>
   </data>
     <data name="Options_ShowNoviceNetwork_Description" xml:space="preserve">
     <value>Mostrar el botón de unirse a la Red de Novatos junto al botón de configuración si se conecta como mentor.</value>
@@ -230,13 +230,13 @@
         <value>Mostrar solo los indicadores no leídos para los mensajes que no ha visto.</value>
     </data>
     <data name="UnreadMode_None_Tooltip" xml:space="preserve">
-        <value>Siempre mostrar indicadores no leídos.</value>
+        <value>No mostrar nunca indicadores no leídos.</value>
     </data>
     <data name="Tab_DefaultName" xml:space="preserve">
         <value>Nueva pestaña</value>
     </data>
     <data name="Settings_Kofi" xml:space="preserve">
-        <value>Apoyar a {0} en Ko-fi</value>
+        <value>Apoyar {0} en Ko-fi</value>
     </data>
     <data name="Settings_SaveAndClose" xml:space="preserve">
         <value>Guardar y cerrar</value>
@@ -371,33 +371,33 @@
         <value>Nueva pestaña</value>
     </data>
     <data name="Options_About_Tab" xml:space="preserve">
-        <value>About</value>
+        <value>Acerca de</value>
     </data>
     <data name="Options_About_Opening" xml:space="preserve">
-        <value>{0} is a project to completely recreate the in-game chat and make it even better.</value>
+        <value>{0} es un proyecto para recrear por completo el chat del juego y hacerlo incluso mejor.</value>
     </data>
     <data name="Options_About_ClickUp" xml:space="preserve">
-        <value>Click the button to the left to see what's being worked on and what's next.</value>
+        <value>Haz clic en el botón de la izquierda para ver en qué funciones se está trabajando y qué está por llegar.</value>
     </data>
     <data name="Options_About_CrowdIn" xml:space="preserve">
-        <value>Click the button to the left to help translate {0}.</value>
+        <value>Haz clic en el botón de la izquierda para ayudar a traducir {0}.</value>
     </data>
     <data name="Options_About_Translators" xml:space="preserve">
-        <value>Translators</value>
+        <value>Traductores</value>
     </data>
     <data name="CommandHelpSide_None" xml:space="preserve">
-        <value>None</value>
+        <value>Ninguno</value>
     </data>
     <data name="CommandHelpSide_Left" xml:space="preserve">
-        <value>Left</value>
+        <value>Izquierda</value>
     </data>
     <data name="CommandHelpSide_Right" xml:space="preserve">
-        <value>Right</value>
+        <value>Derecha</value>
     </data>
     <data name="Options_CommandHelpSide_Name" xml:space="preserve">
-        <value>Command help side</value>
+        <value>Lado de la ayuda de comando</value>
     </data>
     <data name="Options_CommandHelpSide_Description" xml:space="preserve">
-        <value>The side of {0} to display help for commands on.</value>
+        <value>El lado de {0} donde se mostrará la ayuda para comandos.</value>
     </data>
 </root>
