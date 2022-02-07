@@ -223,6 +223,51 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Click the button to the left to see what&apos;s being worked on and what&apos;s next..
+        /// </summary>
+        internal static string Options_About_ClickUp {
+            get {
+                return ResourceManager.GetString("Options_About_ClickUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click the button to the left to help translate {0}..
+        /// </summary>
+        internal static string Options_About_CrowdIn {
+            get {
+                return ResourceManager.GetString("Options_About_CrowdIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is a project to completely recreate the in-game chat and make it even better..
+        /// </summary>
+        internal static string Options_About_Opening {
+            get {
+                return ResourceManager.GetString("Options_About_Opening", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to About.
+        /// </summary>
+        internal static string Options_About_Tab {
+            get {
+                return ResourceManager.GetString("Options_About_Tab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Translators.
+        /// </summary>
+        internal static string Options_About_Translators {
+            get {
+                return ResourceManager.GetString("Options_About_Translators", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Allow moving chat.
         /// </summary>
         internal static string Options_CanMove_Name {

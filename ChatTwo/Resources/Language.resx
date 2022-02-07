@@ -371,4 +371,19 @@
     <data name="Options_Tabs_NewTab" xml:space="preserve">
         <value>New tab</value>
     </data>
+    <data name="Options_About_Tab" xml:space="preserve">
+        <value>About</value>
+    </data>
+    <data name="Options_About_Opening" xml:space="preserve">
+        <value>{0} is a project to completely recreate the in-game chat and make it even better.</value>
+    </data>
+    <data name="Options_About_ClickUp" xml:space="preserve">
+        <value>Click the button to the left to see what's being worked on and what's next.</value>
+    </data>
+    <data name="Options_About_CrowdIn" xml:space="preserve">
+        <value>Click the button to the left to help translate {0}.</value>
+    </data>
+    <data name="Options_About_Translators" xml:space="preserve">
+        <value>Translators</value>
+    </data>
 </root>
