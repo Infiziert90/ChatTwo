@@ -70,7 +70,7 @@ internal sealed class Display : ISettingsTab {
             ImGui.EndCombo();
         }
 
-        ImGuiUtil.HelpText(Language.Options_CommandHelpSide_Description);
+        ImGuiUtil.HelpText(string.Format(Language.Options_CommandHelpSide_Description, Plugin.PluginName));
         ImGui.Spacing();
 
         if (ImGui.DragFloat(Language.Options_WindowOpacity_Name, ref this.Mutable.WindowAlpha, .0025f, 0f, 1f, $"{this.Mutable.WindowAlpha * 100f:N2}%%")) {

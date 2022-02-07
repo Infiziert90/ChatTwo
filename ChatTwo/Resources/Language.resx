@@ -399,6 +399,6 @@
         <value>Command help side</value>
     </data>
     <data name="Options_CommandHelpSide_Description" xml:space="preserve">
-        <value>The side of Chat 2 to display help for commands on.</value>
+        <value>The side of {0} to display help for commands on.</value>
     </data>
 </root>
