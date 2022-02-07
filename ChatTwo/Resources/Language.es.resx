@@ -370,4 +370,34 @@
     <data name="Options_Tabs_NewTab" xml:space="preserve">
         <value>Nueva pestaña</value>
     </data>
+    <data name="Options_About_Tab" xml:space="preserve">
+        <value>About</value>
+    </data>
+    <data name="Options_About_Opening" xml:space="preserve">
+        <value>{0} is a project to completely recreate the in-game chat and make it even better.</value>
+    </data>
+    <data name="Options_About_ClickUp" xml:space="preserve">
+        <value>Click the button to the left to see what's being worked on and what's next.</value>
+    </data>
+    <data name="Options_About_CrowdIn" xml:space="preserve">
+        <value>Click the button to the left to help translate {0}.</value>
+    </data>
+    <data name="Options_About_Translators" xml:space="preserve">
+        <value>Translators</value>
+    </data>
+    <data name="CommandHelpSide_None" xml:space="preserve">
+        <value>None</value>
+    </data>
+    <data name="CommandHelpSide_Left" xml:space="preserve">
+        <value>Left</value>
+    </data>
+    <data name="CommandHelpSide_Right" xml:space="preserve">
+        <value>Right</value>
+    </data>
+    <data name="Options_CommandHelpSide_Name" xml:space="preserve">
+        <value>Command help side</value>
+    </data>
+    <data name="Options_CommandHelpSide_Description" xml:space="preserve">
+        <value>The side of {0} to display help for commands on.</value>
+    </data>
 </root>

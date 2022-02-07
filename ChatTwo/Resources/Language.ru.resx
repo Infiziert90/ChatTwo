@@ -359,15 +359,45 @@
         <value>Скрывать {0}, когда вы не вошли на персонажа.</value>
     </data>
     <data name="Tabs_Presets_General" xml:space="preserve">
-        <value>General</value>
+        <value>Основной</value>
     </data>
     <data name="Options_Tabs_Preset" xml:space="preserve">
-        <value>Preset: {0}</value>
+        <value>Пресет: {0}</value>
     </data>
     <data name="Tabs_Presets_Event" xml:space="preserve">
-        <value>Event</value>
+        <value>События</value>
     </data>
     <data name="Options_Tabs_NewTab" xml:space="preserve">
-        <value>New tab</value>
+        <value>Новая вкладка</value>
+    </data>
+    <data name="Options_About_Tab" xml:space="preserve">
+        <value>О проекте</value>
+    </data>
+    <data name="Options_About_Opening" xml:space="preserve">
+        <value>{0} - проект, полностью пересоздаёт внутриигровой чат и делает его еще лучше.</value>
+    </data>
+    <data name="Options_About_ClickUp" xml:space="preserve">
+        <value>Нажмите на кнопку слева, чтобы увидеть, что в работе и что будет дальше.</value>
+    </data>
+    <data name="Options_About_CrowdIn" xml:space="preserve">
+        <value>Нажмите кнопку слева, чтобы помочь перевести {0}.</value>
+    </data>
+    <data name="Options_About_Translators" xml:space="preserve">
+        <value>Переводчики</value>
+    </data>
+    <data name="CommandHelpSide_None" xml:space="preserve">
+        <value>Не выбран</value>
+    </data>
+    <data name="CommandHelpSide_Left" xml:space="preserve">
+        <value>Слева</value>
+    </data>
+    <data name="CommandHelpSide_Right" xml:space="preserve">
+        <value>Справа</value>
+    </data>
+    <data name="Options_CommandHelpSide_Name" xml:space="preserve">
+        <value>Сторона помощи по команде</value>
+    </data>
+    <data name="Options_CommandHelpSide_Description" xml:space="preserve">
+        <value>Сторона {0} с которой отображается помощь по командам.</value>
     </data>
 </root>

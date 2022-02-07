@@ -125,7 +125,7 @@
     <value>Originales Chatfenster verbergen</value>
   </data>
     <data name="Options_HideChat_Description" xml:space="preserve">
-    <value>Verbirgt das originale Chatfenster wenn das Plugin aktiv ist.</value>
+    <value>Verbirgt das originale Chatfenster, wenn das Plugin aktiv ist.</value>
   </data>
     <data name="Options_HideDuringCutscenes_Name" xml:space="preserve">
     <value>Chatfenster während Zwischensequenzen verbergen</value>
@@ -134,22 +134,22 @@
     <value>Verbirgt {0} während Zwischensequenzen.</value>
   </data>
     <data name="Options_NativeItemTooltips_Name" xml:space="preserve">
-    <value>Originale Itembeschreibungen anzeigen</value>
+    <value>Originale Gegenstandsbeschreibung anzeigen</value>
   </data>
     <data name="Options_NativeItemTooltips_Description" xml:space="preserve">
-    <value>Zeigt die spielinterne Itembeschreibung in {0} an.</value>
+    <value>Zeigt die spielinterne Gegenstandsbeschreibung in {0} an.</value>
   </data>
     <data name="Options_SidebarTabView_Name" xml:space="preserve">
-    <value>Kanäle in der Seitenleiste anzeigen</value>
+    <value>Tabs in der Seitenleiste anzeigen</value>
   </data>
     <data name="Options_SidebarTabView_Description" xml:space="preserve">
-    <value>Zeigt die Kanäle als Seitenleiste, anstatt sie über dem Chat zu platzieren.</value>
+    <value>Zeigt die Tabs in {0} als Seitenleiste, anstatt sie über dem Chat zu platzieren.</value>
   </data>
     <data name="Options_PrettierTimestamps_Name" xml:space="preserve">
     <value>Modernen Zeitstempel verwenden</value>
   </data>
     <data name="Options_PrettierTimestamps_Description" xml:space="preserve">
-    <value>Nutzt einen moderneren Stil um die Nachrichten anzuzeigen.</value>
+    <value>Nutzt einen moderneren Stil, um die Nachrichten anzuzeigen.</value>
   </data>
     <data name="Options_MoreCompactPretty_Name" xml:space="preserve">
     <value>Kompakteres modernes Aussehen</value>
@@ -185,7 +185,7 @@
         <value>Chatfarben</value>
     </data>
     <data name="Options_ChatColours_Reset" xml:space="preserve">
-        <value>Auf Standard zurücksetzen</value>
+        <value>Auf Standardwert zurücksetzen</value>
     </data>
     <data name="Options_ChatColours_Import" xml:space="preserve">
         <value>Vom Spiel importieren</value>
@@ -302,7 +302,7 @@
         <value>Angegriffener Gegner</value>
     </data>
     <data name="ChatSource_UnengagedEnemy" xml:space="preserve">
-        <value>Unangegriffener Gegner</value>
+        <value>Nicht angegriffener Gegner</value>
     </data>
     <data name="ChatSource_FriendlyNpc" xml:space="preserve">
         <value>Freundlicher NPC</value>
@@ -333,7 +333,7 @@
 Sie wurden gewarnt.</value>
     </data>
     <data name="Options_JapaneseFont_Description" xml:space="preserve">
-        <value>Die Schriftart, die {0} nutzt, um Japanischen Text anzuzeigen.</value>
+        <value>Die Schriftart, die {0} nutzt, um japanischen Text anzuzeigen.</value>
     </data>
     <data name="Options_Tabs_ChannelTypes_Special" xml:space="preserve">
         <value>Spezielles</value>
@@ -363,12 +363,42 @@ Sie wurden gewarnt.</value>
         <value>Allgemein</value>
     </data>
     <data name="Options_Tabs_Preset" xml:space="preserve">
-        <value>Preset: {0}</value>
+        <value>Vorlage: {0}</value>
     </data>
     <data name="Tabs_Presets_Event" xml:space="preserve">
         <value>Event</value>
     </data>
     <data name="Options_Tabs_NewTab" xml:space="preserve">
-        <value>New tab</value>
+        <value>Neuer Tab</value>
+    </data>
+    <data name="Options_About_Tab" xml:space="preserve">
+        <value>Info</value>
+    </data>
+    <data name="Options_About_Opening" xml:space="preserve">
+        <value>{0} ist ein Projekt, dessen Ziel es ist, den Spielchat zu verbessern und neu zu gestalten.</value>
+    </data>
+    <data name="Options_About_ClickUp" xml:space="preserve">
+        <value>Drücken Sie auf den linken Knopf, um zu sehen, woran gerade gearbeitet wird.</value>
+    </data>
+    <data name="Options_About_CrowdIn" xml:space="preserve">
+        <value>Drücken Sie auf den linken Knopf, um bei der Übersetzung von {0} zu helfen.</value>
+    </data>
+    <data name="Options_About_Translators" xml:space="preserve">
+        <value>Übersetzer</value>
+    </data>
+    <data name="CommandHelpSide_None" xml:space="preserve">
+        <value>Keine</value>
+    </data>
+    <data name="CommandHelpSide_Left" xml:space="preserve">
+        <value>Links</value>
+    </data>
+    <data name="CommandHelpSide_Right" xml:space="preserve">
+        <value>Rechts</value>
+    </data>
+    <data name="Options_CommandHelpSide_Name" xml:space="preserve">
+        <value>Seite der Befehlshilfe</value>
+    </data>
+    <data name="Options_CommandHelpSide_Description" xml:space="preserve">
+        <value>Die Seite auf der {0} Hilfe zu Befehlen anzeigen soll.</value>
     </data>
 </root>

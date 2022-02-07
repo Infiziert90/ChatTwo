@@ -370,4 +370,34 @@
     <data name="Options_Tabs_NewTab" xml:space="preserve">
         <value>Nouvel onglet</value>
     </data>
+    <data name="Options_About_Tab" xml:space="preserve">
+        <value>À propos</value>
+    </data>
+    <data name="Options_About_Opening" xml:space="preserve">
+        <value>{0} est un projet visant à recréer complètement le chat en jeu et à l'améliorer.</value>
+    </data>
+    <data name="Options_About_ClickUp" xml:space="preserve">
+        <value>Cliquez sur le bouton à gauche afin d'avoir un aperçu des fonctionnalités en cours de développement et de celles à venir.</value>
+    </data>
+    <data name="Options_About_CrowdIn" xml:space="preserve">
+        <value>Cliquez sur le bouton à gauche pour nous aider à traduire {0}.</value>
+    </data>
+    <data name="Options_About_Translators" xml:space="preserve">
+        <value>Traducteurs</value>
+    </data>
+    <data name="CommandHelpSide_None" xml:space="preserve">
+        <value>Ne pas afficher</value>
+    </data>
+    <data name="CommandHelpSide_Left" xml:space="preserve">
+        <value>À gauche</value>
+    </data>
+    <data name="CommandHelpSide_Right" xml:space="preserve">
+        <value>À droite</value>
+    </data>
+    <data name="Options_CommandHelpSide_Name" xml:space="preserve">
+        <value>Côté d'affichage de l'aide des commandes</value>
+    </data>
+    <data name="Options_CommandHelpSide_Description" xml:space="preserve">
+        <value>Le côté de {0} où afficher l'aide pour les commandes.</value>
+    </data>
 </root>
