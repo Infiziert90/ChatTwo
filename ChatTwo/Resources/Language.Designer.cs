@@ -223,6 +223,33 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Left.
+        /// </summary>
+        internal static string CommandHelpSide_Left {
+            get {
+                return ResourceManager.GetString("CommandHelpSide_Left", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to None.
+        /// </summary>
+        internal static string CommandHelpSide_None {
+            get {
+                return ResourceManager.GetString("CommandHelpSide_None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Right.
+        /// </summary>
+        internal static string CommandHelpSide_Right {
+            get {
+                return ResourceManager.GetString("CommandHelpSide_Right", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Click the button to the left to see what&apos;s being worked on and what&apos;s next..
         /// </summary>
         internal static string Options_About_ClickUp {
@@ -309,6 +336,24 @@ namespace ChatTwo.Resources {
         internal static string Options_ChatColours_Tab {
             get {
                 return ResourceManager.GetString("Options_ChatColours_Tab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The side of Chat 2 to display help for commands on..
+        /// </summary>
+        internal static string Options_CommandHelpSide_Description {
+            get {
+                return ResourceManager.GetString("Options_CommandHelpSide_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Command help side.
+        /// </summary>
+        internal static string Options_CommandHelpSide_Name {
+            get {
+                return ResourceManager.GetString("Options_CommandHelpSide_Name", resourceCulture);
             }
         }
         

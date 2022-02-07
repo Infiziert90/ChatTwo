@@ -11,6 +11,7 @@ using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface;
 using Dalamud.Logging;
+using Dalamud.Memory;
 using ImGuiNET;
 using ImGuiScene;
 using Lumina.Excel.GeneratedSheets;
@@ -20,7 +21,7 @@ namespace ChatTwo.Ui;
 internal sealed class ChatLog : IUiComponent {
     private const string ChatChannelPicker = "chat-channel-picker";
 
-    private PluginUi Ui { get; }
+    internal PluginUi Ui { get; }
 
     internal bool Activate;
     internal string Chat = string.Empty;
@@ -30,8 +31,11 @@ internal sealed class ChatLog : IUiComponent {
     internal int LastTab { get; private set; }
     private InputChannel? _tempChannel;
     private TellTarget? _tellTarget;
-    private Vector2 _lastWindowSize = Vector2.Zero;
     private readonly Stopwatch _lastResize = new();
+    private CommandHelp? _commandHelp;
+
+    internal Vector2 LastWindowSize { get; private set; } = Vector2.Zero;
+    internal Vector2 LastWindowPos { get; private set; } = Vector2.Zero;
 
     private PayloadHandler PayloadHandler { get; }
     private Dictionary<string, ChatType> TextCommandChannels { get; } = new();
@@ -271,7 +275,14 @@ internal sealed class ChatLog : IUiComponent {
 
     private HideState _hideState = HideState.None;
 
-    public unsafe void Draw() {
+    public void Draw() {
+        if (this.DrawChatLog()) {
+            this._commandHelp?.Draw();
+        }
+    }
+
+    /// <returns>true if window was rendered</returns>
+    private unsafe bool DrawChatLog() {
         // if the chat has no hide state and in a cutscene, set the hide state to cutscene
         if (this.Ui.Plugin.Config.HideDuringCutscenes && this._hideState == HideState.None && (this.CutsceneActive || this.GposeActive)) {
             this._hideState = HideState.Cutscene;
@@ -293,11 +304,11 @@ internal sealed class ChatLog : IUiComponent {
         }
 
         if (this._hideState is HideState.Cutscene or HideState.User) {
-            return;
+            return false;
         }
 
         if (this.Ui.Plugin.Config.HideWhenNotLoggedIn && !this.Ui.Plugin.ClientState.IsLoggedIn) {
-            return;
+            return false;
         }
 
         var flags = ImGuiWindowFlags.None;
@@ -322,11 +333,12 @@ internal sealed class ChatLog : IUiComponent {
         if (!ImGui.Begin($"{this.Ui.Plugin.Name}###chat2", flags)) {
             this._lastViewport = ImGui.GetWindowViewport().NativePtr;
             ImGui.End();
-            return;
+            return false;
         }
 
-        var resized = this._lastWindowSize != ImGui.GetWindowSize();
-        this._lastWindowSize = ImGui.GetWindowSize();
+        var resized = this.LastWindowSize != ImGui.GetWindowSize();
+        this.LastWindowSize = ImGui.GetWindowSize();
+        this.LastWindowPos = ImGui.GetWindowPos();
 
         if (resized) {
             this._lastResize.Restart();
@@ -522,6 +534,8 @@ internal sealed class ChatLog : IUiComponent {
         }
 
         ImGui.End();
+
+        return true;
     }
 
     internal void UserHide() {
@@ -797,6 +811,22 @@ internal sealed class ChatLog : IUiComponent {
             data->SelectionStart = data->SelectionEnd = data->CursorPos;
         }
 
+        var text = MemoryHelper.ReadString((IntPtr) data->Buf, data->BufTextLen);
+        if (text.StartsWith('/')) {
+            var command = text.Split(' ')[0];
+            var cmd = this.Ui.Plugin.DataManager.GetExcelSheet<TextCommand>()?.FirstOrDefault(cmd => cmd.Command.RawString == command
+                                                                                                     || cmd.Alias.RawString == command
+                                                                                                     || cmd.ShortCommand.RawString == command
+                                                                                                     || cmd.ShortAlias.RawString == command);
+            if (cmd != null) {
+                this._commandHelp = new CommandHelp(this, cmd);
+                goto PostCommandHelp;
+            }
+        }
+
+        this._commandHelp = null;
+
+        PostCommandHelp:
         if (data->EventFlag != ImGuiInputTextFlags.CallbackHistory) {
             return 0;
         }

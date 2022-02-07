@@ -20,6 +20,7 @@ internal class Configuration : IPluginConfiguration {
     public bool MoreCompactPretty;
     public bool ShowNoviceNetwork;
     public bool SidebarTabView;
+    public CommandHelpSide CommandHelpSide = CommandHelpSide.None;
     public bool CanMove = true;
     public bool CanResize = true;
     public bool ShowTitleBar;
@@ -43,6 +44,7 @@ internal class Configuration : IPluginConfiguration {
         this.MoreCompactPretty = other.MoreCompactPretty;
         this.ShowNoviceNetwork = other.ShowNoviceNetwork;
         this.SidebarTabView = other.SidebarTabView;
+        this.CommandHelpSide = other.CommandHelpSide;
         this.CanMove = other.CanMove;
         this.CanResize = other.CanResize;
         this.ShowTitleBar = other.ShowTitleBar;
@@ -168,4 +170,20 @@ internal class Tab {
             Channel = this.Channel,
         };
     }
+}
+
+[Serializable]
+internal enum CommandHelpSide {
+    None,
+    Left,
+    Right,
+}
+
+internal static class CommandHelpSideExt {
+    internal static string Name(this CommandHelpSide side) => side switch {
+        CommandHelpSide.None => Language.CommandHelpSide_None,
+        CommandHelpSide.Left => Language.CommandHelpSide_Left,
+        CommandHelpSide.Right => Language.CommandHelpSide_Right,
+        _ => throw new ArgumentOutOfRangeException(nameof(side), side, null),
+    };
 }

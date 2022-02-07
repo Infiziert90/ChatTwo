@@ -386,4 +386,19 @@
     <data name="Options_About_Translators" xml:space="preserve">
         <value>Translators</value>
     </data>
+    <data name="CommandHelpSide_None" xml:space="preserve">
+        <value>None</value>
+    </data>
+    <data name="CommandHelpSide_Left" xml:space="preserve">
+        <value>Left</value>
+    </data>
+    <data name="CommandHelpSide_Right" xml:space="preserve">
+        <value>Right</value>
+    </data>
+    <data name="Options_CommandHelpSide_Name" xml:space="preserve">
+        <value>Command help side</value>
+    </data>
+    <data name="Options_CommandHelpSide_Description" xml:space="preserve">
+        <value>The side of Chat 2 to display help for commands on.</value>
+    </data>
 </root>

@@ -92,7 +92,7 @@ internal static class InputChannelExt {
             InputChannel.Shout => new uint[] { 103 },
             InputChannel.FreeCompany => new uint[] { 115 },
             InputChannel.PvpTeam => new uint[] { 91 },
-            InputChannel.NoviceNetwork => new uint[] { 224 },
+            InputChannel.NoviceNetwork => new uint[] { 101 },
             InputChannel.CrossLinkshell1 => new uint[] { 13 },
             InputChannel.CrossLinkshell2 => new uint[] { 14 },
             InputChannel.CrossLinkshell3 => new uint[] { 15 },
