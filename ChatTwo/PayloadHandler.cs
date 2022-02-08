@@ -204,6 +204,11 @@ internal sealed class PayloadHandler {
     }
 
     private void HoverItem(ItemPayload item) {
+        if (item.Kind == ItemPayload.ItemKind.EventItem) {
+            this.HoverEventItem(item);
+            return;
+        }
+
         if (item.Item == null) {
             return;
         }
@@ -218,6 +223,27 @@ internal sealed class PayloadHandler {
 
         var desc = ChunkUtil.ToChunks(item.Item.Description.ToDalamudString(), null);
         this.Log.DrawChunks(desc.ToList());
+    }
+
+    private void HoverEventItem(ItemPayload payload) {
+        var item = this.Ui.Plugin.DataManager.GetExcelSheet<EventItem>()?.GetRow(payload.RawItemId);
+        if (item == null) {
+            return;
+        }
+
+        if (this.Ui.Plugin.TextureCache.GetEventItem(item) is { } icon) {
+            InlineIcon(icon);
+        }
+
+        var name = ChunkUtil.ToChunks(item.Name.ToDalamudString(), null);
+        this.Log.DrawChunks(name.ToList());
+        ImGui.Separator();
+
+        var help = this.Ui.Plugin.DataManager.GetExcelSheet<EventItemHelp>()?.GetRow(payload.RawItemId);
+        if (help != null) {
+            var desc = ChunkUtil.ToChunks(help.Description.ToDalamudString(), null);
+            this.Log.DrawChunks(desc.ToList());
+        }
     }
 
     private void LeftClickPayload(Chunk chunk, Payload? payload) {
