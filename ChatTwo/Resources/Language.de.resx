@@ -401,4 +401,10 @@ Sie wurden gewarnt.</value>
     <data name="Options_CommandHelpSide_Description" xml:space="preserve">
         <value>Die Seite auf der {0} Hilfe zu Befehlen anzeigen soll.</value>
     </data>
+    <data name="Options_HideWhenUiHidden_Name" xml:space="preserve">
+        <value>Chatfenster mit Spiel-UI verbergen</value>
+    </data>
+    <data name="Options_HideWhenUiHidden_Description" xml:space="preserve">
+        <value>Verbirgt {0} wenn das Spiel-UI ebenfalls verborgen ist.</value>
+    </data>
 </root>

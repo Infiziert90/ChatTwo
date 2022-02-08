@@ -400,4 +400,10 @@
     <data name="Options_CommandHelpSide_Description" xml:space="preserve">
         <value>Le côté de {0} où afficher l'aide pour les commandes.</value>
     </data>
+    <data name="Options_HideWhenUiHidden_Name" xml:space="preserve">
+        <value>Masquer lorsque l'interface du jeu est cachée</value>
+    </data>
+    <data name="Options_HideWhenUiHidden_Description" xml:space="preserve">
+        <value>Masque {0} lorsque l'interface de jeu est cachée.</value>
+    </data>
 </root>
