@@ -1,10 +1,11 @@
 ﻿using ChatTwo.Code;
+using ChatTwo.Resources;
 
 namespace ChatTwo.Util;
 
 internal static class TabsUtil {
     internal static Tab VanillaGeneral => new() {
-        Name = "General",
+        Name = Language.Tabs_Presets_General,
         ChatCodes = new Dictionary<ChatType, ChatSource> {
             // Special
             [ChatType.Debug] = ChatSourceExt.All,
@@ -67,7 +68,7 @@ internal static class TabsUtil {
     };
 
     internal static Tab VanillaEvent => new() {
-        Name = "Event",
+        Name = Language.Tabs_Presets_Event,
         ChatCodes = new Dictionary<ChatType, ChatSource> {
             [ChatType.NpcDialogue] = ChatSourceExt.All,
         },
