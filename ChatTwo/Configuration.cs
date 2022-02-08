@@ -246,7 +246,7 @@ internal static class LanguageOverrideExt {
         LanguageOverride.Spanish => "Español",
         _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null),
     };
-    
+
     internal static string Code(this LanguageOverride mode) => mode switch {
         LanguageOverride.None => "",
         LanguageOverride.English => "en",
