@@ -407,4 +407,34 @@
     <data name="Options_HideWhenUiHidden_Description" xml:space="preserve">
         <value>Hide {0} when the game UI is hidden.</value>
     </data>
+    <data name="Options_KeybindMode_Name" xml:space="preserve">
+        <value>Keybind mode</value>
+    </data>
+    <data name="Options_KeybindMode_Description" xml:space="preserve">
+        <value>The way in which {0} should handle keybinds.</value>
+    </data>
+    <data name="Options_Miscellaneous_Tab" xml:space="preserve">
+        <value>Miscellaneous</value>
+    </data>
+    <data name="LanguageOverride_None" xml:space="preserve">
+        <value>Use Dalamud's default language</value>
+    </data>
+    <data name="KeybindMode_Flexible_Name" xml:space="preserve">
+        <value>Flexible</value>
+    </data>
+    <data name="KeybindMode_Strict_Name" xml:space="preserve">
+        <value>Strict</value>
+    </data>
+    <data name="KeybindMode_Flexible_Tooltip" xml:space="preserve">
+        <value>Process keybinds with modifiers even if other modifiers are pressed.</value>
+    </data>
+    <data name="KeybindMode_Strict_Tooltip" xml:space="preserve">
+        <value>Only process keybinds with modifiers if no other modifiers are pressed.</value>
+    </data>
+    <data name="Options_Language_Name" xml:space="preserve">
+        <value>Language</value>
+    </data>
+    <data name="Options_Language_Description" xml:space="preserve">
+        <value>The language to display {0} in.</value>
+    </data>
 </root>

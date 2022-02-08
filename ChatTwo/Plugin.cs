@@ -68,10 +68,11 @@ public sealed class Plugin : IDalamudPlugin {
 
     #pragma warning disable CS8618
     public Plugin() {
-        LanguageChanged(this.Interface!.UiLanguage);
-
-        this.Config = this.Interface.GetPluginConfig() as Configuration ?? new Configuration();
+        this.Config = this.Interface!.GetPluginConfig() as Configuration ?? new Configuration();
         this.Config.Migrate();
+
+        this.LanguageChanged(this.Interface.UiLanguage);
+
         this.Common = new XivCommonBase();
         this.TextureCache = new TextureCache(this.DataManager!);
         this.Functions = new GameFunctions.GameFunctions(this);
@@ -79,12 +80,12 @@ public sealed class Plugin : IDalamudPlugin {
         this.Ui = new PluginUi(this);
 
         this.Framework!.Update += this.FrameworkUpdate;
-        this.Interface.LanguageChanged += LanguageChanged;
+        this.Interface.LanguageChanged += this.LanguageChanged;
     }
     #pragma warning restore CS8618
 
     public void Dispose() {
-        this.Interface.LanguageChanged -= LanguageChanged;
+        this.Interface.LanguageChanged -= this.LanguageChanged;
         this.Framework.Update -= this.FrameworkUpdate;
         GameFunctions.GameFunctions.SetChatInteractable(true);
 
@@ -99,8 +100,12 @@ public sealed class Plugin : IDalamudPlugin {
         this.Interface.SavePluginConfig(this.Config);
     }
 
-    private static void LanguageChanged(string langCode) {
-        Language.Culture = new CultureInfo(langCode);
+    internal void LanguageChanged(string langCode) {
+        var info = this.Config.LanguageOverride is LanguageOverride.None
+            ? new CultureInfo(langCode)
+            : new CultureInfo(this.Config.LanguageOverride.Code());
+
+        Language.Culture = info;
     }
 
     private static readonly string[] ChatAddonNames = {

@@ -23,6 +23,7 @@ internal class Configuration : IPluginConfiguration {
     public bool SidebarTabView;
     public CommandHelpSide CommandHelpSide = CommandHelpSide.None;
     public KeybindMode KeybindMode = KeybindMode.Strict;
+    public LanguageOverride LanguageOverride = LanguageOverride.None;
     public bool CanMove = true;
     public bool CanResize = true;
     public bool ShowTitleBar;
@@ -49,6 +50,7 @@ internal class Configuration : IPluginConfiguration {
         this.SidebarTabView = other.SidebarTabView;
         this.CommandHelpSide = other.CommandHelpSide;
         this.KeybindMode = other.KeybindMode;
+        this.LanguageOverride = other.LanguageOverride;
         this.CanMove = other.CanMove;
         this.CanResize = other.CanResize;
         this.ShowTitleBar = other.ShowTitleBar;
@@ -207,3 +209,56 @@ internal static class KeybindModeExt {
         _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null),
     };
 
+    internal static string? Tooltip(this KeybindMode mode) => mode switch {
+        KeybindMode.Flexible => Language.KeybindMode_Flexible_Tooltip,
+        KeybindMode.Strict => Language.KeybindMode_Strict_Tooltip,
+        _ => null,
+    };
+}
+
+[Serializable]
+internal enum LanguageOverride {
+    None,
+    English,
+    French,
+    German,
+    Italian,
+    Japanese,
+    Korean,
+    Norwegian,
+    PortugueseBrazil,
+    Russian,
+    Spanish,
+}
+
+internal static class LanguageOverrideExt {
+    internal static string Name(this LanguageOverride mode) => mode switch {
+        LanguageOverride.None => Language.LanguageOverride_None,
+        LanguageOverride.English => "English",
+        LanguageOverride.French => "Français",
+        LanguageOverride.German => "Deutsch",
+        LanguageOverride.Italian => "Italiano",
+        LanguageOverride.Japanese => "日本語",
+        LanguageOverride.Korean => "한국어 (Korean)",
+        LanguageOverride.Norwegian => "Norsk",
+        LanguageOverride.PortugueseBrazil => "Português do Brasil",
+        LanguageOverride.Russian => "Русский",
+        LanguageOverride.Spanish => "Español",
+        _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null),
+    };
+    
+    internal static string Code(this LanguageOverride mode) => mode switch {
+        LanguageOverride.None => "",
+        LanguageOverride.English => "en",
+        LanguageOverride.French => "fr",
+        LanguageOverride.German => "de",
+        LanguageOverride.Italian => "it",
+        LanguageOverride.Japanese => "ja",
+        LanguageOverride.Korean => "ko",
+        LanguageOverride.Norwegian => "no",
+        LanguageOverride.PortugueseBrazil => "pt-br",
+        LanguageOverride.Russian => "ru",
+        LanguageOverride.Spanish => "es",
+        _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null),
+    };
+}

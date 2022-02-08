@@ -250,6 +250,51 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Flexible.
+        /// </summary>
+        internal static string KeybindMode_Flexible_Name {
+            get {
+                return ResourceManager.GetString("KeybindMode_Flexible_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Process keybinds with modifiers even if other modifiers are pressed..
+        /// </summary>
+        internal static string KeybindMode_Flexible_Tooltip {
+            get {
+                return ResourceManager.GetString("KeybindMode_Flexible_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Strict.
+        /// </summary>
+        internal static string KeybindMode_Strict_Name {
+            get {
+                return ResourceManager.GetString("KeybindMode_Strict_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only process keybinds with modifiers if no other modifiers are pressed..
+        /// </summary>
+        internal static string KeybindMode_Strict_Tooltip {
+            get {
+                return ResourceManager.GetString("KeybindMode_Strict_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Dalamud&apos;s default language.
+        /// </summary>
+        internal static string LanguageOverride_None {
+            get {
+                return ResourceManager.GetString("LanguageOverride_None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Click the button to the left to see what&apos;s being worked on and what&apos;s next..
         /// </summary>
         internal static string Options_About_ClickUp {
@@ -507,6 +552,51 @@ namespace ChatTwo.Resources {
         internal static string Options_JapaneseFontSize_Name {
             get {
                 return ResourceManager.GetString("Options_JapaneseFontSize_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The way in which {0} should handle keybinds..
+        /// </summary>
+        internal static string Options_KeybindMode_Description {
+            get {
+                return ResourceManager.GetString("Options_KeybindMode_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keybind mode.
+        /// </summary>
+        internal static string Options_KeybindMode_Name {
+            get {
+                return ResourceManager.GetString("Options_KeybindMode_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The language to display {0} in..
+        /// </summary>
+        internal static string Options_Language_Description {
+            get {
+                return ResourceManager.GetString("Options_Language_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Language.
+        /// </summary>
+        internal static string Options_Language_Name {
+            get {
+                return ResourceManager.GetString("Options_Language_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Miscellaneous.
+        /// </summary>
+        internal static string Options_Miscellaneous_Tab {
+            get {
+                return ResourceManager.GetString("Options_Miscellaneous_Tab", resourceCulture);
             }
         }
         

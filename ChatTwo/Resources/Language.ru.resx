@@ -398,12 +398,12 @@
         <value>Сторона помощи по команде</value>
     </data>
     <data name="Options_CommandHelpSide_Description" xml:space="preserve">
-        <value>Сторона {0} с которой отображается помощь по командам.</value>
+        <value>Сторона {0}, на которой отображается помощь по командам.</value>
     </data>
     <data name="Options_HideWhenUiHidden_Name" xml:space="preserve">
         <value>Скрывать, когда игровой интерфейс скрыт</value>
     </data>
     <data name="Options_HideWhenUiHidden_Description" xml:space="preserve">
-        <value>Скрыть {0}, когда игровой интерфейс скрыт.</value>
+        <value>Скрыть {0}, когда скрыт игровой интерфейс.</value>
     </data>
 </root>

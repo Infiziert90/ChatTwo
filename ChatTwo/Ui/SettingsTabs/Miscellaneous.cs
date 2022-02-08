@@ -14,6 +14,16 @@ internal sealed class Miscellaneous : ISettingsTab {
     }
 
     public void Draw() {
+        if (ImGui.BeginCombo(Language.Options_Language_Name, this.Mutable.LanguageOverride.Name())) {
+            foreach (var language in Enum.GetValues<LanguageOverride>()) {
+                if (ImGui.Selectable(language.Name())) {
+                    this.Mutable.LanguageOverride = language;
+                }
+            }
+
+            ImGui.EndCombo();
+        }
+
         ImGuiUtil.HelpText(string.Format(Language.Options_Language_Description, Plugin.PluginName));
         ImGui.Spacing();
 
