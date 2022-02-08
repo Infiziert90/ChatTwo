@@ -367,7 +367,12 @@ internal sealed unsafe class Chat : IDisposable {
                     return;
                 }
 
-                if (!modifierState.HasFlag(modifier)) {
+                var modifierPressed = this.Plugin.Config.KeybindMode switch {
+                    KeybindMode.Strict => modifier == modifierState,
+                    KeybindMode.Flexible => modifierState.HasFlag(modifier),
+                    _ => false,
+                };
+                if (!modifierPressed) {
                     return;
                 }
 

@@ -221,7 +221,12 @@ internal sealed class ChatLog : IUiComponent {
             }
 
             void Intercept(VirtualKey key, ModifierFlag modifier) {
-                if (!ImGui.IsKeyPressed((int) key) || !modifierState.HasFlag(modifier) || modifier == 0 && modifiersOnly) {
+                var modifierPressed = this.Ui.Plugin.Config.KeybindMode switch {
+                    KeybindMode.Strict => modifier == modifierState,
+                    KeybindMode.Flexible => modifierState.HasFlag(modifier),
+                    _ => false,
+                };
+                if (!ImGui.IsKeyPressed((int) key) || !modifierPressed || modifier == 0 && modifiersOnly) {
                     return;
                 }
 

@@ -22,6 +22,7 @@ internal class Configuration : IPluginConfiguration {
     public bool ShowNoviceNetwork;
     public bool SidebarTabView;
     public CommandHelpSide CommandHelpSide = CommandHelpSide.None;
+    public KeybindMode KeybindMode = KeybindMode.Strict;
     public bool CanMove = true;
     public bool CanResize = true;
     public bool ShowTitleBar;
@@ -47,6 +48,7 @@ internal class Configuration : IPluginConfiguration {
         this.ShowNoviceNetwork = other.ShowNoviceNetwork;
         this.SidebarTabView = other.SidebarTabView;
         this.CommandHelpSide = other.CommandHelpSide;
+        this.KeybindMode = other.KeybindMode;
         this.CanMove = other.CanMove;
         this.CanResize = other.CanResize;
         this.ShowTitleBar = other.ShowTitleBar;
@@ -191,3 +193,17 @@ internal static class CommandHelpSideExt {
         _ => throw new ArgumentOutOfRangeException(nameof(side), side, null),
     };
 }
+
+[Serializable]
+internal enum KeybindMode {
+    Flexible,
+    Strict,
+}
+
+internal static class KeybindModeExt {
+    internal static string Name(this KeybindMode mode) => mode switch {
+        KeybindMode.Flexible => Language.KeybindMode_Flexible_Name,
+        KeybindMode.Strict => Language.KeybindMode_Strict_Name,
+        _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null),
+    };
+
