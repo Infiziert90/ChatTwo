@@ -67,19 +67,6 @@ internal sealed class Display : ISettingsTab {
         ImGuiUtil.OptionCheckbox(ref this.Mutable.ShowNoviceNetwork, Language.Options_ShowNoviceNetwork_Name, Language.Options_ShowNoviceNetwork_Description);
         ImGui.Spacing();
 
-        if (ImGui.BeginCombo(Language.Options_CommandHelpSide_Name, this.Mutable.CommandHelpSide.Name())) {
-            foreach (var side in Enum.GetValues<CommandHelpSide>()) {
-                if (ImGui.Selectable(side.Name(), this.Mutable.CommandHelpSide == side)) {
-                    this.Mutable.CommandHelpSide = side;
-                }
-            }
-
-            ImGui.EndCombo();
-        }
-
-        ImGuiUtil.HelpText(string.Format(Language.Options_CommandHelpSide_Description, Plugin.PluginName));
-        ImGui.Spacing();
-
         if (ImGui.DragFloat(Language.Options_WindowOpacity_Name, ref this.Mutable.WindowAlpha, .0025f, 0f, 1f, $"{this.Mutable.WindowAlpha * 100f:N2}%%")) {
             switch (this.Mutable.WindowAlpha) {
                 case > 1f and <= 100f:
