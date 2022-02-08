@@ -17,10 +17,12 @@ internal sealed class About : ISettingsTab {
         "Dark32",
         "andreycout",
         "cassandra308",
+        "AkiraYorumoto",
         "MKhayle",
         "elena.space",
         "ShivaInka",
         "Risu64",
+        "witchymary",
     };
 
     internal About() {
