@@ -143,4 +143,16 @@ internal static class ImGuiUtil {
             ImGui.PopStyleColor();
         }
     }
+
+    internal static bool BeginComboVertical(string label, string previewValue, ImGuiComboFlags flags = ImGuiComboFlags.None) {
+        ImGui.TextUnformatted(label);
+        ImGui.SetNextItemWidth(-1);
+        return ImGui.BeginCombo($"##{label}", previewValue, flags);
+    }
+
+    internal static bool DragFloatVertical(string label, ref float value, float vSpeed = 1.0f, float vMin = float.MinValue, float vMax = float.MaxValue, string? format = null, ImGuiSliderFlags flags = ImGuiSliderFlags.None) {
+        ImGui.TextUnformatted(label);
+        ImGui.SetNextItemWidth(-1);
+        return ImGui.DragFloat($"##{label}", ref value, vSpeed, vMin, vMax, format, flags);
+    }
 }

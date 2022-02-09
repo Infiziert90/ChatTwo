@@ -67,7 +67,7 @@ internal sealed class Display : ISettingsTab {
         ImGuiUtil.OptionCheckbox(ref this.Mutable.ShowNoviceNetwork, Language.Options_ShowNoviceNetwork_Name, Language.Options_ShowNoviceNetwork_Description);
         ImGui.Spacing();
 
-        if (ImGui.DragFloat(Language.Options_WindowOpacity_Name, ref this.Mutable.WindowAlpha, .0025f, 0f, 1f, $"{this.Mutable.WindowAlpha * 100f:N2}%%")) {
+        if (ImGuiUtil.DragFloatVertical(Language.Options_WindowOpacity_Name, ref this.Mutable.WindowAlpha, .0025f, 0f, 1f, $"{this.Mutable.WindowAlpha * 100f:N2}%%")) {
             switch (this.Mutable.WindowAlpha) {
                 case > 1f and <= 100f:
                     this.Mutable.WindowAlpha /= 100f;

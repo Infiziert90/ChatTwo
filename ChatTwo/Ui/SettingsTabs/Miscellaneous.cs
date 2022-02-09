@@ -14,7 +14,7 @@ internal sealed class Miscellaneous : ISettingsTab {
     }
 
     public void Draw() {
-        if (ImGui.BeginCombo(Language.Options_Language_Name, this.Mutable.LanguageOverride.Name())) {
+        if (ImGuiUtil.BeginComboVertical(Language.Options_Language_Name, this.Mutable.LanguageOverride.Name())) {
             foreach (var language in Enum.GetValues<LanguageOverride>()) {
                 if (ImGui.Selectable(language.Name())) {
                     this.Mutable.LanguageOverride = language;
@@ -27,7 +27,7 @@ internal sealed class Miscellaneous : ISettingsTab {
         ImGuiUtil.HelpText(string.Format(Language.Options_Language_Description, Plugin.PluginName));
         ImGui.Spacing();
 
-        if (ImGui.BeginCombo(Language.Options_CommandHelpSide_Name, this.Mutable.CommandHelpSide.Name())) {
+        if (ImGuiUtil.BeginComboVertical(Language.Options_CommandHelpSide_Name, this.Mutable.CommandHelpSide.Name())) {
             foreach (var side in Enum.GetValues<CommandHelpSide>()) {
                 if (ImGui.Selectable(side.Name(), this.Mutable.CommandHelpSide == side)) {
                     this.Mutable.CommandHelpSide = side;
@@ -40,7 +40,7 @@ internal sealed class Miscellaneous : ISettingsTab {
         ImGuiUtil.HelpText(string.Format(Language.Options_CommandHelpSide_Description, Plugin.PluginName));
         ImGui.Spacing();
 
-        if (ImGui.BeginCombo(Language.Options_KeybindMode_Name, this.Mutable.KeybindMode.Name())) {
+        if (ImGuiUtil.BeginComboVertical(Language.Options_KeybindMode_Name, this.Mutable.KeybindMode.Name())) {
             foreach (var mode in Enum.GetValues<KeybindMode>()) {
                 if (ImGui.Selectable(mode.Name(), this.Mutable.KeybindMode == mode)) {
                     this.Mutable.KeybindMode = mode;

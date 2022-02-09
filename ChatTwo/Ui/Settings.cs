@@ -15,6 +15,8 @@ internal sealed class Settings : IUiComponent {
     private Configuration Mutable { get; }
     private List<ISettingsTab> Tabs { get; }
 
+    private int _currentTab;
+
     internal Settings(PluginUi ui) {
         this.Ui = ui;
         this.Mutable = new Configuration();
@@ -50,7 +52,7 @@ internal sealed class Settings : IUiComponent {
             return;
         }
 
-        ImGui.SetNextWindowSize(new Vector2(500, 650) * ImGuiHelpers.GlobalScale, ImGuiCond.FirstUseEver);
+        ImGui.SetNextWindowSize(new Vector2(475, 600) * ImGuiHelpers.GlobalScale, ImGuiCond.FirstUseEver);
 
         var name = string.Format(Language.Settings_Title, this.Ui.Plugin.Name);
         if (!ImGui.Begin($"{name}###chat2-settings", ref this.Ui.SettingsVisible)) {
@@ -62,27 +64,54 @@ internal sealed class Settings : IUiComponent {
             this.Initialise();
         }
 
-        if (ImGui.BeginTabBar("settings-tabs")) {
-            foreach (var settingsTab in this.Tabs) {
-                if (!ImGui.BeginTabItem(settingsTab.Name)) {
-                    continue;
-                }
+        if (ImGui.BeginTable("##chat2-settings-table", 2)) {
+            ImGui.TableSetupColumn("tab", ImGuiTableColumnFlags.WidthFixed);
+            ImGui.TableSetupColumn("settings", ImGuiTableColumnFlags.WidthStretch);
 
-                var height = ImGui.GetContentRegionAvail().Y
-                             - ImGui.GetStyle().FramePadding.Y * 2
-                             - ImGui.GetStyle().ItemSpacing.Y
-                             - ImGui.GetStyle().ItemInnerSpacing.Y * 2
-                             - ImGui.CalcTextSize("A").Y;
-                if (ImGui.BeginChild("##chat2-settings", new Vector2(-1, height))) {
-                    settingsTab.Draw();
-                    ImGui.EndChild();
-                }
+            ImGui.TableNextColumn();
 
-                ImGui.EndTabItem();
+            for (var i = 0; i < this.Tabs.Count; i++) {
+                if (ImGui.Selectable($"{this.Tabs[i].Name}###tab-{i}", this._currentTab == i)) {
+                    this._currentTab = i;
+                }
             }
 
-            ImGui.EndTabBar();
+            ImGui.TableNextColumn();
+
+            var height = ImGui.GetContentRegionAvail().Y
+                         - ImGui.GetStyle().FramePadding.Y * 2
+                         - ImGui.GetStyle().ItemSpacing.Y
+                         - ImGui.GetStyle().ItemInnerSpacing.Y * 2
+                         - ImGui.CalcTextSize("A").Y;
+            if (ImGui.BeginChild("##chat2-settings", new Vector2(-1, height))) {
+                this.Tabs[this._currentTab].Draw();
+                ImGui.EndChild();
+            }
+
+            ImGui.EndTable();
         }
+
+        // if (ImGui.BeginTabBar("settings-tabs")) {
+        //     foreach (var settingsTab in this.Tabs) {
+        //         if (!ImGui.BeginTabItem(settingsTab.Name)) {
+        //             continue;
+        //         }
+        //
+        //         var height = ImGui.GetContentRegionAvail().Y
+        //                      - ImGui.GetStyle().FramePadding.Y * 2
+        //                      - ImGui.GetStyle().ItemSpacing.Y
+        //                      - ImGui.GetStyle().ItemInnerSpacing.Y * 2
+        //                      - ImGui.CalcTextSize("A").Y;
+        //         if (ImGui.BeginChild("##chat2-settings", new Vector2(-1, height))) {
+        //             settingsTab.Draw();
+        //             ImGui.EndChild();
+        //         }
+        //
+        //         ImGui.EndTabItem();
+        //     }
+        //
+        //     ImGui.EndTabBar();
+        // }
 
         ImGui.Separator();
 

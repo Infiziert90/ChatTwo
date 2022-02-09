@@ -76,7 +76,7 @@ internal sealed class Tabs : ISettingsTab {
                 ImGui.InputText(Language.Options_Tabs_Name, ref tab.Name, 512, ImGuiInputTextFlags.EnterReturnsTrue);
                 ImGui.Checkbox(Language.Options_Tabs_ShowTimestamps, ref tab.DisplayTimestamp);
 
-                if (ImGui.BeginCombo(Language.Options_Tabs_UnreadMode, tab.UnreadMode.Name())) {
+                if (ImGuiUtil.BeginComboVertical(Language.Options_Tabs_UnreadMode, tab.UnreadMode.Name())) {
                     foreach (var mode in Enum.GetValues<UnreadMode>()) {
                         if (ImGui.Selectable(mode.Name(), tab.UnreadMode == mode)) {
                             tab.UnreadMode = mode;
@@ -93,7 +93,7 @@ internal sealed class Tabs : ISettingsTab {
                 }
 
                 var input = tab.Channel?.ToChatType().Name() ?? Language.Options_Tabs_NoInputChannel;
-                if (ImGui.BeginCombo(Language.Options_Tabs_InputChannel, input)) {
+                if (ImGuiUtil.BeginComboVertical(Language.Options_Tabs_InputChannel, input)) {
                     if (ImGui.Selectable(Language.Options_Tabs_NoInputChannel, tab.Channel == null)) {
                         tab.Channel = null;
                     }

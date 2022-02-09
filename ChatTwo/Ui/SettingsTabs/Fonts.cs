@@ -28,7 +28,7 @@ public class Fonts : ISettingsTab {
 
         ImGui.PushTextWrapPos();
 
-        if (ImGui.BeginCombo(Language.Options_Font_Name, this.Mutable.GlobalFont)) {
+        if (ImGuiUtil.BeginComboVertical(Language.Options_Font_Name, this.Mutable.GlobalFont)) {
             foreach (var font in Ui.Fonts.GlobalFonts) {
                 if (ImGui.Selectable(font.Name, this.Mutable.GlobalFont == font.Name)) {
                     this.Mutable.GlobalFont = font.Name;
@@ -58,7 +58,7 @@ public class Fonts : ISettingsTab {
         ImGuiUtil.WarningText(Language.Options_Font_Warning);
         ImGui.Spacing();
 
-        if (ImGui.BeginCombo(Language.Options_JapaneseFont_Name, this.Mutable.JapaneseFont)) {
+        if (ImGuiUtil.BeginComboVertical(Language.Options_JapaneseFont_Name, this.Mutable.JapaneseFont)) {
             foreach (var (name, _) in Ui.Fonts.JapaneseFonts) {
                 if (ImGui.Selectable(name, this.Mutable.JapaneseFont == name)) {
                     this.Mutable.JapaneseFont = name;
@@ -90,9 +90,9 @@ public class Fonts : ISettingsTab {
         const float speed = .0125f;
         const float min = 8f;
         const float max = 36f;
-        ImGui.DragFloat(Language.Options_FontSize_Name, ref this.Mutable.FontSize, speed, min, max, $"{this.Mutable.FontSize:N1}");
-        ImGui.DragFloat(Language.Options_JapaneseFontSize_Name, ref this.Mutable.JapaneseFontSize, speed, min, max, $"{this.Mutable.JapaneseFontSize:N1}");
-        ImGui.DragFloat(Language.Options_SymbolsFontSize_Name, ref this.Mutable.SymbolsFontSize, speed, min, max, $"{this.Mutable.SymbolsFontSize:N1}");
+        ImGuiUtil.DragFloatVertical(Language.Options_FontSize_Name, ref this.Mutable.FontSize, speed, min, max, $"{this.Mutable.FontSize:N1}");
+        ImGuiUtil.DragFloatVertical(Language.Options_JapaneseFontSize_Name, ref this.Mutable.JapaneseFontSize, speed, min, max, $"{this.Mutable.JapaneseFontSize:N1}");
+        ImGuiUtil.DragFloatVertical(Language.Options_SymbolsFontSize_Name, ref this.Mutable.SymbolsFontSize, speed, min, max, $"{this.Mutable.SymbolsFontSize:N1}");
         ImGuiUtil.HelpText(Language.Options_SymbolsFontSize_Description);
 
         ImGui.PopTextWrapPos();
