@@ -11,6 +11,8 @@ internal sealed class Tabs : ISettingsTab {
 
     public string Name => Language.Options_Tabs_Tab + "###tabs-tabs";
 
+    private int _toOpen = -2;
+
     internal Tabs(Configuration mutable) {
         this.Mutable = mutable;
     }
@@ -41,26 +43,34 @@ internal sealed class Tabs : ISettingsTab {
         }
 
         var toRemove = -1;
+        var doOpens = this._toOpen > -2;
         for (var i = 0; i < this.Mutable.Tabs.Count; i++) {
             var tab = this.Mutable.Tabs[i];
+
+            if (doOpens) {
+                ImGui.SetNextItemOpen(i == this._toOpen);
+            }
 
             if (ImGui.TreeNodeEx($"{tab.Name}###tab-{i}")) {
                 ImGui.PushID($"tab-{i}");
 
                 if (ImGuiUtil.IconButton(FontAwesomeIcon.TrashAlt, tooltip: Language.Options_Tabs_Delete)) {
                     toRemove = i;
+                    this._toOpen = -1;
                 }
 
                 ImGui.SameLine();
 
                 if (ImGuiUtil.IconButton(FontAwesomeIcon.ArrowUp, tooltip: Language.Options_Tabs_MoveUp) && i > 0) {
                     (this.Mutable.Tabs[i - 1], this.Mutable.Tabs[i]) = (this.Mutable.Tabs[i], this.Mutable.Tabs[i - 1]);
+                    this._toOpen = i - 1;
                 }
 
                 ImGui.SameLine();
 
                 if (ImGuiUtil.IconButton(FontAwesomeIcon.ArrowDown, tooltip: Language.Options_Tabs_MoveDown) && i < this.Mutable.Tabs.Count - 1) {
                     (this.Mutable.Tabs[i + 1], this.Mutable.Tabs[i]) = (this.Mutable.Tabs[i], this.Mutable.Tabs[i + 1]);
+                    this._toOpen = i + 1;
                 }
 
                 ImGui.InputText(Language.Options_Tabs_Name, ref tab.Name, 512, ImGuiInputTextFlags.EnterReturnsTrue);
@@ -149,6 +159,10 @@ internal sealed class Tabs : ISettingsTab {
 
         if (toRemove > -1) {
             this.Mutable.Tabs.RemoveAt(toRemove);
+        }
+
+        if (doOpens) {
+            this._toOpen = -2;
         }
     }
 }
