@@ -195,7 +195,7 @@ internal sealed class ChatLog : IUiComponent {
         var lineHeight = ImGui.CalcTextSize("A").Y;
         return ImGui.GetContentRegionAvail().Y
                - lineHeight * 2
-               - ImGui.GetStyle().ItemSpacing.Y * 4;
+               - ImGui.GetStyle().ItemSpacing.Y * 2.5f;
     }
 
     private unsafe ImGuiViewport* _lastViewport;
