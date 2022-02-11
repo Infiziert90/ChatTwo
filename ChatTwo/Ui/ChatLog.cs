@@ -463,29 +463,32 @@ internal sealed class ChatLog : IUiComponent {
                 this.AddBacklog(trimmed);
                 this._inputBacklogIdx = -1;
 
-                if (this._tellTarget != null) {
-                    var target = this._tellTarget;
-                    var reason = target.Reason;
-                    var world = this.Ui.Plugin.DataManager.GetExcelSheet<World>()?.GetRow(target.World);
-                    if (world is { IsPublic: true }) {
-                        if (reason == TellReason.Reply && this.Ui.Plugin.Common.Functions.FriendList.List.Any(friend => friend.ContentId == target.ContentId)) {
-                            reason = TellReason.Friend;
+                if (!trimmed.StartsWith('/')) {
+                    if (this._tellTarget != null) {
+                        var target = this._tellTarget;
+                        var reason = target.Reason;
+                        var world = this.Ui.Plugin.DataManager.GetExcelSheet<World>()?.GetRow(target.World);
+                        if (world is { IsPublic: true }) {
+                            if (reason == TellReason.Reply && this.Ui.Plugin.Common.Functions.FriendList.List.Any(friend => friend.ContentId == target.ContentId)) {
+                                reason = TellReason.Friend;
+                            }
+
+                            this.Ui.Plugin.Functions.Chat.SendTell(reason, target.ContentId, target.Name, (ushort) world.RowId, trimmed);
                         }
 
-                        this.Ui.Plugin.Functions.Chat.SendTell(reason, target.ContentId, target.Name, (ushort) world.RowId, trimmed);
+                        if (this._tempChannel is InputChannel.Tell) {
+                            this._tellTarget = null;
+                        }
+
+                        goto Skip;
                     }
 
-                    if (this._tempChannel is InputChannel.Tell) {
-                        this._tellTarget = null;
+
+                    if (this._tempChannel != null) {
+                        trimmed = $"{this._tempChannel.Value.Prefix()} {trimmed}";
+                    } else if (activeTab is { Channel: { } channel }) {
+                        trimmed = $"{channel.Prefix()} {trimmed}";
                     }
-
-                    goto Skip;
-                }
-
-                if (this._tempChannel != null) {
-                    trimmed = $"{this._tempChannel.Value.Prefix()} {trimmed}";
-                } else if (activeTab is { Channel: { } channel } && !trimmed.StartsWith('/')) {
-                    trimmed = $"{channel.Prefix()} {trimmed}";
                 }
 
                 this.Ui.Plugin.Common.Functions.Chat.SendMessage(trimmed);
