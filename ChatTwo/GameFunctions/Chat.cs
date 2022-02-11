@@ -1,5 +1,4 @@
-﻿using System.Text;
-using ChatTwo.Code;
+﻿using ChatTwo.Code;
 using ChatTwo.GameFunctions.Types;
 using ChatTwo.Util;
 using Dalamud.Game.ClientState.Keys;
@@ -558,22 +557,14 @@ internal sealed unsafe class Chat : IDisposable {
             return;
         }
 
-        var bytes = Encoding.UTF8.GetBytes(tellTarget ?? "");
-        var target = new Utf8String();
-        fixed (byte* tellTargetPtr = bytes) {
-            var zero = stackalloc byte[1];
-            zero[0] = 0;
-
-            target.StringPtr = tellTargetPtr == null ? zero : tellTargetPtr;
-            target.StringLength = bytes.Length;
-
-            var idx = channel.LinkshellIndex();
-            if (idx == uint.MaxValue) {
-                idx = 0;
-            }
-
-            this._changeChatChannel(RaptureShellModule.Instance, (int) channel, idx, &target, 1);
+        var target = Utf8String.FromString(tellTarget ?? "");
+        var idx = channel.LinkshellIndex();
+        if (idx == uint.MaxValue) {
+            idx = 0;
         }
+
+        this._changeChatChannel(RaptureShellModule.Instance, (int) channel, idx, target, 1);
+        target->Dtor();
     }
 
     private static VirtualKey GetKeyForModifier(ModifierFlag modifierFlag) => modifierFlag switch {
@@ -597,6 +588,7 @@ internal sealed unsafe class Chat : IDisposable {
         var outData = stackalloc byte[32];
         var idString = Utf8String.FromString(id);
         this._getKeybind((IntPtr) a1, idString, (IntPtr) outData);
+        idString->Dtor();
 
         var key1 = (VirtualKey) outData[0];
         if (key1 is VirtualKey.F23) {
@@ -644,5 +636,8 @@ internal sealed unsafe class Chat : IDisposable {
 
         this._printTell(logModule, 33, uName, uMessage, contentId, homeWorld, 255, 0, 0);
         this._sendTell(a1, contentId, homeWorld, uName, uMessage, (byte) reason, homeWorld);
+
+        uName->Dtor();
+        uMessage->Dtor();
     }
 }
