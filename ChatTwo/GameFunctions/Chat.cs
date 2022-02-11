@@ -8,6 +8,7 @@ using Dalamud.Logging;
 using Dalamud.Memory;
 using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
+using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
@@ -565,6 +566,7 @@ internal sealed unsafe class Chat : IDisposable {
 
         this._changeChatChannel(RaptureShellModule.Instance, (int) channel, idx, target, 1);
         target->Dtor();
+        IMemorySpace.Free(target);
     }
 
     private static VirtualKey GetKeyForModifier(ModifierFlag modifierFlag) => modifierFlag switch {
@@ -589,6 +591,7 @@ internal sealed unsafe class Chat : IDisposable {
         var idString = Utf8String.FromString(id);
         this._getKeybind((IntPtr) a1, idString, (IntPtr) outData);
         idString->Dtor();
+        IMemorySpace.Free(idString);
 
         var key1 = (VirtualKey) outData[0];
         if (key1 is VirtualKey.F23) {
@@ -638,6 +641,9 @@ internal sealed unsafe class Chat : IDisposable {
         this._sendTell(a1, contentId, homeWorld, uName, uMessage, (byte) reason, homeWorld);
 
         uName->Dtor();
+        IMemorySpace.Free(uName);
+
         uMessage->Dtor();
+        IMemorySpace.Free(uMessage);
     }
 }
