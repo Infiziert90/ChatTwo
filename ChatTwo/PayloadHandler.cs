@@ -284,7 +284,7 @@ internal sealed class PayloadHandler {
         }
 
         var start = source.Payloads.IndexOf(payload);
-        var end = source.Payloads.IndexOf(RawPayload.LinkTerminator);
+        var end = source.Payloads.IndexOf(RawPayload.LinkTerminator, start == -1 ? 0 : start);
         if (start == -1 || end == -1) {
             return;
         }
