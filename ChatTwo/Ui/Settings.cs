@@ -91,28 +91,6 @@ internal sealed class Settings : IUiComponent {
             ImGui.EndTable();
         }
 
-        // if (ImGui.BeginTabBar("settings-tabs")) {
-        //     foreach (var settingsTab in this.Tabs) {
-        //         if (!ImGui.BeginTabItem(settingsTab.Name)) {
-        //             continue;
-        //         }
-        //
-        //         var height = ImGui.GetContentRegionAvail().Y
-        //                      - ImGui.GetStyle().FramePadding.Y * 2
-        //                      - ImGui.GetStyle().ItemSpacing.Y
-        //                      - ImGui.GetStyle().ItemInnerSpacing.Y * 2
-        //                      - ImGui.CalcTextSize("A").Y;
-        //         if (ImGui.BeginChild("##chat2-settings", new Vector2(-1, height))) {
-        //             settingsTab.Draw();
-        //             ImGui.EndChild();
-        //         }
-        //
-        //         ImGui.EndTabItem();
-        //     }
-        //
-        //     ImGui.EndTabBar();
-        // }
-
         ImGui.Separator();
 
         var save = ImGui.Button(Language.Settings_Save);
