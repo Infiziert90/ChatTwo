@@ -13,7 +13,7 @@ internal sealed class Display : ISettingsTab {
         this.Mutable = mutable;
     }
 
-    public void Draw() {
+    public void Draw(bool changed) {
         ImGui.PushTextWrapPos();
 
         ImGuiUtil.OptionCheckbox(ref this.Mutable.HideChat, Language.Options_HideChat_Name, Language.Options_HideChat_Description);

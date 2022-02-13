@@ -132,10 +132,26 @@ internal sealed class PluginUi : IDisposable {
             component.Dispose();
         }
 
-        this._regularFont.Item1.Free();
-        this._italicFont.Item1.Free();
-        this._gameSymFont.Item1.Free();
-        this._symRange.Free();
+        if (this._regularFont.Item1.IsAllocated) {
+            this._regularFont.Item1.Free();
+        }
+
+        if (this._italicFont.Item1.IsAllocated) {
+            this._italicFont.Item1.Free();
+        }
+
+        if (this._jpFont.Item1.IsAllocated) {
+            this._jpFont.Item1.Free();
+        }
+
+        if (this._gameSymFont.Item1.IsAllocated) {
+            this._gameSymFont.Item1.Free();
+        }
+
+        if (this._symRange.IsAllocated) {
+            this._symRange.Free();
+        }
+
         this._fontCfg.Destroy();
         this._fontCfgMerge.Destroy();
     }

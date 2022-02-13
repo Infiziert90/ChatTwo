@@ -53,12 +53,26 @@ internal sealed class ChatLog : IUiComponent {
         this._fontIcon = this.Ui.Plugin.DataManager.GetImGuiTexture("common/font/fonticon_ps5.tex");
 
         this.Ui.Plugin.Functions.Chat.Activated += this.Activated;
+        this.Ui.Plugin.ClientState.Login += this.Login;
+        this.Ui.Plugin.ClientState.Logout += this.Logout;
     }
 
     public void Dispose() {
+        this.Ui.Plugin.ClientState.Logout -= this.Logout;
+        this.Ui.Plugin.ClientState.Login -= this.Login;
         this.Ui.Plugin.Functions.Chat.Activated -= this.Activated;
         this._fontIcon?.Dispose();
         this.Ui.Plugin.CommandManager.RemoveHandler("/clearlog2");
+    }
+
+    private void Logout(object? sender, EventArgs e) {
+        foreach (var tab in this.Ui.Plugin.Config.Tabs) {
+            tab.Clear();
+        }
+    }
+
+    private void Login(object? sender, EventArgs e) {
+        this.Ui.Plugin.Store.FilterAllTabs(false);
     }
 
     private void Activated(ChatActivatedArgs args) {
@@ -126,10 +140,6 @@ internal sealed class ChatLog : IUiComponent {
     private void ClearLog(string command, string arguments) {
         switch (arguments) {
             case "all":
-                using (var messages = this.Ui.Plugin.Store.GetMessages()) {
-                    messages.Messages.Clear();
-                }
-
                 foreach (var tab in this.Ui.Plugin.Config.Tabs) {
                     tab.Clear();
                 }
@@ -374,10 +384,10 @@ internal sealed class ChatLog : IUiComponent {
                     ?.RawString ?? "???";
 
                 this.DrawChunks(new Chunk[] {
-                    new TextChunk(null, null, "Tell "),
-                    new TextChunk(null, null, this._tellTarget.Name),
-                    new IconChunk(null, null, BitmapFontIcon.CrossWorld),
-                    new TextChunk(null, null, world),
+                    new TextChunk(ChunkSource.None, null, "Tell "),
+                    new TextChunk(ChunkSource.None, null, this._tellTarget.Name),
+                    new IconChunk(ChunkSource.None, null, BitmapFontIcon.CrossWorld),
+                    new TextChunk(ChunkSource.None, null, world),
                 });
             } else if (this._tempChannel != null) {
                 if (this._tempChannel.Value.IsLinkshell()) {
@@ -626,7 +636,7 @@ internal sealed class ChatLog : IUiComponent {
                         if (table) {
                             ImGui.TextUnformatted(timestamp);
                         } else {
-                            this.DrawChunk(new TextChunk(null, null, $"[{timestamp}]") {
+                            this.DrawChunk(new TextChunk(ChunkSource.None, null, $"[{timestamp}]") {
                                 Foreground = 0xFFFFFFFF,
                             });
                             ImGui.SameLine();

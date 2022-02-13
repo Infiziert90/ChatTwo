@@ -1,9 +1,11 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics;
 using ChatTwo.Code;
 using ChatTwo.Util;
 using Dalamud.Game;
 using Dalamud.Game.Text;
 using Dalamud.Game.Text.SeStringHandling;
+using LiteDB;
 using Lumina.Excel.GeneratedSheets;
 
 namespace ChatTwo;
@@ -11,63 +13,146 @@ namespace ChatTwo;
 internal class Store : IDisposable {
     internal const int MessagesLimit = 10_000;
 
-    internal sealed class MessagesLock : IDisposable {
-        private Mutex Mutex { get; }
-        internal List<Message> Messages { get; }
-
-        internal MessagesLock(List<Message> messages, Mutex mutex) {
-            this.Messages = messages;
-            this.Mutex = mutex;
-
-            this.Mutex.WaitOne();
-        }
-
-        public void Dispose() {
-            this.Mutex.ReleaseMutex();
-        }
-    }
-
     private Plugin Plugin { get; }
 
-    private Mutex MessagesMutex { get; } = new();
-    private List<Message> Messages { get; } = new();
     private ConcurrentQueue<(uint, Message)> Pending { get; } = new();
+    private Stopwatch CheckpointTimer { get; } = new();
+    internal ILiteDatabase Database { get; }
+    private ILiteCollection<Message> Messages => this.Database.GetCollection<Message>("messages");
 
     private Dictionary<ChatType, NameFormatting> Formats { get; } = new();
+    private ulong LastContentId { get; set; }
+
+    private ulong CurrentContentId {
+        get {
+            var contentId = this.Plugin.ClientState.LocalContentId;
+            return contentId == 0 ? this.LastContentId : contentId;
+        }
+    }
 
     internal Store(Plugin plugin) {
         this.Plugin = plugin;
+        this.CheckpointTimer.Start();
+
+        var dir = this.Plugin.Interface.ConfigDirectory;
+        dir.Create();
+
+        BsonMapper.Global = new BsonMapper {
+            IncludeNonPublic = true,
+            TrimWhitespace = false,
+            // EnumAsInteger = true,
+        };
+        BsonMapper.Global.Entity<Message>()
+            .Id(msg => msg.Id)
+            .Ctor(doc => new Message(
+                doc["_id"].AsObjectId,
+                (ulong) doc["Receiver"].AsInt64,
+                (ulong) doc["ContentId"].AsInt64,
+                DateTime.UnixEpoch.AddMilliseconds(doc["Date"].AsInt64),
+                doc["Code"].AsDocument,
+                doc["Sender"].AsArray,
+                doc["Content"].AsArray,
+                doc["SenderSource"].AsDocument,
+                doc["ContentSource"].AsDocument,
+                doc["SortCode"].AsDocument
+            ));
+        BsonMapper.Global.RegisterType<Payload?>(
+            payload => {
+                switch (payload) {
+                    case AchievementPayload achievement:
+                        return new BsonDocument(new Dictionary<string, BsonValue> {
+                            ["Type"] = new("Achievement"),
+                            ["Id"] = new(achievement.Id),
+                        });
+                    case PartyFinderPayload partyFinder:
+                        return new BsonDocument(new Dictionary<string, BsonValue> {
+                            ["Type"] = new("PartyFinder"),
+                            ["Id"] = new(partyFinder.Id),
+                        });
+                }
+
+                return payload?.Encode();
+            },
+            bson => {
+                if (bson.IsNull) {
+                    return null;
+                }
+
+                if (bson.IsDocument) {
+                    return bson["Type"].AsString switch {
+                        "Achievement" => new AchievementPayload((uint) bson["Id"].AsInt64),
+                        "PartyFinder" => new PartyFinderPayload((uint) bson["Id"].AsInt64),
+                        _ => null,
+                    };
+                }
+
+                return Payload.Decode(new BinaryReader(new MemoryStream(bson.AsBinary)));
+            });
+        BsonMapper.Global.RegisterType(
+            type => (int) type,
+            bson => (ChatType) bson.AsInt32
+        );
+        BsonMapper.Global.RegisterType(
+            source => (int) source,
+            bson => (ChatSource) bson.AsInt32
+        );
+        BsonMapper.Global.RegisterType(
+            dateTime => dateTime.Subtract(DateTime.UnixEpoch).TotalMilliseconds,
+            bson => DateTime.UnixEpoch.AddMilliseconds(bson.AsInt64)
+        );
+        this.Database = new LiteDatabase(Path.Join(dir.FullName, "chat.db"), BsonMapper.Global) {
+            CheckpointSize = 1_000,
+            Timeout = TimeSpan.FromSeconds(1),
+        };
+        this.Messages.EnsureIndex(msg => msg.Date);
+        this.Messages.EnsureIndex(msg => msg.SortCode);
 
         this.Plugin.ChatGui.ChatMessageUnhandled += this.ChatMessage;
         this.Plugin.Framework.Update += this.GetMessageInfo;
+        this.Plugin.Framework.Update += this.UpdateReceiver;
+        this.Plugin.ClientState.Logout += this.Logout;
     }
 
     public void Dispose() {
+        this.Plugin.ClientState.Logout -= this.Logout;
+        this.Plugin.Framework.Update -= this.UpdateReceiver;
         this.Plugin.Framework.Update -= this.GetMessageInfo;
         this.Plugin.ChatGui.ChatMessageUnhandled -= this.ChatMessage;
 
-        this.MessagesMutex.Dispose();
+        this.Database.Dispose();
+    }
+
+    private void Logout(object? sender, EventArgs eventArgs) {
+        this.LastContentId = 0;
+    }
+
+    private void UpdateReceiver(Framework framework) {
+        var contentId = this.Plugin.ClientState.LocalContentId;
+        if (contentId != 0) {
+            this.LastContentId = contentId;
+        }
     }
 
     private void GetMessageInfo(Framework framework) {
+        if (this.CheckpointTimer.Elapsed > TimeSpan.FromMinutes(5)) {
+            this.CheckpointTimer.Restart();
+            new Thread(() => this.Database.Checkpoint()).Start();
+        }
+
         if (!this.Pending.TryDequeue(out var entry)) {
             return;
         }
 
         var contentId = this.Plugin.Functions.Chat.GetContentIdForEntry(entry.Item1);
         entry.Item2.ContentId = contentId ?? 0;
-    }
-
-    internal MessagesLock GetMessages() {
-        return new MessagesLock(this.Messages, this.MessagesMutex);
+        if (this.Plugin.Config.DatabaseBattleMessages || !entry.Item2.Code.IsBattle()) {
+            this.Messages.Update(entry.Item2);
+        }
     }
 
     internal void AddMessage(Message message, Tab? currentTab) {
-        using var messages = this.GetMessages();
-        messages.Messages.Add(message);
-
-        while (messages.Messages.Count > MessagesLimit) {
-            messages.Messages.RemoveAt(0);
+        if (this.Plugin.Config.DatabaseBattleMessages || !message.Code.IsBattle()) {
+            this.Messages.Insert(message);
         }
 
         var currentMatches = currentTab?.Matches(message) ?? false;
@@ -88,11 +173,35 @@ internal class Store : IDisposable {
     }
 
     internal void FilterTab(Tab tab, bool unread) {
-        using var messages = this.GetMessages();
-        foreach (var message in messages.Messages) {
-            if (tab.Matches(message)) {
-                tab.AddMessage(message, unread);
+        var sortCodes = new List<SortCode>();
+        foreach (var (type, sources) in tab.ChatCodes) {
+            sortCodes.Add(new SortCode(type, 0));
+            sortCodes.Add(new SortCode(type, (ChatSource) 1));
+
+            if (type.HasSource()) {
+                foreach (var source in Enum.GetValues<ChatSource>()) {
+                    if (sources.HasFlag(source)) {
+                        sortCodes.Add(new SortCode(type, source));
+                    }
+                }
             }
+        }
+
+        var query = this.Messages
+            .Query()
+            .OrderByDescending(msg => msg.Date)
+            .Where(msg => sortCodes.Contains(msg.SortCode))
+            .Where(msg => msg.Receiver == this.CurrentContentId);
+        if (!this.Plugin.Config.FilterIncludePreviousSessions) {
+            query = query.Where(msg => msg.Date >= this.Plugin.GameStarted);
+        }
+
+        var messages = query
+            .Limit(MessagesLimit)
+            .ToEnumerable()
+            .Reverse();
+        foreach (var message in messages) {
+            tab.AddMessage(message, unread);
         }
     }
 
@@ -106,18 +215,18 @@ internal class Store : IDisposable {
 
         var senderChunks = new List<Chunk>();
         if (formatting is { IsPresent: true }) {
-            senderChunks.Add(new TextChunk(null, null, formatting.Before) {
+            senderChunks.Add(new TextChunk(ChunkSource.None, null, formatting.Before) {
                 FallbackColour = chatCode.Type,
             });
-            senderChunks.AddRange(ChunkUtil.ToChunks(sender, chatCode.Type));
-            senderChunks.Add(new TextChunk(null, null, formatting.After) {
+            senderChunks.AddRange(ChunkUtil.ToChunks(sender, ChunkSource.Sender, chatCode.Type));
+            senderChunks.Add(new TextChunk(ChunkSource.None, null, formatting.After) {
                 FallbackColour = chatCode.Type,
             });
         }
 
-        var messageChunks = ChunkUtil.ToChunks(message, chatCode.Type).ToList();
+        var messageChunks = ChunkUtil.ToChunks(message, ChunkSource.Content, chatCode.Type).ToList();
 
-        var msg = new Message(chatCode, senderChunks, messageChunks);
+        var msg = new Message(this.CurrentContentId, chatCode, senderChunks, messageChunks, sender, message);
         this.AddMessage(msg, this.Plugin.Ui.CurrentTab);
 
         var idx = this.Plugin.Functions.GetCurrentChatLogEntryIndex();

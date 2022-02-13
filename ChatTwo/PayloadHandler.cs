@@ -195,11 +195,11 @@ internal sealed class PayloadHandler {
             InlineIcon(icon);
         }
 
-        var name = ChunkUtil.ToChunks(status.Status.Name.ToDalamudString(), null);
+        var name = ChunkUtil.ToChunks(status.Status.Name.ToDalamudString(), ChunkSource.None, null);
         this.Log.DrawChunks(name.ToList());
         ImGui.Separator();
 
-        var desc = ChunkUtil.ToChunks(status.Status.Description.ToDalamudString(), null);
+        var desc = ChunkUtil.ToChunks(status.Status.Description.ToDalamudString(), ChunkSource.None, null);
         this.Log.DrawChunks(desc.ToList());
     }
 
@@ -217,11 +217,11 @@ internal sealed class PayloadHandler {
             InlineIcon(icon);
         }
 
-        var name = ChunkUtil.ToChunks(item.Item.Name.ToDalamudString(), null);
+        var name = ChunkUtil.ToChunks(item.Item.Name.ToDalamudString(), ChunkSource.None, null);
         this.Log.DrawChunks(name.ToList());
         ImGui.Separator();
 
-        var desc = ChunkUtil.ToChunks(item.Item.Description.ToDalamudString(), null);
+        var desc = ChunkUtil.ToChunks(item.Item.Description.ToDalamudString(), ChunkSource.None, null);
         this.Log.DrawChunks(desc.ToList());
     }
 
@@ -235,13 +235,13 @@ internal sealed class PayloadHandler {
             InlineIcon(icon);
         }
 
-        var name = ChunkUtil.ToChunks(item.Name.ToDalamudString(), null);
+        var name = ChunkUtil.ToChunks(item.Name.ToDalamudString(), ChunkSource.None, null);
         this.Log.DrawChunks(name.ToList());
         ImGui.Separator();
 
         var help = this.Ui.Plugin.DataManager.GetExcelSheet<EventItemHelp>()?.GetRow(payload.RawItemId);
         if (help != null) {
-            var desc = ChunkUtil.ToChunks(help.Description.ToDalamudString(), null);
+            var desc = ChunkUtil.ToChunks(help.Description.ToDalamudString(), ChunkSource.None, null);
             this.Log.DrawChunks(desc.ToList());
         }
     }
@@ -279,7 +279,7 @@ internal sealed class PayloadHandler {
     }
 
     private void ClickLinkPayload(Chunk chunk, Payload payload, DalamudLinkPayload link) {
-        if (chunk.Source is not { } source) {
+        if (chunk.GetSeString() is not { } source) {
             return;
         }
 
@@ -334,7 +334,7 @@ internal sealed class PayloadHandler {
             name.Payloads.Add(new TextPayload(" "));
         }
 
-        this.Log.DrawChunks(ChunkUtil.ToChunks(name, null).ToList(), false);
+        this.Log.DrawChunks(ChunkUtil.ToChunks(name, ChunkSource.None, null).ToList(), false);
         ImGui.Separator();
 
         var realItemId = payload.RawItemId;
@@ -383,7 +383,7 @@ internal sealed class PayloadHandler {
         }
 
         var name = item.Name.ToDalamudString();
-        this.Log.DrawChunks(ChunkUtil.ToChunks(name, null).ToList(), false);
+        this.Log.DrawChunks(ChunkUtil.ToChunks(name, ChunkSource.None, null).ToList(), false);
         ImGui.Separator();
 
         var realItemId = payload.RawItemId;
@@ -398,11 +398,11 @@ internal sealed class PayloadHandler {
     }
 
     private void DrawPlayerPopup(Chunk chunk, PlayerPayload player) {
-        var name = new List<Chunk> { new TextChunk(null, null, player.PlayerName) };
+        var name = new List<Chunk> { new TextChunk(ChunkSource.None, null, player.PlayerName) };
         if (player.World.IsPublic) {
             name.AddRange(new Chunk[] {
-                new IconChunk(null, null, BitmapFontIcon.CrossWorld),
-                new TextChunk(null, null, player.World.Name),
+                new IconChunk(ChunkSource.None, null, BitmapFontIcon.CrossWorld),
+                new TextChunk(ChunkSource.None, null, player.World.Name),
             });
         }
 

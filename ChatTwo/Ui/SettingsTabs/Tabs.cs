@@ -17,7 +17,7 @@ internal sealed class Tabs : ISettingsTab {
         this.Mutable = mutable;
     }
 
-    public void Draw() {
+    public void Draw(bool changed) {
         const string addTabPopup = "add-tab-popup";
 
         if (ImGuiUtil.IconButton(FontAwesomeIcon.Plus, tooltip: Language.Options_Tabs_Add)) {

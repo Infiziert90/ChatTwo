@@ -21,8 +21,8 @@ public class Fonts : ISettingsTab {
         this.JpFonts = Ui.Fonts.GetJpFonts();
     }
 
-    public void Draw() {
-        if (ImGui.IsWindowAppearing()) {
+    public void Draw(bool changed) {
+        if (changed) {
             this.UpdateFonts();
         }
 

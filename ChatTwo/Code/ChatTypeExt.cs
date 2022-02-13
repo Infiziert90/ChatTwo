@@ -345,10 +345,16 @@ internal static class ChatTypeExt {
         ChatType.LoseDebuff => true,
 
         // Announcements
+        ChatType.System => true,
+        ChatType.BattleSystem => true,
+        ChatType.Error => true,
+        ChatType.LootNotice => true,
         ChatType.Progress => true,
         ChatType.LootRoll => true,
         ChatType.Crafting => true,
         ChatType.Gathering => true,
+        ChatType.FreeCompanyLoginLogout => true,
+        ChatType.PvpTeamLoginLogout => true,
         _ => false,
     };
 }

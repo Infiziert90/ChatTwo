@@ -2,5 +2,5 @@
 
 internal interface ISettingsTab {
     string Name { get; }
-    void Draw();
+    void Draw(bool changed);
 }

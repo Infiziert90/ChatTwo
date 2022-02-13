@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics;
+using System.Globalization;
 using ChatTwo.Resources;
 using Dalamud.Data;
 using Dalamud.Game;
@@ -66,8 +67,12 @@ public sealed class Plugin : IDalamudPlugin {
 
     internal int DeferredSaveFrames = -1;
 
+    internal DateTime GameStarted { get; }
+
     #pragma warning disable CS8618
     public Plugin() {
+        this.GameStarted = Process.GetCurrentProcess().StartTime.ToUniversalTime();
+
         this.Config = this.Interface!.GetPluginConfig() as Configuration ?? new Configuration();
         this.Config.Migrate();
 
@@ -78,6 +83,10 @@ public sealed class Plugin : IDalamudPlugin {
         this.Functions = new GameFunctions.GameFunctions(this);
         this.Store = new Store(this);
         this.Ui = new PluginUi(this);
+
+        if (this.Interface.Reason is not PluginLoadReason.Boot) {
+            this.Store.FilterAllTabs(false);
+        }
 
         this.Framework!.Update += this.FrameworkUpdate;
         this.Interface.LanguageChanged += this.LanguageChanged;

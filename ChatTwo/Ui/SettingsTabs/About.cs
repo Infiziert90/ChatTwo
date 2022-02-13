@@ -29,7 +29,7 @@ internal sealed class About : ISettingsTab {
         this._translators.Sort((a, b) => string.Compare(a.ToLowerInvariant(), b.ToLowerInvariant(), StringComparison.Ordinal));
     }
 
-    public void Draw() {
+    public void Draw(bool changed) {
         ImGui.PushTextWrapPos();
 
         ImGui.TextUnformatted(string.Format(Language.Options_About_Opening, Plugin.PluginName));

@@ -13,7 +13,7 @@ internal sealed class Miscellaneous : ISettingsTab {
         this.Mutable = mutable;
     }
 
-    public void Draw() {
+    public void Draw(bool changed) {
         if (ImGuiUtil.BeginComboVertical(Language.Options_Language_Name, this.Mutable.LanguageOverride.Name())) {
             foreach (var language in Enum.GetValues<LanguageOverride>()) {
                 if (ImGui.Selectable(language.Name())) {

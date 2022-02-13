@@ -32,7 +32,7 @@ internal sealed class ChatColours : ISettingsTab {
         #endif
     }
 
-    public void Draw() {
+    public void Draw(bool changed) {
         foreach (var (_, types) in ChatTypeExt.SortOrder) {
             foreach (var type in types) {
                 if (ImGuiUtil.IconButton(FontAwesomeIcon.UndoAlt, $"{type}", Language.Options_ChatColours_Reset)) {

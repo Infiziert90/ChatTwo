@@ -403,11 +403,56 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Database.
+        /// </summary>
+        internal static string Options_Database_Tab {
+            get {
+                return ResourceManager.GetString("Options_Database_Tab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If battle messages are saved to the database, the size of the database will grow much faster, and there will be a noticeable freeze when saving settings. It is recommended to leave this disabled..
+        /// </summary>
+        internal static string Options_DatabaseBattleMessages_Description {
+            get {
+                return ResourceManager.GetString("Options_DatabaseBattleMessages_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save battle messages in database.
+        /// </summary>
+        internal static string Options_DatabaseBattleMessages_Name {
+            get {
+                return ResourceManager.GetString("Options_DatabaseBattleMessages_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Display.
         /// </summary>
         internal static string Options_Display_Tab {
             get {
                 return ResourceManager.GetString("Options_Display_Tab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Include messages from before the game was launched when populating tabs. Tabs are populated when the settings are saved..
+        /// </summary>
+        internal static string Options_FilterIncludePreviousSessions_Description {
+            get {
+                return ResourceManager.GetString("Options_FilterIncludePreviousSessions_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Include previous sessions when populating tabs.
+        /// </summary>
+        internal static string Options_FilterIncludePreviousSessions_Name {
+            get {
+                return ResourceManager.GetString("Options_FilterIncludePreviousSessions_Name", resourceCulture);
             }
         }
         
@@ -588,6 +633,24 @@ namespace ChatTwo.Resources {
         internal static string Options_Language_Name {
             get {
                 return ResourceManager.GetString("Options_Language_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to After logging in, populate the chat with the messages from when you last logged off..
+        /// </summary>
+        internal static string Options_LoadPreviousSession_Description {
+            get {
+                return ResourceManager.GetString("Options_LoadPreviousSession_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Display previous chat session on login.
+        /// </summary>
+        internal static string Options_LoadPreviousSession_Name {
+            get {
+                return ResourceManager.GetString("Options_LoadPreviousSession_Name", resourceCulture);
             }
         }
         

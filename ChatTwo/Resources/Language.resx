@@ -437,4 +437,25 @@
     <data name="Options_Language_Description" xml:space="preserve">
         <value>The language to display {0} in.</value>
     </data>
+    <data name="Options_DatabaseBattleMessages_Name" xml:space="preserve">
+        <value>Save battle messages in database</value>
+    </data>
+    <data name="Options_DatabaseBattleMessages_Description" xml:space="preserve">
+        <value>If battle messages are saved to the database, the size of the database will grow much faster, and there will be a noticeable freeze when saving settings. It is recommended to leave this disabled.</value>
+    </data>
+    <data name="Options_LoadPreviousSession_Name" xml:space="preserve">
+        <value>Display previous chat session on login</value>
+    </data>
+    <data name="Options_LoadPreviousSession_Description" xml:space="preserve">
+        <value>After logging in, populate the chat with the messages from when you last logged off.</value>
+    </data>
+    <data name="Options_Database_Tab" xml:space="preserve">
+        <value>Database</value>
+    </data>
+    <data name="Options_FilterIncludePreviousSessions_Name" xml:space="preserve">
+        <value>Include previous sessions when populating tabs</value>
+    </data>
+    <data name="Options_FilterIncludePreviousSessions_Description" xml:space="preserve">
+        <value>Include messages from before the game was launched when populating tabs. Tabs are populated when the settings are saved.</value>
+    </data>
 </root>

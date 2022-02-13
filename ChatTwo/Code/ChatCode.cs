@@ -1,17 +1,30 @@
-﻿namespace ChatTwo.Code;
+﻿using LiteDB;
+
+namespace ChatTwo.Code;
 
 internal class ChatCode {
     private const ushort Clear7 = ~(~0 << 7);
 
     internal ushort Raw { get; }
 
-    internal ChatType Type => (ChatType) (this.Raw & Clear7);
-    internal ChatSource Source => this.SourceFrom(11);
-    internal ChatSource Target => this.SourceFrom(7);
+    internal ChatType Type { get; }
+    internal ChatSource Source { get; }
+    internal ChatSource Target { get; }
     private ChatSource SourceFrom(ushort shift) => (ChatSource) (1 << ((this.Raw >> shift) & 0xF));
 
     internal ChatCode(ushort raw) {
         this.Raw = raw;
+        this.Type = (ChatType) (this.Raw & Clear7);
+        this.Source = this.SourceFrom(11);
+        this.Target = this.SourceFrom(7);
+    }
+
+    [BsonCtor]
+    public ChatCode(ushort raw, ChatType type, ChatSource source, ChatSource target) {
+        this.Raw = raw;
+        this.Type = type;
+        this.Source = source;
+        this.Target = target;
     }
 
     internal ChatType Parent() => this.Type switch {

@@ -26,6 +26,7 @@ internal sealed class Settings : IUiComponent {
             new Ui.SettingsTabs.Fonts(this.Mutable),
             new ChatColours(this.Mutable, this.Ui.Plugin),
             new Tabs(this.Mutable),
+            new Database(this.Mutable, this.Ui.Plugin.Store),
             new Miscellaneous(this.Mutable),
             new About(),
         };
@@ -70,9 +71,11 @@ internal sealed class Settings : IUiComponent {
 
             ImGui.TableNextColumn();
 
+            var changed = false;
             for (var i = 0; i < this.Tabs.Count; i++) {
                 if (ImGui.Selectable($"{this.Tabs[i].Name}###tab-{i}", this._currentTab == i)) {
                     this._currentTab = i;
+                    changed = true;
                 }
             }
 
@@ -84,7 +87,7 @@ internal sealed class Settings : IUiComponent {
                          - ImGui.GetStyle().ItemInnerSpacing.Y * 2
                          - ImGui.CalcTextSize("A").Y;
             if (ImGui.BeginChild("##chat2-settings", new Vector2(-1, height))) {
-                this.Tabs[this._currentTab].Draw();
+                this.Tabs[this._currentTab].Draw(changed);
                 ImGui.EndChild();
             }
 

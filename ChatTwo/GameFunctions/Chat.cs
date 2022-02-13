@@ -503,7 +503,7 @@ internal sealed unsafe class Chat : IDisposable {
             return ret;
         }
 
-        var nameChunks = ChunkUtil.ToChunks(name, null).ToList();
+        var nameChunks = ChunkUtil.ToChunks(name, ChunkSource.None, null).ToList();
         if (nameChunks.Count > 0 && nameChunks[0] is TextChunk text) {
             text.Content = text.Content.TrimStart('\uE01E').TrimStart();
         }

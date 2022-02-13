@@ -27,6 +27,9 @@ internal class Configuration : IPluginConfiguration {
     public bool CanMove = true;
     public bool CanResize = true;
     public bool ShowTitleBar;
+    public bool DatabaseBattleMessages;
+    public bool LoadPreviousSession;
+    public bool FilterIncludePreviousSessions;
 
     public float FontSize = 17f;
     public float JapaneseFontSize = 17f;
@@ -54,6 +57,9 @@ internal class Configuration : IPluginConfiguration {
         this.CanMove = other.CanMove;
         this.CanResize = other.CanResize;
         this.ShowTitleBar = other.ShowTitleBar;
+        this.DatabaseBattleMessages = other.DatabaseBattleMessages;
+        this.LoadPreviousSession = other.LoadPreviousSession;
+        this.FilterIncludePreviousSessions = other.FilterIncludePreviousSessions;
         this.FontSize = other.FontSize;
         this.JapaneseFontSize = other.JapaneseFontSize;
         this.SymbolsFontSize = other.SymbolsFontSize;

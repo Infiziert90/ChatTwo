@@ -50,7 +50,7 @@ internal class CommandHelp {
             return;
         }
 
-        this.Log.DrawChunks(ChunkUtil.ToChunks(this.Command.Description.ToDalamudString(), null).ToList());
+        this.Log.DrawChunks(ChunkUtil.ToChunks(this.Command.Description.ToDalamudString(), ChunkSource.None, null).ToList());
 
         ImGui.End();
     }

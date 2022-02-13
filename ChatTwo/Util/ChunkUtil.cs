@@ -5,7 +5,7 @@ using Dalamud.Game.Text.SeStringHandling.Payloads;
 namespace ChatTwo.Util;
 
 internal static class ChunkUtil {
-    internal static IEnumerable<Chunk> ToChunks(SeString msg, ChatType? defaultColour) {
+    internal static IEnumerable<Chunk> ToChunks(SeString msg, ChunkSource source, ChatType? defaultColour) {
         var chunks = new List<Chunk>();
 
         var italic = false;
@@ -14,7 +14,7 @@ internal static class ChunkUtil {
         Payload? link = null;
 
         void Append(string text) {
-            chunks.Add(new TextChunk(msg, link, text) {
+            chunks.Add(new TextChunk(source, link, text) {
                 FallbackColour = defaultColour,
                 Foreground = foreground.Count > 0 ? foreground.Peek() : null,
                 Glow = glow.Count > 0 ? glow.Peek() : null,
@@ -47,13 +47,13 @@ internal static class ChunkUtil {
 
                     break;
                 case PayloadType.AutoTranslateText:
-                    chunks.Add(new IconChunk(msg, link, BitmapFontIcon.AutoTranslateBegin));
+                    chunks.Add(new IconChunk(source, link, BitmapFontIcon.AutoTranslateBegin));
                     var autoText = ((AutoTranslatePayload) payload).Text;
                     Append(autoText.Substring(2, autoText.Length - 4));
-                    chunks.Add(new IconChunk(msg, link, BitmapFontIcon.AutoTranslateEnd));
+                    chunks.Add(new IconChunk(source, link, BitmapFontIcon.AutoTranslateEnd));
                     break;
                 case PayloadType.Icon:
-                    chunks.Add(new IconChunk(msg, link, ((IconPayload) payload).Icon));
+                    chunks.Add(new IconChunk(source, link, ((IconPayload) payload).Icon));
                     break;
                 case PayloadType.MapLink:
                 case PayloadType.Quest:
