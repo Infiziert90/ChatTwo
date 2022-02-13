@@ -74,9 +74,34 @@ internal sealed class PayloadHandler {
         }
 
         this.ContextFooter(drawn, chunk);
+        this.Integrations(chunk, payload);
 
         ImGui.PopID();
         ImGui.EndPopup();
+    }
+
+    private void Integrations(Chunk chunk, Payload? payload) {
+        var registered = this.Ui.Plugin.Ipc.Registered;
+        if (registered.Count == 0) {
+            return;
+        }
+
+        var contentId = chunk.Message?.ContentId ?? 0;
+        var sender = chunk.Message?.Sender
+            .Select(chunk => chunk.Link)
+            .FirstOrDefault(chunk => chunk is PlayerPayload) as PlayerPayload;
+
+        if (ImGui.BeginMenu("Integrations")) {
+            foreach (var id in registered) {
+                try {
+                    this.Ui.Plugin.Ipc.Invoke(id, sender, contentId, payload);
+                } catch (Exception ex) {
+                    PluginLog.Error(ex, "Error executing integration");
+                }
+            }
+
+            ImGui.EndMenu();
+        }
     }
 
     private void ContextFooter(bool separator, Chunk chunk) {
