@@ -458,4 +458,7 @@
     <data name="Options_FilterIncludePreviousSessions_Description" xml:space="preserve">
         <value>Include messages from before the game was launched when populating tabs. Tabs are populated when the settings are saved.</value>
     </data>
+    <data name="Options_Database_Advanced_Warning" xml:space="preserve">
+        <value>Do not click these buttons unless you know what you're doing.</value>
+    </data>
 </root>

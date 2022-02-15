@@ -43,7 +43,7 @@ internal sealed class Database : ISettingsTab {
 
         if (this._showAdvanced && ImGui.TreeNodeEx("Advanced")) {
             ImGui.PushTextWrapPos();
-            ImGuiUtil.WarningText("Do not click these buttons unless you know what you're doing.");
+            ImGuiUtil.WarningText(Language.Options_Database_Advanced_Warning);
 
             if (ImGui.Button("Checkpoint")) {
                 this.Store.Database.Checkpoint();
