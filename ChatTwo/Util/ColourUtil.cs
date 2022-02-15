@@ -29,6 +29,15 @@ internal static class ColourUtil {
         );
     }
 
+    internal static uint Vector4ToAbgr(Vector4 col) {
+        return RgbaToAbgr(ComponentsToRgba(
+            (byte) Math.Round(col.X * 255),
+            (byte) Math.Round(col.Y * 255),
+            (byte) Math.Round(col.Z * 255),
+            (byte) Math.Round(col.W * 255)
+        ));
+    }
+
     internal static uint ComponentsToRgba(byte red, byte green, byte blue, byte alpha = 0xFF) => alpha
                                                                                                  | (uint) (red << 24)
                                                                                                  | (uint) (green << 16)

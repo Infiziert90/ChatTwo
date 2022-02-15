@@ -164,7 +164,7 @@ internal sealed class ChatLog : IUiComponent {
         if (parts.Length < 2 || parts[0] != "chat") {
             return;
         }
-        
+
         switch (parts[1]) {
             case "hide":
                 this._hideState = HideState.User;
@@ -988,7 +988,7 @@ internal sealed class ChatLog : IUiComponent {
         }
 
         if (wrap) {
-            ImGuiUtil.WrapText(content, chunk, handler);
+            ImGuiUtil.WrapText(content, chunk, handler, this.Ui.DefaultText);
         } else {
             ImGui.TextUnformatted(content);
             ImGuiUtil.PostPayload(chunk, handler);

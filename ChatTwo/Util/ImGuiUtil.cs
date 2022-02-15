@@ -1,4 +1,6 @@
+using System.Numerics;
 using System.Text;
+using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Interface;
 using Dalamud.Interface.Style;
 using ImGuiNET;
@@ -12,11 +14,18 @@ internal static class ImGuiUtil {
         ImGuiMouseButton.Right,
     };
 
+    private static Payload? _hovered;
+    private static Payload? _lastLink;
+    private static readonly List<(Vector2, Vector2)> _payloadBounds = new();
+
     internal static void PostPayload(Chunk chunk, PayloadHandler? handler) {
         var payload = chunk.Link;
         if (payload != null && ImGui.IsItemHovered()) {
+            _hovered = payload;
             ImGui.SetMouseCursor(ImGuiMouseCursor.Hand);
             handler?.Hover(payload);
+        } else if (!ReferenceEquals(_hovered, payload)) {
+            _hovered = null;
         }
 
         if (handler == null) {
@@ -30,10 +39,34 @@ internal static class ImGuiUtil {
         }
     }
 
-    internal static unsafe void WrapText(string csText, Chunk chunk, PayloadHandler? handler) {
+    internal static unsafe void WrapText(string csText, Chunk chunk, PayloadHandler? handler, Vector4 defaultText) {
         void Text(byte* text, byte* textEnd) {
+            var oldPos = ImGui.GetCursorScreenPos();
+
             ImGuiNative.igTextUnformatted(text, textEnd);
             PostPayload(chunk, handler);
+
+            if (!ReferenceEquals(_lastLink, chunk.Link)) {
+                _payloadBounds.Clear();
+            }
+
+            _lastLink = chunk.Link;
+
+            if (_hovered != null && ReferenceEquals(_hovered, chunk.Link)) {
+                defaultText.W = 0.25f;
+                var actualCol = ColourUtil.Vector4ToAbgr(defaultText);
+                ImGui.GetWindowDrawList().AddRectFilled(oldPos, oldPos + ImGui.GetItemRectSize(), actualCol);
+
+                foreach (var (start, size) in _payloadBounds) {
+                    ImGui.GetWindowDrawList().AddRectFilled(start, start + size, actualCol);
+                }
+
+                _payloadBounds.Clear();
+            }
+
+            if (_hovered == null && chunk.Link != null) {
+                _payloadBounds.Add((oldPos, ImGui.GetItemRectSize()));
+            }
         }
 
         if (csText.Length == 0) {
