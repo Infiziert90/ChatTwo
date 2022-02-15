@@ -173,17 +173,12 @@ internal sealed class ChatLog : IUiComponent {
                 this._hideState = HideState.None;
                 break;
             case "toggle":
-                if (this._hideState is HideState.User or HideState.CutsceneOverride) {
-                    this._hideState = HideState.None;
-                }
-
-                if (this._hideState is HideState.Cutscene) {
-                    this._hideState = HideState.CutsceneOverride;
-                }
-
-                if (this._hideState is HideState.None) {
-                    this._hideState = HideState.User;
-                }
+                this._hideState = this._hideState switch {
+                    HideState.User or HideState.CutsceneOverride => HideState.None,
+                    HideState.Cutscene => HideState.CutsceneOverride,
+                    HideState.None => HideState.User,
+                    _ => this._hideState,
+                };
 
                 break;
         }
