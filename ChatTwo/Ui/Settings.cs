@@ -3,7 +3,6 @@ using System.Numerics;
 using ChatTwo.Resources;
 using ChatTwo.Ui.SettingsTabs;
 using ChatTwo.Util;
-using Dalamud.Game.Command;
 using Dalamud.Interface;
 using ImGuiNET;
 
@@ -31,17 +30,17 @@ internal sealed class Settings : IUiComponent {
             new About(),
         };
 
-        this.Ui.Plugin.CommandManager.AddHandler("/chat2", new CommandInfo(this.Command) {
-            HelpMessage = "Toggle the Chat 2 settings",
-        });
+        this.Ui.Plugin.Commands.Register("/chat2", "Perform various actions with Chat 2.").Execute += this.Command;
     }
 
     public void Dispose() {
-        this.Ui.Plugin.CommandManager.RemoveHandler("/chat2");
+        this.Ui.Plugin.Commands.Register("/chat2").Execute -= this.Command;
     }
 
     private void Command(string command, string args) {
-        this.Ui.SettingsVisible ^= true;
+        if (string.IsNullOrWhiteSpace(args)) {
+            this.Ui.SettingsVisible ^= true;
+        }
     }
 
     private void Initialise() {

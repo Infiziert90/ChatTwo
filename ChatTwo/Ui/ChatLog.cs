@@ -6,7 +6,6 @@ using ChatTwo.Resources;
 using ChatTwo.Util;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Keys;
-using Dalamud.Game.Command;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface;
@@ -46,9 +45,8 @@ internal sealed class ChatLog : IUiComponent {
 
         this.SetUpTextCommandChannels();
 
-        this.Ui.Plugin.CommandManager.AddHandler("/clearlog2", new CommandInfo(this.ClearLog) {
-            HelpMessage = "Clears the Chat 2 chat log",
-        });
+        this.Ui.Plugin.Commands.Register("/clearlog2", "Clear the Chat 2 chat log").Execute += this.ClearLog;
+        this.Ui.Plugin.Commands.Register("/chat2").Execute += this.ToggleChat;
 
         this._fontIcon = this.Ui.Plugin.DataManager.GetImGuiTexture("common/font/fonticon_ps5.tex");
 
@@ -62,7 +60,8 @@ internal sealed class ChatLog : IUiComponent {
         this.Ui.Plugin.ClientState.Login -= this.Login;
         this.Ui.Plugin.Functions.Chat.Activated -= this.Activated;
         this._fontIcon?.Dispose();
-        this.Ui.Plugin.CommandManager.RemoveHandler("/clearlog2");
+        this.Ui.Plugin.Commands.Register("/chat2").Execute -= this.ToggleChat;
+        this.Ui.Plugin.Commands.Register("/clearlog2").Execute -= this.ClearLog;
     }
 
     private void Logout(object? sender, EventArgs e) {
@@ -154,6 +153,36 @@ internal sealed class ChatLog : IUiComponent {
             default:
                 if (this.LastTab > -1 && this.LastTab < this.Ui.Plugin.Config.Tabs.Count) {
                     this.Ui.Plugin.Config.Tabs[this.LastTab].Clear();
+                }
+
+                break;
+        }
+    }
+
+    private void ToggleChat(string command, string arguments) {
+        var parts = arguments.Split(' ');
+        if (parts.Length < 2 || parts[0] != "chat") {
+            return;
+        }
+        
+        switch (parts[1]) {
+            case "hide":
+                this._hideState = HideState.User;
+                break;
+            case "show":
+                this._hideState = HideState.None;
+                break;
+            case "toggle":
+                if (this._hideState is HideState.User or HideState.CutsceneOverride) {
+                    this._hideState = HideState.None;
+                }
+
+                if (this._hideState is HideState.Cutscene) {
+                    this._hideState = HideState.CutsceneOverride;
+                }
+
+                if (this._hideState is HideState.None) {
+                    this._hideState = HideState.User;
                 }
 
                 break;

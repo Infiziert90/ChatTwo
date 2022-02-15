@@ -59,6 +59,7 @@ public sealed class Plugin : IDalamudPlugin {
     internal TargetManager TargetManager { get; init; }
 
     internal Configuration Config { get; }
+    internal Commands Commands { get; }
     internal XivCommonBase Common { get; }
     internal TextureCache TextureCache { get; }
     internal GameFunctions.GameFunctions Functions { get; }
@@ -78,11 +79,15 @@ public sealed class Plugin : IDalamudPlugin {
 
         this.LanguageChanged(this.Interface.UiLanguage);
 
+        this.Commands = new Commands(this);
         this.Common = new XivCommonBase();
         this.TextureCache = new TextureCache(this.DataManager!);
         this.Functions = new GameFunctions.GameFunctions(this);
         this.Store = new Store(this);
         this.Ui = new PluginUi(this);
+
+        // let all the other components register, then initialise commands
+        this.Commands.Initialise();
 
         if (this.Interface.Reason is not PluginLoadReason.Boot) {
             this.Store.FilterAllTabs(false);
@@ -103,6 +108,7 @@ public sealed class Plugin : IDalamudPlugin {
         this.Functions.Dispose();
         this.TextureCache.Dispose();
         this.Common.Dispose();
+        this.Commands.Dispose();
     }
 
     internal void SaveConfig() {
