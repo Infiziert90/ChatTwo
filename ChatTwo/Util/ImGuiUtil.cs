@@ -16,7 +16,7 @@ internal static class ImGuiUtil {
 
     private static Payload? _hovered;
     private static Payload? _lastLink;
-    private static readonly List<(Vector2, Vector2)> _payloadBounds = new();
+    private static readonly List<(Vector2, Vector2)> PayloadBounds = new();
 
     internal static void PostPayload(Chunk chunk, PayloadHandler? handler) {
         var payload = chunk.Link;
@@ -47,7 +47,7 @@ internal static class ImGuiUtil {
             PostPayload(chunk, handler);
 
             if (!ReferenceEquals(_lastLink, chunk.Link)) {
-                _payloadBounds.Clear();
+                PayloadBounds.Clear();
             }
 
             _lastLink = chunk.Link;
@@ -57,15 +57,15 @@ internal static class ImGuiUtil {
                 var actualCol = ColourUtil.Vector4ToAbgr(defaultText);
                 ImGui.GetWindowDrawList().AddRectFilled(oldPos, oldPos + ImGui.GetItemRectSize(), actualCol);
 
-                foreach (var (start, size) in _payloadBounds) {
+                foreach (var (start, size) in PayloadBounds) {
                     ImGui.GetWindowDrawList().AddRectFilled(start, start + size, actualCol);
                 }
 
-                _payloadBounds.Clear();
+                PayloadBounds.Clear();
             }
 
             if (_hovered == null && chunk.Link != null) {
-                _payloadBounds.Add((oldPos, ImGui.GetItemRectSize()));
+                PayloadBounds.Add((oldPos, ImGui.GetItemRectSize()));
             }
         }
 
