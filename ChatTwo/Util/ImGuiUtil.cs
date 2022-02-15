@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using Dalamud.Interface;
 using Dalamud.Interface.Style;
 using ImGuiNET;

@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices;
 using SharpDX.DirectWrite;
 using FontStyle = SharpDX.DirectWrite.FontStyle;
 

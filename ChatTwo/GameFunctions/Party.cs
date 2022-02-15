@@ -1,4 +1,4 @@
-﻿using ChatTwo.Util;
+using ChatTwo.Util;
 using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;

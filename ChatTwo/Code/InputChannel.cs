@@ -1,4 +1,4 @@
-﻿namespace ChatTwo.Code;
+namespace ChatTwo.Code;
 
 internal enum InputChannel : uint {
     Tell = 0,

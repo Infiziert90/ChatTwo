@@ -1,4 +1,4 @@
-﻿using ChatTwo.Resources;
+using ChatTwo.Resources;
 using ChatTwo.Util;
 using ImGuiNET;
 

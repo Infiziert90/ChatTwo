@@ -1,4 +1,4 @@
-﻿namespace ChatTwo.GameFunctions.Types;
+namespace ChatTwo.GameFunctions.Types;
 
 internal sealed class TellHistoryInfo {
     internal string Name { get; }

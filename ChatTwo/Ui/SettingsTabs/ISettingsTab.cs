@@ -1,4 +1,4 @@
-﻿namespace ChatTwo.Ui.SettingsTabs;
+namespace ChatTwo.Ui.SettingsTabs;
 
 internal interface ISettingsTab {
     string Name { get; }

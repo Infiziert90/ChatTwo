@@ -1,4 +1,4 @@
-﻿using Dalamud.Game.Text.SeStringHandling;
+using Dalamud.Game.Text.SeStringHandling;
 
 namespace ChatTwo.Util;
 

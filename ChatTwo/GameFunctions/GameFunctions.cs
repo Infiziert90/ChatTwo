@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices;
 using Dalamud.Hooking;
 using Dalamud.Memory;
 using Dalamud.Utility.Signatures;

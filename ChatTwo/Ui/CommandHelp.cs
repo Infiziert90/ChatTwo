@@ -1,4 +1,4 @@
-﻿using System.Numerics;
+using System.Numerics;
 using ChatTwo.Util;
 using Dalamud.Interface;
 using Dalamud.Utility;

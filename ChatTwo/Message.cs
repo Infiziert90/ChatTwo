@@ -1,4 +1,4 @@
-﻿using ChatTwo.Code;
+using ChatTwo.Code;
 using Dalamud.Game.Text.SeStringHandling;
 using LiteDB;
 

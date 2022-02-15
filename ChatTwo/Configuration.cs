@@ -1,4 +1,4 @@
-﻿using ChatTwo.Code;
+using ChatTwo.Code;
 using ChatTwo.Resources;
 using ChatTwo.Ui;
 using Dalamud.Configuration;

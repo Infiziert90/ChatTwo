@@ -1,4 +1,4 @@
-﻿namespace ChatTwo.GameFunctions.Types;
+namespace ChatTwo.GameFunctions.Types;
 
 [Flags]
 internal enum ModifierFlag {

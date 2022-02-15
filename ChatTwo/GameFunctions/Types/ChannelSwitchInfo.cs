@@ -1,4 +1,4 @@
-﻿using ChatTwo.Code;
+using ChatTwo.Code;
 
 namespace ChatTwo.GameFunctions.Types;
 

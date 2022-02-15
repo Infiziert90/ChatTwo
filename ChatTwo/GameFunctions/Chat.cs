@@ -1,4 +1,4 @@
-﻿using ChatTwo.Code;
+using ChatTwo.Code;
 using ChatTwo.GameFunctions.Types;
 using ChatTwo.Util;
 using Dalamud.Game.ClientState.Keys;

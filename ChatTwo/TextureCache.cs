@@ -1,4 +1,4 @@
-﻿using Dalamud.Data;
+using Dalamud.Data;
 using ImGuiScene;
 using Lumina.Excel.GeneratedSheets;
 

@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Numerics;
 using ChatTwo.Code;
 using ChatTwo.GameFunctions.Types;
