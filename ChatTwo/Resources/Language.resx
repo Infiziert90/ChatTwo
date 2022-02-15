@@ -461,4 +461,7 @@
     <data name="Options_Database_Advanced_Warning" xml:space="preserve">
         <value>Do not click these buttons unless you know what you're doing.</value>
     </data>
+    <data name="Options_Database_Advanced" xml:space="preserve">
+        <value>Advanced</value>
+    </data>
 </root>

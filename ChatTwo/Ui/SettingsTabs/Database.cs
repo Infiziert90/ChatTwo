@@ -41,7 +41,7 @@ internal sealed class Database : ISettingsTab {
 
         ImGui.Spacing();
 
-        if (this._showAdvanced && ImGui.TreeNodeEx("Advanced")) {
+        if (this._showAdvanced && ImGui.TreeNodeEx(Language.Options_Database_Advanced)) {
             ImGui.PushTextWrapPos();
             ImGuiUtil.WarningText(Language.Options_Database_Advanced_Warning);
 

@@ -403,6 +403,15 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Advanced.
+        /// </summary>
+        internal static string Options_Database_Advanced {
+            get {
+                return ResourceManager.GetString("Options_Database_Advanced", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Do not click these buttons unless you know what you&apos;re doing..
         /// </summary>
         internal static string Options_Database_Advanced_Warning {
