@@ -52,8 +52,8 @@ internal class Store : IDisposable {
                 doc["Code"].AsDocument,
                 doc["Sender"].AsArray,
                 doc["Content"].AsArray,
-                doc["SenderSource"].AsDocument,
-                doc["ContentSource"].AsDocument,
+                doc["SenderSource"],
+                doc["ContentSource"],
                 doc["SortCode"].AsDocument
             ));
         BsonMapper.Global.RegisterType<Payload?>(
@@ -88,6 +88,22 @@ internal class Store : IDisposable {
 
                 return Payload.Decode(new BinaryReader(new MemoryStream(bson.AsBinary)));
             });
+        BsonMapper.Global.RegisterType<SeString?>(
+            seString => seString == null
+                ? null
+                : new BsonArray(seString.Payloads.Select(payload => new BsonValue(payload.Encode()))),
+            bson => {
+                if (bson.IsNull) {
+                    return null;
+                }
+
+                var array = bson.IsArray ? bson.AsArray : bson["Payloads"].AsArray;
+                var payloads = array
+                    .Select(payload => Payload.Decode(new BinaryReader(new MemoryStream(payload.AsBinary))))
+                    .ToList();
+                return new SeString(payloads);
+            }
+        );
         BsonMapper.Global.RegisterType(
             type => (int) type,
             bson => (ChatType) bson.AsInt32

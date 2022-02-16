@@ -54,7 +54,7 @@ internal class Message {
         }
     }
 
-    internal Message(ObjectId id, ulong receiver, ulong contentId, DateTime date, BsonDocument code, BsonArray sender, BsonArray content, BsonDocument senderSource, BsonDocument contentSource, BsonDocument sortCode) {
+    internal Message(ObjectId id, ulong receiver, ulong contentId, DateTime date, BsonDocument code, BsonArray sender, BsonArray content, BsonValue senderSource, BsonValue contentSource, BsonDocument sortCode) {
         this.Id = id;
         this.Receiver = receiver;
         this.ContentId = contentId;
@@ -62,8 +62,8 @@ internal class Message {
         this.Code = BsonMapper.Global.ToObject<ChatCode>(code);
         this.Sender = BsonMapper.Global.Deserialize<List<Chunk>>(sender);
         this.Content = BsonMapper.Global.Deserialize<List<Chunk>>(content);
-        this.SenderSource = BsonMapper.Global.ToObject<SeString>(senderSource);
-        this.ContentSource = BsonMapper.Global.ToObject<SeString>(contentSource);
+        this.SenderSource = BsonMapper.Global.Deserialize<SeString>(senderSource);
+        this.ContentSource = BsonMapper.Global.Deserialize<SeString>(contentSource);
         this.SortCode = BsonMapper.Global.ToObject<SortCode>(sortCode);
 
         foreach (var chunk in this.Sender.Concat(this.Content)) {
