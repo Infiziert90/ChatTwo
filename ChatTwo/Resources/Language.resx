@@ -464,4 +464,13 @@
     <data name="Options_Database_Advanced" xml:space="preserve">
         <value>Advanced</value>
     </data>
+    <data name="Options_SharedMode_Name" xml:space="preserve">
+        <value>Enable multi-client mode</value>
+    </data>
+    <data name="Options_SharedMode_Description" xml:space="preserve">
+        <value>Allow multiple clients to run {0} at the same time, sharing the same database.</value>
+    </data>
+    <data name="Options_SharedMode_Warning" xml:space="preserve">
+        <value>This option is not recommended. No support will be offered if you enable this option. This option will hurt the performance of {0}.</value>
+    </data>
 </root>

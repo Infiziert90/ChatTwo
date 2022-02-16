@@ -142,6 +142,7 @@ internal sealed class Settings : IUiComponent {
                                   || Math.Abs(this.Mutable.JapaneseFontSize - this.Ui.Plugin.Config.JapaneseFontSize) > 0.001
                                   || Math.Abs(this.Mutable.SymbolsFontSize - this.Ui.Plugin.Config.SymbolsFontSize) > 0.001;
             var langChanged = this.Mutable.LanguageOverride != this.Ui.Plugin.Config.LanguageOverride;
+            var sharedChanged = this.Mutable.SharedMode != this.Ui.Plugin.Config.SharedMode;
 
             config.UpdateFrom(this.Mutable);
 
@@ -157,6 +158,10 @@ internal sealed class Settings : IUiComponent {
 
             if (langChanged) {
                 this.Ui.Plugin.LanguageChanged(this.Ui.Plugin.Interface.UiLanguage);
+            }
+
+            if (sharedChanged) {
+                this.Ui.Plugin.Store.Reconnect();
             }
 
             if (!this.Mutable.HideChat && hideChatChanged) {

@@ -39,6 +39,13 @@ internal sealed class Database : ISettingsTab {
             }
         }
 
+        ImGuiUtil.OptionCheckbox(
+            ref this.Mutable.SharedMode,
+            Language.Options_SharedMode_Name,
+            string.Format(Language.Options_SharedMode_Description, Plugin.PluginName)
+        );
+        ImGuiUtil.WarningText(string.Format(Language.Options_SharedMode_Warning, Plugin.PluginName));
+
         ImGui.Spacing();
 
         if (this._showAdvanced && ImGui.TreeNodeEx(Language.Options_Database_Advanced)) {

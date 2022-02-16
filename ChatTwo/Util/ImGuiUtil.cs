@@ -202,7 +202,9 @@ internal static class ImGuiUtil {
             ImGui.PushStyleColor(ImGuiCol.Text, dalamudOrange.Value);
         }
 
+        ImGui.PushTextWrapPos();
         ImGui.TextUnformatted(text);
+        ImGui.PopTextWrapPos();
 
         if (dalamudOrange != null) {
             ImGui.PopStyleColor();

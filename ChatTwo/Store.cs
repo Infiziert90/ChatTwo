@@ -17,7 +17,7 @@ internal class Store : IDisposable {
 
     private ConcurrentQueue<(uint, Message)> Pending { get; } = new();
     private Stopwatch CheckpointTimer { get; } = new();
-    internal ILiteDatabase Database { get; }
+    internal ILiteDatabase Database { get; private set; }
     private ILiteCollection<Message> Messages => this.Database.GetCollection<Message>("messages");
 
     private Dictionary<ChatType, NameFormatting> Formats { get; } = new();
@@ -33,9 +33,6 @@ internal class Store : IDisposable {
     internal Store(Plugin plugin) {
         this.Plugin = plugin;
         this.CheckpointTimer.Start();
-
-        var dir = this.Plugin.Interface.ConfigDirectory;
-        dir.Create();
 
         BsonMapper.Global = new BsonMapper {
             IncludeNonPublic = true,
@@ -116,10 +113,7 @@ internal class Store : IDisposable {
             dateTime => dateTime.Subtract(DateTime.UnixEpoch).TotalMilliseconds,
             bson => DateTime.UnixEpoch.AddMilliseconds(bson.AsInt64)
         );
-        this.Database = new LiteDatabase(Path.Join(dir.FullName, "chat.db"), BsonMapper.Global) {
-            CheckpointSize = 1_000,
-            Timeout = TimeSpan.FromSeconds(1),
-        };
+        this.Database = this.Connect();
         this.Messages.EnsureIndex(msg => msg.Date);
         this.Messages.EnsureIndex(msg => msg.SortCode);
 
@@ -136,6 +130,24 @@ internal class Store : IDisposable {
         this.Plugin.ChatGui.ChatMessageUnhandled -= this.ChatMessage;
 
         this.Database.Dispose();
+    }
+
+    private ILiteDatabase Connect() {
+        var dir = this.Plugin.Interface.ConfigDirectory;
+        dir.Create();
+
+        var dbPath = Path.Join(dir.FullName, "chat.db");
+        var connection = this.Plugin.Config.SharedMode ? "shared" : "direct";
+        var connString = $"Filename='{dbPath}';Connection={connection}";
+        return new LiteDatabase(connString, BsonMapper.Global) {
+            CheckpointSize = 1_000,
+            Timeout = TimeSpan.FromSeconds(1),
+        };
+    }
+
+    internal void Reconnect() {
+        this.Database.Dispose();
+        this.Database = this.Connect();
     }
 
     private void Logout(object? sender, EventArgs eventArgs) {
