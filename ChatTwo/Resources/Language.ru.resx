@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
+    <!-- 
       Microsoft ResX Schema 
       
       Version 2.0
@@ -59,385 +59,408 @@
               : using a System.ComponentModel.TypeConverter
               : and then encoded with base64 encoding.
       -->
-  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
+    <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+        <xsd:element name="root" msdata:IsDataSet="true">
             <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="metadata">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" use="required" type="xsd:string"/>
+                            <xsd:attribute name="type" type="xsd:string"/>
+                            <xsd:attribute name="mimetype" type="xsd:string"/>
+                            <xsd:attribute ref="xml:space"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="assembly">
+                        <xsd:complexType>
+                            <xsd:attribute name="alias" type="xsd:string"/>
+                            <xsd:attribute name="name" type="xsd:string"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+                            <xsd:attribute ref="xml:space"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
             </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>2.0</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-  </resheader>
-  <data name="Options_HideChat_Name" xml:space="preserve">
+    </resheader>
+    <data name="Options_HideChat_Name" xml:space="preserve">
     <value>Скрыть стандартный чат</value>
   </data>
-  <data name="Options_HideChat_Description" xml:space="preserve">
+    <data name="Options_HideChat_Description" xml:space="preserve">
     <value>Скрыть окно стандартного чата, когда плагин активен.</value>
   </data>
-  <data name="Options_HideDuringCutscenes_Name" xml:space="preserve">
+    <data name="Options_HideDuringCutscenes_Name" xml:space="preserve">
     <value>Скрыть чат во время катсцен</value>
   </data>
-  <data name="Options_HideDuringCutscenes_Description" xml:space="preserve">
+    <data name="Options_HideDuringCutscenes_Description" xml:space="preserve">
     <value>Скрыть {0} во время катсцен.</value>
   </data>
-  <data name="Options_NativeItemTooltips_Name" xml:space="preserve">
+    <data name="Options_NativeItemTooltips_Name" xml:space="preserve">
     <value>Показывать подсказки для предметов</value>
   </data>
-  <data name="Options_NativeItemTooltips_Description" xml:space="preserve">
+    <data name="Options_NativeItemTooltips_Description" xml:space="preserve">
     <value>Показывать подсказки при наведении курсора на предметы внутри {0}.</value>
   </data>
-  <data name="Options_SidebarTabView_Name" xml:space="preserve">
+    <data name="Options_SidebarTabView_Name" xml:space="preserve">
     <value>Отображать вкладки в боковой панели</value>
   </data>
-  <data name="Options_SidebarTabView_Description" xml:space="preserve">
+    <data name="Options_SidebarTabView_Description" xml:space="preserve">
     <value>Показывать вкладки в {0} как боковую панель вместо полосы в верхней части чата.</value>
   </data>
-  <data name="Options_PrettierTimestamps_Name" xml:space="preserve">
+    <data name="Options_PrettierTimestamps_Name" xml:space="preserve">
     <value>Использовать современный формат времени</value>
   </data>
-  <data name="Options_PrettierTimestamps_Description" xml:space="preserve">
+    <data name="Options_PrettierTimestamps_Description" xml:space="preserve">
     <value>Более современный стиль отображения сообщений.</value>
   </data>
-  <data name="Options_MoreCompactPretty_Name" xml:space="preserve">
+    <data name="Options_MoreCompactPretty_Name" xml:space="preserve">
     <value>Более компактный вид чата</value>
   </data>
-  <data name="Options_MoreCompactPretty_Description" xml:space="preserve">
+    <data name="Options_MoreCompactPretty_Description" xml:space="preserve">
     <value>Уменьшить промежуток между строками.</value>
   </data>
-  <data name="Options_ShowNoviceNetwork_Name" xml:space="preserve">
+    <data name="Options_ShowNoviceNetwork_Name" xml:space="preserve">
     <value>Показать кнопку "Присоединиться к Novice Network"</value>
   </data>
-  <data name="Options_ShowNoviceNetwork_Description" xml:space="preserve">
+    <data name="Options_ShowNoviceNetwork_Description" xml:space="preserve">
     <value>Показать кнопку "Присоединиться к Novice Network" рядом с настройками, если вы вошли в систему как наставник.</value>
   </data>
-  <data name="Options_FontSize_Name" xml:space="preserve">
+    <data name="Options_FontSize_Name" xml:space="preserve">
     <value>Размер шрифта</value>
   </data>
-  <data name="Options_WindowOpacity_Name" xml:space="preserve">
+    <data name="Options_WindowOpacity_Name" xml:space="preserve">
     <value>Прозрачность окна</value>
   </data>
-  <data name="Options_CanMove_Name" xml:space="preserve">
+    <data name="Options_CanMove_Name" xml:space="preserve">
     <value>Разрешить перемещение окна чата</value>
   </data>
-  <data name="Options_CanResize_Name" xml:space="preserve">
+    <data name="Options_CanResize_Name" xml:space="preserve">
     <value>Разрешить изменение размера окна чата</value>
   </data>
-  <data name="Options_ShowTitleBar_Name" xml:space="preserve">
+    <data name="Options_ShowTitleBar_Name" xml:space="preserve">
     <value>Показывать заголовок для окна чата</value>
   </data>
-  <data name="Options_Display_Tab" xml:space="preserve">
-    <value>Внешний вид</value>
-  </data>
-  <data name="Options_ChatColours_Tab" xml:space="preserve">
-    <value>Цвета чата</value>
-  </data>
-  <data name="Options_ChatColours_Reset" xml:space="preserve">
-    <value>Сбросить настройки</value>
-  </data>
-  <data name="Options_ChatColours_Import" xml:space="preserve">
-    <value>Импортировать из игры</value>
-  </data>
-  <data name="Options_Tabs_Tab" xml:space="preserve">
-    <value>Вкладки</value>
-  </data>
-  <data name="Options_Tabs_Add" xml:space="preserve">
-    <value>Добавить</value>
-  </data>
-  <data name="Options_Tabs_Delete" xml:space="preserve">
-    <value>Удалить</value>
-  </data>
-  <data name="Options_Tabs_MoveUp" xml:space="preserve">
-    <value>Поднять</value>
-  </data>
-  <data name="Options_Tabs_MoveDown" xml:space="preserve">
-    <value>Опустить</value>
-  </data>
-  <data name="Options_Tabs_Name" xml:space="preserve">
-    <value>Имя</value>
-  </data>
-  <data name="Options_Tabs_ShowTimestamps" xml:space="preserve">
-    <value>Показать метки времени</value>
-  </data>
-  <data name="Options_Tabs_UnreadMode" xml:space="preserve">
-    <value>Режим отображения непрочитанных</value>
-  </data>
-  <data name="Options_Tabs_NoInputChannel" xml:space="preserve">
-    <value>&lt;Не выбран&gt;</value>
-  </data>
-  <data name="Options_Tabs_InputChannel" xml:space="preserve">
-    <value>Канал ввода</value>
-  </data>
-  <data name="Options_Tabs_Channels" xml:space="preserve">
-    <value>Каналы</value>
-  </data>
-  <data name="UnreadMode_All_Tooltip" xml:space="preserve">
-    <value>Всегда отображать индикаторы непрочитанных сообщений.</value>
-  </data>
-  <data name="UnreadMode_Unseen_Tooltip" xml:space="preserve">
-    <value>Показывать индикаторы непрочитанных только для сообщений, которые вы не видели.</value>
-  </data>
-  <data name="UnreadMode_None_Tooltip" xml:space="preserve">
-    <value>Не отображать метки непрочитанных сообщений.</value>
-  </data>
-  <data name="Tab_DefaultName" xml:space="preserve">
-    <value>Новая вкладка</value>
-  </data>
-  <data name="Settings_Kofi" xml:space="preserve">
-    <value>Поддержать {0} через Ko-fi</value>
-  </data>
-  <data name="Settings_SaveAndClose" xml:space="preserve">
-    <value>Сохранить и закрыть</value>
-  </data>
-  <data name="Settings_Save" xml:space="preserve">
-    <value>Сохранить</value>
-  </data>
-  <data name="Settings_Discard" xml:space="preserve">
-    <value>Отменить</value>
-  </data>
-  <data name="Settings_Title" xml:space="preserve">
-    <value>Настройки {0}</value>
-  </data>
-  <data name="ChatLog_SwitcherDisabled" xml:space="preserve">
-    <value>Отключено для этой вкладки.</value>
-  </data>
-  <data name="ChatLog_HideChat" xml:space="preserve">
-    <value>Cкрыть чат</value>
-  </data>
-  <data name="ChatLog_Tabs_MoveUp" xml:space="preserve">
-    <value>Поднять</value>
-  </data>
-  <data name="ChatLog_Tabs_MoveLeft" xml:space="preserve">
-    <value>Сдвинуть влево</value>
-  </data>
-  <data name="ChatLog_Tabs_MoveDown" xml:space="preserve">
-    <value>Опустить</value>
-  </data>
-  <data name="ChatLog_Tabs_MoveRight" xml:space="preserve">
-    <value>Сдвинуть вправо</value>
-  </data>
-  <data name="Options_Tabs_ChannelTypes_Chat" xml:space="preserve">
-    <value>Чат</value>
-  </data>
-  <data name="Options_Tabs_ChannelTypes_Battle" xml:space="preserve">
-    <value>Бой</value>
-  </data>
-  <data name="Options_Tabs_ChannelTypes_Announcements" xml:space="preserve">
-    <value>Оповещения</value>
-  </data>
-  <data name="UnreadMode_All" xml:space="preserve">
-    <value>Все</value>
-  </data>
-  <data name="UnreadMode_Unseen" xml:space="preserve">
-    <value>Непрочитанные</value>
-  </data>
-  <data name="UnreadMode_None" xml:space="preserve">
-    <value>Не выбран</value>
-  </data>
-  <data name="ChatSource_Self" xml:space="preserve">
-    <value>Свой</value>
-  </data>
-  <data name="ChatSource_PartyMember" xml:space="preserve">
-    <value>Участники группы</value>
-  </data>
-  <data name="ChatSource_AllianceMember" xml:space="preserve">
-    <value>Участники альянса</value>
-  </data>
-  <data name="ChatSource_Other" xml:space="preserve">
-    <value>Прочие</value>
-  </data>
-  <data name="ChatSource_EngagedEnemy" xml:space="preserve">
-    <value>Захваченные враги</value>
-  </data>
-  <data name="ChatSource_UnengagedEnemy" xml:space="preserve">
-    <value>Незахваченные враги</value>
-  </data>
-  <data name="ChatSource_FriendlyNpc" xml:space="preserve">
-    <value>Дружественные NPC</value>
-  </data>
-  <data name="ChatSource_SelfPet" xml:space="preserve">
-    <value>Пет (свой)</value>
-  </data>
-  <data name="ChatSource_PartyPet" xml:space="preserve">
-    <value>Пет (группа)</value>
-  </data>
-  <data name="ChatSource_AlliancePet" xml:space="preserve">
-    <value>Пет (альянс)</value>
-  </data>
-  <data name="ChatSource_OtherPet" xml:space="preserve">
-    <value>Пет (прочие)</value>
-  </data>
-  <data name="Options_Font_Name" xml:space="preserve">
-    <value>Шрифт</value>
-  </data>
-  <data name="Options_JapaneseFont_Name" xml:space="preserve">
-    <value>Японский шрифт</value>
-  </data>
-  <data name="Options_Font_Description" xml:space="preserve">
-    <value>Шрифт {0} для всех языков кроме японского.</value>
-  </data>
-  <data name="Options_Font_Warning" xml:space="preserve">
-    <value>Использование некоторых шрифтов может привести к крашу игры. Вы были предупреждены.</value>
-  </data>
-  <data name="Options_JapaneseFont_Description" xml:space="preserve">
-    <value>Шрифт {0} для отображения японского текста.</value>
-  </data>
-  <data name="Options_Tabs_ChannelTypes_Special" xml:space="preserve">
-    <value>Особые</value>
-  </data>
-  <data name="Options_Fonts_Tab" xml:space="preserve">
-    <value>Шрифты</value>
-  </data>
-  <data name="Options_SymbolsFontSize_Name" xml:space="preserve">
-    <value>Размер шрифта символов</value>
-  </data>
-  <data name="Options_JapaneseFontSize_Name" xml:space="preserve">
-    <value>Размер японского шрифта</value>
-  </data>
-  <data name="Options_SymbolsFontSize_Description" xml:space="preserve">
-    <value>Размер шрифта для игровых символов.</value>
-  </data>
-  <data name="ChatLog_Tabs_Delete" xml:space="preserve">
-    <value>Удалить вкладку</value>
-  </data>
-  <data name="Options_HideWhenNotLoggedIn_Name" xml:space="preserve">
-    <value>Скрывать, когда не залогинен</value>
-  </data>
-  <data name="Options_HideWhenNotLoggedIn_Description" xml:space="preserve">
-    <value>Скрывать {0}, когда вы не вошли на персонажа.</value>
-  </data>
-  <data name="Tabs_Presets_General" xml:space="preserve">
-    <value>Основной</value>
-  </data>
-  <data name="Options_Tabs_Preset" xml:space="preserve">
-    <value>Пресет: {0}</value>
-  </data>
-  <data name="Tabs_Presets_Event" xml:space="preserve">
-    <value>События</value>
-  </data>
-  <data name="Options_Tabs_NewTab" xml:space="preserve">
-    <value>Новая вкладка</value>
-  </data>
-  <data name="Options_About_Tab" xml:space="preserve">
-    <value>О проекте</value>
-  </data>
-  <data name="Options_About_Opening" xml:space="preserve">
-    <value>{0} - проект, полностью пересоздаёт внутриигровой чат и делает его еще лучше.</value>
-  </data>
-  <data name="Options_About_ClickUp" xml:space="preserve">
-    <value>Нажмите на кнопку слева, чтобы увидеть, что в работе и что будет дальше.</value>
-  </data>
-  <data name="Options_About_CrowdIn" xml:space="preserve">
-    <value>Нажмите кнопку слева, чтобы помочь перевести {0}.</value>
-  </data>
-  <data name="Options_About_Translators" xml:space="preserve">
-    <value>Переводчики</value>
-  </data>
-  <data name="CommandHelpSide_None" xml:space="preserve">
-    <value>Не выбран</value>
-  </data>
-  <data name="CommandHelpSide_Left" xml:space="preserve">
-    <value>Слева</value>
-  </data>
-  <data name="CommandHelpSide_Right" xml:space="preserve">
-    <value>Справа</value>
-  </data>
-  <data name="Options_CommandHelpSide_Name" xml:space="preserve">
-    <value>Сторона помощи по команде</value>
-  </data>
-  <data name="Options_CommandHelpSide_Description" xml:space="preserve">
-    <value>Сторона {0}, на которой отображается помощь по командам.</value>
-  </data>
-  <data name="Options_HideWhenUiHidden_Name" xml:space="preserve">
-    <value>Скрывать, когда игровой интерфейс скрыт</value>
-  </data>
-  <data name="Options_HideWhenUiHidden_Description" xml:space="preserve">
-    <value>Скрыть {0}, когда скрыт игровой интерфейс.</value>
-  </data>
-  <data name="Options_KeybindMode_Name" xml:space="preserve">
-    <value>Режим сочетания клавиш</value>
-  </data>
-  <data name="Options_KeybindMode_Description" xml:space="preserve">
-    <value>Способ обработки клавиш {0}.</value>
-  </data>
-  <data name="Options_Miscellaneous_Tab" xml:space="preserve">
-    <value>Прочее</value>
-  </data>
-  <data name="LanguageOverride_None" xml:space="preserve">
-    <value>Использовать по умолчанию язык Dalamud 'а</value>
-  </data>
-  <data name="KeybindMode_Flexible_Name" xml:space="preserve">
-    <value>Гибкий</value>
-  </data>
-  <data name="KeybindMode_Strict_Name" xml:space="preserve">
-    <value>Строгий</value>
-  </data>
-  <data name="KeybindMode_Flexible_Tooltip" xml:space="preserve">
-    <value>Обработать комбинации клавиш с модификаторами даже при нажатии других модификаторов.</value>
-    <comment>KeybindMode_Flexible_Tooltip
-The tooltip shown when hovering over the flexible keybind mode option.</comment>
-  </data>
-  <data name="KeybindMode_Strict_Tooltip" xml:space="preserve">
-    <value>Обработать комбинации клавиш с модификаторами если не нажаты другие модификаторы.</value>
-    <comment>KeybindMode_Strict_Tooltip
-The tooltip shown when hovering over the strict keybind mode option.</comment>
-  </data>
-  <data name="Options_Language_Name" xml:space="preserve">
-    <value>Язык</value>
-  </data>
-  <data name="Options_Language_Description" xml:space="preserve">
-    <value>Язык для отображения {0}.</value>
-  </data>
+    <data name="Options_Display_Tab" xml:space="preserve">
+        <value>Внешний вид</value>
+    </data>
+    <data name="Options_ChatColours_Tab" xml:space="preserve">
+        <value>Цвета чата</value>
+    </data>
+    <data name="Options_ChatColours_Reset" xml:space="preserve">
+        <value>Сбросить настройки</value>
+    </data>
+    <data name="Options_ChatColours_Import" xml:space="preserve">
+        <value>Импортировать из игры</value>
+    </data>
+    <data name="Options_Tabs_Tab" xml:space="preserve">
+        <value>Вкладки</value>
+    </data>
+    <data name="Options_Tabs_Add" xml:space="preserve">
+        <value>Добавить</value>
+    </data>
+    <data name="Options_Tabs_Delete" xml:space="preserve">
+        <value>Удалить</value>
+    </data>
+    <data name="Options_Tabs_MoveUp" xml:space="preserve">
+        <value>Поднять</value>
+    </data>
+    <data name="Options_Tabs_MoveDown" xml:space="preserve">
+        <value>Опустить</value>
+    </data>
+    <data name="Options_Tabs_Name" xml:space="preserve">
+        <value>Имя</value>
+    </data>
+    <data name="Options_Tabs_ShowTimestamps" xml:space="preserve">
+        <value>Показать метки времени</value>
+    </data>
+    <data name="Options_Tabs_UnreadMode" xml:space="preserve">
+        <value>Режим отображения непрочитанных</value>
+    </data>
+    <data name="Options_Tabs_NoInputChannel" xml:space="preserve">
+        <value>&lt;Не выбран&gt;</value>
+    </data>
+    <data name="Options_Tabs_InputChannel" xml:space="preserve">
+        <value>Канал ввода</value>
+    </data>
+    <data name="Options_Tabs_Channels" xml:space="preserve">
+        <value>Каналы</value>
+    </data>
+    <data name="UnreadMode_All_Tooltip" xml:space="preserve">
+        <value>Всегда отображать индикаторы непрочитанных сообщений.</value>
+    </data>
+    <data name="UnreadMode_Unseen_Tooltip" xml:space="preserve">
+        <value>Показывать индикаторы непрочитанных только для сообщений, которые вы не видели.</value>
+    </data>
+    <data name="UnreadMode_None_Tooltip" xml:space="preserve">
+        <value>Не отображать метки непрочитанных сообщений.</value>
+    </data>
+    <data name="Tab_DefaultName" xml:space="preserve">
+        <value>Новая вкладка</value>
+    </data>
+    <data name="Settings_Kofi" xml:space="preserve">
+        <value>Поддержать {0} через Ko-fi</value>
+    </data>
+    <data name="Settings_SaveAndClose" xml:space="preserve">
+        <value>Сохранить и закрыть</value>
+    </data>
+    <data name="Settings_Save" xml:space="preserve">
+        <value>Сохранить</value>
+    </data>
+    <data name="Settings_Discard" xml:space="preserve">
+        <value>Отменить</value>
+    </data>
+    <data name="Settings_Title" xml:space="preserve">
+        <value>Настройки {0}</value>
+    </data>
+    <data name="ChatLog_SwitcherDisabled" xml:space="preserve">
+        <value>Отключено для этой вкладки.</value>
+    </data>
+    <data name="ChatLog_HideChat" xml:space="preserve">
+        <value>Cкрыть чат</value>
+    </data>
+    <data name="ChatLog_Tabs_MoveUp" xml:space="preserve">
+        <value>Поднять</value>
+    </data>
+    <data name="ChatLog_Tabs_MoveLeft" xml:space="preserve">
+        <value>Сдвинуть влево</value>
+    </data>
+    <data name="ChatLog_Tabs_MoveDown" xml:space="preserve">
+        <value>Опустить</value>
+    </data>
+    <data name="ChatLog_Tabs_MoveRight" xml:space="preserve">
+        <value>Сдвинуть вправо</value>
+    </data>
+    <data name="Options_Tabs_ChannelTypes_Chat" xml:space="preserve">
+        <value>Чат</value>
+    </data>
+    <data name="Options_Tabs_ChannelTypes_Battle" xml:space="preserve">
+        <value>Бой</value>
+    </data>
+    <data name="Options_Tabs_ChannelTypes_Announcements" xml:space="preserve">
+        <value>Оповещения</value>
+    </data>
+    <data name="UnreadMode_All" xml:space="preserve">
+        <value>Все</value>
+    </data>
+    <data name="UnreadMode_Unseen" xml:space="preserve">
+        <value>Непрочитанные</value>
+    </data>
+    <data name="UnreadMode_None" xml:space="preserve">
+        <value>Не выбран</value>
+    </data>
+    <data name="ChatSource_Self" xml:space="preserve">
+        <value>Свой</value>
+    </data>
+    <data name="ChatSource_PartyMember" xml:space="preserve">
+        <value>Участники группы</value>
+    </data>
+    <data name="ChatSource_AllianceMember" xml:space="preserve">
+        <value>Участники альянса</value>
+    </data>
+    <data name="ChatSource_Other" xml:space="preserve">
+        <value>Прочие</value>
+    </data>
+    <data name="ChatSource_EngagedEnemy" xml:space="preserve">
+        <value>Захваченные враги</value>
+    </data>
+    <data name="ChatSource_UnengagedEnemy" xml:space="preserve">
+        <value>Незахваченные враги</value>
+    </data>
+    <data name="ChatSource_FriendlyNpc" xml:space="preserve">
+        <value>Дружественные NPC</value>
+    </data>
+    <data name="ChatSource_SelfPet" xml:space="preserve">
+        <value>Пет (свой)</value>
+    </data>
+    <data name="ChatSource_PartyPet" xml:space="preserve">
+        <value>Пет (группа)</value>
+    </data>
+    <data name="ChatSource_AlliancePet" xml:space="preserve">
+        <value>Пет (альянс)</value>
+    </data>
+    <data name="ChatSource_OtherPet" xml:space="preserve">
+        <value>Пет (прочие)</value>
+    </data>
+    <data name="Options_Font_Name" xml:space="preserve">
+        <value>Шрифт</value>
+    </data>
+    <data name="Options_JapaneseFont_Name" xml:space="preserve">
+        <value>Японский шрифт</value>
+    </data>
+    <data name="Options_Font_Description" xml:space="preserve">
+        <value>Шрифт {0} для всех языков кроме японского.</value>
+    </data>
+    <data name="Options_Font_Warning" xml:space="preserve">
+        <value>Использование некоторых шрифтов может привести к крашу игры. Вы были предупреждены.</value>
+    </data>
+    <data name="Options_JapaneseFont_Description" xml:space="preserve">
+        <value>Шрифт {0} для отображения японского текста.</value>
+    </data>
+    <data name="Options_Tabs_ChannelTypes_Special" xml:space="preserve">
+        <value>Особые</value>
+    </data>
+    <data name="Options_Fonts_Tab" xml:space="preserve">
+        <value>Шрифты</value>
+    </data>
+    <data name="Options_SymbolsFontSize_Name" xml:space="preserve">
+        <value>Размер шрифта символов</value>
+    </data>
+    <data name="Options_JapaneseFontSize_Name" xml:space="preserve">
+        <value>Размер японского шрифта</value>
+    </data>
+    <data name="Options_SymbolsFontSize_Description" xml:space="preserve">
+        <value>Размер шрифта для игровых символов.</value>
+    </data>
+    <data name="ChatLog_Tabs_Delete" xml:space="preserve">
+        <value>Удалить вкладку</value>
+    </data>
+    <data name="Options_HideWhenNotLoggedIn_Name" xml:space="preserve">
+        <value>Скрывать, когда не залогинен</value>
+    </data>
+    <data name="Options_HideWhenNotLoggedIn_Description" xml:space="preserve">
+        <value>Скрывать {0}, когда вы не вошли на персонажа.</value>
+    </data>
+    <data name="Tabs_Presets_General" xml:space="preserve">
+        <value>Основной</value>
+    </data>
+    <data name="Options_Tabs_Preset" xml:space="preserve">
+        <value>Пресет: {0}</value>
+    </data>
+    <data name="Tabs_Presets_Event" xml:space="preserve">
+        <value>События</value>
+    </data>
+    <data name="Options_Tabs_NewTab" xml:space="preserve">
+        <value>Новая вкладка</value>
+    </data>
+    <data name="Options_About_Tab" xml:space="preserve">
+        <value>О проекте</value>
+    </data>
+    <data name="Options_About_Opening" xml:space="preserve">
+        <value>{0} - проект, полностью пересоздаёт внутриигровой чат и делает его еще лучше.</value>
+    </data>
+    <data name="Options_About_ClickUp" xml:space="preserve">
+        <value>Нажмите на кнопку слева, чтобы увидеть, что в работе и что будет дальше.</value>
+    </data>
+    <data name="Options_About_CrowdIn" xml:space="preserve">
+        <value>Нажмите кнопку слева, чтобы помочь перевести {0}.</value>
+    </data>
+    <data name="Options_About_Translators" xml:space="preserve">
+        <value>Переводчики</value>
+    </data>
+    <data name="CommandHelpSide_None" xml:space="preserve">
+        <value>Не выбран</value>
+    </data>
+    <data name="CommandHelpSide_Left" xml:space="preserve">
+        <value>Слева</value>
+    </data>
+    <data name="CommandHelpSide_Right" xml:space="preserve">
+        <value>Справа</value>
+    </data>
+    <data name="Options_CommandHelpSide_Name" xml:space="preserve">
+        <value>Сторона помощи по команде</value>
+    </data>
+    <data name="Options_CommandHelpSide_Description" xml:space="preserve">
+        <value>Сторона {0}, на которой отображается помощь по командам.</value>
+    </data>
+    <data name="Options_HideWhenUiHidden_Name" xml:space="preserve">
+        <value>Скрывать, когда игровой интерфейс скрыт</value>
+    </data>
+    <data name="Options_HideWhenUiHidden_Description" xml:space="preserve">
+        <value>Скрыть {0}, когда скрыт игровой интерфейс.</value>
+    </data>
+    <data name="Options_KeybindMode_Name" xml:space="preserve">
+        <value>Режим сочетания клавиш</value>
+    </data>
+    <data name="Options_KeybindMode_Description" xml:space="preserve">
+        <value>Способ обработки клавиш {0}.</value>
+    </data>
+    <data name="Options_Miscellaneous_Tab" xml:space="preserve">
+        <value>Прочее</value>
+    </data>
+    <data name="LanguageOverride_None" xml:space="preserve">
+        <value>Использовать по умолчанию язык Dalamud 'а</value>
+    </data>
+    <data name="KeybindMode_Flexible_Name" xml:space="preserve">
+        <value>Гибкий</value>
+    </data>
+    <data name="KeybindMode_Strict_Name" xml:space="preserve">
+        <value>Строгий</value>
+    </data>
+    <data name="KeybindMode_Flexible_Tooltip" xml:space="preserve">
+        <value>Обработать комбинации клавиш с модификаторами даже при нажатии других модификаторов.</value>
+    </data>
+    <data name="KeybindMode_Strict_Tooltip" xml:space="preserve">
+        <value>Обработать комбинации клавиш с модификаторами если не нажаты другие модификаторы.</value>
+    </data>
+    <data name="Options_Language_Name" xml:space="preserve">
+        <value>Язык</value>
+    </data>
+    <data name="Options_Language_Description" xml:space="preserve">
+        <value>Язык для отображения {0}.</value>
+    </data>
+    <data name="Options_DatabaseBattleMessages_Name" xml:space="preserve">
+        <value>Сохранять сообщения о битвах в базу данных</value>
+    </data>
+    <data name="Options_DatabaseBattleMessages_Description" xml:space="preserve">
+        <value>Если в базу данных сохранены боевые сообщения, то размер базы данных будет расти намного быстрее, и при сохранении настроек будет заметно заморожено. Рекомендуется оставить это отключено.</value>
+    </data>
+    <data name="Options_LoadPreviousSession_Name" xml:space="preserve">
+        <value>Показывать чат предыдущий сессии при входе</value>
+    </data>
+    <data name="Options_LoadPreviousSession_Description" xml:space="preserve">
+        <value>После входа в систему, заполните чат сообщениями с момента последнего выхода из системы.</value>
+    </data>
+    <data name="Options_Database_Tab" xml:space="preserve">
+        <value>База данных</value>
+    </data>
+    <data name="Options_FilterIncludePreviousSessions_Name" xml:space="preserve">
+        <value>Включать предыдущие сессии при заполнении вкладок</value>
+    </data>
+    <data name="Options_FilterIncludePreviousSessions_Description" xml:space="preserve">
+        <value>Включать сообщения до начала игры при заполнении вкладок. Вкладки заполняются при сохранении настроек.</value>
+    </data>
+    <data name="Options_Database_Advanced_Warning" xml:space="preserve">
+        <value>Не нажимайте на эти кнопки, если не знаете, что вы делаете.</value>
+    </data>
+    <data name="Options_Database_Advanced" xml:space="preserve">
+        <value>Расширенные</value>
+    </data>
 </root>
