@@ -82,21 +82,31 @@ internal static class ImGuiUtil {
                 // empty string
                 if (text == null) {
                     ImGui.TextUnformatted("");
-                    ImGui.TextUnformatted("");
-                    return;
+                    continue;
                 }
 
                 var widthLeft = ImGui.GetContentRegionAvail().X;
                 var endPrevLine = ImGuiNative.ImFont_CalcWordWrapPositionA(ImGui.GetFont().NativePtr, ImGuiHelpers.GlobalScale, text, textEnd, widthLeft);
                 if (endPrevLine == null) {
-                    return;
+                    continue;
                 }
 
-                Text(text, endPrevLine);
+                var firstSpace = FindFirstSpace(text, textEnd);
+                var properBreak = firstSpace <= endPrevLine;
+                if (properBreak) {
+                    Text(text, endPrevLine);
+                } else {
+                    ImGui.TextUnformatted("");
+                }
 
                 widthLeft = ImGui.GetContentRegionAvail().X;
                 while (endPrevLine < textEnd) {
-                    text = endPrevLine;
+                    if (properBreak) {
+                        text = endPrevLine;
+                    }
+
+                    properBreak = true;
+
                     if (*text == ' ') {
                         ++text;
                     } // skip a space at start of line
@@ -117,6 +127,16 @@ internal static class ImGuiUtil {
                 }
             }
         }
+    }
+
+    private static unsafe byte* FindFirstSpace(byte* text, byte* textEnd) {
+        for (var i = text; i < textEnd; i++) {
+            if (char.IsWhiteSpace((char) *i)) {
+                return i;
+            }
+        }
+
+        return textEnd;
     }
 
     internal static bool IconButton(FontAwesomeIcon icon, string? id = null, string? tooltip = null) {
