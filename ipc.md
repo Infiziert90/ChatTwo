@@ -5,7 +5,7 @@ Chat 2's IPC.
 
 Here's an example.
 
-```c#
+```cs
 public class ContextMenuIntegration {
     // This is used to register your plugin with the IPC. It will return an ID
     // that you should save for later.
