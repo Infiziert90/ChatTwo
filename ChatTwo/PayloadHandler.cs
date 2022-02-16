@@ -94,7 +94,7 @@ internal sealed class PayloadHandler {
         if (ImGui.BeginMenu("Integrations")) {
             foreach (var id in registered) {
                 try {
-                    this.Ui.Plugin.Ipc.Invoke(id, sender, contentId, payload);
+                    this.Ui.Plugin.Ipc.Invoke(id, sender, contentId, payload, chunk.Message?.SenderSource, chunk.Message?.ContentSource);
                 } catch (Exception ex) {
                     PluginLog.Error(ex, "Error executing integration");
                 }
