@@ -39,7 +39,7 @@ internal static class ImGuiUtil {
         }
     }
 
-    internal static unsafe void WrapText(string csText, Chunk chunk, PayloadHandler? handler, Vector4 defaultText) {
+    internal static unsafe void WrapText(string csText, Chunk chunk, PayloadHandler? handler, Vector4 defaultText, float lineWidth) {
         void Text(byte* text, byte* textEnd) {
             var oldPos = ImGui.GetCursorScreenPos();
 
@@ -96,7 +96,16 @@ internal static class ImGuiUtil {
                 if (properBreak) {
                     Text(text, endPrevLine);
                 } else {
-                    ImGui.TextUnformatted("");
+                    if (lineWidth == 0f) {
+                        ImGui.TextUnformatted("");
+                    } else {
+                        // check if the next bit is longer than the entire line width
+                        var wrapPos = ImGuiNative.ImFont_CalcWordWrapPositionA(ImGui.GetFont().NativePtr, ImGuiHelpers.GlobalScale, text, firstSpace, lineWidth);
+                        if (wrapPos >= firstSpace) {
+                            // only go to next line is it's going to wrap at the space
+                            ImGui.TextUnformatted("");
+                        }
+                    }
                 }
 
                 widthLeft = ImGui.GetContentRegionAvail().X;
@@ -105,14 +114,12 @@ internal static class ImGuiUtil {
                         text = endPrevLine;
                     }
 
-                    properBreak = true;
-
                     if (*text == ' ') {
                         ++text;
                     } // skip a space at start of line
 
                     var newEnd = ImGuiNative.ImFont_CalcWordWrapPositionA(ImGui.GetFont().NativePtr, ImGuiHelpers.GlobalScale, text, textEnd, widthLeft);
-                    if (newEnd == endPrevLine) {
+                    if (properBreak && newEnd == endPrevLine) {
                         break;
                     }
 
@@ -124,6 +131,11 @@ internal static class ImGuiUtil {
                     }
 
                     Text(text, endPrevLine);
+
+                    if (!properBreak) {
+                        properBreak = true;
+                        widthLeft = ImGui.GetContentRegionAvail().X;
+                    }
                 }
             }
         }
