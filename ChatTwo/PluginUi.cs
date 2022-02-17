@@ -91,7 +91,11 @@ internal sealed class PluginUi : IDisposable {
             }
 
             // various symbols
-            builder.AddText("←→↑↓《》■※☀★★☆♥♡ヅツッシ☀☁☂℃℉°♀♂♠♣♦♣♧®©™€$£♯♭♪✓√◎◆◇♦■□〇●△▽▼▲‹›≤≥<«“”─＼～Œœ");
+            builder.AddText("←→↑↓《》■※☀★★☆♥♡ヅツッシ☀☁☂℃℉°♀♂♠♣♦♣♧®©™€$£♯♭♪✓√◎◆◇♦■□〇●△▽▼▲‹›≤≥<«“”─＼～");
+            // French
+            builder.AddText("Œœ");
+            // Romanian
+            builder.AddText("ĂăÂâÎîȘșȚț");
 
             // "Enclosed Alphanumerics" (partial) https://www.compart.com/en/unicode/block/U+2460
             for (var i = 0x2460; i <= 0x24B5; i++) {

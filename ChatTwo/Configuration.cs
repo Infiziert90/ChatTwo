@@ -235,6 +235,7 @@ internal enum LanguageOverride {
     Korean,
     Norwegian,
     PortugueseBrazil,
+    Romanian,
     Russian,
     Spanish,
 }
@@ -250,6 +251,7 @@ internal static class LanguageOverrideExt {
         LanguageOverride.Korean => "한국어 (Korean)",
         LanguageOverride.Norwegian => "Norsk",
         LanguageOverride.PortugueseBrazil => "Português do Brasil",
+        LanguageOverride.Romanian => "Română",
         LanguageOverride.Russian => "Русский",
         LanguageOverride.Spanish => "Español",
         _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null),
@@ -265,6 +267,7 @@ internal static class LanguageOverrideExt {
         LanguageOverride.Korean => "ko",
         LanguageOverride.Norwegian => "no",
         LanguageOverride.PortugueseBrazil => "pt-br",
+        LanguageOverride.Romanian => "ro",
         LanguageOverride.Russian => "ru",
         LanguageOverride.Spanish => "es",
         _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null),
