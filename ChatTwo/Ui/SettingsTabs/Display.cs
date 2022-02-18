@@ -59,6 +59,7 @@ internal sealed class Display : ISettingsTab {
         if (this.Mutable.PrettierTimestamps) {
             ImGui.TreePush();
             ImGuiUtil.OptionCheckbox(ref this.Mutable.MoreCompactPretty, Language.Options_MoreCompactPretty_Name, Language.Options_MoreCompactPretty_Description);
+            ImGuiUtil.OptionCheckbox(ref this.Mutable.HideSameTimestamps, Language.Options_HideSameTimestamps_Name, Language.Options_HideSameTimestamps_Description);
             ImGui.TreePop();
         }
 

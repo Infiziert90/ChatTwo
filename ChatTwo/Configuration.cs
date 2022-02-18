@@ -19,6 +19,7 @@ internal class Configuration : IPluginConfiguration {
     public bool NativeItemTooltips = true;
     public bool PrettierTimestamps = true;
     public bool MoreCompactPretty;
+    public bool HideSameTimestamps;
     public bool ShowNoviceNetwork;
     public bool SidebarTabView;
     public CommandHelpSide CommandHelpSide = CommandHelpSide.None;
@@ -50,6 +51,7 @@ internal class Configuration : IPluginConfiguration {
         this.NativeItemTooltips = other.NativeItemTooltips;
         this.PrettierTimestamps = other.PrettierTimestamps;
         this.MoreCompactPretty = other.MoreCompactPretty;
+        this.HideSameTimestamps = other.HideSameTimestamps;
         this.ShowNoviceNetwork = other.ShowNoviceNetwork;
         this.SidebarTabView = other.SidebarTabView;
         this.CommandHelpSide = other.CommandHelpSide;

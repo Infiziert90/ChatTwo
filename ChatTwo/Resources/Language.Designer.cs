@@ -565,6 +565,24 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hide timestamps when previous messages have the same timestamp..
+        /// </summary>
+        internal static string Options_HideSameTimestamps_Description {
+            get {
+                return ResourceManager.GetString("Options_HideSameTimestamps_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hide timestamps when redundant.
+        /// </summary>
+        internal static string Options_HideSameTimestamps_Name {
+            get {
+                return ResourceManager.GetString("Options_HideSameTimestamps_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hide {0} when you are not logged in to a character..
         /// </summary>
         internal static string Options_HideWhenNotLoggedIn_Description {

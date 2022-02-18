@@ -476,4 +476,10 @@
     <data name="ChatLog_Tabs_PopOut" xml:space="preserve">
         <value>Pop out</value>
     </data>
+    <data name="Options_HideSameTimestamps_Name" xml:space="preserve">
+        <value>Hide timestamps when redundant</value>
+    </data>
+    <data name="Options_HideSameTimestamps_Description" xml:space="preserve">
+        <value>Hide timestamps when previous messages have the same timestamp.</value>
+    </data>
 </root>

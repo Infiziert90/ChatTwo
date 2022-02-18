@@ -623,6 +623,7 @@ internal sealed class ChatLog : IUiComponent {
                 }
 
                 var lastPos = ImGui.GetCursorPosY();
+                var lastTimestamp = string.Empty;
                 foreach (var message in tab.Messages) {
                     if (reset) {
                         message.Height = null;
@@ -663,7 +664,10 @@ internal sealed class ChatLog : IUiComponent {
                     if (tab.DisplayTimestamp) {
                         var timestamp = message.Date.ToLocalTime().ToString("t");
                         if (table) {
-                            ImGui.TextUnformatted(timestamp);
+                            if (!this.Ui.Plugin.Config.HideSameTimestamps || timestamp != lastTimestamp) {
+                                ImGui.TextUnformatted(timestamp);
+                                lastTimestamp = timestamp;
+                            }
                         } else {
                             this.DrawChunk(new TextChunk(ChunkSource.None, null, $"[{timestamp}]") {
                                 Foreground = 0xFFFFFFFF,
