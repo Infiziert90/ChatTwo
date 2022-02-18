@@ -58,6 +58,9 @@ internal sealed unsafe class Chat : IDisposable {
     [Signature("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 48 83 EC 20 8B F2 48 8D B9")]
     private readonly delegate* unmanaged<IntPtr, uint, IntPtr> _getColourInfo = null!;
 
+    [Signature("E8 ?? ?? ?? ?? EB 0A 48 8D 4C 24 ?? E8 ?? ?? ?? ?? 48 8D 8D")]
+    private readonly delegate* unmanaged<Utf8String*, int, IntPtr, void> _sanitiseString = null!;
+
     // Hooks
 
     private delegate byte ChatLogRefreshDelegate(IntPtr log, ushort eventId, AtkValue* value);
@@ -645,5 +648,17 @@ internal sealed unsafe class Chat : IDisposable {
 
         uMessage->Dtor();
         IMemorySpace.Free(uMessage);
+    }
+
+    internal bool IsCharValid(char c) {
+        var uC = Utf8String.FromString(c.ToString());
+
+        this._sanitiseString(uC, 0x27F, IntPtr.Zero);
+        var wasValid = uC->ToString().Length > 0;
+
+        uC->Dtor();
+        IMemorySpace.Free(uC);
+
+        return wasValid;
     }
 }

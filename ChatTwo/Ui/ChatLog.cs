@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Numerics;
+using System.Text;
 using ChatTwo.Code;
 using ChatTwo.GameFunctions.Types;
 using ChatTwo.Resources;
@@ -490,6 +491,7 @@ internal sealed class ChatLog : IUiComponent {
         ImGui.SetNextItemWidth(inputWidth);
         const ImGuiInputTextFlags inputFlags = ImGuiInputTextFlags.EnterReturnsTrue
                                                | ImGuiInputTextFlags.CallbackAlways
+                                               | ImGuiInputTextFlags.CallbackCharFilter
                                                | ImGuiInputTextFlags.CallbackHistory;
         if (ImGui.InputText("##chat2-input", ref this.Chat, 500, inputFlags, this.Callback)) {
             if (!string.IsNullOrWhiteSpace(this.Chat)) {
@@ -525,7 +527,7 @@ internal sealed class ChatLog : IUiComponent {
                     }
                 }
 
-                this.Ui.Plugin.Common.Functions.Chat.SendMessage(trimmed);
+                this.Ui.Plugin.Common.Functions.Chat.SendMessageUnsafe(Encoding.UTF8.GetBytes(trimmed));
             }
 
             Skip:
@@ -849,6 +851,13 @@ internal sealed class ChatLog : IUiComponent {
 
     private unsafe int Callback(ImGuiInputTextCallbackData* data) {
         var ptr = new ImGuiInputTextCallbackDataPtr(data);
+
+        if (data->EventFlag == ImGuiInputTextFlags.CallbackCharFilter) {
+            var valid = this.Ui.Plugin.Functions.Chat.IsCharValid((char) ptr.EventChar);
+            if (!valid) {
+                return 1;
+            }
+        }
 
         if (this.Activate) {
             this.Activate = false;
