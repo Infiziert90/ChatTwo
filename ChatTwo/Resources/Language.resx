@@ -147,11 +147,11 @@
     <value>Show tabs in {0} as a sidebar instead of a bar at the top.</value>
   </data>
     <data name="Options_PrettierTimestamps_Name" xml:space="preserve">
-    <value>Use modern timestamp layout</value>
-  </data>
+        <value>Use modern layout</value>
+    </data>
     <data name="Options_PrettierTimestamps_Description" xml:space="preserve">
-    <value>Use a more modern style of displaying messages.</value>
-  </data>
+        <value>Display messages in a more modern style.</value>
+    </data>
     <data name="Options_MoreCompactPretty_Name" xml:space="preserve">
     <value>More compact modern layout</value>
   </data>

@@ -745,7 +745,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use a more modern style of displaying messages..
+        ///   Looks up a localized string similar to Display messages in a more modern style..
         /// </summary>
         internal static string Options_PrettierTimestamps_Description {
             get {
@@ -754,7 +754,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use modern timestamp layout.
+        ///   Looks up a localized string similar to Use modern layout.
         /// </summary>
         internal static string Options_PrettierTimestamps_Name {
             get {
