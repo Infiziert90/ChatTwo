@@ -124,6 +124,15 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pop out.
+        /// </summary>
+        internal static string ChatLog_Tabs_PopOut {
+            get {
+                return ResourceManager.GetString("ChatLog_Tabs_PopOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Alliance Member.
         /// </summary>
         internal static string ChatSource_AllianceMember {

@@ -473,4 +473,7 @@
     <data name="Options_SharedMode_Warning" xml:space="preserve">
         <value>This option is not recommended. No support will be offered if you enable this option. This option will hurt the performance of {0}.</value>
     </data>
+    <data name="ChatLog_Tabs_PopOut" xml:space="preserve">
+        <value>Pop out</value>
+    </data>
 </root>

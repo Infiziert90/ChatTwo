@@ -136,6 +136,7 @@ internal class Tab {
     public UnreadMode UnreadMode = UnreadMode.Unseen;
     public bool DisplayTimestamp = true;
     public InputChannel? Channel;
+    public bool PopOut;
 
     [NonSerialized]
     public uint Unread;
@@ -184,6 +185,7 @@ internal class Tab {
             UnreadMode = this.UnreadMode,
             DisplayTimestamp = this.DisplayTimestamp,
             Channel = this.Channel,
+            PopOut = this.PopOut,
         };
     }
 }

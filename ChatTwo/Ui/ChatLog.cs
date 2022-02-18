@@ -317,9 +317,12 @@ internal sealed class ChatLog : IUiComponent {
     private HideState _hideState = HideState.None;
 
     public void Draw() {
-        if (this.DrawChatLog()) {
-            this._commandHelp?.Draw();
+        if (!this.DrawChatLog()) {
+            return;
         }
+
+        this._commandHelp?.Draw();
+        this.DrawPopOuts();
     }
 
     /// <returns>true if window was rendered</returns>
@@ -725,6 +728,9 @@ internal sealed class ChatLog : IUiComponent {
 
         for (var tabI = 0; tabI < this.Ui.Plugin.Config.Tabs.Count; tabI++) {
             var tab = this.Ui.Plugin.Config.Tabs[tabI];
+            if (tab.PopOut) {
+                continue;
+            }
 
             var unread = tabI == this.LastTab || tab.UnreadMode == UnreadMode.None || tab.Unread == 0 ? "" : $" ({tab.Unread})";
             var draw = ImGui.BeginTabItem($"{tab.Name}{unread}###log-tab-{tabI}");
@@ -766,6 +772,9 @@ internal sealed class ChatLog : IUiComponent {
         if (ImGui.BeginChild("##chat2-tab-sidebar", new Vector2(-1, childHeight))) {
             for (var tabI = 0; tabI < this.Ui.Plugin.Config.Tabs.Count; tabI++) {
                 var tab = this.Ui.Plugin.Config.Tabs[tabI];
+                if (tab.PopOut) {
+                    continue;
+                }
 
                 var unread = tabI == this.LastTab || tab.UnreadMode == UnreadMode.None || tab.Unread == 0 ? "" : $" ({tab.Unread})";
                 var clicked = ImGui.Selectable($"{tab.Name}{unread}###log-tab-{tabI}", this.LastTab == tabI);
@@ -841,12 +850,44 @@ internal sealed class ChatLog : IUiComponent {
             anyChanged = true;
         }
 
+        ImGui.SameLine();
+        if (ImGuiUtil.IconButton(FontAwesomeIcon.WindowRestore, tooltip: Language.ChatLog_Tabs_PopOut)) {
+            tab.PopOut = true;
+            anyChanged = true;
+        }
+
         if (anyChanged) {
             this.Ui.Plugin.SaveConfig();
         }
 
         ImGui.PopID();
         ImGui.EndPopup();
+    }
+
+    private void DrawPopOuts() {
+        foreach (var tab in this.Ui.Plugin.Config.Tabs.Where(tab => tab.PopOut)) {
+            this.DrawPopOut(tab);
+        }
+    }
+
+    private void DrawPopOut(Tab tab) {
+        ImGui.SetNextWindowSize(new Vector2(350, 350) * ImGuiHelpers.GlobalScale, ImGuiCond.FirstUseEver);
+        if (!ImGui.Begin($"{tab.Name}##popout", ref tab.PopOut)) {
+            goto End;
+        }
+
+        ImGui.PushID($"popout-{tab.Name}");
+
+        this.DrawMessageLog(tab, ImGui.GetContentRegionAvail().Y, false);
+
+        ImGui.PopID();
+
+        End:
+        ImGui.End();
+
+        if (!tab.PopOut) {
+            this.Ui.Plugin.SaveConfig();
+        }
     }
 
     private unsafe int Callback(ImGuiInputTextCallbackData* data) {
