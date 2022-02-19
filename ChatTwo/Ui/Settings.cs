@@ -63,7 +63,7 @@ internal sealed class Settings : IUiComponent {
         ImGui.SetNextWindowSize(new Vector2(475, 600) * ImGuiHelpers.GlobalScale, ImGuiCond.FirstUseEver);
 
         var name = string.Format(Language.Settings_Title, this.Ui.Plugin.Name);
-        if (!ImGui.Begin($"{name}###chat2-settings", ref this.Ui.SettingsVisible)) {
+        if (!ImGui.Begin($"{name}###chat2-settings", ref this.Ui.SettingsVisible, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)) {
             ImGui.End();
             return;
         }

@@ -355,7 +355,7 @@ internal sealed class ChatLog : IUiComponent {
             return false;
         }
 
-        var flags = ImGuiWindowFlags.None;
+        var flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse;
         if (!this.Ui.Plugin.Config.CanMove) {
             flags |= ImGuiWindowFlags.NoMove;
         }
