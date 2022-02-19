@@ -31,16 +31,22 @@ internal sealed class Settings : IUiComponent {
         };
 
         this.Ui.Plugin.Commands.Register("/chat2", "Perform various actions with Chat 2.").Execute += this.Command;
+        this.Ui.Plugin.Interface.UiBuilder.OpenConfigUi += this.Toggle;
     }
 
     public void Dispose() {
+        this.Ui.Plugin.Interface.UiBuilder.OpenConfigUi -= this.Toggle;
         this.Ui.Plugin.Commands.Register("/chat2").Execute -= this.Command;
     }
 
     private void Command(string command, string args) {
         if (string.IsNullOrWhiteSpace(args)) {
-            this.Ui.SettingsVisible ^= true;
+            this.Toggle();
         }
+    }
+
+    private void Toggle() {
+        this.Ui.SettingsVisible ^= true;
     }
 
     private void Initialise() {
