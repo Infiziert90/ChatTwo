@@ -88,6 +88,9 @@ internal sealed class Display : ISettingsTab {
         ImGuiUtil.OptionCheckbox(ref this.Mutable.ShowTitleBar, Language.Options_ShowTitleBar_Name);
         ImGui.Spacing();
 
+        ImGuiUtil.OptionCheckbox(ref this.Mutable.ShowPopOutTitleBar, Language.Options_ShowPopOutTitleBar_Name);
+        ImGui.Spacing();
+
         ImGui.PopTextWrapPos();
     }
 }

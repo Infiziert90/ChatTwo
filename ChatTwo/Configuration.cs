@@ -28,6 +28,7 @@ internal class Configuration : IPluginConfiguration {
     public bool CanMove = true;
     public bool CanResize = true;
     public bool ShowTitleBar;
+    public bool ShowPopOutTitleBar = true;
     public bool DatabaseBattleMessages;
     public bool LoadPreviousSession;
     public bool FilterIncludePreviousSessions;
@@ -60,6 +61,7 @@ internal class Configuration : IPluginConfiguration {
         this.CanMove = other.CanMove;
         this.CanResize = other.CanResize;
         this.ShowTitleBar = other.ShowTitleBar;
+        this.ShowPopOutTitleBar = other.ShowPopOutTitleBar;
         this.DatabaseBattleMessages = other.DatabaseBattleMessages;
         this.LoadPreviousSession = other.LoadPreviousSession;
         this.FilterIncludePreviousSessions = other.FilterIncludePreviousSessions;
@@ -139,6 +141,8 @@ internal class Tab {
     public bool DisplayTimestamp = true;
     public InputChannel? Channel;
     public bool PopOut;
+    public bool IndependentOpacity;
+    public float Opacity = 100f;
 
     [NonSerialized]
     public uint Unread;
@@ -188,6 +192,8 @@ internal class Tab {
             DisplayTimestamp = this.DisplayTimestamp,
             Channel = this.Channel,
             PopOut = this.PopOut,
+            IndependentOpacity = this.IndependentOpacity,
+            Opacity = this.Opacity,
         };
     }
 }

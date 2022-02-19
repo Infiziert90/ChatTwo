@@ -482,4 +482,16 @@
     <data name="Options_HideSameTimestamps_Description" xml:space="preserve">
         <value>Hide timestamps when previous messages have the same timestamp.</value>
     </data>
+    <data name="Options_ShowPopOutTitleBar_Name" xml:space="preserve">
+        <value>Show title bar for popped-out tabs</value>
+    </data>
+    <data name="Options_Tabs_PopOut" xml:space="preserve">
+        <value>Display in separate window</value>
+    </data>
+    <data name="Options_Tabs_IndependentOpacity" xml:space="preserve">
+        <value>Use different opacity than main window</value>
+    </data>
+    <data name="Options_Tabs_Opacity" xml:space="preserve">
+        <value>Opacity</value>
+    </data>
 </root>

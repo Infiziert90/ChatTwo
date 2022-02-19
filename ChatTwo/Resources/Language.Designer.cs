@@ -808,6 +808,15 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show title bar for popped-out tabs.
+        /// </summary>
+        internal static string Options_ShowPopOutTitleBar_Name {
+            get {
+                return ResourceManager.GetString("Options_ShowPopOutTitleBar_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show title bar for chat.
         /// </summary>
         internal static string Options_ShowTitleBar_Name {
@@ -916,6 +925,15 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use different opacity than main window.
+        /// </summary>
+        internal static string Options_Tabs_IndependentOpacity {
+            get {
+                return ResourceManager.GetString("Options_Tabs_IndependentOpacity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Input channel.
         /// </summary>
         internal static string Options_Tabs_InputChannel {
@@ -966,6 +984,24 @@ namespace ChatTwo.Resources {
         internal static string Options_Tabs_NoInputChannel {
             get {
                 return ResourceManager.GetString("Options_Tabs_NoInputChannel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opacity.
+        /// </summary>
+        internal static string Options_Tabs_Opacity {
+            get {
+                return ResourceManager.GetString("Options_Tabs_Opacity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Display in separate window.
+        /// </summary>
+        internal static string Options_Tabs_PopOut {
+            get {
+                return ResourceManager.GetString("Options_Tabs_PopOut", resourceCulture);
             }
         }
         

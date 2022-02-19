@@ -875,12 +875,24 @@ internal sealed class ChatLog : IUiComponent {
     }
 
     private void DrawPopOut(Tab tab) {
+        var flags = ImGuiWindowFlags.None;
+        if (!this.Ui.Plugin.Config.ShowPopOutTitleBar) {
+            flags |= ImGuiWindowFlags.NoTitleBar;
+        }
+
+        var alpha = tab.IndependentOpacity ? tab.Opacity / 100f : this.Ui.Plugin.Config.WindowAlpha;
+        ImGui.SetNextWindowBgAlpha(alpha);
         ImGui.SetNextWindowSize(new Vector2(350, 350) * ImGuiHelpers.GlobalScale, ImGuiCond.FirstUseEver);
-        if (!ImGui.Begin($"{tab.Name}##popout", ref tab.PopOut)) {
+        if (!ImGui.Begin($"{tab.Name}##popout", ref tab.PopOut, flags)) {
             goto End;
         }
 
         ImGui.PushID($"popout-{tab.Name}");
+
+        if (!this.Ui.Plugin.Config.ShowPopOutTitleBar) {
+            ImGui.TextUnformatted(tab.Name);
+            ImGui.Separator();
+        }
 
         this.DrawMessageLog(tab, ImGui.GetContentRegionAvail().Y, false);
 

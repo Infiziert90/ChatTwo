@@ -75,6 +75,13 @@ internal sealed class Tabs : ISettingsTab {
 
                 ImGui.InputText(Language.Options_Tabs_Name, ref tab.Name, 512, ImGuiInputTextFlags.EnterReturnsTrue);
                 ImGui.Checkbox(Language.Options_Tabs_ShowTimestamps, ref tab.DisplayTimestamp);
+                ImGui.Checkbox(Language.Options_Tabs_PopOut, ref tab.PopOut);
+                if (tab.PopOut) {
+                    ImGui.Checkbox(Language.Options_Tabs_IndependentOpacity, ref tab.IndependentOpacity);
+                    if (tab.IndependentOpacity) {
+                        ImGuiUtil.DragFloatVertical(Language.Options_Tabs_Opacity, ref tab.Opacity, 0.1f, 0f, 100f);
+                    }
+                }
 
                 if (ImGuiUtil.BeginComboVertical(Language.Options_Tabs_UnreadMode, tab.UnreadMode.Name())) {
                     foreach (var mode in Enum.GetValues<UnreadMode>()) {
