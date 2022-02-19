@@ -30,6 +30,8 @@ internal sealed class Settings : IUiComponent {
             new About(),
         };
 
+        this.Initialise();
+
         this.Ui.Plugin.Commands.Register("/chat2", "Perform various actions with Chat 2.").Execute += this.Command;
         this.Ui.Plugin.Interface.UiBuilder.OpenConfigUi += this.Toggle;
     }
