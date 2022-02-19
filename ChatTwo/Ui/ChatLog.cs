@@ -369,7 +369,7 @@ internal sealed class ChatLog : IUiComponent {
         }
 
         if (this._lastViewport == ImGuiHelpers.MainViewport.NativePtr) {
-            ImGui.SetNextWindowBgAlpha(this.Ui.Plugin.Config.WindowAlpha);
+            ImGui.SetNextWindowBgAlpha(this.Ui.Plugin.Config.WindowAlpha / 100f);
         }
 
         ImGui.SetNextWindowSize(new Vector2(500, 250) * ImGuiHelpers.GlobalScale, ImGuiCond.FirstUseEver);
@@ -880,8 +880,8 @@ internal sealed class ChatLog : IUiComponent {
             flags |= ImGuiWindowFlags.NoTitleBar;
         }
 
-        var alpha = tab.IndependentOpacity ? tab.Opacity / 100f : this.Ui.Plugin.Config.WindowAlpha;
-        ImGui.SetNextWindowBgAlpha(alpha);
+        var alpha = tab.IndependentOpacity ? tab.Opacity : this.Ui.Plugin.Config.WindowAlpha;
+        ImGui.SetNextWindowBgAlpha(alpha / 100f);
         ImGui.SetNextWindowSize(new Vector2(350, 350) * ImGuiHelpers.GlobalScale, ImGuiCond.FirstUseEver);
         if (!ImGui.Begin($"{tab.Name}##popout", ref tab.PopOut, flags)) {
             goto End;

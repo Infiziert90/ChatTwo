@@ -79,7 +79,7 @@ internal sealed class Tabs : ISettingsTab {
                 if (tab.PopOut) {
                     ImGui.Checkbox(Language.Options_Tabs_IndependentOpacity, ref tab.IndependentOpacity);
                     if (tab.IndependentOpacity) {
-                        ImGuiUtil.DragFloatVertical(Language.Options_Tabs_Opacity, ref tab.Opacity, 0.1f, 0f, 100f);
+                        ImGuiUtil.DragFloatVertical(Language.Options_Tabs_Opacity, ref tab.Opacity, 0.25f, 0f, 100f, $"{tab.Opacity:N2}%%", ImGuiSliderFlags.AlwaysClamp);
                     }
                 }
 

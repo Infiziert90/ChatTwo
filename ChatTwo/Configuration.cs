@@ -8,7 +8,7 @@ namespace ChatTwo;
 
 [Serializable]
 internal class Configuration : IPluginConfiguration {
-    private const int LatestVersion = 3;
+    private const int LatestVersion = 4;
 
     public int Version { get; set; } = LatestVersion;
 
@@ -40,7 +40,7 @@ internal class Configuration : IPluginConfiguration {
     public string GlobalFont = Fonts.GlobalFonts[0].Name;
     public string JapaneseFont = Fonts.JapaneseFonts[0].Item1;
 
-    public float WindowAlpha = 1f;
+    public float WindowAlpha = 100f;
     public Dictionary<ChatType, uint> ChatColours = new();
     public List<Tab> Tabs = new();
 
@@ -96,6 +96,11 @@ internal class Configuration : IPluginConfiguration {
 
                     this.JapaneseFontSize = this.FontSize;
                     this.SymbolsFontSize = this.FontSize;
+                    break;
+                case 3:
+                    this.Version = 4;
+
+                    this.WindowAlpha *= 100f;
                     break;
                 default:
                     PluginLog.Warning($"Couldn't migrate config version {this.Version}");
