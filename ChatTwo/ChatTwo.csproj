@@ -9,6 +9,8 @@
         <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <LangVersion>preview</LangVersion>
+        <DebugSymbols>true</DebugSymbols>
+        <DebugType>full</DebugType>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -47,10 +49,10 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="DalamudPackager" Version="2.1.5"/>
+        <PackageReference Include="DalamudPackager" Version="2.1.6"/>
         <PackageReference Include="LiteDB" Version="5.0.11"/>
         <PackageReference Include="SharpDX.Direct2D1" Version="4.2.0"/>
-        <PackageReference Include="XivCommon" Version="5.0.0"/>
+        <PackageReference Include="XivCommon" Version="5.0.1-alpha.1"/>
     </ItemGroup>
 
     <ItemGroup>

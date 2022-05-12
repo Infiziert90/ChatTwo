@@ -27,65 +27,70 @@ public class Fonts : ISettingsTab {
         }
 
         ImGui.PushTextWrapPos();
-
-        if (ImGuiUtil.BeginComboVertical(Language.Options_Font_Name, this.Mutable.GlobalFont)) {
-            foreach (var font in Ui.Fonts.GlobalFonts) {
-                if (ImGui.Selectable(font.Name, this.Mutable.GlobalFont == font.Name)) {
-                    this.Mutable.GlobalFont = font.Name;
-                }
-
-                if (ImGui.IsWindowAppearing() && this.Mutable.GlobalFont == font.Name) {
-                    ImGui.SetScrollHereY(0.5f);
-                }
-            }
-
-            ImGui.Separator();
-
-            foreach (var name in this.GlobalFonts) {
-                if (ImGui.Selectable(name, this.Mutable.GlobalFont == name)) {
-                    this.Mutable.GlobalFont = name;
-                }
-
-                if (ImGui.IsWindowAppearing() && this.Mutable.GlobalFont == name) {
-                    ImGui.SetScrollHereY(0.5f);
-                }
-            }
-
-            ImGui.EndCombo();
-        }
-
-        ImGuiUtil.HelpText(string.Format(Language.Options_Font_Description, Plugin.PluginName));
-        ImGuiUtil.WarningText(Language.Options_Font_Warning);
+        
+        ImGui.Checkbox(Language.Options_FontsEnabled, ref this.Mutable.FontsEnabled);
         ImGui.Spacing();
 
-        if (ImGuiUtil.BeginComboVertical(Language.Options_JapaneseFont_Name, this.Mutable.JapaneseFont)) {
-            foreach (var (name, _) in Ui.Fonts.JapaneseFonts) {
-                if (ImGui.Selectable(name, this.Mutable.JapaneseFont == name)) {
-                    this.Mutable.JapaneseFont = name;
+        if (this.Mutable.FontsEnabled) {
+            if (ImGuiUtil.BeginComboVertical(Language.Options_Font_Name, this.Mutable.GlobalFont)) {
+                foreach (var font in Ui.Fonts.GlobalFonts) {
+                    if (ImGui.Selectable(font.Name, this.Mutable.GlobalFont == font.Name)) {
+                        this.Mutable.GlobalFont = font.Name;
+                    }
+
+                    if (ImGui.IsWindowAppearing() && this.Mutable.GlobalFont == font.Name) {
+                        ImGui.SetScrollHereY(0.5f);
+                    }
                 }
 
-                if (ImGui.IsWindowAppearing() && this.Mutable.JapaneseFont == name) {
-                    ImGui.SetScrollHereY(0.5f);
+                ImGui.Separator();
+
+                foreach (var name in this.GlobalFonts) {
+                    if (ImGui.Selectable(name, this.Mutable.GlobalFont == name)) {
+                        this.Mutable.GlobalFont = name;
+                    }
+
+                    if (ImGui.IsWindowAppearing() && this.Mutable.GlobalFont == name) {
+                        ImGui.SetScrollHereY(0.5f);
+                    }
                 }
+
+                ImGui.EndCombo();
             }
 
-            ImGui.Separator();
+            ImGuiUtil.HelpText(string.Format(Language.Options_Font_Description, Plugin.PluginName));
+            ImGuiUtil.WarningText(Language.Options_Font_Warning);
+            ImGui.Spacing();
 
-            foreach (var family in this.JpFonts) {
-                if (ImGui.Selectable(family, this.Mutable.JapaneseFont == family)) {
-                    this.Mutable.JapaneseFont = family;
+            if (ImGuiUtil.BeginComboVertical(Language.Options_JapaneseFont_Name, this.Mutable.JapaneseFont)) {
+                foreach (var (name, _) in Ui.Fonts.JapaneseFonts) {
+                    if (ImGui.Selectable(name, this.Mutable.JapaneseFont == name)) {
+                        this.Mutable.JapaneseFont = name;
+                    }
+
+                    if (ImGui.IsWindowAppearing() && this.Mutable.JapaneseFont == name) {
+                        ImGui.SetScrollHereY(0.5f);
+                    }
                 }
 
-                if (ImGui.IsWindowAppearing() && this.Mutable.JapaneseFont == family) {
-                    ImGui.SetScrollHereY(0.5f);
+                ImGui.Separator();
+
+                foreach (var family in this.JpFonts) {
+                    if (ImGui.Selectable(family, this.Mutable.JapaneseFont == family)) {
+                        this.Mutable.JapaneseFont = family;
+                    }
+
+                    if (ImGui.IsWindowAppearing() && this.Mutable.JapaneseFont == family) {
+                        ImGui.SetScrollHereY(0.5f);
+                    }
                 }
+
+                ImGui.EndCombo();
             }
 
-            ImGui.EndCombo();
+            ImGuiUtil.HelpText(string.Format(Language.Options_JapaneseFont_Description, Plugin.PluginName));
+            ImGui.Spacing();
         }
-
-        ImGuiUtil.HelpText(string.Format(Language.Options_JapaneseFont_Description, Plugin.PluginName));
-        ImGui.Spacing();
 
         const float speed = .0125f;
         const float min = 8f;

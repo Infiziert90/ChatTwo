@@ -34,6 +34,7 @@ internal class Configuration : IPluginConfiguration {
     public bool FilterIncludePreviousSessions;
     public bool SharedMode;
 
+    public bool FontsEnabled = true;
     public float FontSize = 17f;
     public float JapaneseFontSize = 17f;
     public float SymbolsFontSize = 17f;
@@ -66,6 +67,7 @@ internal class Configuration : IPluginConfiguration {
         this.LoadPreviousSession = other.LoadPreviousSession;
         this.FilterIncludePreviousSessions = other.FilterIncludePreviousSessions;
         this.SharedMode = other.SharedMode;
+        this.FontsEnabled = other.FontsEnabled;
         this.FontSize = other.FontSize;
         this.JapaneseFontSize = other.JapaneseFontSize;
         this.SymbolsFontSize = other.SymbolsFontSize;

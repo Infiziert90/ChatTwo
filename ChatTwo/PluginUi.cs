@@ -2,6 +2,7 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using ChatTwo.Ui;
 using Dalamud.Interface;
+using Dalamud.Interface.GameFonts;
 using Dalamud.Logging;
 using ImGuiNET;
 
@@ -13,6 +14,9 @@ internal sealed class PluginUi : IDisposable {
     internal bool SettingsVisible;
     internal bool ScreenshotMode;
     internal string Salt { get; }
+
+    internal GameFontHandle Axis { get; private set; }
+    internal GameFontHandle AxisItalic { get; private set; }
 
     internal ImFontPtr? RegularFont { get; private set; }
     internal ImFontPtr? ItalicFont { get; private set; }
@@ -112,7 +116,11 @@ internal sealed class PluginUi : IDisposable {
         BuildRange(out this._jpRange, GlyphRangesJapanese.GlyphRanges);
         this.SetUpUserFonts();
 
-        var gameSym = File.ReadAllBytes(Path.Combine(this.Plugin.Interface.DalamudAssetDirectory.FullName, "UIRes", "gamesym.ttf"));
+        var gameSym = new HttpClient().GetAsync("https://img.finalfantasyxiv.com/lds/pc/global/fonts/FFXIV_Lodestone_SSF.ttf")
+            .Result
+            .Content
+            .ReadAsByteArrayAsync()
+            .Result;
         this._gameSymFont = (
             GCHandle.Alloc(gameSym, GCHandleType.Pinned),
             gameSym.Length
@@ -165,9 +173,13 @@ internal sealed class PluginUi : IDisposable {
         this.DefaultText = ImGui.GetStyle().Colors[(int) ImGuiCol.Text];
 
         var font = this.RegularFont.HasValue;
+        var pushed = font && this.Plugin.Config.FontsEnabled;
+        var axis = !this.Plugin.Config.FontsEnabled && this.Axis.Available;
 
-        if (font) {
+        if (pushed) {
             ImGui.PushFont(this.RegularFont!.Value);
+        } else if (axis) {
+            ImGui.PushFont(this.Axis.ImFont);
         }
 
         foreach (var component in this.Components) {
@@ -178,7 +190,7 @@ internal sealed class PluginUi : IDisposable {
             }
         }
 
-        if (font) {
+        if (pushed || axis) {
             ImGui.PopFont();
         }
     }
@@ -273,6 +285,11 @@ internal sealed class PluginUi : IDisposable {
         this.ItalicFont = null;
 
         this.SetUpUserFonts();
+
+        this.Axis = this.Plugin.Interface.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamily.Axis, this.Plugin.Config.FontSize));
+        this.AxisItalic = this.Plugin.Interface.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamily.Axis, this.Plugin.Config.FontSize) {
+            SkewStrength = this.Plugin.Config.FontSize / 6,
+        });
 
         // load regular noto sans and merge in jp + game icons
         this.RegularFont = ImGui.GetIO().Fonts.AddFontFromMemoryTTF(

@@ -30,7 +30,7 @@ internal unsafe class GameFunctions : IDisposable {
     [Signature("48 89 5C 24 ?? 57 48 83 EC 20 48 8B FA 48 8B D9 E8 ?? ?? ?? ?? 48 8B 8B ?? ?? ?? ?? 48 85 C9", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<AgentInterface*, ulong, byte> _openPartyFinder = null!;
 
-    [Signature("E8 ?? ?? ?? ?? EB 42 48 8B 47 30", Fallibility = Fallibility.Fallible)]
+    [Signature("E8 ?? ?? ?? ?? EB 20 48 8B 46 28", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<AgentInterface*, uint, void> _openAchievement = null!;
 
     #endregion
@@ -164,27 +164,27 @@ internal unsafe class GameFunctions : IDisposable {
 
         var agentPtr = (IntPtr) agent;
 
-        // addresses mentioned here are 6.01
+        // addresses mentioned here are 6.11
         // see the call near the end of AgentItemDetail.Update
-        // offsets valid as of 6.01
+        // offsets valid as of 6.11
 
-        // 8BFC49: sets some shit
+        // A54B19: sets some shit
         *(uint*) (agentPtr + 0x20) = 22;
-        // 8C04C8: switch goes down to default, which is what we want
+        // A55218: switch goes down to default, which is what we want
         *(byte*) (agentPtr + 0x118) = 1;
-        // 8BFCF6: item id when hovering over item in chat
+        // A54BE0: item id when hovering over item in chat
         *(uint*) (agentPtr + 0x11C) = id;
-        // 8BFCE4: always 0 when hovering over item in chat
+        // A54BCC: always 0 when hovering over item in chat
         *(uint*) (agentPtr + 0x120) = 0;
-        // 8C0B55: skips a check to do with inventory
+        // A558A5: skips a check to do with inventory
         *(byte*) (agentPtr + 0x128) &= 0xEF;
-        // 8BFC7C: when set to 1, lets everything continue (one frame)
-        *(byte*) (agentPtr + 0x146) = 1;
-        // 8BFC89: skips early return
-        *(byte*) (agentPtr + 0x14A) = 0;
+        // A54B3F: when set to 1, lets everything continue (one frame)
+        *(byte*) (agentPtr + 0x14A) = 1;
+        // A54B59: skips early return
+        *(byte*) (agentPtr + 0x14E) = 0;
 
         // this just probably needs to be set
-        agent->AddonId = (uint) addon->ID;
+        agent->AddonId = addon->ID;
 
         // vcall from E8 ?? ?? ?? ?? 0F B7 C0 48 83 C4 60
         var vf5 = (delegate* unmanaged<AtkUnitBase*, byte, uint, void>*) ((IntPtr) addon->VTable + 40);

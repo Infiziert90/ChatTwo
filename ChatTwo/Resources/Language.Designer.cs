@@ -520,6 +520,15 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enable custom fonts.
+        /// </summary>
+        internal static string Options_FontsEnabled {
+            get {
+                return ResourceManager.GetString("Options_FontsEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Font size.
         /// </summary>
         internal static string Options_FontSize_Name {

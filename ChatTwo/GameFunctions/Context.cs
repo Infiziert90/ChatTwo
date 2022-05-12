@@ -87,8 +87,8 @@ internal sealed unsafe class Context {
         }
 
         var uiModule = Framework.Instance()->GetUiModule();
-        var vf35 = (delegate* unmanaged<UIModule*, IntPtr>) uiModule->vfunc[35];
-        var a1 = vf35(uiModule);
+        var vf36 = (delegate* unmanaged<UIModule*, IntPtr>) uiModule->vfunc[36];
+        var a1 = vf36(uiModule);
         this._searchForRecipesUsingItem(a1, itemId);
     }
 

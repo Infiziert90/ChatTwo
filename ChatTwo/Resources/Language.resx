@@ -494,4 +494,7 @@
     <data name="Options_Tabs_Opacity" xml:space="preserve">
         <value>Opacity</value>
     </data>
+    <data name="Options_FontsEnabled" xml:space="preserve">
+        <value>Enable custom fonts</value>
+    </data>
 </root>

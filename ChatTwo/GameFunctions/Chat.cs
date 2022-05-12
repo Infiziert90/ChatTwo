@@ -34,7 +34,7 @@ internal sealed unsafe class Chat : IDisposable {
     [Signature("E8 ?? ?? ?? ?? 48 3B F0 74 35")]
     private readonly delegate* unmanaged<AtkStage*, IntPtr> _getFocus = null!;
 
-    [Signature("44 8B 89 ?? ?? ?? ?? 4C 8B C1")]
+    [Signature("44 8B 89 ?? ?? ?? ?? 4C 8B C1 45 85 C9")]
     private readonly delegate* unmanaged<void*, int, IntPtr> _getTellHistory = null!;
 
     [Signature("E8 ?? ?? ?? ?? B8 ?? ?? ?? ?? 48 8D 4D 50")]

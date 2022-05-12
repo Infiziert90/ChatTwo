@@ -39,12 +39,14 @@ internal sealed class ChatLog : IUiComponent {
 
     private PayloadHandler PayloadHandler { get; }
     private Dictionary<string, ChatType> TextCommandChannels { get; } = new();
+    private HashSet<string> AllCommands { get; } = new();
 
     internal ChatLog(PluginUi ui) {
         this.Ui = ui;
         this.PayloadHandler = new PayloadHandler(this.Ui, this);
 
         this.SetUpTextCommandChannels();
+        this.SetUpAllCommands();
 
         this.Ui.Plugin.Commands.Register("/clearlog2", "Clear the Chat 2 chat log").Execute += this.ClearLog;
         this.Ui.Plugin.Commands.Register("/chat2").Execute += this.ToggleChat;
@@ -137,6 +139,11 @@ internal sealed class ChatLog : IUiComponent {
         }
     }
 
+    private bool IsValidCommand(string command) {
+        return this.Ui.Plugin.CommandManager.Commands.ContainsKey(command)
+               || this.AllCommands.Contains(command);
+    }
+
     private void ClearLog(string command, string arguments) {
         switch (arguments) {
             case "all":
@@ -211,6 +218,23 @@ internal sealed class ChatLog : IUiComponent {
         this.TextCommandChannels[command.ShortCommand] = type;
         this.TextCommandChannels[command.Alias] = type;
         this.TextCommandChannels[command.ShortAlias] = type;
+    }
+
+    private void SetUpAllCommands() {
+        if (this.Ui.Plugin.DataManager.GetExcelSheet<TextCommand>() is not { } commands) {
+            return;
+        }
+
+        var commandNames = commands.SelectMany(cmd => new[] {
+            cmd.Command.RawString,
+            cmd.ShortCommand.RawString,
+            cmd.Alias.RawString,
+            cmd.ShortAlias.RawString,
+        });
+
+        foreach (var command in commandNames) {
+            this.AllCommands.Add(command);
+        }
     }
 
     private void AddBacklog(string message) {
@@ -478,6 +502,10 @@ internal sealed class ChatLog : IUiComponent {
             var command = this.Chat.Split(' ')[0];
             if (this.TextCommandChannels.TryGetValue(command, out var channel)) {
                 inputType = channel;
+            }
+
+            if (!this.IsValidCommand(command)) {
+                inputType = ChatType.Error;
             }
         }
 
@@ -1040,8 +1068,17 @@ internal sealed class ChatLog : IUiComponent {
             ImGui.PushStyleColor(ImGuiCol.Text, colour.Value);
         }
 
-        if (text.Italic && this.Ui.ItalicFont.HasValue) {
-            ImGui.PushFont(this.Ui.ItalicFont.Value);
+        var pushed = false;
+        if (text.Italic) {
+            if (this.Ui.ItalicFont.HasValue && this.Ui.Plugin.Config.FontsEnabled) {
+                ImGui.PushFont(this.Ui.ItalicFont.Value);
+                pushed = true;
+            }
+
+            if (!this.Ui.Plugin.Config.FontsEnabled && this.Ui.AxisItalic.Available) {
+                ImGui.PushFont(this.Ui.AxisItalic.ImFont);
+                pushed = true;
+            }
         }
 
         var content = text.Content;
@@ -1062,7 +1099,7 @@ internal sealed class ChatLog : IUiComponent {
             ImGuiUtil.PostPayload(chunk, handler);
         }
 
-        if (text.Italic && this.Ui.ItalicFont.HasValue) {
+        if (pushed) {
             ImGui.PopFont();
         }
 
