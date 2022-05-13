@@ -38,12 +38,14 @@ internal sealed class ChatLog : IUiComponent {
     internal Vector2 LastWindowPos { get; private set; } = Vector2.Zero;
 
     private PayloadHandler PayloadHandler { get; }
+    private Lender<PayloadHandler> HandlerLender { get; }
     private Dictionary<string, ChatType> TextCommandChannels { get; } = new();
     private HashSet<string> AllCommands { get; } = new();
 
     internal ChatLog(PluginUi ui) {
         this.Ui = ui;
         this.PayloadHandler = new PayloadHandler(this.Ui, this);
+        this.HandlerLender = new Lender<PayloadHandler>(() => new PayloadHandler(this.Ui, this));
 
         this.SetUpTextCommandChannels();
         this.SetUpAllCommands();
@@ -618,7 +620,7 @@ internal sealed class ChatLog : IUiComponent {
         this._hideState = HideState.User;
     }
 
-    private void DrawMessageLog(Tab tab, float childHeight, bool switchedTab) {
+    private void DrawMessageLog(Tab tab, PayloadHandler handler, float childHeight, bool switchedTab) {
         if (ImGui.BeginChild("##chat2-messages", new Vector2(-1, childHeight))) {
             ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, Vector2.Zero);
             var table = tab.DisplayTimestamp && this.Ui.Plugin.Config.PrettierTimestamps;
@@ -712,11 +714,11 @@ internal sealed class ChatLog : IUiComponent {
 
                     var beforeDraw = ImGui.GetCursorScreenPos();
                     if (message.Sender.Count > 0) {
-                        this.DrawChunks(message.Sender, true, this.PayloadHandler, lineWidth);
+                        this.DrawChunks(message.Sender, true, handler, lineWidth);
                         ImGui.SameLine();
                     }
 
-                    this.DrawChunks(message.Content, true, this.PayloadHandler, lineWidth);
+                    this.DrawChunks(message.Content, true, handler, lineWidth);
                     var afterDraw = ImGui.GetCursorScreenPos();
 
                     message.Height = ImGui.GetCursorPosY() - lastPos;
@@ -740,7 +742,7 @@ internal sealed class ChatLog : IUiComponent {
                 ImGui.SetScrollHereY(1f);
             }
 
-            this.PayloadHandler.Draw();
+            handler.Draw();
 
             if (table) {
                 ImGui.EndTable();
@@ -777,7 +779,7 @@ internal sealed class ChatLog : IUiComponent {
             this.LastTab = tabI;
             tab.Unread = 0;
 
-            this.DrawMessageLog(tab, GetRemainingHeightForMessageLog(), switchedTab);
+            this.DrawMessageLog(tab, this.PayloadHandler, GetRemainingHeightForMessageLog(), switchedTab);
 
             ImGui.EndTabItem();
         }
@@ -832,7 +834,7 @@ internal sealed class ChatLog : IUiComponent {
         }
 
         if (currentTab > -1) {
-            this.DrawMessageLog(this.Ui.Plugin.Config.Tabs[currentTab], childHeight, switchedTab);
+            this.DrawMessageLog(this.Ui.Plugin.Config.Tabs[currentTab], this.PayloadHandler, childHeight, switchedTab);
         }
 
         ImGui.EndTable();
@@ -897,6 +899,7 @@ internal sealed class ChatLog : IUiComponent {
     }
 
     private void DrawPopOuts() {
+        this.HandlerLender.ResetCounter();
         foreach (var tab in this.Ui.Plugin.Config.Tabs.Where(tab => tab.PopOut)) {
             this.DrawPopOut(tab);
         }
@@ -922,7 +925,8 @@ internal sealed class ChatLog : IUiComponent {
             ImGui.Separator();
         }
 
-        this.DrawMessageLog(tab, ImGui.GetContentRegionAvail().Y, false);
+        var handler = this.HandlerLender.Borrow();
+        this.DrawMessageLog(tab, handler, ImGui.GetContentRegionAvail().Y, false);
 
         ImGui.PopID();
 
