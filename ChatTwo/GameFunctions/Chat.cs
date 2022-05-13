@@ -185,10 +185,10 @@ internal sealed unsafe class Chat : IDisposable {
             *(int*) (uiModule + this._linkshellCycleOffset.Value) = -1;
         }
 
-        return RotateLinkshellHistoryInternal(189, mode);
+        return RotateLinkshellHistoryInternal(201, mode);
     }
 
-    internal ulong RotateCrossLinkshellHistory(RotateMode mode) => RotateLinkshellHistoryInternal(191, mode);
+    internal ulong RotateCrossLinkshellHistory(RotateMode mode) => RotateLinkshellHistoryInternal(203, mode);
 
     private static ulong RotateLinkshellHistoryInternal(int vfunc, RotateMode mode) {
         var idx = mode switch {
