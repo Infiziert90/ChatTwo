@@ -992,7 +992,7 @@ internal sealed class ChatLog : IUiComponent {
                 for (var i = clipper.DisplayStart; i < clipper.DisplayEnd; i++) {
                     var entry = this._autoCompleteList[i];
 
-                    if (!ImGui.Selectable(entry.String)) {
+                    if (!ImGui.Selectable($"{entry.String}##{entry.Group}/{entry.Row}")) {
                         continue;
                     }
 
