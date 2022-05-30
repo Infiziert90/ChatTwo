@@ -27,7 +27,7 @@ public class Fonts : ISettingsTab {
         }
 
         ImGui.PushTextWrapPos();
-        
+
         ImGui.Checkbox(Language.Options_FontsEnabled, ref this.Mutable.FontsEnabled);
         ImGui.Spacing();
 

@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using System.Text;
 using ChatTwo.Code;
 using ChatTwo.GameFunctions.Types;
@@ -20,10 +21,12 @@ namespace ChatTwo.Ui;
 
 internal sealed class ChatLog : IUiComponent {
     private const string ChatChannelPicker = "chat-channel-picker";
+    private const string AutoCompleteId = "##chat2-autocomplete";
 
     internal PluginUi Ui { get; }
 
     internal bool Activate;
+    private int _activatePos = -1;
     internal string Chat = string.Empty;
     private readonly TextureWrap? _fontIcon;
     private readonly List<string> _inputBacklog = new();
@@ -33,6 +36,10 @@ internal sealed class ChatLog : IUiComponent {
     private TellTarget? _tellTarget;
     private readonly Stopwatch _lastResize = new();
     private CommandHelp? _commandHelp;
+    private AutoCompleteInfo? _autoCompleteInfo;
+    private bool _autoCompleteOpen;
+    private List<AutoTranslateEntry>? _autoCompleteList;
+    private bool _fixCursor;
 
     internal Vector2 LastWindowSize { get; private set; } = Vector2.Zero;
     internal Vector2 LastWindowPos { get; private set; } = Vector2.Zero;
@@ -349,6 +356,7 @@ internal sealed class ChatLog : IUiComponent {
 
         this._commandHelp?.Draw();
         this.DrawPopOuts();
+        this.DrawAutoComplete();
     }
 
     /// <returns>true if window was rendered</returns>
@@ -525,6 +533,7 @@ internal sealed class ChatLog : IUiComponent {
         const ImGuiInputTextFlags inputFlags = ImGuiInputTextFlags.EnterReturnsTrue
                                                | ImGuiInputTextFlags.CallbackAlways
                                                | ImGuiInputTextFlags.CallbackCharFilter
+                                               | ImGuiInputTextFlags.CallbackCompletion
                                                | ImGuiInputTextFlags.CallbackHistory;
         if (ImGui.InputText("##chat2-input", ref this.Chat, 500, inputFlags, this.Callback)) {
             if (!string.IsNullOrWhiteSpace(this.Chat)) {
@@ -560,7 +569,10 @@ internal sealed class ChatLog : IUiComponent {
                     }
                 }
 
-                this.Ui.Plugin.Common.Functions.Chat.SendMessageUnsafe(Encoding.UTF8.GetBytes(trimmed));
+                var bytes = Encoding.UTF8.GetBytes(trimmed);
+                AutoTranslate.ReplaceWithPayload(this.Ui.Plugin.DataManager, ref bytes);
+
+                this.Ui.Plugin.Common.Functions.Chat.SendMessageUnsafe(bytes);
             }
 
             Skip:
@@ -938,8 +950,110 @@ internal sealed class ChatLog : IUiComponent {
         }
     }
 
+    private unsafe void DrawAutoComplete() {
+        if (this._autoCompleteInfo == null) {
+            return;
+        }
+
+        this._autoCompleteList ??= AutoTranslate.Matching(this.Ui.Plugin.DataManager, this._autoCompleteInfo.ToComplete);
+
+        if (this._autoCompleteOpen) {
+            ImGui.OpenPopup(AutoCompleteId);
+            this._autoCompleteOpen = false;
+        }
+
+        ImGui.SetNextWindowSize(new Vector2(350, 250) * ImGuiHelpers.GlobalScale);
+        if (!ImGui.BeginPopup(AutoCompleteId)) {
+            if (this._activatePos == -1) {
+                this._activatePos = this._autoCompleteInfo.EndPos;
+            }
+
+            this._autoCompleteInfo = null;
+            this._autoCompleteList = null;
+            this.Activate = true;
+            return;
+        }
+
+        ImGui.SetNextItemWidth(-1);
+        if (ImGui.InputTextWithHint("##auto-complete-filter", "Search auto translate...", ref this._autoCompleteInfo.ToComplete, 256, ImGuiInputTextFlags.CallbackAlways, this.FixCursor)) {
+            this._autoCompleteList = AutoTranslate.Matching(this.Ui.Plugin.DataManager, this._autoCompleteInfo.ToComplete);
+        }
+
+        if (ImGui.IsWindowAppearing()) {
+            this._fixCursor = true;
+            ImGui.SetKeyboardFocusHere();
+        }
+
+        if (ImGui.BeginChild("##auto-complete-list", new Vector2(0, 0), false, ImGuiWindowFlags.HorizontalScrollbar)) {
+            var clipper = new ImGuiListClipperPtr(ImGuiNative.ImGuiListClipper_ImGuiListClipper());
+
+            clipper.Begin(this._autoCompleteList.Count);
+            while (clipper.Step()) {
+                for (var i = clipper.DisplayStart; i < clipper.DisplayEnd; i++) {
+                    var entry = this._autoCompleteList[i];
+
+                    if (!ImGui.Selectable(entry.String)) {
+                        continue;
+                    }
+
+                    var before = this.Chat[..this._autoCompleteInfo.StartPos];
+                    var after = this.Chat[this._autoCompleteInfo.EndPos..];
+                    var replacement = $"<at:{entry.Group},{entry.Row}>";
+                    this.Chat = $"{before}{replacement}{after}";
+                    ImGui.CloseCurrentPopup();
+                    this.Activate = true;
+                    this._activatePos = this._autoCompleteInfo.StartPos + replacement.Length;
+                }
+            }
+
+            ImGui.EndChild();
+        }
+
+        ImGui.EndPopup();
+    }
+
+    private unsafe int FixCursor(ImGuiInputTextCallbackData* data) {
+        if (!this._fixCursor || this._autoCompleteInfo == null) {
+            return 0;
+        }
+
+        this._fixCursor = false;
+        data->CursorPos = this._autoCompleteInfo.ToComplete.Length;
+        data->SelectionStart = data->SelectionEnd = data->CursorPos;
+
+        return 0;
+    }
+
     private unsafe int Callback(ImGuiInputTextCallbackData* data) {
         var ptr = new ImGuiInputTextCallbackDataPtr(data);
+
+        if (data->EventFlag == ImGuiInputTextFlags.CallbackCompletion) {
+            if (ptr.CursorPos == 0) {
+                this._autoCompleteInfo = new AutoCompleteInfo(
+                    string.Empty,
+                    ptr.CursorPos,
+                    ptr.CursorPos
+                );
+                this._autoCompleteOpen = true;
+
+                return 0;
+            }
+
+            int white;
+            for (white = ptr.CursorPos - 1; white >= 0; white--) {
+                if (data->Buf[white] == ' ') {
+                    break;
+                }
+            }
+
+            this._autoCompleteInfo = new AutoCompleteInfo(
+                Marshal.PtrToStringUTF8(ptr.Buf + white + 1, ptr.CursorPos - white - 1),
+                white + 1,
+                ptr.CursorPos
+            );
+            this._autoCompleteOpen = true;
+            return 0;
+        }
 
         if (data->EventFlag == ImGuiInputTextFlags.CallbackCharFilter) {
             var valid = this.Ui.Plugin.Functions.Chat.IsCharValid((char) ptr.EventChar);
@@ -950,8 +1064,9 @@ internal sealed class ChatLog : IUiComponent {
 
         if (this.Activate) {
             this.Activate = false;
-            data->CursorPos = this.Chat.Length;
+            data->CursorPos = this._activatePos > -1 ? this._activatePos : this.Chat.Length;
             data->SelectionStart = data->SelectionEnd = data->CursorPos;
+            this._activatePos = -1;
         }
 
         var text = MemoryHelper.ReadString((IntPtr) data->Buf, data->BufTextLen);
