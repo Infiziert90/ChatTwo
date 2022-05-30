@@ -812,5 +812,11 @@ namespace ChatTwo.Resources {
                 return ResourceManager.GetString("Options_SortAutoTranslate_Description", resourceCulture);
             }
         }
+        
+        internal static string AutoTranslate_Completion_Key {
+            get {
+                return ResourceManager.GetString("AutoTranslate_Completion_Key", resourceCulture);
+            }
+        }
     }
 }

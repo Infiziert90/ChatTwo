@@ -506,4 +506,7 @@
     <data name="Options_SortAutoTranslate_Description" xml:space="preserve">
         <value>If this is enabled, the Auto Translate list will be sorted alphabetically.</value>
     </data>
+    <data name="AutoTranslate_Completion_Key" xml:space="preserve">
+        <value>Ctrl + {0}</value>
+    </data>
 </root>

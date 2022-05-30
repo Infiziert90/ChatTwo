@@ -962,7 +962,7 @@ internal sealed class ChatLog : IUiComponent {
             this._autoCompleteOpen = false;
         }
 
-        ImGui.SetNextWindowSize(new Vector2(350, 250) * ImGuiHelpers.GlobalScale);
+        ImGui.SetNextWindowSize(new Vector2(400, 300) * ImGuiHelpers.GlobalScale);
         if (!ImGui.BeginPopup(AutoCompleteId)) {
             if (this._activatePos == -1) {
                 this._activatePos = this._autoCompleteInfo.EndPos;
@@ -979,6 +979,31 @@ internal sealed class ChatLog : IUiComponent {
             this._autoCompleteList = AutoTranslate.Matching(this.Ui.Plugin.DataManager, this._autoCompleteInfo.ToComplete, this.Ui.Plugin.Config.SortAutoTranslate);
         }
 
+        var selected = -1;
+        if (ImGui.IsItemActive() && ImGui.GetIO().KeyCtrl) {
+            for (var i = 0; i < 10 && i < this._autoCompleteList.Count; i++) {
+                var num = (i + 1) % 10;
+                var key = (int) VirtualKey.KEY_0 + num;
+                var key2 = (int) VirtualKey.NUMPAD0 + num;
+                if (ImGui.IsKeyDown(key) || ImGui.IsKeyDown(key2)) {
+                    selected = i;
+                }
+            }
+        }
+
+        if (ImGui.IsItemDeactivated()) {
+            if (ImGui.IsKeyDown(ImGui.GetKeyIndex(ImGuiKey.Escape))) {
+                ImGui.CloseCurrentPopup();
+                goto End;
+            }
+
+            var enter = ImGui.IsKeyDown(ImGui.GetKeyIndex(ImGuiKey.Enter))
+                        || ImGui.IsKeyDown(ImGui.GetKeyIndex(ImGuiKey.KeyPadEnter));
+            if (this._autoCompleteList.Count > 0 && enter) {
+                selected = 0;
+            }
+        }
+
         if (ImGui.IsWindowAppearing()) {
             this._fixCursor = true;
             ImGui.SetKeyboardFocusHere();
@@ -992,7 +1017,19 @@ internal sealed class ChatLog : IUiComponent {
                 for (var i = clipper.DisplayStart; i < clipper.DisplayEnd; i++) {
                     var entry = this._autoCompleteList[i];
 
-                    if (!ImGui.Selectable($"{entry.String}##{entry.Group}/{entry.Row}")) {
+                    var clicked = ImGui.Selectable($"{entry.String}##{entry.Group}/{entry.Row}") || selected == i;
+
+                    if (i < 10) {
+                        var button = (i + 1) % 10;
+                        var text = string.Format(Language.AutoTranslate_Completion_Key, button);
+                        var size = ImGui.CalcTextSize(text);
+                        ImGui.SameLine(ImGui.GetContentRegionAvail().X - size.X);
+                        ImGui.PushStyleColor(ImGuiCol.Text, *ImGui.GetStyleColorVec4(ImGuiCol.TextDisabled));
+                        ImGui.TextUnformatted(text);
+                        ImGui.PopStyleColor();
+                    }
+
+                    if (!clicked) {
                         continue;
                     }
 
@@ -1009,6 +1046,7 @@ internal sealed class ChatLog : IUiComponent {
             ImGui.EndChild();
         }
 
+        End:
         ImGui.EndPopup();
     }
 
