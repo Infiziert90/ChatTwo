@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <Version>1.15.0</Version>
+        <Version>1.15.1</Version>
         <TargetFramework>net5.0-windows</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
@@ -53,23 +53,23 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="DalamudPackager" Version="2.1.6" />
-        <PackageReference Include="LiteDB" Version="5.0.11" />
-        <PackageReference Include="Pidgin" Version="3.1.0" />
-        <PackageReference Include="SharpDX.Direct2D1" Version="4.2.0" />
-        <PackageReference Include="XivCommon" Version="5.0.1-alpha.1" />
+        <PackageReference Include="DalamudPackager" Version="2.1.6"/>
+        <PackageReference Include="LiteDB" Version="5.0.11"/>
+        <PackageReference Include="Pidgin" Version="3.1.0"/>
+        <PackageReference Include="SharpDX.Direct2D1" Version="4.2.0"/>
+        <PackageReference Include="XivCommon" Version="5.0.1-alpha.1"/>
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="fonts\NotoSans-Italic.ttf" />
-        <EmbeddedResource Include="fonts\NotoSans-Regular.ttf" />
-        <EmbeddedResource Include="fonts\NotoSansJP-Regular.otf" />
-        <EmbeddedResource Include="fonts\NotoSerif-Italic.ttf" />
-        <EmbeddedResource Include="fonts\NotoSerif-Regular.ttf" />
-        <EmbeddedResource Include="fonts\OpenSans-Italic.ttf" />
-        <EmbeddedResource Include="fonts\OpenSans-Regular.ttf" />
-        <EmbeddedResource Include="fonts\Roboto-Italic.ttf" />
-        <EmbeddedResource Include="fonts\Roboto-Regular.ttf" />
+        <EmbeddedResource Include="fonts\NotoSans-Italic.ttf"/>
+        <EmbeddedResource Include="fonts\NotoSans-Regular.ttf"/>
+        <EmbeddedResource Include="fonts\NotoSansJP-Regular.otf"/>
+        <EmbeddedResource Include="fonts\NotoSerif-Italic.ttf"/>
+        <EmbeddedResource Include="fonts\NotoSerif-Regular.ttf"/>
+        <EmbeddedResource Include="fonts\OpenSans-Italic.ttf"/>
+        <EmbeddedResource Include="fonts\OpenSans-Regular.ttf"/>
+        <EmbeddedResource Include="fonts\Roboto-Italic.ttf"/>
+        <EmbeddedResource Include="fonts\Roboto-Regular.ttf"/>
     </ItemGroup>
 
     <ItemGroup>
