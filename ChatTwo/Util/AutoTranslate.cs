@@ -16,6 +16,7 @@ namespace ChatTwo.Util;
 
 internal static class AutoTranslate {
     private static readonly Dictionary<ClientLanguage, List<AutoTranslateEntry>> Entries = new();
+    private static readonly HashSet<(uint, uint)> ValidEntries = new();
 
     private static Parser<char, (string name, Maybe<IEnumerable<ISelectorPart>> selector)> Parser() {
         var sheetName = Any
@@ -92,6 +93,8 @@ internal static class AutoTranslate {
         if (Entries.TryGetValue(data.Language, out var entries)) {
             return entries;
         }
+        
+        var shouldAdd = ValidEntries.Count == 0;
 
         var parser = Parser();
         var list = new List<AutoTranslateEntry>();
@@ -167,6 +170,10 @@ internal static class AutoTranslate {
                                     text,
                                     name
                                 ));
+
+                                if (shouldAdd) {
+                                    ValidEntries.Add((row.Group, (uint) i));
+                                }
                             }
                         }
                     }
@@ -179,6 +186,10 @@ internal static class AutoTranslate {
                     text.TextValue,
                     text
                 ));
+                
+                if (shouldAdd) {
+                    ValidEntries.Add((row.Group, row.RowId));
+                }
             }
         }
 
@@ -222,16 +233,21 @@ internal static class AutoTranslate {
             return;
         }
 
+        if (ValidEntries.Count == 0) {
+            // populate the list of valid entries
+            AllEntries(data);
+        }
+
         var start = -1;
         for (var i = 0; i < bytes.Length; i++) {
             if (start != -1) {
                 if (bytes[i] == '>') {
                     var tag = Encoding.UTF8.GetString(bytes[start..(i + 1)]);
                     var parts = tag[4..^1].Split(',', 2);
-                    if (uint.TryParse(parts[0], out var group) && uint.TryParse(parts[1], out var key)) {
-                        var payload = AllEntries(data).FirstOrDefault(entry => entry.Group == group && entry.Row == key) == null
-                            ? Array.Empty<byte>()
-                            : new AutoTranslatePayload(group, key).Encode();
+                    if (parts.Length == 2 && uint.TryParse(parts[0], out var group) && uint.TryParse(parts[1], out var key)) {
+                        var payload = ValidEntries.Contains((group, key))
+                            ? new AutoTranslatePayload(group, key).Encode()
+                            : Array.Empty<byte>();
                         var oldBytes = bytes.ToArray();
                         var lengthDiff = payload.Length - (i - start);
                         bytes = new byte[oldBytes.Length + lengthDiff];
