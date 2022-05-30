@@ -33,6 +33,7 @@ internal class Configuration : IPluginConfiguration {
     public bool LoadPreviousSession;
     public bool FilterIncludePreviousSessions;
     public bool SharedMode;
+    public bool SortAutoTranslate;
 
     public bool FontsEnabled = true;
     public float FontSize = 17f;
@@ -67,6 +68,7 @@ internal class Configuration : IPluginConfiguration {
         this.LoadPreviousSession = other.LoadPreviousSession;
         this.FilterIncludePreviousSessions = other.FilterIncludePreviousSessions;
         this.SharedMode = other.SharedMode;
+        this.SortAutoTranslate = other.SortAutoTranslate;
         this.FontsEnabled = other.FontsEnabled;
         this.FontSize = other.FontSize;
         this.JapaneseFontSize = other.JapaneseFontSize;

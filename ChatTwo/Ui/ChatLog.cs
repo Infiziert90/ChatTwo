@@ -955,7 +955,7 @@ internal sealed class ChatLog : IUiComponent {
             return;
         }
 
-        this._autoCompleteList ??= AutoTranslate.Matching(this.Ui.Plugin.DataManager, this._autoCompleteInfo.ToComplete);
+        this._autoCompleteList ??= AutoTranslate.Matching(this.Ui.Plugin.DataManager, this._autoCompleteInfo.ToComplete, this.Ui.Plugin.Config.SortAutoTranslate);
 
         if (this._autoCompleteOpen) {
             ImGui.OpenPopup(AutoCompleteId);
@@ -975,8 +975,8 @@ internal sealed class ChatLog : IUiComponent {
         }
 
         ImGui.SetNextItemWidth(-1);
-        if (ImGui.InputTextWithHint("##auto-complete-filter", "Search auto translate...", ref this._autoCompleteInfo.ToComplete, 256, ImGuiInputTextFlags.CallbackAlways, this.FixCursor)) {
-            this._autoCompleteList = AutoTranslate.Matching(this.Ui.Plugin.DataManager, this._autoCompleteInfo.ToComplete);
+        if (ImGui.InputTextWithHint("##auto-complete-filter", Language.AutoTranslate_Search_Hint, ref this._autoCompleteInfo.ToComplete, 256, ImGuiInputTextFlags.CallbackAlways, this.FixCursor)) {
+            this._autoCompleteList = AutoTranslate.Matching(this.Ui.Plugin.DataManager, this._autoCompleteInfo.ToComplete, this.Ui.Plugin.Config.SortAutoTranslate);
         }
 
         if (ImGui.IsWindowAppearing()) {

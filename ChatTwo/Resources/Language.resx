@@ -497,4 +497,13 @@
     <data name="Options_FontsEnabled" xml:space="preserve">
         <value>Enable custom fonts</value>
     </data>
+    <data name="AutoTranslate_Search_Hint" xml:space="preserve">
+        <value>Search Auto Translate...</value>
+    </data>
+    <data name="Options_SortAutoTranslate_Name" xml:space="preserve">
+        <value>Sort the Auto Translate list</value>
+    </data>
+    <data name="Options_SortAutoTranslate_Description" xml:space="preserve">
+        <value>If this is enabled, the Auto Translate list will be sorted alphabetically.</value>
+    </data>
 </root>

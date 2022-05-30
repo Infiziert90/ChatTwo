@@ -58,5 +58,9 @@ internal sealed class Miscellaneous : ISettingsTab {
 
         ImGuiUtil.HelpText(string.Format(Language.Options_KeybindMode_Description, Plugin.PluginName));
         ImGui.Spacing();
+
+        ImGui.Checkbox(Language.Options_SortAutoTranslate_Name, ref this.Mutable.SortAutoTranslate);
+        ImGuiUtil.HelpText(Language.Options_SortAutoTranslate_Description);
+        ImGui.Spacing();
     }
 }

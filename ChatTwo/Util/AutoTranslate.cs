@@ -186,7 +186,7 @@ internal static class AutoTranslate {
         return list;
     }
 
-    internal static List<AutoTranslateEntry> Matching(DataManager data, string prefix) {
+    internal static List<AutoTranslateEntry> Matching(DataManager data, string prefix, bool sort) {
         var wholeMatches = new List<AutoTranslateEntry>();
         var prefixMatches = new List<AutoTranslateEntry>();
         var otherMatches = new List<AutoTranslateEntry>();
@@ -200,9 +200,16 @@ internal static class AutoTranslate {
             }
         }
 
-        return wholeMatches.OrderBy(entry => entry.String, StringComparer.OrdinalIgnoreCase)
-            .Concat(prefixMatches.OrderBy(entry => entry.String, StringComparer.OrdinalIgnoreCase))
-            .Concat(otherMatches.OrderBy(entry => entry.String, StringComparer.OrdinalIgnoreCase))
+        if (sort) {
+            return wholeMatches.OrderBy(entry => entry.String, StringComparer.OrdinalIgnoreCase)
+                .Concat(prefixMatches.OrderBy(entry => entry.String, StringComparer.OrdinalIgnoreCase))
+                .Concat(otherMatches.OrderBy(entry => entry.String, StringComparer.OrdinalIgnoreCase))
+                .ToList();
+        }
+
+        return wholeMatches
+            .Concat(prefixMatches)
+            .Concat(otherMatches)
             .ToList();
     }
 
