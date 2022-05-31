@@ -40,6 +40,7 @@ internal sealed class ChatLog : IUiComponent {
     private bool _autoCompleteOpen;
     private List<AutoTranslateEntry>? _autoCompleteList;
     private bool _fixCursor;
+    private int _autoCompleteSelection;
 
     internal Vector2 LastWindowSize { get; private set; } = Vector2.Zero;
     internal Vector2 LastWindowPos { get; private set; } = Vector2.Zero;
@@ -975,8 +976,9 @@ internal sealed class ChatLog : IUiComponent {
         }
 
         ImGui.SetNextItemWidth(-1);
-        if (ImGui.InputTextWithHint("##auto-complete-filter", Language.AutoTranslate_Search_Hint, ref this._autoCompleteInfo.ToComplete, 256, ImGuiInputTextFlags.CallbackAlways, this.FixCursor)) {
+        if (ImGui.InputTextWithHint("##auto-complete-filter", Language.AutoTranslate_Search_Hint, ref this._autoCompleteInfo.ToComplete, 256, ImGuiInputTextFlags.CallbackAlways | ImGuiInputTextFlags.CallbackHistory, this.AutoCompleteCallback)) {
             this._autoCompleteList = AutoTranslate.Matching(this.Ui.Plugin.DataManager, this._autoCompleteInfo.ToComplete, this.Ui.Plugin.Config.SortAutoTranslate);
+            this._autoCompleteSelection = 0;
         }
 
         var selected = -1;
@@ -1000,7 +1002,7 @@ internal sealed class ChatLog : IUiComponent {
             var enter = ImGui.IsKeyDown(ImGui.GetKeyIndex(ImGuiKey.Enter))
                         || ImGui.IsKeyDown(ImGui.GetKeyIndex(ImGuiKey.KeyPadEnter));
             if (this._autoCompleteList.Count > 0 && enter) {
-                selected = 0;
+                selected = this._autoCompleteSelection;
             }
         }
 
@@ -1017,7 +1019,8 @@ internal sealed class ChatLog : IUiComponent {
                 for (var i = clipper.DisplayStart; i < clipper.DisplayEnd; i++) {
                     var entry = this._autoCompleteList[i];
 
-                    var clicked = ImGui.Selectable($"{entry.String}##{entry.Group}/{entry.Row}") || selected == i;
+                    var highlight = this._autoCompleteSelection == i;
+                    var clicked = ImGui.Selectable($"{entry.String}##{entry.Group}/{entry.Row}", highlight) || selected == i;
 
                     if (i < 10) {
                         var button = (i + 1) % 10;
@@ -1043,6 +1046,9 @@ internal sealed class ChatLog : IUiComponent {
                 }
             }
 
+            var selectedPos = clipper.StartPosY + clipper.ItemsHeight * (this._autoCompleteSelection * 1f);
+            ImGui.SetScrollFromPosY(selectedPos - ImGui.GetWindowPos().Y);
+
             ImGui.EndChild();
         }
 
@@ -1050,14 +1056,37 @@ internal sealed class ChatLog : IUiComponent {
         ImGui.EndPopup();
     }
 
-    private unsafe int FixCursor(ImGuiInputTextCallbackData* data) {
-        if (!this._fixCursor || this._autoCompleteInfo == null) {
+    private unsafe int AutoCompleteCallback(ImGuiInputTextCallbackData* data) {
+        if (this._fixCursor && this._autoCompleteInfo != null) {
+            this._fixCursor = false;
+            data->CursorPos = this._autoCompleteInfo.ToComplete.Length;
+            data->SelectionStart = data->SelectionEnd = data->CursorPos;
+        }
+
+        if (this._autoCompleteList == null) {
             return 0;
         }
 
-        this._fixCursor = false;
-        data->CursorPos = this._autoCompleteInfo.ToComplete.Length;
-        data->SelectionStart = data->SelectionEnd = data->CursorPos;
+        switch (data->EventKey) {
+            case ImGuiKey.UpArrow: {
+                if (this._autoCompleteSelection == 0) {
+                    this._autoCompleteSelection = this._autoCompleteList.Count - 1;
+                } else {
+                    this._autoCompleteSelection--;
+                }
+
+                return 1;
+            }
+            case ImGuiKey.DownArrow: {
+                if (this._autoCompleteSelection == this._autoCompleteList.Count - 1) {
+                    this._autoCompleteSelection = 0;
+                } else {
+                    this._autoCompleteSelection++;
+                }
+
+                return 1;
+            }
+        }
 
         return 0;
     }
@@ -1073,6 +1102,7 @@ internal sealed class ChatLog : IUiComponent {
                     ptr.CursorPos
                 );
                 this._autoCompleteOpen = true;
+                this._autoCompleteSelection = 0;
 
                 return 0;
             }
@@ -1090,6 +1120,7 @@ internal sealed class ChatLog : IUiComponent {
                 ptr.CursorPos
             );
             this._autoCompleteOpen = true;
+            this._autoCompleteSelection = 0;
             return 0;
         }
 
