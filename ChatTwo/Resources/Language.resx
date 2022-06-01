@@ -509,12 +509,6 @@
     <data name="AutoTranslate_Completion_Key" xml:space="preserve">
         <value>Ctrl + {0}</value>
     </data>
-    <data name="Options_EnableChineseRange_Name" xml:space="preserve">
-        <value>Enable Chinese glyphs</value>
-    </data>
-    <data name="Options_EnableChineseRange_Description" xml:space="preserve">
-        <value>Adds support for Chinese characters in the global font. This will most likely require Dalamud's font atlas size to be increased.</value>
-    </data>
     <data name="Options_ExtraGlyphs_Name" xml:space="preserve">
         <value>Extra font glyphs</value>
     </data>

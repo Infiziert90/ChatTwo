@@ -819,18 +819,6 @@ namespace ChatTwo.Resources {
             }
         }
         
-        internal static string Options_EnableChineseRange_Name {
-            get {
-                return ResourceManager.GetString("Options_EnableChineseRange_Name", resourceCulture);
-            }
-        }
-        
-        internal static string Options_EnableChineseRange_Description {
-            get {
-                return ResourceManager.GetString("Options_EnableChineseRange_Description", resourceCulture);
-            }
-        }
-        
         internal static string Options_ExtraGlyphs_Name {
             get {
                 return ResourceManager.GetString("Options_ExtraGlyphs_Name", resourceCulture);
