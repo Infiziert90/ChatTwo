@@ -91,8 +91,8 @@ public class Fonts : ISettingsTab {
             ImGuiUtil.HelpText(string.Format(Language.Options_JapaneseFont_Description, Plugin.PluginName));
             ImGui.Spacing();
 
-            ImGui.Checkbox("Enable Chinese glyphs", ref this.Mutable.EnableChineseRange);
-            ImGuiUtil.HelpText("Adds support for Chinese characters in the global font.");
+            ImGui.Checkbox(Language.Options_EnableChineseRange_Name, ref this.Mutable.EnableChineseRange);
+            ImGuiUtil.HelpText(Language.Options_EnableChineseRange_Description);
             ImGui.Spacing();
         }
 
