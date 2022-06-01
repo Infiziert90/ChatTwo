@@ -450,14 +450,15 @@ internal sealed class PayloadHandler {
             var isLeader = party.Length == 0 || this.Ui.Plugin.ClientState.LocalContentId == leader;
             var member = party.FirstOrDefault(member => member.Name.TextValue == player.PlayerName && member.World.Id == player.World.RowId);
             var isInParty = member != default;
+            var inInstance = this.Ui.Plugin.Functions.IsInInstance();
             var inPartyInstance = this.Ui.Plugin.DataManager.GetExcelSheet<TerritoryType>()!.GetRow(this.Ui.Plugin.ClientState.TerritoryType)?.TerritoryIntendedUse is (41 or 47 or 48 or 52 or 53);
             if (isLeader) {
                 if (!isInParty) {
-                    if (inPartyInstance) {
+                    if (inInstance && inPartyInstance) {
                         if (chunk.Message?.ContentId is not null or 0 && ImGui.Selectable("Invite to Party")) {
                             this.Ui.Plugin.Functions.Party.InviteInInstance(chunk.Message!.ContentId);
                         }
-                    } else if (ImGui.BeginMenu("Invite to Party")) {
+                    } else if (!inInstance && ImGui.BeginMenu("Invite to Party")) {
                         if (ImGui.Selectable("Same world")) {
                             this.Ui.Plugin.Functions.Party.InviteSameWorld(player.PlayerName, (ushort) player.World.RowId, chunk.Message?.ContentId ?? 0);
                         }
@@ -470,7 +471,7 @@ internal sealed class PayloadHandler {
                     }
                 }
 
-                if (isInParty && member != null) {
+                if (isInParty && member != null && (!inInstance || (inInstance && inPartyInstance))) {
                     if (ImGui.Selectable("Promote")) {
                         this.Ui.Plugin.Functions.Party.Promote(player.PlayerName, (ulong) member.ContentId);
                     }
