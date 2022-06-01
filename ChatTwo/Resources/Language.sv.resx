@@ -371,7 +371,7 @@
         <value>Ny flik</value>
     </data>
     <data name="Options_About_Tab" xml:space="preserve">
-        <value>Om</value>
+        <value>Om {0}</value>
     </data>
     <data name="Options_About_Opening" xml:space="preserve">
         <value>{0} är ett projekt gjort för att fullt återskapa spelets ursprungliga chattfönster och göra det ännu bättre.</value>
