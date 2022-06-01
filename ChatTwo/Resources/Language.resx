@@ -515,4 +515,10 @@
     <data name="Options_EnableChineseRange_Description" xml:space="preserve">
         <value>Adds support for Chinese characters in the global font. This will most likely require Dalamud's font atlas size to be increased.</value>
     </data>
+    <data name="Options_ExtraGlyphs_Name" xml:space="preserve">
+        <value>Extra font glyphs</value>
+    </data>
+    <data name="Options_ExtraGlyphs_Description" xml:space="preserve">
+        <value>Extra glyphs can be added to {0}'s font global font by enabling the checkboxes below. This will likely require increasing Dalamud's font atlas size.</value>
+    </data>
 </root>

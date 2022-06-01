@@ -830,5 +830,17 @@ namespace ChatTwo.Resources {
                 return ResourceManager.GetString("Options_EnableChineseRange_Description", resourceCulture);
             }
         }
+        
+        internal static string Options_ExtraGlyphs_Name {
+            get {
+                return ResourceManager.GetString("Options_ExtraGlyphs_Name", resourceCulture);
+            }
+        }
+        
+        internal static string Options_ExtraGlyphs_Description {
+            get {
+                return ResourceManager.GetString("Options_ExtraGlyphs_Description", resourceCulture);
+            }
+        }
     }
 }

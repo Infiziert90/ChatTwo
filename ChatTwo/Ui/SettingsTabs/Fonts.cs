@@ -91,8 +91,8 @@ public class Fonts : ISettingsTab {
             ImGuiUtil.HelpText(string.Format(Language.Options_JapaneseFont_Description, Plugin.PluginName));
             ImGui.Spacing();
 
-            if (ImGui.CollapsingHeader("Extra font glyphs")) {
-                ImGuiUtil.HelpText("Extra glyphs can be added to {0}'s font global font by enabling the checkboxes below. This will likely require increasing Dalamud's font atlas size.");
+            if (ImGui.CollapsingHeader(Language.Options_ExtraGlyphs_Name)) {
+                ImGuiUtil.HelpText(string.Format(Language.Options_ExtraGlyphs_Description, Plugin.PluginName));
 
                 var range = (int) this.Mutable.ExtraGlyphRanges;
                 foreach (var extra in Enum.GetValues<ExtraGlyphRanges>()) {
