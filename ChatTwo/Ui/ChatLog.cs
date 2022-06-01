@@ -41,6 +41,7 @@ internal sealed class ChatLog : IUiComponent {
     private List<AutoTranslateEntry>? _autoCompleteList;
     private bool _fixCursor;
     private int _autoCompleteSelection;
+    private bool _autoCompleteShouldScroll;
 
     internal Vector2 LastWindowSize { get; private set; } = Vector2.Zero;
     internal Vector2 LastWindowPos { get; private set; } = Vector2.Zero;
@@ -979,6 +980,7 @@ internal sealed class ChatLog : IUiComponent {
         if (ImGui.InputTextWithHint("##auto-complete-filter", Language.AutoTranslate_Search_Hint, ref this._autoCompleteInfo.ToComplete, 256, ImGuiInputTextFlags.CallbackAlways | ImGuiInputTextFlags.CallbackHistory, this.AutoCompleteCallback)) {
             this._autoCompleteList = AutoTranslate.Matching(this.Ui.Plugin.DataManager, this._autoCompleteInfo.ToComplete, this.Ui.Plugin.Config.SortAutoTranslate);
             this._autoCompleteSelection = 0;
+            this._autoCompleteShouldScroll = true;
         }
 
         var selected = -1;
@@ -1011,7 +1013,7 @@ internal sealed class ChatLog : IUiComponent {
             ImGui.SetKeyboardFocusHere();
         }
 
-        if (ImGui.BeginChild("##auto-complete-list", new Vector2(0, 0), false, ImGuiWindowFlags.HorizontalScrollbar)) {
+        if (ImGui.BeginChild("##auto-complete-list", Vector2.Zero, false, ImGuiWindowFlags.HorizontalScrollbar)) {
             var clipper = new ImGuiListClipperPtr(ImGuiNative.ImGuiListClipper_ImGuiListClipper());
 
             clipper.Begin(this._autoCompleteList.Count);
@@ -1046,8 +1048,11 @@ internal sealed class ChatLog : IUiComponent {
                 }
             }
 
-            var selectedPos = clipper.StartPosY + clipper.ItemsHeight * (this._autoCompleteSelection * 1f);
-            ImGui.SetScrollFromPosY(selectedPos - ImGui.GetWindowPos().Y);
+            if (this._autoCompleteShouldScroll) {
+                this._autoCompleteShouldScroll = false;
+                var selectedPos = clipper.StartPosY + clipper.ItemsHeight * (this._autoCompleteSelection * 1f);
+                ImGui.SetScrollFromPosY(selectedPos - ImGui.GetWindowPos().Y);
+            }
 
             ImGui.EndChild();
         }
@@ -1075,6 +1080,8 @@ internal sealed class ChatLog : IUiComponent {
                     this._autoCompleteSelection--;
                 }
 
+                this._autoCompleteShouldScroll = true;
+
                 return 1;
             }
             case ImGuiKey.DownArrow: {
@@ -1083,6 +1090,8 @@ internal sealed class ChatLog : IUiComponent {
                 } else {
                     this._autoCompleteSelection++;
                 }
+
+                this._autoCompleteShouldScroll = true;
 
                 return 1;
             }

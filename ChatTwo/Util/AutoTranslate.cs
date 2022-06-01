@@ -93,7 +93,7 @@ internal static class AutoTranslate {
         if (Entries.TryGetValue(data.Language, out var entries)) {
             return entries;
         }
-        
+
         var shouldAdd = ValidEntries.Count == 0;
 
         var parser = Parser();
@@ -186,7 +186,7 @@ internal static class AutoTranslate {
                     text.TextValue,
                     text
                 ));
-                
+
                 if (shouldAdd) {
                     ValidEntries.Add((row.Group, row.RowId));
                 }
