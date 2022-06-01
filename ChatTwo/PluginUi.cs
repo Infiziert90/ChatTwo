@@ -116,8 +116,10 @@ internal sealed class PluginUi : IDisposable {
             ImGui.GetIO().Fonts.GetGlyphRangesDefault(),
         };
 
-        if (this.Plugin.Config.EnableChineseRange) {
-            ranges.Add(ImGui.GetIO().Fonts.GetGlyphRangesChineseFull());
+        foreach (var extraRange in Enum.GetValues<ExtraGlyphRanges>()) {
+            if (this.Plugin.Config.ExtraGlyphRanges.HasFlag(extraRange)) {
+                ranges.Add(extraRange.Range());
+            }
         }
 
         BuildRange(out this._ranges, null, ranges.ToArray());

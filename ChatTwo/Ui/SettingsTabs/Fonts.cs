@@ -91,8 +91,17 @@ public class Fonts : ISettingsTab {
             ImGuiUtil.HelpText(string.Format(Language.Options_JapaneseFont_Description, Plugin.PluginName));
             ImGui.Spacing();
 
-            ImGui.Checkbox(Language.Options_EnableChineseRange_Name, ref this.Mutable.EnableChineseRange);
-            ImGuiUtil.HelpText(Language.Options_EnableChineseRange_Description);
+            if (ImGui.CollapsingHeader("Extra font glyphs")) {
+                ImGuiUtil.HelpText("Extra glyphs can be added to {0}'s font global font by enabling the checkboxes below. This will likely require increasing Dalamud's font atlas size.");
+
+                var range = (int) this.Mutable.ExtraGlyphRanges;
+                foreach (var extra in Enum.GetValues<ExtraGlyphRanges>()) {
+                    ImGui.CheckboxFlags(extra.Name(), ref range, (int) extra);
+                }
+
+                this.Mutable.ExtraGlyphRanges = (ExtraGlyphRanges) range;
+            }
+
             ImGui.Spacing();
         }
 

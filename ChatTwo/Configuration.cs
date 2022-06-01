@@ -3,6 +3,7 @@ using ChatTwo.Resources;
 using ChatTwo.Ui;
 using Dalamud.Configuration;
 using Dalamud.Logging;
+using ImGuiNET;
 
 namespace ChatTwo;
 
@@ -36,7 +37,7 @@ internal class Configuration : IPluginConfiguration {
     public bool SortAutoTranslate;
 
     public bool FontsEnabled = true;
-    public bool EnableChineseRange;
+    public ExtraGlyphRanges ExtraGlyphRanges = 0;
     public float FontSize = 17f;
     public float JapaneseFontSize = 17f;
     public float SymbolsFontSize = 17f;
@@ -71,7 +72,7 @@ internal class Configuration : IPluginConfiguration {
         this.SharedMode = other.SharedMode;
         this.SortAutoTranslate = other.SortAutoTranslate;
         this.FontsEnabled = other.FontsEnabled;
-        this.EnableChineseRange = other.EnableChineseRange;
+        this.ExtraGlyphRanges = other.ExtraGlyphRanges;
         this.FontSize = other.FontSize;
         this.JapaneseFontSize = other.JapaneseFontSize;
         this.SymbolsFontSize = other.SymbolsFontSize;
@@ -304,5 +305,41 @@ internal static class LanguageOverrideExt {
         LanguageOverride.Spanish => "es",
         LanguageOverride.Swedish => "sv",
         _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null),
+    };
+}
+
+[Serializable]
+[Flags]
+internal enum ExtraGlyphRanges {
+    ChineseFull = 1 << 0,
+    ChineseSimplifiedCommon = 1 << 1,
+    Cyrillic = 1 << 2,
+    Japanese = 1 << 3,
+    Korean = 1 << 4,
+    Thai = 1 << 5,
+    Vietnamese = 1 << 6,
+}
+
+internal static class ExtraGlyphRangesExt {
+    internal static string Name(this ExtraGlyphRanges ranges) => ranges switch {
+        ExtraGlyphRanges.ChineseFull => "Chinese (full)",
+        ExtraGlyphRanges.ChineseSimplifiedCommon => "Chinese (common simplified)",
+        ExtraGlyphRanges.Cyrillic => "Cyrillic",
+        ExtraGlyphRanges.Japanese => "Japanese",
+        ExtraGlyphRanges.Korean => "Korean",
+        ExtraGlyphRanges.Thai => "Thai",
+        ExtraGlyphRanges.Vietnamese => "Vietnamese",
+        _ => throw new ArgumentOutOfRangeException(nameof(ranges), ranges, null),
+    };
+
+    internal static IntPtr Range(this ExtraGlyphRanges ranges) => ranges switch {
+        ExtraGlyphRanges.ChineseFull => ImGui.GetIO().Fonts.GetGlyphRangesChineseFull(),
+        ExtraGlyphRanges.ChineseSimplifiedCommon => ImGui.GetIO().Fonts.GetGlyphRangesChineseSimplifiedCommon(),
+        ExtraGlyphRanges.Cyrillic => ImGui.GetIO().Fonts.GetGlyphRangesCyrillic(),
+        ExtraGlyphRanges.Japanese => ImGui.GetIO().Fonts.GetGlyphRangesJapanese(),
+        ExtraGlyphRanges.Korean => ImGui.GetIO().Fonts.GetGlyphRangesKorean(),
+        ExtraGlyphRanges.Thai => ImGui.GetIO().Fonts.GetGlyphRangesThai(),
+        ExtraGlyphRanges.Vietnamese => ImGui.GetIO().Fonts.GetGlyphRangesVietnamese(),
+        _ => throw new ArgumentOutOfRangeException(nameof(ranges), ranges, null),
     };
 }
