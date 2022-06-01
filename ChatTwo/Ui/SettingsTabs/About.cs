@@ -8,7 +8,7 @@ using ImGuiNET;
 namespace ChatTwo.Ui.SettingsTabs;
 
 internal sealed class About : ISettingsTab {
-    public string Name => Language.Options_About_Tab + "###tabs-about";
+    public string Name => string.Format(Language.Options_About_Tab, Plugin.PluginName) + "###tabs-about";
 
     private readonly List<string> _translators = new() {
         "Akizem",
