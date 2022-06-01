@@ -322,13 +322,13 @@ internal enum ExtraGlyphRanges {
 
 internal static class ExtraGlyphRangesExt {
     internal static string Name(this ExtraGlyphRanges ranges) => ranges switch {
-        ExtraGlyphRanges.ChineseFull => "Chinese (full)",
-        ExtraGlyphRanges.ChineseSimplifiedCommon => "Chinese (common simplified)",
-        ExtraGlyphRanges.Cyrillic => "Cyrillic",
-        ExtraGlyphRanges.Japanese => "Japanese",
-        ExtraGlyphRanges.Korean => "Korean",
-        ExtraGlyphRanges.Thai => "Thai",
-        ExtraGlyphRanges.Vietnamese => "Vietnamese",
+        ExtraGlyphRanges.ChineseFull => Language.ExtraGlyphRanges_ChineseFull_Name,
+        ExtraGlyphRanges.ChineseSimplifiedCommon => Language.ExtraGlyphRanges_ChineseSimplifiedCommon_Name,
+        ExtraGlyphRanges.Cyrillic => Language.ExtraGlyphRanges_Cyrillic_Name,
+        ExtraGlyphRanges.Japanese => Language.ExtraGlyphRanges_Japanese_Name,
+        ExtraGlyphRanges.Korean => Language.ExtraGlyphRanges_Korean_Name,
+        ExtraGlyphRanges.Thai => Language.ExtraGlyphRanges_Thai_Name,
+        ExtraGlyphRanges.Vietnamese => Language.ExtraGlyphRanges_Vietnamese_Name,
         _ => throw new ArgumentOutOfRangeException(nameof(ranges), ranges, null),
     };
 

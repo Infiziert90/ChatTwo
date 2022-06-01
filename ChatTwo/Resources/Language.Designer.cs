@@ -842,5 +842,47 @@ namespace ChatTwo.Resources {
                 return ResourceManager.GetString("Options_ExtraGlyphs_Description", resourceCulture);
             }
         }
+        
+        internal static string ExtraGlyphRanges_ChineseFull_Name {
+            get {
+                return ResourceManager.GetString("ExtraGlyphRanges_ChineseFull_Name", resourceCulture);
+            }
+        }
+        
+        internal static string ExtraGlyphRanges_ChineseSimplifiedCommon_Name {
+            get {
+                return ResourceManager.GetString("ExtraGlyphRanges_ChineseSimplifiedCommon_Name", resourceCulture);
+            }
+        }
+        
+        internal static string ExtraGlyphRanges_Cyrillic_Name {
+            get {
+                return ResourceManager.GetString("ExtraGlyphRanges_Cyrillic_Name", resourceCulture);
+            }
+        }
+        
+        internal static string ExtraGlyphRanges_Japanese_Name {
+            get {
+                return ResourceManager.GetString("ExtraGlyphRanges_Japanese_Name", resourceCulture);
+            }
+        }
+        
+        internal static string ExtraGlyphRanges_Korean_Name {
+            get {
+                return ResourceManager.GetString("ExtraGlyphRanges_Korean_Name", resourceCulture);
+            }
+        }
+        
+        internal static string ExtraGlyphRanges_Thai_Name {
+            get {
+                return ResourceManager.GetString("ExtraGlyphRanges_Thai_Name", resourceCulture);
+            }
+        }
+        
+        internal static string ExtraGlyphRanges_Vietnamese_Name {
+            get {
+                return ResourceManager.GetString("ExtraGlyphRanges_Vietnamese_Name", resourceCulture);
+            }
+        }
     }
 }
