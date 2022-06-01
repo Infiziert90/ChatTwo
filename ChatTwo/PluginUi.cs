@@ -41,8 +41,8 @@ internal sealed class PluginUi : IDisposable {
     private (GCHandle, int, float) _jpFont;
     private (GCHandle, int) _gameSymFont;
 
-    private readonly ImVector _ranges;
-    private readonly ImVector _jpRange;
+    private ImVector _ranges;
+    private ImVector _jpRange;
 
     private GCHandle _symRange = GCHandle.Alloc(
         new ushort[] {
@@ -74,56 +74,7 @@ internal sealed class PluginUi : IDisposable {
             MergeMode = true,
         };
 
-        void BuildRange(out ImVector result, IReadOnlyList<ushort>? chars, params IntPtr[] ranges) {
-            var builder = new ImFontGlyphRangesBuilderPtr(ImGuiNative.ImFontGlyphRangesBuilder_ImFontGlyphRangesBuilder());
-            // text
-            foreach (var range in ranges) {
-                builder.AddRanges(range);
-            }
-
-            // chars
-            if (chars != null) {
-                for (var i = 0; i < chars.Count; i += 2) {
-                    if (chars[i] == 0) {
-                        break;
-                    }
-
-                    for (var j = (uint) chars[i]; j <= chars[i + 1]; j++) {
-                        builder.AddChar((ushort) j);
-                    }
-                }
-            }
-
-            // various symbols
-            builder.AddText("←→↑↓《》■※☀★★☆♥♡ヅツッシ☀☁☂℃℉°♀♂♠♣♦♣♧®©™€$£♯♭♪✓√◎◆◇♦■□〇●△▽▼▲‹›≤≥<«“”─＼～");
-            // French
-            builder.AddText("Œœ");
-            // Romanian
-            builder.AddText("ĂăÂâÎîȘșȚț");
-
-            // "Enclosed Alphanumerics" (partial) https://www.compart.com/en/unicode/block/U+2460
-            for (var i = 0x2460; i <= 0x24B5; i++) {
-                builder.AddChar((char) i);
-            }
-
-            builder.AddChar('⓪');
-
-            builder.BuildRanges(out result);
-            builder.Destroy();
-        }
-
-        var ranges = new List<IntPtr> {
-            ImGui.GetIO().Fonts.GetGlyphRangesDefault(),
-        };
-
-        foreach (var extraRange in Enum.GetValues<ExtraGlyphRanges>()) {
-            if (this.Plugin.Config.ExtraGlyphRanges.HasFlag(extraRange)) {
-                ranges.Add(extraRange.Range());
-            }
-        }
-
-        BuildRange(out this._ranges, null, ranges.ToArray());
-        BuildRange(out this._jpRange, GlyphRangesJapanese.GlyphRanges);
+        this.SetUpRanges();
         this.SetUpUserFonts();
 
         var gameSym = new HttpClient().GetAsync("https://img.finalfantasyxiv.com/lds/pc/global/fonts/FFXIV_Lodestone_SSF.ttf")
@@ -212,6 +163,62 @@ internal sealed class PluginUi : IDisposable {
         return memory.ToArray();
     }
 
+    private unsafe void SetUpRanges() {
+        ImVector BuildRange(IReadOnlyList<ushort>? chars, params IntPtr[] ranges) {
+            var builder = new ImFontGlyphRangesBuilderPtr(ImGuiNative.ImFontGlyphRangesBuilder_ImFontGlyphRangesBuilder());
+            // text
+            foreach (var range in ranges) {
+                builder.AddRanges(range);
+            }
+
+            // chars
+            if (chars != null) {
+                for (var i = 0; i < chars.Count; i += 2) {
+                    if (chars[i] == 0) {
+                        break;
+                    }
+
+                    for (var j = (uint) chars[i]; j <= chars[i + 1]; j++) {
+                        builder.AddChar((ushort) j);
+                    }
+                }
+            }
+
+            // various symbols
+            builder.AddText("←→↑↓《》■※☀★★☆♥♡ヅツッシ☀☁☂℃℉°♀♂♠♣♦♣♧®©™€$£♯♭♪✓√◎◆◇♦■□〇●△▽▼▲‹›≤≥<«“”─＼～");
+            // French
+            builder.AddText("Œœ");
+            // Romanian
+            builder.AddText("ĂăÂâÎîȘșȚț");
+
+            // "Enclosed Alphanumerics" (partial) https://www.compart.com/en/unicode/block/U+2460
+            for (var i = 0x2460; i <= 0x24B5; i++) {
+                builder.AddChar((char) i);
+            }
+
+            builder.AddChar('⓪');
+
+            var result = new ImVector();
+            builder.BuildRanges(out result);
+            builder.Destroy();
+
+            return result;
+        }
+
+        var ranges = new List<IntPtr> {
+            ImGui.GetIO().Fonts.GetGlyphRangesDefault(),
+        };
+
+        foreach (var extraRange in Enum.GetValues<ExtraGlyphRanges>()) {
+            if (this.Plugin.Config.ExtraGlyphRanges.HasFlag(extraRange)) {
+                ranges.Add(extraRange.Range());
+            }
+        }
+
+        this._ranges = BuildRange(null, ranges.ToArray());
+        this._jpRange = BuildRange(GlyphRangesJapanese.GlyphRanges);
+    }
+
     private void SetUpUserFonts() {
         FontData? fontData = null;
         if (this.Plugin.Config.GlobalFont.StartsWith(Fonts.IncludedIndicator)) {
@@ -294,6 +301,7 @@ internal sealed class PluginUi : IDisposable {
         this.RegularFont = null;
         this.ItalicFont = null;
 
+        this.SetUpRanges();
         this.SetUpUserFonts();
 
         this.Axis = this.Plugin.Interface.UiBuilder.GetGameFontHandle(new GameFontStyle(GameFontFamily.Axis, this.Plugin.Config.FontSize));
