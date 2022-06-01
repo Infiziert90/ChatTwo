@@ -145,7 +145,8 @@ internal sealed class Settings : IUiComponent {
 
             var hideChatChanged = this.Mutable.HideChat != this.Ui.Plugin.Config.HideChat;
             var fontChanged = this.Mutable.GlobalFont != this.Ui.Plugin.Config.GlobalFont
-                              || this.Mutable.JapaneseFont != this.Ui.Plugin.Config.JapaneseFont;
+                              || this.Mutable.JapaneseFont != this.Ui.Plugin.Config.JapaneseFont
+                              || this.Mutable.ExtraGlyphRanges != this.Ui.Plugin.Config.ExtraGlyphRanges;
             var fontSizeChanged = Math.Abs(this.Mutable.FontSize - this.Ui.Plugin.Config.FontSize) > 0.001
                                   || Math.Abs(this.Mutable.JapaneseFontSize - this.Ui.Plugin.Config.JapaneseFontSize) > 0.001
                                   || Math.Abs(this.Mutable.SymbolsFontSize - this.Ui.Plugin.Config.SymbolsFontSize) > 0.001;
