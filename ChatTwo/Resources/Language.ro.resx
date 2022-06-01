@@ -122,7 +122,7 @@
         </value>
     </resheader>
     <data name="Options_HideChat_Name" xml:space="preserve">
-    <value>Ascunde chat-ul implicit</value>
+    <value>Ascunde chat-ul normal</value>
   </data>
     <data name="Options_HideChat_Description" xml:space="preserve">
     <value>Ascunde fereastra de chat a jocului atunci când pluginul este activ.</value>
@@ -146,11 +146,11 @@
     <value>Afișează taburi in {0} ca o bara laterala in loc de o bara deasupra ferestrei.</value>
   </data>
     <data name="Options_PrettierTimestamps_Name" xml:space="preserve">
-    <value>Folosește un aspect modern pentru marcajul timpului</value>
-  </data>
+        <value>Folosește aspectul modern</value>
+    </data>
     <data name="Options_PrettierTimestamps_Description" xml:space="preserve">
-    <value>Folosește un stil modern de afișare a mesajelor.</value>
-  </data>
+        <value>Afișează mesajele într-un stil modern.</value>
+    </data>
     <data name="Options_MoreCompactPretty_Name" xml:space="preserve">
     <value>Aspect modern mai compact</value>
   </data>
@@ -462,5 +462,47 @@
     </data>
     <data name="Options_Database_Advanced" xml:space="preserve">
         <value>Avansat</value>
+    </data>
+    <data name="Options_SharedMode_Name" xml:space="preserve">
+        <value>Activează modul instanțelor multiple</value>
+    </data>
+    <data name="Options_SharedMode_Description" xml:space="preserve">
+        <value>Permite mai multor instanțe sa folosească {0} simultan, folosind aceeași data de baze.</value>
+    </data>
+    <data name="Options_SharedMode_Warning" xml:space="preserve">
+        <value>Această opțiune nu este recomandată. Dacă o activați nu veți primi niciun suport. Această opțiune va afecta performanța {0}-ului.</value>
+    </data>
+    <data name="ChatLog_Tabs_PopOut" xml:space="preserve">
+        <value>Mută tabul într-o fereastra noua</value>
+    </data>
+    <data name="Options_HideSameTimestamps_Name" xml:space="preserve">
+        <value>Ascunde marcajele de timp când nu sunt necesare</value>
+    </data>
+    <data name="Options_HideSameTimestamps_Description" xml:space="preserve">
+        <value>Ascunde marcajele de timp atunci când mesajele anterioare au aceeași marcă de timp.</value>
+    </data>
+    <data name="Options_ShowPopOutTitleBar_Name" xml:space="preserve">
+        <value>Arată bara de titlu pentru tab-urile in ferestre diferite</value>
+    </data>
+    <data name="Options_Tabs_PopOut" xml:space="preserve">
+        <value>Afișează într-o fereastră separată</value>
+    </data>
+    <data name="Options_Tabs_IndependentOpacity" xml:space="preserve">
+        <value>Folosește o transparentă diferită de fereastra principală</value>
+    </data>
+    <data name="Options_Tabs_Opacity" xml:space="preserve">
+        <value>Transparență</value>
+    </data>
+    <data name="Options_FontsEnabled" xml:space="preserve">
+        <value>Activează fonturi personalizate</value>
+    </data>
+    <data name="AutoTranslate_Search_Hint" xml:space="preserve">
+        <value>Caută traducere automată...</value>
+    </data>
+    <data name="Options_SortAutoTranslate_Name" xml:space="preserve">
+        <value>Sortează lista de traduceri automate</value>
+    </data>
+    <data name="Options_SortAutoTranslate_Description" xml:space="preserve">
+        <value>Dacă această opțiune este activată, lista de traduceri automate va fi sortată alfabetic.</value>
     </data>
 </root>

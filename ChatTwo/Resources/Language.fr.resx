@@ -146,11 +146,11 @@
     <value>Affiche les onglets de {0} dans une barre latérale au lieu d'une barre horizontale en haut.</value>
   </data>
     <data name="Options_PrettierTimestamps_Name" xml:space="preserve">
-    <value>Utiliser une mise en page moderne pour l'horodatage</value>
-  </data>
+        <value>Utiliser la disposition moderne</value>
+    </data>
     <data name="Options_PrettierTimestamps_Description" xml:space="preserve">
-    <value>Utilise un style plus moderne pour l'affichage des messages.</value>
-  </data>
+        <value>Affiche les messages dans un style plus moderne.</value>
+    </data>
     <data name="Options_MoreCompactPretty_Name" xml:space="preserve">
     <value>Mise en page moderne et davantage compacte</value>
   </data>
@@ -462,5 +462,47 @@
     </data>
     <data name="Options_Database_Advanced" xml:space="preserve">
         <value>Avancé</value>
+    </data>
+    <data name="Options_SharedMode_Name" xml:space="preserve">
+        <value>Activer le mode multi-client</value>
+    </data>
+    <data name="Options_SharedMode_Description" xml:space="preserve">
+        <value>Permet à plusieurs clients d'exécuter {0} en même temps, en partageant la même base de données.</value>
+    </data>
+    <data name="Options_SharedMode_Warning" xml:space="preserve">
+        <value>Cette option n'est pas recommandée. Aucune assistance ne sera offerte si vous activez cette option. Cette option nuira aux performances de {0}.</value>
+    </data>
+    <data name="ChatLog_Tabs_PopOut" xml:space="preserve">
+        <value>Détacher</value>
+    </data>
+    <data name="Options_HideSameTimestamps_Name" xml:space="preserve">
+        <value>Masquer les horodatages en cas de redondance</value>
+    </data>
+    <data name="Options_HideSameTimestamps_Description" xml:space="preserve">
+        <value>Masque les horodatages lorsque les messages précédents ont le même horodatage.</value>
+    </data>
+    <data name="Options_ShowPopOutTitleBar_Name" xml:space="preserve">
+        <value>Afficher la barre de titre pour les onglets détachés</value>
+    </data>
+    <data name="Options_Tabs_PopOut" xml:space="preserve">
+        <value>Afficher dans une fenêtre séparée</value>
+    </data>
+    <data name="Options_Tabs_IndependentOpacity" xml:space="preserve">
+        <value>Utiliser une opacité différente de la fenêtre principale</value>
+    </data>
+    <data name="Options_Tabs_Opacity" xml:space="preserve">
+        <value>Opacité</value>
+    </data>
+    <data name="Options_FontsEnabled" xml:space="preserve">
+        <value>Activer les fontes personnalisées</value>
+    </data>
+    <data name="AutoTranslate_Search_Hint" xml:space="preserve">
+        <value>Recherche d'une Traduction Automatique...</value>
+    </data>
+    <data name="Options_SortAutoTranslate_Name" xml:space="preserve">
+        <value>Trier la liste de Traduction Automatique</value>
+    </data>
+    <data name="Options_SortAutoTranslate_Description" xml:space="preserve">
+        <value>Si cette option est activée, la liste de Traduction Automatique sera triée par ordre alphabétique.</value>
     </data>
 </root>

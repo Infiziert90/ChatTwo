@@ -122,16 +122,16 @@
         </value>
     </resheader>
     <data name="Options_HideChat_Name" xml:space="preserve">
-    <value>Originales Chatfenster verbergen</value>
+    <value>Originales Chatfenster ausblenden</value>
   </data>
     <data name="Options_HideChat_Description" xml:space="preserve">
     <value>Blendet das originale Chatfenster aus, wenn das Plugin aktiv ist.</value>
   </data>
     <data name="Options_HideDuringCutscenes_Name" xml:space="preserve">
-    <value>Chatfenster während Zwischensequenzen verbergen</value>
+    <value>Chatfenster während Zwischensequenzen ausblenden</value>
   </data>
     <data name="Options_HideDuringCutscenes_Description" xml:space="preserve">
-    <value>Verbirgt {0} während Zwischensequenzen.</value>
+    <value>{0} während Zwischensequenzen ausblenden.</value>
   </data>
     <data name="Options_NativeItemTooltips_Name" xml:space="preserve">
     <value>Originale Gegenstandsbeschreibung anzeigen</value>
@@ -146,11 +146,11 @@
     <value>Zeigt die Tabs in {0} als Seitenleiste, anstatt sie über dem Chat zu platzieren.</value>
   </data>
     <data name="Options_PrettierTimestamps_Name" xml:space="preserve">
-    <value>Modernen Zeitstempel verwenden</value>
-  </data>
+        <value>Modernen Stil verwenden</value>
+    </data>
     <data name="Options_PrettierTimestamps_Description" xml:space="preserve">
-    <value>Nutzt einen moderneren Stil, um die Nachrichten anzuzeigen.</value>
-  </data>
+        <value>Zeigt Nachrichten im modernen Stil an.</value>
+    </data>
     <data name="Options_MoreCompactPretty_Name" xml:space="preserve">
     <value>Kompakteres modernes Aussehen</value>
   </data>
@@ -254,7 +254,7 @@
         <value>Für diesen Tab ausgeschalten.</value>
     </data>
     <data name="ChatLog_HideChat" xml:space="preserve">
-        <value>Chatfenster verbergen</value>
+        <value>Chatfenster ausblenden</value>
     </data>
     <data name="ChatLog_Tabs_MoveUp" xml:space="preserve">
         <value>Hinaufbewegen</value>
@@ -354,10 +354,10 @@ Sie wurden gewarnt.</value>
         <value>Tab löschen</value>
     </data>
     <data name="Options_HideWhenNotLoggedIn_Name" xml:space="preserve">
-        <value>Verberge Chatfenster wenn nicht angemeldet</value>
+        <value>Chatfenster ausblenden, wenn nicht eingeloggt</value>
     </data>
     <data name="Options_HideWhenNotLoggedIn_Description" xml:space="preserve">
-        <value>Verbirgt {0} wenn Sie mit keinem Charakter angemeldet sind.</value>
+        <value>{0} ausblenden, wenn du mit keinem Charakter eingeloggt bist.</value>
     </data>
     <data name="Tabs_Presets_General" xml:space="preserve">
         <value>Allgemein</value>
@@ -402,10 +402,10 @@ Sie wurden gewarnt.</value>
         <value>Die Seite auf der {0} Hilfe zu Befehlen anzeigen soll.</value>
     </data>
     <data name="Options_HideWhenUiHidden_Name" xml:space="preserve">
-        <value>Chatfenster mit Spiel-UI verbergen</value>
+        <value>Chatfenster mit Spiel-UI ausblenden</value>
     </data>
     <data name="Options_HideWhenUiHidden_Description" xml:space="preserve">
-        <value>Verbirgt {0} wenn das Spiel-UI ebenfalls verborgen ist.</value>
+        <value>{0} ausblenden, wenn das Spiel-UI ebenfalls ausgeblendet ist.</value>
     </data>
     <data name="Options_KeybindMode_Name" xml:space="preserve">
         <value>Tastenkürzel Eingabe</value>
@@ -463,5 +463,47 @@ Sie wurden gewarnt.</value>
     </data>
     <data name="Options_Database_Advanced" xml:space="preserve">
         <value>Erweitert</value>
+    </data>
+    <data name="Options_SharedMode_Name" xml:space="preserve">
+        <value>Mehrere Clients verwenden</value>
+    </data>
+    <data name="Options_SharedMode_Description" xml:space="preserve">
+        <value>Erlaubt es mehreren Clients, {0} gleichzeitig zu verwenden und Daten zu teilen.</value>
+    </data>
+    <data name="Options_SharedMode_Warning" xml:space="preserve">
+        <value>Diese Einstellung ist nicht empfohlen. Es wird keine Hilfe angeboten, falls diese Option genutzt wird. Dadurch sinkt zudem die Leistung von {0}.</value>
+    </data>
+    <data name="ChatLog_Tabs_PopOut" xml:space="preserve">
+        <value>Herauslösen</value>
+    </data>
+    <data name="Options_HideSameTimestamps_Name" xml:space="preserve">
+        <value>Zeitstempel nur bei Änderung anzeigen</value>
+    </data>
+    <data name="Options_HideSameTimestamps_Description" xml:space="preserve">
+        <value>Blendet den Zeitstempel bei Nachrichten, deren Vorgänger dieselbe Uhrzeit hat, aus.</value>
+    </data>
+    <data name="Options_ShowPopOutTitleBar_Name" xml:space="preserve">
+        <value>Titelleiste für herausgelöste Tabs anzeigen</value>
+    </data>
+    <data name="Options_Tabs_PopOut" xml:space="preserve">
+        <value>In separatem Fenster anzeigen</value>
+    </data>
+    <data name="Options_Tabs_IndependentOpacity" xml:space="preserve">
+        <value>Transparenz vom Hauptfenster separat einstellen</value>
+    </data>
+    <data name="Options_Tabs_Opacity" xml:space="preserve">
+        <value>Transparenz</value>
+    </data>
+    <data name="Options_FontsEnabled" xml:space="preserve">
+        <value>Eigene Schriftarten verwenden</value>
+    </data>
+    <data name="AutoTranslate_Search_Hint" xml:space="preserve">
+        <value>Durchsuche Auto-Übersetzung...</value>
+    </data>
+    <data name="Options_SortAutoTranslate_Name" xml:space="preserve">
+        <value>Auto-Übersetzungsliste sortieren</value>
+    </data>
+    <data name="Options_SortAutoTranslate_Description" xml:space="preserve">
+        <value>Wenn dies aktiviert ist, wird die Auto-Übersetzerliste alphabetisch sortiert.</value>
     </data>
 </root>

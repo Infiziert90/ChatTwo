@@ -146,11 +146,11 @@
     <value>Mostre abas em {0} como uma barra lateral as invés de uma barra no topo.</value>
   </data>
     <data name="Options_PrettierTimestamps_Name" xml:space="preserve">
-    <value>Usar layout moderno de timestamps</value>
-  </data>
+        <value>Use modern layout</value>
+    </data>
     <data name="Options_PrettierTimestamps_Description" xml:space="preserve">
-    <value>Use um design mais moderno para exibir mensagens.</value>
-  </data>
+        <value>Display messages in a more modern style.</value>
+    </data>
     <data name="Options_MoreCompactPretty_Name" xml:space="preserve">
     <value>Design moderno e compacto</value>
   </data>
@@ -462,5 +462,47 @@
     </data>
     <data name="Options_Database_Advanced" xml:space="preserve">
         <value>Avançado</value>
+    </data>
+    <data name="Options_SharedMode_Name" xml:space="preserve">
+        <value>Enable multi-client mode</value>
+    </data>
+    <data name="Options_SharedMode_Description" xml:space="preserve">
+        <value>Allow multiple clients to run {0} at the same time, sharing the same database.</value>
+    </data>
+    <data name="Options_SharedMode_Warning" xml:space="preserve">
+        <value>This option is not recommended. No support will be offered if you enable this option. This option will hurt the performance of {0}.</value>
+    </data>
+    <data name="ChatLog_Tabs_PopOut" xml:space="preserve">
+        <value>Pop out</value>
+    </data>
+    <data name="Options_HideSameTimestamps_Name" xml:space="preserve">
+        <value>Hide timestamps when redundant</value>
+    </data>
+    <data name="Options_HideSameTimestamps_Description" xml:space="preserve">
+        <value>Hide timestamps when previous messages have the same timestamp.</value>
+    </data>
+    <data name="Options_ShowPopOutTitleBar_Name" xml:space="preserve">
+        <value>Show title bar for popped-out tabs</value>
+    </data>
+    <data name="Options_Tabs_PopOut" xml:space="preserve">
+        <value>Display in separate window</value>
+    </data>
+    <data name="Options_Tabs_IndependentOpacity" xml:space="preserve">
+        <value>Use different opacity than main window</value>
+    </data>
+    <data name="Options_Tabs_Opacity" xml:space="preserve">
+        <value>Opacity</value>
+    </data>
+    <data name="Options_FontsEnabled" xml:space="preserve">
+        <value>Enable custom fonts</value>
+    </data>
+    <data name="AutoTranslate_Search_Hint" xml:space="preserve">
+        <value>Search Auto Translate...</value>
+    </data>
+    <data name="Options_SortAutoTranslate_Name" xml:space="preserve">
+        <value>Sort the Auto Translate list</value>
+    </data>
+    <data name="Options_SortAutoTranslate_Description" xml:space="preserve">
+        <value>If this is enabled, the Auto Translate list will be sorted alphabetically.</value>
     </data>
 </root>
