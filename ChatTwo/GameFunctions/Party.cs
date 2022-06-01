@@ -13,6 +13,9 @@ internal sealed unsafe class Party {
     [Signature("48 83 EC 38 41 B1 09", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<IntPtr, ulong, ushort, byte> _inviteToPartyContentId = null!;
 
+    [Signature("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B 83 ?? ?? ?? ?? 48 85 C0 74 62", Fallibility = Fallibility.Fallible)]
+    private readonly delegate* unmanaged<IntPtr, ulong, byte> _inviteToPartyInInstance = null!;
+
     [Signature("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 49 8B 56 20", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<AgentInterface*, byte*, ushort, ulong, void> _promote = null!;
 
@@ -40,7 +43,7 @@ internal sealed unsafe class Party {
     }
 
     internal void InviteOtherWorld(ulong contentId) {
-        if (this._inviteToPartyContentId != null) {
+        if (this._inviteToPartyContentId == null) {
             return;
         }
 
@@ -52,6 +55,22 @@ internal sealed unsafe class Party {
             // pass 0 and it will work on any world EXCEPT for the world the
             // current player is on
             this._inviteToPartyContentId(a1, contentId, 0);
+        }
+    }
+
+    internal void InviteInInstance(ulong contentId) {
+        if (this._inviteToPartyInInstance == null) {
+            return;
+        }
+
+        // 6.11: 214A55
+        var a1 = this.Plugin.Functions.GetInfoProxyByIndex(1);
+        if (contentId != 0) {
+            // third param is world, but it requires a specific world
+            // if they're not on that world, it will fail
+            // pass 0 and it will work on any world EXCEPT for the world the
+            // current player is on
+            this._inviteToPartyInInstance(a1, contentId);
         }
     }
 

@@ -450,17 +450,24 @@ internal sealed class PayloadHandler {
             var isLeader = party.Length == 0 || this.Ui.Plugin.ClientState.LocalContentId == leader;
             var member = party.FirstOrDefault(member => member.Name.TextValue == player.PlayerName && member.World.Id == player.World.RowId);
             var isInParty = member != default;
+            var inPartyInstance = this.Ui.Plugin.DataManager.GetExcelSheet<TerritoryType>()!.GetRow(this.Ui.Plugin.ClientState.TerritoryType)?.TerritoryIntendedUse is (41 or 47 or 48 or 52 or 53);
             if (isLeader) {
-                if (!isInParty && ImGui.BeginMenu("Invite to Party")) {
-                    if (ImGui.Selectable("Same world")) {
-                        this.Ui.Plugin.Functions.Party.InviteSameWorld(player.PlayerName, (ushort) player.World.RowId, chunk.Message?.ContentId ?? 0);
-                    }
+                if (!isInParty) {
+                    if (inPartyInstance) {
+                        if (chunk.Message?.ContentId is not null or 0 && ImGui.Selectable("Invite to Party")) {
+                            this.Ui.Plugin.Functions.Party.InviteInInstance(chunk.Message!.ContentId);
+                        }
+                    } else if (ImGui.BeginMenu("Invite to Party")) {
+                        if (ImGui.Selectable("Same world")) {
+                            this.Ui.Plugin.Functions.Party.InviteSameWorld(player.PlayerName, (ushort) player.World.RowId, chunk.Message?.ContentId ?? 0);
+                        }
 
-                    if (chunk.Message?.ContentId is not null or 0 && ImGui.Selectable("Different world")) {
-                        this.Ui.Plugin.Functions.Party.InviteOtherWorld(chunk.Message!.ContentId);
-                    }
+                        if (chunk.Message?.ContentId is not null or 0 && ImGui.Selectable("Different world")) {
+                            this.Ui.Plugin.Functions.Party.InviteOtherWorld(chunk.Message!.ContentId);
+                        }
 
-                    ImGui.EndMenu();
+                        ImGui.EndMenu();
+                    }
                 }
 
                 if (isInParty && member != null) {
