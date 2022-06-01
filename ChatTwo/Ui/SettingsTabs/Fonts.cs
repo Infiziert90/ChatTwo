@@ -90,6 +90,10 @@ public class Fonts : ISettingsTab {
 
             ImGuiUtil.HelpText(string.Format(Language.Options_JapaneseFont_Description, Plugin.PluginName));
             ImGui.Spacing();
+
+            ImGui.Checkbox("Enable Chinese glyphs", ref this.Mutable.EnableChineseRange);
+            ImGuiUtil.HelpText("Adds support for Chinese characters in the global font.");
+            ImGui.Spacing();
         }
 
         const float speed = .0125f;

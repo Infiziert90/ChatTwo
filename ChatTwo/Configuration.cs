@@ -36,6 +36,7 @@ internal class Configuration : IPluginConfiguration {
     public bool SortAutoTranslate;
 
     public bool FontsEnabled = true;
+    public bool EnableChineseRange;
     public float FontSize = 17f;
     public float JapaneseFontSize = 17f;
     public float SymbolsFontSize = 17f;
@@ -70,6 +71,7 @@ internal class Configuration : IPluginConfiguration {
         this.SharedMode = other.SharedMode;
         this.SortAutoTranslate = other.SortAutoTranslate;
         this.FontsEnabled = other.FontsEnabled;
+        this.EnableChineseRange = other.EnableChineseRange;
         this.FontSize = other.FontSize;
         this.JapaneseFontSize = other.JapaneseFontSize;
         this.SymbolsFontSize = other.SymbolsFontSize;
@@ -246,49 +248,61 @@ internal static class KeybindModeExt {
 [Serializable]
 internal enum LanguageOverride {
     None,
+    ChineseSimplified,
+    ChineseTraditional,
     English,
     French,
     German,
-    Italian,
-    Japanese,
-    Korean,
-    Norwegian,
+    Greek,
+    // Italian,
+    // Japanese,
+    // Korean,
+    // Norwegian,
     PortugueseBrazil,
     Romanian,
     Russian,
     Spanish,
+    Swedish,
 }
 
 internal static class LanguageOverrideExt {
     internal static string Name(this LanguageOverride mode) => mode switch {
         LanguageOverride.None => Language.LanguageOverride_None,
+        LanguageOverride.ChineseSimplified => "简体中文",
+        LanguageOverride.ChineseTraditional => "繁體中文",
         LanguageOverride.English => "English",
         LanguageOverride.French => "Français",
         LanguageOverride.German => "Deutsch",
-        LanguageOverride.Italian => "Italiano",
-        LanguageOverride.Japanese => "日本語",
-        LanguageOverride.Korean => "한국어 (Korean)",
-        LanguageOverride.Norwegian => "Norsk",
+        LanguageOverride.Greek => "Ελληνικά",
+        // LanguageOverride.Italian => "Italiano",
+        // LanguageOverride.Japanese => "日本語",
+        // LanguageOverride.Korean => "한국어 (Korean)",
+        // LanguageOverride.Norwegian => "Norsk",
         LanguageOverride.PortugueseBrazil => "Português do Brasil",
         LanguageOverride.Romanian => "Română",
         LanguageOverride.Russian => "Русский",
         LanguageOverride.Spanish => "Español",
+        LanguageOverride.Swedish => "Svenska",
         _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null),
     };
 
     internal static string Code(this LanguageOverride mode) => mode switch {
         LanguageOverride.None => "",
+        LanguageOverride.ChineseSimplified => "zh-hans",
+        LanguageOverride.ChineseTraditional => "zh-hant",
         LanguageOverride.English => "en",
         LanguageOverride.French => "fr",
         LanguageOverride.German => "de",
-        LanguageOverride.Italian => "it",
-        LanguageOverride.Japanese => "ja",
-        LanguageOverride.Korean => "ko",
-        LanguageOverride.Norwegian => "no",
+        LanguageOverride.Greek => "el",
+        // LanguageOverride.Italian => "it",
+        // LanguageOverride.Japanese => "ja",
+        // LanguageOverride.Korean => "ko",
+        // LanguageOverride.Norwegian => "no",
         LanguageOverride.PortugueseBrazil => "pt-br",
         LanguageOverride.Romanian => "ro",
         LanguageOverride.Russian => "ru",
         LanguageOverride.Spanish => "es",
+        LanguageOverride.Swedish => "sv",
         _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null),
     };
 }

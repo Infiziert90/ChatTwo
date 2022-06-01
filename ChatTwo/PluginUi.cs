@@ -112,7 +112,15 @@ internal sealed class PluginUi : IDisposable {
             builder.Destroy();
         }
 
-        BuildRange(out this._ranges, null, ImGui.GetIO().Fonts.GetGlyphRangesDefault());
+        var ranges = new List<IntPtr> {
+            ImGui.GetIO().Fonts.GetGlyphRangesDefault(),
+        };
+
+        if (this.Plugin.Config.EnableChineseRange) {
+            ranges.Add(ImGui.GetIO().Fonts.GetGlyphRangesChineseFull());
+        }
+
+        BuildRange(out this._ranges, null, ranges.ToArray());
         BuildRange(out this._jpRange, GlyphRangesJapanese.GlyphRanges);
         this.SetUpUserFonts();
 
