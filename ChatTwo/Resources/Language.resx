@@ -536,4 +536,67 @@
     <data name="ExtraGlyphRanges_Vietnamese_Name" xml:space="preserve">
         <value>Vietnamese</value>
     </data>
+    <data name="Context_Integrations" xml:space="preserve">
+        <value>Integrations</value>
+    </data>
+    <data name="Context_ScreenshotMode" xml:space="preserve">
+        <value>Screenshot mode</value>
+    </data>
+    <data name="Context_HideChat" xml:space="preserve">
+        <value>Hide chat</value>
+    </data>
+    <data name="Context_Copy" xml:space="preserve">
+        <value>Copy</value>
+    </data>
+    <data name="Context_TryOn" xml:space="preserve">
+        <value>Try On</value>
+    </data>
+    <data name="Context_ItemComparison" xml:space="preserve">
+        <value>Item Comparison</value>
+    </data>
+    <data name="Context_SearchRecipes" xml:space="preserve">
+        <value>Search Recipes Using This Material</value>
+    </data>
+    <data name="Context_SearchForItem" xml:space="preserve">
+        <value>Search for Item</value>
+    </data>
+    <data name="Context_Link" xml:space="preserve">
+        <value>Link</value>
+    </data>
+    <data name="Context_CopyItemName" xml:space="preserve">
+        <value>Copy Item Name</value>
+    </data>
+    <data name="Context_SendTell" xml:space="preserve">
+        <value>Send Tell</value>
+    </data>
+    <data name="Context_InviteToParty" xml:space="preserve">
+        <value>Invite to Party</value>
+    </data>
+    <data name="Context_InviteToParty_SameWorld" xml:space="preserve">
+        <value>Same world</value>
+    </data>
+    <data name="Context_InviteToParty_DifferentWorld" xml:space="preserve">
+        <value>Different world</value>
+    </data>
+    <data name="Context_Promote" xml:space="preserve">
+        <value>Promote</value>
+    </data>
+    <data name="Context_KickFromParty" xml:space="preserve">
+        <value>Kick from Party</value>
+    </data>
+    <data name="Context_SendFriendRequest" xml:space="preserve">
+        <value>Send Friend Request</value>
+    </data>
+    <data name="Context_AddToBlacklist" xml:space="preserve">
+        <value>Add to Blacklist</value>
+    </data>
+    <data name="Context_InviteToNoviceNetwork" xml:space="preserve">
+        <value>Invite to Novice Network</value>
+    </data>
+    <data name="Context_ReplyInSelectedChatMode" xml:space="preserve">
+        <value>Reply in Selected Chat Mode</value>
+    </data>
+    <data name="Context_Target" xml:space="preserve">
+        <value>Target</value>
+    </data>
 </root>

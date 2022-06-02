@@ -1,6 +1,7 @@
 using System.Numerics;
 using System.Reflection;
 using ChatTwo.Code;
+using ChatTwo.Resources;
 using ChatTwo.Ui;
 using ChatTwo.Util;
 using Dalamud.Game.ClientState.Objects.SubKinds;
@@ -91,7 +92,7 @@ internal sealed class PayloadHandler {
             .Select(chunk => chunk.Link)
             .FirstOrDefault(chunk => chunk is PlayerPayload) as PlayerPayload;
 
-        if (ImGui.BeginMenu("Integrations")) {
+        if (ImGui.BeginMenu(Language.Context_Integrations)) {
             foreach (var id in registered) {
                 try {
                     this.Ui.Plugin.Ipc.Invoke(id, sender, contentId, payload, chunk.Message?.SenderSource, chunk.Message?.ContentSource);
@@ -113,14 +114,14 @@ internal sealed class PayloadHandler {
             return;
         }
 
-        ImGui.Checkbox("Screenshot mode", ref this.Ui.ScreenshotMode);
+        ImGui.Checkbox(Language.Context_ScreenshotMode, ref this.Ui.ScreenshotMode);
 
-        if (ImGui.Selectable("Hide chat")) {
+        if (ImGui.Selectable(Language.Context_HideChat)) {
             this.Log.UserHide();
         }
 
         if (chunk.Message is { } message) {
-            if (ImGui.BeginMenu("Copy")) {
+            if (ImGui.BeginMenu(Language.Context_Copy)) {
                 var text = message.Sender
                     .Concat(message.Content)
                     .Where(chunk => chunk is TextChunk)
@@ -365,30 +366,30 @@ internal sealed class PayloadHandler {
         var realItemId = payload.RawItemId;
 
         if (item.EquipSlotCategory.Row != 0) {
-            if (ImGui.Selectable("Try On")) {
+            if (ImGui.Selectable(Language.Context_TryOn)) {
                 this.Ui.Plugin.Functions.Context.TryOn(realItemId, 0);
             }
 
-            if (ImGui.Selectable("Item Comparison")) {
+            if (ImGui.Selectable(Language.Context_ItemComparison)) {
                 this.Ui.Plugin.Functions.Context.OpenItemComparison(realItemId);
             }
         }
 
         if (item.ItemSearchCategory.Value?.Category == 3) {
-            if (ImGui.Selectable("Search Recipes Using This Material")) {
+            if (ImGui.Selectable(Language.Context_SearchRecipes)) {
                 this.Ui.Plugin.Functions.Context.SearchForRecipesUsingItem(payload.ItemId);
             }
         }
 
-        if (ImGui.Selectable("Search for Item")) {
+        if (ImGui.Selectable(Language.Context_SearchForItem)) {
             this.Ui.Plugin.Functions.Context.SearchForItem(realItemId);
         }
 
-        if (ImGui.Selectable("Link")) {
+        if (ImGui.Selectable(Language.Context_Link)) {
             this.Ui.Plugin.Functions.Context.LinkItem(realItemId);
         }
 
-        if (ImGui.Selectable("Copy Item Name")) {
+        if (ImGui.Selectable(Language.Context_CopyItemName)) {
             ImGui.SetClipboardText(name.TextValue);
         }
     }
@@ -413,11 +414,11 @@ internal sealed class PayloadHandler {
 
         var realItemId = payload.RawItemId;
 
-        if (ImGui.Selectable("Link")) {
+        if (ImGui.Selectable(Language.Context_Link)) {
             this.Ui.Plugin.Functions.Context.LinkItem(realItemId);
         }
 
-        if (ImGui.Selectable("Copy Item Name")) {
+        if (ImGui.Selectable(Language.Context_CopyItemName)) {
             ImGui.SetClipboardText(name.TextValue);
         }
     }
@@ -434,7 +435,7 @@ internal sealed class PayloadHandler {
         this.Log.DrawChunks(name, false);
         ImGui.Separator();
 
-        if (ImGui.Selectable("Send Tell")) {
+        if (ImGui.Selectable(Language.Context_SendTell)) {
             this.Log.Chat = $"/tell {player.PlayerName}";
             if (player.World.IsPublic) {
                 this.Log.Chat += $"@{player.World.Name}";
@@ -455,15 +456,15 @@ internal sealed class PayloadHandler {
             if (isLeader) {
                 if (!isInParty) {
                     if (inInstance && inPartyInstance) {
-                        if (chunk.Message?.ContentId is not null or 0 && ImGui.Selectable("Invite to Party")) {
+                        if (chunk.Message?.ContentId is not null or 0 && ImGui.Selectable(Language.Context_InviteToParty)) {
                             this.Ui.Plugin.Functions.Party.InviteInInstance(chunk.Message!.ContentId);
                         }
-                    } else if (!inInstance && ImGui.BeginMenu("Invite to Party")) {
-                        if (ImGui.Selectable("Same world")) {
+                    } else if (!inInstance && ImGui.BeginMenu(Language.Context_InviteToParty)) {
+                        if (ImGui.Selectable(Language.Context_InviteToParty_SameWorld)) {
                             this.Ui.Plugin.Functions.Party.InviteSameWorld(player.PlayerName, (ushort) player.World.RowId, chunk.Message?.ContentId ?? 0);
                         }
 
-                        if (chunk.Message?.ContentId is not null or 0 && ImGui.Selectable("Different world")) {
+                        if (chunk.Message?.ContentId is not null or 0 && ImGui.Selectable(Language.Context_InviteToParty_DifferentWorld)) {
                             this.Ui.Plugin.Functions.Party.InviteOtherWorld(chunk.Message!.ContentId);
                         }
 
@@ -472,37 +473,37 @@ internal sealed class PayloadHandler {
                 }
 
                 if (isInParty && member != null && (!inInstance || (inInstance && inPartyInstance))) {
-                    if (ImGui.Selectable("Promote")) {
+                    if (ImGui.Selectable(Language.Context_Promote)) {
                         this.Ui.Plugin.Functions.Party.Promote(player.PlayerName, (ulong) member.ContentId);
                     }
 
-                    if (ImGui.Selectable("Kick from Party")) {
+                    if (ImGui.Selectable(Language.Context_KickFromParty)) {
                         this.Ui.Plugin.Functions.Party.Kick(player.PlayerName, (ulong) member.ContentId);
                     }
                 }
             }
 
             var isFriend = this.Ui.Plugin.Common.Functions.FriendList.List.Any(friend => friend.Name.TextValue == player.PlayerName && friend.HomeWorld == player.World.RowId);
-            if (!isFriend && ImGui.Selectable("Send Friend Request")) {
+            if (!isFriend && ImGui.Selectable(Language.Context_SendFriendRequest)) {
                 this.Ui.Plugin.Functions.SendFriendRequest(player.PlayerName, (ushort) player.World.RowId);
             }
 
-            if (ImGui.Selectable("Add to Blacklist")) {
+            if (ImGui.Selectable(Language.Context_AddToBlacklist)) {
                 this.Ui.Plugin.Functions.AddToBlacklist(player.PlayerName, (ushort) player.World.RowId);
             }
 
-            if (this.Ui.Plugin.Functions.IsMentor() && ImGui.Selectable("Invite to Novice Network")) {
+            if (this.Ui.Plugin.Functions.IsMentor() && ImGui.Selectable(Language.Context_InviteToNoviceNetwork)) {
                 this.Ui.Plugin.Functions.Context.InviteToNoviceNetwork(player.PlayerName, (ushort) player.World.RowId);
             }
         }
 
         var inputChannel = chunk.Message?.Code.Type.ToInputChannel();
-        if (inputChannel != null && ImGui.Selectable("Reply in Selected Chat Mode")) {
+        if (inputChannel != null && ImGui.Selectable(Language.Context_ReplyInSelectedChatMode)) {
             this.Ui.Plugin.Functions.Chat.SetChannel(inputChannel.Value);
             this.Log.Activate = true;
         }
 
-        if (ImGui.Selectable("Target") && this.FindCharacterForPayload(player) is { } obj) {
+        if (ImGui.Selectable(Language.Context_Target) && this.FindCharacterForPayload(player) is { } obj) {
             this.Ui.Plugin.TargetManager.SetTarget(obj);
         }
 

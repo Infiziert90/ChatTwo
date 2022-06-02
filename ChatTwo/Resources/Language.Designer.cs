@@ -872,5 +872,131 @@ namespace ChatTwo.Resources {
                 return ResourceManager.GetString("ExtraGlyphRanges_Vietnamese_Name", resourceCulture);
             }
         }
+        
+        internal static string Context_Integrations {
+            get {
+                return ResourceManager.GetString("Context_Integrations", resourceCulture);
+            }
+        }
+        
+        internal static string Context_ScreenshotMode {
+            get {
+                return ResourceManager.GetString("Context_ScreenshotMode", resourceCulture);
+            }
+        }
+        
+        internal static string Context_HideChat {
+            get {
+                return ResourceManager.GetString("Context_HideChat", resourceCulture);
+            }
+        }
+        
+        internal static string Context_Copy {
+            get {
+                return ResourceManager.GetString("Context_Copy", resourceCulture);
+            }
+        }
+        
+        internal static string Context_TryOn {
+            get {
+                return ResourceManager.GetString("Context_TryOn", resourceCulture);
+            }
+        }
+        
+        internal static string Context_ItemComparison {
+            get {
+                return ResourceManager.GetString("Context_ItemComparison", resourceCulture);
+            }
+        }
+        
+        internal static string Context_SearchRecipes {
+            get {
+                return ResourceManager.GetString("Context_SearchRecipes", resourceCulture);
+            }
+        }
+        
+        internal static string Context_SearchForItem {
+            get {
+                return ResourceManager.GetString("Context_SearchForItem", resourceCulture);
+            }
+        }
+        
+        internal static string Context_Link {
+            get {
+                return ResourceManager.GetString("Context_Link", resourceCulture);
+            }
+        }
+        
+        internal static string Context_CopyItemName {
+            get {
+                return ResourceManager.GetString("Context_CopyItemName", resourceCulture);
+            }
+        }
+        
+        internal static string Context_SendTell {
+            get {
+                return ResourceManager.GetString("Context_SendTell", resourceCulture);
+            }
+        }
+        
+        internal static string Context_InviteToParty {
+            get {
+                return ResourceManager.GetString("Context_InviteToParty", resourceCulture);
+            }
+        }
+        
+        internal static string Context_InviteToParty_SameWorld {
+            get {
+                return ResourceManager.GetString("Context_InviteToParty_SameWorld", resourceCulture);
+            }
+        }
+        
+        internal static string Context_InviteToParty_DifferentWorld {
+            get {
+                return ResourceManager.GetString("Context_InviteToParty_DifferentWorld", resourceCulture);
+            }
+        }
+        
+        internal static string Context_Promote {
+            get {
+                return ResourceManager.GetString("Context_Promote", resourceCulture);
+            }
+        }
+        
+        internal static string Context_KickFromParty {
+            get {
+                return ResourceManager.GetString("Context_KickFromParty", resourceCulture);
+            }
+        }
+        
+        internal static string Context_SendFriendRequest {
+            get {
+                return ResourceManager.GetString("Context_SendFriendRequest", resourceCulture);
+            }
+        }
+        
+        internal static string Context_AddToBlacklist {
+            get {
+                return ResourceManager.GetString("Context_AddToBlacklist", resourceCulture);
+            }
+        }
+        
+        internal static string Context_InviteToNoviceNetwork {
+            get {
+                return ResourceManager.GetString("Context_InviteToNoviceNetwork", resourceCulture);
+            }
+        }
+        
+        internal static string Context_ReplyInSelectedChatMode {
+            get {
+                return ResourceManager.GetString("Context_ReplyInSelectedChatMode", resourceCulture);
+            }
+        }
+        
+        internal static string Context_Target {
+            get {
+                return ResourceManager.GetString("Context_Target", resourceCulture);
+            }
+        }
     }
 }
