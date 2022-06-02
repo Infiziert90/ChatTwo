@@ -506,14 +506,77 @@ Sie wurden gewarnt.</value>
     <data name="Options_SortAutoTranslate_Description" xml:space="preserve">
         <value>Wenn dies aktiviert ist, wird die Auto-Übersetzerliste alphabetisch sortiert.</value>
     </data>
-    <data name="Context_InviteToParty" xml:space="preserve">
-        <value>In die Gruppe einladen</value>
+    <data name="AutoTranslate_Completion_Key" xml:space="preserve">
+        <value>Strg + {0}</value>
     </data>
-    <data name="Context_InviteToNoviceNetwork" xml:space="preserve">
-        <value>In den Neulings-Chat einladen</value>
+    <data name="Options_ExtraGlyphs_Name" xml:space="preserve">
+        <value>Zusätzliche Schriftzeichen</value>
+    </data>
+    <data name="Options_ExtraGlyphs_Description" xml:space="preserve">
+        <value>Extra glyphs can be added to {0}'s font global font by enabling the checkboxes below. This will likely require increasing Dalamud's font atlas size.</value>
+    </data>
+    <data name="ExtraGlyphRanges_ChineseFull_Name" xml:space="preserve">
+        <value>Chinese (full)</value>
+    </data>
+    <data name="ExtraGlyphRanges_ChineseSimplifiedCommon_Name" xml:space="preserve">
+        <value>Chinese (common simplified)</value>
+    </data>
+    <data name="ExtraGlyphRanges_Cyrillic_Name" xml:space="preserve">
+        <value>Cyrillic</value>
+    </data>
+    <data name="ExtraGlyphRanges_Japanese_Name" xml:space="preserve">
+        <value>Japanese</value>
+    </data>
+    <data name="ExtraGlyphRanges_Korean_Name" xml:space="preserve">
+        <value>Korean</value>
+    </data>
+    <data name="ExtraGlyphRanges_Thai_Name" xml:space="preserve">
+        <value>Thai</value>
+    </data>
+    <data name="ExtraGlyphRanges_Vietnamese_Name" xml:space="preserve">
+        <value>Vietnamese</value>
+    </data>
+    <data name="Context_Integrations" xml:space="preserve">
+        <value>Integrations</value>
+    </data>
+    <data name="Context_ScreenshotMode" xml:space="preserve">
+        <value>Screenshot mode</value>
+    </data>
+    <data name="Context_HideChat" xml:space="preserve">
+        <value>Chatlog verbergen</value>
+    </data>
+    <data name="Context_Copy" xml:space="preserve">
+        <value>Kopieren</value>
+    </data>
+    <data name="Context_TryOn" xml:space="preserve">
+        <value>Anprobieren</value>
+    </data>
+    <data name="Context_ItemComparison" xml:space="preserve">
+        <value>Vergleichen</value>
+    </data>
+    <data name="Context_SearchRecipes" xml:space="preserve">
+        <value>Nach Rezept mit diesem Material suchen</value>
+    </data>
+    <data name="Context_SearchForItem" xml:space="preserve">
+        <value>Im Inventar suchen</value>
+    </data>
+    <data name="Context_Link" xml:space="preserve">
+        <value>Beschreibung im Chat senden</value>
+    </data>
+    <data name="Context_CopyItemName" xml:space="preserve">
+        <value>Gegenstandsnamen kopieren</value>
     </data>
     <data name="Context_SendTell" xml:space="preserve">
         <value>Zuflüstern</value>
+    </data>
+    <data name="Context_InviteToParty" xml:space="preserve">
+        <value>In die Gruppe einladen</value>
+    </data>
+    <data name="Context_InviteToParty_SameWorld" xml:space="preserve">
+        <value>Same world</value>
+    </data>
+    <data name="Context_InviteToParty_DifferentWorld" xml:space="preserve">
+        <value>Different world</value>
     </data>
     <data name="Context_Promote" xml:space="preserve">
         <value>Zum Gruppenanführer machen</value>
@@ -521,44 +584,29 @@ Sie wurden gewarnt.</value>
     <data name="Context_KickFromParty" xml:space="preserve">
         <value>Aus der Gruppe entfernen</value>
     </data>
+    <data name="Context_SendFriendRequest" xml:space="preserve">
+        <value>Freundschaft anbieten</value>
+    </data>
     <data name="Context_AddToBlacklist" xml:space="preserve">
         <value>Auf die Schwarze Liste</value>
     </data>
-    <data name="Context_Copy" xml:space="preserve">
-        <value>Kopieren</value>
-    </data>
-    <data name="Context_CopyItemName" xml:space="preserve">
-        <value>Gegenstandsnamen kopieren</value>
-    </data>
-    <data name="Context_Link" xml:space="preserve">
-        <value>Beschreibung im Chat senden</value>
+    <data name="Context_InviteToNoviceNetwork" xml:space="preserve">
+        <value>In den Neulings-Chat einladen</value>
     </data>
     <data name="Context_ReplyInSelectedChatMode" xml:space="preserve">
         <value>Im ausgewählten Chatmodus antworten</value>
     </data>
-    <data name="Context_HideChat" xml:space="preserve">
-        <value>Chatlog verbergen</value>
-    </data>
-    <data name="Context_ItemComparison" xml:space="preserve">
-        <value>Vergleichen</value>
-    </data>
-    <data name="Context_SearchForItem" xml:space="preserve">
-        <value>Im Inventar suchen</value>
-    </data>
-    <data name="Context_SearchRecipes" xml:space="preserve">
-        <value>Nach Rezept mit diesem Material suchen</value>
-    </data>
-    <data name="Context_SendFriendRequest" xml:space="preserve">
-        <value>Freundschaft anbieten</value>
-    </data>
-    <data name="Context_TryOn" xml:space="preserve">
-        <value>Anprobieren</value>
-    </data>
     <data name="Context_Target" xml:space="preserve">
         <value>Anvisieren</value>
     </data>
-    <data name="ChatType_BattleSystem" xml:space="preserve">
-        <value>Systemnachrichten - Kampf</value>
+    <data name="ChatType_Debug" xml:space="preserve">
+        <value>Debug</value>
+    </data>
+    <data name="ChatType_Urgent" xml:space="preserve">
+        <value>Urgent</value>
+    </data>
+    <data name="ChatType_Notice" xml:space="preserve">
+        <value>Notice</value>
     </data>
     <data name="ChatType_Say" xml:space="preserve">
         <value>Sagen</value>
@@ -566,35 +614,14 @@ Sie wurden gewarnt.</value>
     <data name="ChatType_Shout" xml:space="preserve">
         <value>Schreien</value>
     </data>
+    <data name="ChatType_TellOutgoing" xml:space="preserve">
+        <value>Tell (Outgoing)</value>
+    </data>
+    <data name="ChatType_TellIncoming" xml:space="preserve">
+        <value>Tell (Incoming)</value>
+    </data>
     <data name="ChatType_Party" xml:space="preserve">
         <value>Gruppe</value>
-    </data>
-    <data name="ChatType_Echo" xml:space="preserve">
-        <value>Für andere unsichtbarer „/echo“-Text</value>
-    </data>
-    <data name="ChatType_System" xml:space="preserve">
-        <value>Systemnachrichten</value>
-    </data>
-    <data name="ChatType_GatheringSystem" xml:space="preserve">
-        <value>Systemnachrichten - Sammeln</value>
-    </data>
-    <data name="ChatType_Error" xml:space="preserve">
-        <value>Fehlermeldungen</value>
-    </data>
-    <data name="ChatType_NpcDialogue" xml:space="preserve">
-        <value>NPC-Dialoge</value>
-    </data>
-    <data name="ChatType_Damage" xml:space="preserve">
-        <value>Verursachter Schaden</value>
-    </data>
-    <data name="ChatType_Yell" xml:space="preserve">
-        <value>Rufen</value>
-    </data>
-    <data name="ChatType_FreeCompany" xml:space="preserve">
-        <value>Freie Gesellschaft</value>
-    </data>
-    <data name="ChatType_FreeCompanyAnnouncement" xml:space="preserve">
-        <value>Mitteilungen der Freien Gesellschaft</value>
     </data>
     <data name="ChatType_Alliance" xml:space="preserve">
         <value>Allianz</value>
@@ -611,17 +638,38 @@ Sie wurden gewarnt.</value>
     <data name="ChatType_Linkshell4" xml:space="preserve">
         <value>Kontaktkreis 4</value>
     </data>
-    <data name="ChatType_Linkshell6" xml:space="preserve">
-        <value>Kontaktkreis 6</value>
-    </data>
     <data name="ChatType_Linkshell5" xml:space="preserve">
         <value>Kontaktkreis 5</value>
+    </data>
+    <data name="ChatType_Linkshell6" xml:space="preserve">
+        <value>Kontaktkreis 6</value>
     </data>
     <data name="ChatType_Linkshell7" xml:space="preserve">
         <value>Kontaktkreis 7</value>
     </data>
     <data name="ChatType_Linkshell8" xml:space="preserve">
         <value>Kontaktkreis 8</value>
+    </data>
+    <data name="ChatType_FreeCompany" xml:space="preserve">
+        <value>Freie Gesellschaft</value>
+    </data>
+    <data name="ChatType_NoviceNetwork" xml:space="preserve">
+        <value>Neulinge</value>
+    </data>
+    <data name="ChatType_CustomEmotes" xml:space="preserve">
+        <value>Custom Emotes</value>
+    </data>
+    <data name="ChatType_StandardEmotes" xml:space="preserve">
+        <value>Standard Emotes</value>
+    </data>
+    <data name="ChatType_Yell" xml:space="preserve">
+        <value>Rufen</value>
+    </data>
+    <data name="ChatType_CrossWorldParty" xml:space="preserve">
+        <value>Cross-world Party</value>
+    </data>
+    <data name="ChatType_PvpTeam" xml:space="preserve">
+        <value>PvP-Team</value>
     </data>
     <data name="ChatType_CrossLinkshell1" xml:space="preserve">
         <value>Welten-Kontaktkreis [1]</value>
@@ -647,16 +695,148 @@ Sie wurden gewarnt.</value>
     <data name="ChatType_CrossLinkshell8" xml:space="preserve">
         <value>Welten-Kontaktkreis [8]</value>
     </data>
+    <data name="ChatType_Damage" xml:space="preserve">
+        <value>Verursachter Schaden</value>
+    </data>
+    <data name="ChatType_Miss" xml:space="preserve">
+        <value>Failed attacks</value>
+    </data>
+    <data name="ChatType_Action" xml:space="preserve">
+        <value>Actions used</value>
+    </data>
+    <data name="ChatType_Item" xml:space="preserve">
+        <value>Items used</value>
+    </data>
+    <data name="ChatType_Healing" xml:space="preserve">
+        <value>Healing</value>
+    </data>
+    <data name="ChatType_GainBuff" xml:space="preserve">
+        <value>Beneficial effects granted</value>
+    </data>
+    <data name="ChatType_GainDebuff" xml:space="preserve">
+        <value>Detrimental effects inflicted</value>
+    </data>
+    <data name="ChatType_LoseBuff" xml:space="preserve">
+        <value>Beneficial effects lost</value>
+    </data>
+    <data name="ChatType_LoseDebuff" xml:space="preserve">
+        <value>Detrimental effects cured</value>
+    </data>
+    <data name="ChatType_Alarm" xml:space="preserve">
+        <value>Alarm Notifications</value>
+    </data>
+    <data name="ChatType_Echo" xml:space="preserve">
+        <value>Für andere unsichtbarer „/echo“-Text</value>
+    </data>
+    <data name="ChatType_System" xml:space="preserve">
+        <value>Systemnachrichten</value>
+    </data>
+    <data name="ChatType_BattleSystem" xml:space="preserve">
+        <value>Systemnachrichten - Kampf</value>
+    </data>
+    <data name="ChatType_GatheringSystem" xml:space="preserve">
+        <value>Systemnachrichten - Sammeln</value>
+    </data>
+    <data name="ChatType_Error" xml:space="preserve">
+        <value>Fehlermeldungen</value>
+    </data>
+    <data name="ChatType_NpcDialogue" xml:space="preserve">
+        <value>NPC-Dialoge</value>
+    </data>
+    <data name="ChatType_LootNotice" xml:space="preserve">
+        <value>Loot Notices</value>
+    </data>
+    <data name="ChatType_Progress" xml:space="preserve">
+        <value>Progression Messages</value>
+    </data>
+    <data name="ChatType_LootRoll" xml:space="preserve">
+        <value>Loot Messages</value>
+    </data>
+    <data name="ChatType_Crafting" xml:space="preserve">
+        <value>Synthesis Messages</value>
+    </data>
+    <data name="ChatType_Gathering" xml:space="preserve">
+        <value>Gathering Messages</value>
+    </data>
+    <data name="ChatType_NpcAnnouncement" xml:space="preserve">
+        <value>NPC Dialogue (Announcements)</value>
+    </data>
+    <data name="ChatType_FreeCompanyAnnouncement" xml:space="preserve">
+        <value>Mitteilungen der Freien Gesellschaft</value>
+    </data>
+    <data name="ChatType_FreeCompanyLoginLogout" xml:space="preserve">
+        <value>Free Company Member Login Notifications</value>
+    </data>
+    <data name="ChatType_RetainerSale" xml:space="preserve">
+        <value>Retainer Sale Notifications</value>
+    </data>
+    <data name="ChatType_PeriodicRecruitmentNotification" xml:space="preserve">
+        <value>Periodic Recruitment Notifications</value>
+    </data>
+    <data name="ChatType_Sign" xml:space="preserve">
+        <value>Sign Messages for PC Targets</value>
+    </data>
+    <data name="ChatType_RandomNumber" xml:space="preserve">
+        <value>Random Number Messages</value>
+    </data>
     <data name="ChatType_NoviceNetworkSystem" xml:space="preserve">
         <value>Neuling-Informationen</value>
     </data>
-    <data name="ChatType_NoviceNetwork" xml:space="preserve">
-        <value>Neulinge</value>
-    </data>
-    <data name="ChatType_PvpTeam" xml:space="preserve">
-        <value>PvP-Team</value>
+    <data name="ChatType_Orchestrion" xml:space="preserve">
+        <value>Current Orchestrion Track Messages</value>
     </data>
     <data name="ChatType_PvpTeamAnnouncement" xml:space="preserve">
         <value>Nachricht des PvP-Teams</value>
+    </data>
+    <data name="ChatType_PvpTeamLoginLogout" xml:space="preserve">
+        <value>PvP Team Member Login Notifications</value>
+    </data>
+    <data name="ChatType_MessageBook" xml:space="preserve">
+        <value>Message Book Alert</value>
+    </data>
+    <data name="ChatType_GmTell" xml:space="preserve">
+        <value>Tell (GM)</value>
+    </data>
+    <data name="ChatType_GmSay" xml:space="preserve">
+        <value>Say (GM)</value>
+    </data>
+    <data name="ChatType_GmShout" xml:space="preserve">
+        <value>Shout (GM)</value>
+    </data>
+    <data name="ChatType_GmYell" xml:space="preserve">
+        <value>Yell (GM)</value>
+    </data>
+    <data name="ChatType_GmParty" xml:space="preserve">
+        <value>Party (GM)</value>
+    </data>
+    <data name="ChatType_GmFreeCompany" xml:space="preserve">
+        <value>Free Company (GM)</value>
+    </data>
+    <data name="ChatType_GmLinkshell1" xml:space="preserve">
+        <value>Linkshell [1] (GM)</value>
+    </data>
+    <data name="ChatType_GmLinkshell2" xml:space="preserve">
+        <value>Linkshell [2] (GM)</value>
+    </data>
+    <data name="ChatType_GmLinkshell3" xml:space="preserve">
+        <value>Linkshell [3] (GM)</value>
+    </data>
+    <data name="ChatType_GmLinkshell4" xml:space="preserve">
+        <value>Linkshell [4] (GM)</value>
+    </data>
+    <data name="ChatType_GmLinkshell5" xml:space="preserve">
+        <value>Linkshell [5] (GM)</value>
+    </data>
+    <data name="ChatType_GmLinkshell6" xml:space="preserve">
+        <value>Linkshell [6] (GM)</value>
+    </data>
+    <data name="ChatType_GmLinkshell7" xml:space="preserve">
+        <value>Linkshell [7] (GM)</value>
+    </data>
+    <data name="ChatType_GmLinkshell8" xml:space="preserve">
+        <value>Linkshell [8] (GM)</value>
+    </data>
+    <data name="ChatType_GmNoviceNetwork" xml:space="preserve">
+        <value>Novice Network (GM)</value>
     </data>
 </root>
