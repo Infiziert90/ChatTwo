@@ -998,5 +998,485 @@ namespace ChatTwo.Resources {
                 return ResourceManager.GetString("Context_Target", resourceCulture);
             }
         }
+        
+        internal static string ChatType_Debug {
+            get {
+                return ResourceManager.GetString("ChatType_Debug", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_Urgent {
+            get {
+                return ResourceManager.GetString("ChatType_Urgent", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_Notice {
+            get {
+                return ResourceManager.GetString("ChatType_Notice", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_Say {
+            get {
+                return ResourceManager.GetString("ChatType_Say", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_Shout {
+            get {
+                return ResourceManager.GetString("ChatType_Shout", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_TellOutgoing {
+            get {
+                return ResourceManager.GetString("ChatType_TellOutgoing", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_TellIncoming {
+            get {
+                return ResourceManager.GetString("ChatType_TellIncoming", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_Party {
+            get {
+                return ResourceManager.GetString("ChatType_Party", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_Alliance {
+            get {
+                return ResourceManager.GetString("ChatType_Alliance", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_Linkshell1 {
+            get {
+                return ResourceManager.GetString("ChatType_Linkshell1", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_Linkshell2 {
+            get {
+                return ResourceManager.GetString("ChatType_Linkshell2", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_Linkshell3 {
+            get {
+                return ResourceManager.GetString("ChatType_Linkshell3", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_Linkshell4 {
+            get {
+                return ResourceManager.GetString("ChatType_Linkshell4", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_Linkshell5 {
+            get {
+                return ResourceManager.GetString("ChatType_Linkshell5", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_Linkshell6 {
+            get {
+                return ResourceManager.GetString("ChatType_Linkshell6", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_Linkshell7 {
+            get {
+                return ResourceManager.GetString("ChatType_Linkshell7", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_Linkshell8 {
+            get {
+                return ResourceManager.GetString("ChatType_Linkshell8", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_FreeCompany {
+            get {
+                return ResourceManager.GetString("ChatType_FreeCompany", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_NoviceNetwork {
+            get {
+                return ResourceManager.GetString("ChatType_NoviceNetwork", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_CustomEmotes {
+            get {
+                return ResourceManager.GetString("ChatType_CustomEmotes", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_StandardEmotes {
+            get {
+                return ResourceManager.GetString("ChatType_StandardEmotes", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_Yell {
+            get {
+                return ResourceManager.GetString("ChatType_Yell", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_CrossWorldParty {
+            get {
+                return ResourceManager.GetString("ChatType_CrossWorldParty", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_PvpTeam {
+            get {
+                return ResourceManager.GetString("ChatType_PvpTeam", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_CrossLinkshell1 {
+            get {
+                return ResourceManager.GetString("ChatType_CrossLinkshell1", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_CrossLinkshell2 {
+            get {
+                return ResourceManager.GetString("ChatType_CrossLinkshell2", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_CrossLinkshell3 {
+            get {
+                return ResourceManager.GetString("ChatType_CrossLinkshell3", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_CrossLinkshell4 {
+            get {
+                return ResourceManager.GetString("ChatType_CrossLinkshell4", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_CrossLinkshell5 {
+            get {
+                return ResourceManager.GetString("ChatType_CrossLinkshell5", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_CrossLinkshell6 {
+            get {
+                return ResourceManager.GetString("ChatType_CrossLinkshell6", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_CrossLinkshell7 {
+            get {
+                return ResourceManager.GetString("ChatType_CrossLinkshell7", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_CrossLinkshell8 {
+            get {
+                return ResourceManager.GetString("ChatType_CrossLinkshell8", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_Damage {
+            get {
+                return ResourceManager.GetString("ChatType_Damage", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_Miss {
+            get {
+                return ResourceManager.GetString("ChatType_Miss", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_Action {
+            get {
+                return ResourceManager.GetString("ChatType_Action", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_Item {
+            get {
+                return ResourceManager.GetString("ChatType_Item", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_Healing {
+            get {
+                return ResourceManager.GetString("ChatType_Healing", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_GainBuff {
+            get {
+                return ResourceManager.GetString("ChatType_GainBuff", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_GainDebuff {
+            get {
+                return ResourceManager.GetString("ChatType_GainDebuff", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_LoseBuff {
+            get {
+                return ResourceManager.GetString("ChatType_LoseBuff", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_LoseDebuff {
+            get {
+                return ResourceManager.GetString("ChatType_LoseDebuff", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_Alarm {
+            get {
+                return ResourceManager.GetString("ChatType_Alarm", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_Echo {
+            get {
+                return ResourceManager.GetString("ChatType_Echo", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_System {
+            get {
+                return ResourceManager.GetString("ChatType_System", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_BattleSystem {
+            get {
+                return ResourceManager.GetString("ChatType_BattleSystem", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_GatheringSystem {
+            get {
+                return ResourceManager.GetString("ChatType_GatheringSystem", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_Error {
+            get {
+                return ResourceManager.GetString("ChatType_Error", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_NpcDialogue {
+            get {
+                return ResourceManager.GetString("ChatType_NpcDialogue", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_LootNotice {
+            get {
+                return ResourceManager.GetString("ChatType_LootNotice", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_Progress {
+            get {
+                return ResourceManager.GetString("ChatType_Progress", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_LootRoll {
+            get {
+                return ResourceManager.GetString("ChatType_LootRoll", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_Crafting {
+            get {
+                return ResourceManager.GetString("ChatType_Crafting", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_Gathering {
+            get {
+                return ResourceManager.GetString("ChatType_Gathering", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_NpcAnnouncement {
+            get {
+                return ResourceManager.GetString("ChatType_NpcAnnouncement", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_FreeCompanyAnnouncement {
+            get {
+                return ResourceManager.GetString("ChatType_FreeCompanyAnnouncement", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_FreeCompanyLoginLogout {
+            get {
+                return ResourceManager.GetString("ChatType_FreeCompanyLoginLogout", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_RetainerSale {
+            get {
+                return ResourceManager.GetString("ChatType_RetainerSale", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_PeriodicRecruitmentNotification {
+            get {
+                return ResourceManager.GetString("ChatType_PeriodicRecruitmentNotification", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_Sign {
+            get {
+                return ResourceManager.GetString("ChatType_Sign", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_RandomNumber {
+            get {
+                return ResourceManager.GetString("ChatType_RandomNumber", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_NoviceNetworkSystem {
+            get {
+                return ResourceManager.GetString("ChatType_NoviceNetworkSystem", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_Orchestrion {
+            get {
+                return ResourceManager.GetString("ChatType_Orchestrion", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_PvpTeamAnnouncement {
+            get {
+                return ResourceManager.GetString("ChatType_PvpTeamAnnouncement", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_PvpTeamLoginLogout {
+            get {
+                return ResourceManager.GetString("ChatType_PvpTeamLoginLogout", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_MessageBook {
+            get {
+                return ResourceManager.GetString("ChatType_MessageBook", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_GmTell {
+            get {
+                return ResourceManager.GetString("ChatType_GmTell", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_GmSay {
+            get {
+                return ResourceManager.GetString("ChatType_GmSay", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_GmShout {
+            get {
+                return ResourceManager.GetString("ChatType_GmShout", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_GmYell {
+            get {
+                return ResourceManager.GetString("ChatType_GmYell", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_GmParty {
+            get {
+                return ResourceManager.GetString("ChatType_GmParty", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_GmFreeCompany {
+            get {
+                return ResourceManager.GetString("ChatType_GmFreeCompany", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_GmLinkshell1 {
+            get {
+                return ResourceManager.GetString("ChatType_GmLinkshell1", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_GmLinkshell2 {
+            get {
+                return ResourceManager.GetString("ChatType_GmLinkshell2", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_GmLinkshell3 {
+            get {
+                return ResourceManager.GetString("ChatType_GmLinkshell3", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_GmLinkshell4 {
+            get {
+                return ResourceManager.GetString("ChatType_GmLinkshell4", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_GmLinkshell5 {
+            get {
+                return ResourceManager.GetString("ChatType_GmLinkshell5", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_GmLinkshell6 {
+            get {
+                return ResourceManager.GetString("ChatType_GmLinkshell6", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_GmLinkshell7 {
+            get {
+                return ResourceManager.GetString("ChatType_GmLinkshell7", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_GmLinkshell8 {
+            get {
+                return ResourceManager.GetString("ChatType_GmLinkshell8", resourceCulture);
+            }
+        }
+        
+        internal static string ChatType_GmNoviceNetwork {
+            get {
+                return ResourceManager.GetString("ChatType_GmNoviceNetwork", resourceCulture);
+            }
+        }
     }
 }
