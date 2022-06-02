@@ -505,4 +505,55 @@
     <data name="Options_SortAutoTranslate_Description" xml:space="preserve">
         <value>Si cette option est activée, la liste de Traduction Automatique sera triée par ordre alphabétique.</value>
     </data>
+    <data name="Context_InviteToNoviceNetwork" xml:space="preserve">
+        <value>Inviter dans le réseau des novices</value>
+    </data>
+    <data name="Context_SendTell" xml:space="preserve">
+        <value>Murmurer</value>
+    </data>
+    <data name="Context_Promote" xml:space="preserve">
+        <value>Nommer chef d'équipe</value>
+    </data>
+    <data name="Context_KickFromParty" xml:space="preserve">
+        <value>Exclure de l'équipe</value>
+    </data>
+    <data name="Context_AddToBlacklist" xml:space="preserve">
+        <value>Ajouter à la liste noire</value>
+    </data>
+    <data name="Context_Copy" xml:space="preserve">
+        <value>Copier</value>
+    </data>
+    <data name="Context_CopyItemName" xml:space="preserve">
+        <value>Copier le nom d'objet</value>
+    </data>
+    <data name="Context_InviteToParty" xml:space="preserve">
+        <value>Inviter dans l'équipe</value>
+    </data>
+    <data name="Context_Link" xml:space="preserve">
+        <value>Lien d'objet</value>
+    </data>
+    <data name="Context_ReplyInSelectedChatMode" xml:space="preserve">
+        <value>Répondre avec le même mode de discussion</value>
+    </data>
+    <data name="Context_HideChat" xml:space="preserve">
+        <value>Cacher la fenêtre de log</value>
+    </data>
+    <data name="Context_ItemComparison" xml:space="preserve">
+        <value>Comparer</value>
+    </data>
+    <data name="Context_SearchForItem" xml:space="preserve">
+        <value>Nombre possédé</value>
+    </data>
+    <data name="Context_SearchRecipes" xml:space="preserve">
+        <value>Recettes associées</value>
+    </data>
+    <data name="Context_SendFriendRequest" xml:space="preserve">
+        <value>Envoyer une requête d'ami</value>
+    </data>
+    <data name="Context_TryOn" xml:space="preserve">
+        <value>Essayer</value>
+    </data>
+    <data name="Context_Target" xml:space="preserve">
+        <value>Cibler</value>
+    </data>
 </root>

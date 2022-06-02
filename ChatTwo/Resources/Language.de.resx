@@ -506,4 +506,55 @@ Sie wurden gewarnt.</value>
     <data name="Options_SortAutoTranslate_Description" xml:space="preserve">
         <value>Wenn dies aktiviert ist, wird die Auto-Übersetzerliste alphabetisch sortiert.</value>
     </data>
+    <data name="Context_InviteToParty" xml:space="preserve">
+        <value>In die Gruppe einladen</value>
+    </data>
+    <data name="Context_InviteToNoviceNetwork" xml:space="preserve">
+        <value>In den Neulings-Chat einladen</value>
+    </data>
+    <data name="Context_SendTell" xml:space="preserve">
+        <value>Zuflüstern</value>
+    </data>
+    <data name="Context_Promote" xml:space="preserve">
+        <value>Zum Gruppenanführer machen</value>
+    </data>
+    <data name="Context_KickFromParty" xml:space="preserve">
+        <value>Aus der Gruppe entfernen</value>
+    </data>
+    <data name="Context_AddToBlacklist" xml:space="preserve">
+        <value>Auf die Schwarze Liste</value>
+    </data>
+    <data name="Context_Copy" xml:space="preserve">
+        <value>Kopieren</value>
+    </data>
+    <data name="Context_CopyItemName" xml:space="preserve">
+        <value>Gegenstandsnamen kopieren</value>
+    </data>
+    <data name="Context_Link" xml:space="preserve">
+        <value>Beschreibung im Chat senden</value>
+    </data>
+    <data name="Context_ReplyInSelectedChatMode" xml:space="preserve">
+        <value>Im ausgewählten Chatmodus antworten</value>
+    </data>
+    <data name="Context_HideChat" xml:space="preserve">
+        <value>Chatlog verbergen</value>
+    </data>
+    <data name="Context_ItemComparison" xml:space="preserve">
+        <value>Vergleichen</value>
+    </data>
+    <data name="Context_SearchForItem" xml:space="preserve">
+        <value>Im Inventar suchen</value>
+    </data>
+    <data name="Context_SearchRecipes" xml:space="preserve">
+        <value>Nach Rezept mit diesem Material suchen</value>
+    </data>
+    <data name="Context_SendFriendRequest" xml:space="preserve">
+        <value>Freund-schaft anbieten</value>
+    </data>
+    <data name="Context_TryOn" xml:space="preserve">
+        <value>Anprobieren</value>
+    </data>
+    <data name="Context_Target" xml:space="preserve">
+        <value>Anvisieren</value>
+    </data>
 </root>
