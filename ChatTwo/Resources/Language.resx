@@ -780,7 +780,7 @@
         <value>Random Number Messages</value>
     </data>
     <data name="ChatType_NoviceNetworkSystem" xml:space="preserve">
-        <value>Novice Network Notifications</value>
+        <value>Novice Network Announcements</value>
     </data>
     <data name="ChatType_Orchestrion" xml:space="preserve">
         <value>Current Orchestrion Track Messages</value>

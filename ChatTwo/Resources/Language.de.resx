@@ -549,12 +549,114 @@ Sie wurden gewarnt.</value>
         <value>Nach Rezept mit diesem Material suchen</value>
     </data>
     <data name="Context_SendFriendRequest" xml:space="preserve">
-        <value>Freund-schaft anbieten</value>
+        <value>Freundschaft anbieten</value>
     </data>
     <data name="Context_TryOn" xml:space="preserve">
         <value>Anprobieren</value>
     </data>
     <data name="Context_Target" xml:space="preserve">
         <value>Anvisieren</value>
+    </data>
+    <data name="ChatType_BattleSystem" xml:space="preserve">
+        <value>Systemnachrichten - Kampf</value>
+    </data>
+    <data name="ChatType_Say" xml:space="preserve">
+        <value>Sagen</value>
+    </data>
+    <data name="ChatType_Shout" xml:space="preserve">
+        <value>Schreien</value>
+    </data>
+    <data name="ChatType_Party" xml:space="preserve">
+        <value>Gruppe</value>
+    </data>
+    <data name="ChatType_Echo" xml:space="preserve">
+        <value>Für andere unsichtbarer „/echo“-Text</value>
+    </data>
+    <data name="ChatType_System" xml:space="preserve">
+        <value>Systemnachrichten</value>
+    </data>
+    <data name="ChatType_GatheringSystem" xml:space="preserve">
+        <value>Systemnachrichten - Sammeln</value>
+    </data>
+    <data name="ChatType_Error" xml:space="preserve">
+        <value>Fehlermeldungen</value>
+    </data>
+    <data name="ChatType_NpcDialogue" xml:space="preserve">
+        <value>NPC-Dialoge</value>
+    </data>
+    <data name="ChatType_Damage" xml:space="preserve">
+        <value>Verursachter Schaden</value>
+    </data>
+    <data name="ChatType_Yell" xml:space="preserve">
+        <value>Rufen</value>
+    </data>
+    <data name="ChatType_FreeCompany" xml:space="preserve">
+        <value>Freie Gesellschaft</value>
+    </data>
+    <data name="ChatType_FreeCompanyAnnouncement" xml:space="preserve">
+        <value>Mitteilungen der Freien Gesellschaft</value>
+    </data>
+    <data name="ChatType_Alliance" xml:space="preserve">
+        <value>Allianz</value>
+    </data>
+    <data name="ChatType_Linkshell1" xml:space="preserve">
+        <value>Kontaktkreis 1</value>
+    </data>
+    <data name="ChatType_Linkshell2" xml:space="preserve">
+        <value>Kontaktkreis 2</value>
+    </data>
+    <data name="ChatType_Linkshell3" xml:space="preserve">
+        <value>Kontaktkreis 3</value>
+    </data>
+    <data name="ChatType_Linkshell4" xml:space="preserve">
+        <value>Kontaktkreis 4</value>
+    </data>
+    <data name="ChatType_Linkshell6" xml:space="preserve">
+        <value>Kontaktkreis 6</value>
+    </data>
+    <data name="ChatType_Linkshell5" xml:space="preserve">
+        <value>Kontaktkreis 5</value>
+    </data>
+    <data name="ChatType_Linkshell7" xml:space="preserve">
+        <value>Kontaktkreis 7</value>
+    </data>
+    <data name="ChatType_Linkshell8" xml:space="preserve">
+        <value>Kontaktkreis 8</value>
+    </data>
+    <data name="ChatType_CrossLinkshell1" xml:space="preserve">
+        <value>Welten-Kontaktkreis [1]</value>
+    </data>
+    <data name="ChatType_CrossLinkshell2" xml:space="preserve">
+        <value>Welten-Kontaktkreis [2]</value>
+    </data>
+    <data name="ChatType_CrossLinkshell3" xml:space="preserve">
+        <value>Welten-Kontaktkreis [3]</value>
+    </data>
+    <data name="ChatType_CrossLinkshell4" xml:space="preserve">
+        <value>Welten-Kontaktkreis [4]</value>
+    </data>
+    <data name="ChatType_CrossLinkshell5" xml:space="preserve">
+        <value>Welten-Kontaktkreis [5]</value>
+    </data>
+    <data name="ChatType_CrossLinkshell6" xml:space="preserve">
+        <value>Welten-Kontaktkreis [6]</value>
+    </data>
+    <data name="ChatType_CrossLinkshell7" xml:space="preserve">
+        <value>Welten-Kontaktkreis [7]</value>
+    </data>
+    <data name="ChatType_CrossLinkshell8" xml:space="preserve">
+        <value>Welten-Kontaktkreis [8]</value>
+    </data>
+    <data name="ChatType_NoviceNetworkSystem" xml:space="preserve">
+        <value>Neuling-Informationen</value>
+    </data>
+    <data name="ChatType_NoviceNetwork" xml:space="preserve">
+        <value>Neulinge</value>
+    </data>
+    <data name="ChatType_PvpTeam" xml:space="preserve">
+        <value>PvP-Team</value>
+    </data>
+    <data name="ChatType_PvpTeamAnnouncement" xml:space="preserve">
+        <value>Nachricht des PvP-Teams</value>
     </data>
 </root>
