@@ -482,7 +482,7 @@
     <value>当以前的消息有相同的时间戳时，隐藏时间戳。</value>
   </data>
   <data name="Options_ShowPopOutTitleBar_Name" xml:space="preserve">
-    <value>显示弹出标签页的标题栏</value>
+    <value>显示弹出标签页标题栏</value>
   </data>
   <data name="Options_Tabs_PopOut" xml:space="preserve">
     <value>在单独窗口中显示</value>
@@ -601,7 +601,7 @@ Note that "full" does not mean "traditional". Full means that all Chinese glyphs
     <value>选中</value>
   </data>
   <data name="ChatType_Debug" xml:space="preserve">
-    <value>Debug</value>
+    <value>调试</value>
   </data>
   <data name="ChatType_Urgent" xml:space="preserve">
     <value>紧急</value>
@@ -814,28 +814,28 @@ Note that "full" does not mean "traditional". Full means that all Chinese glyphs
     <value>部队(游戏管理员)</value>
   </data>
   <data name="ChatType_GmLinkshell1" xml:space="preserve">
-    <value>通讯贝[1](游戏管理员)</value>
+    <value>通讯贝 [1] (游戏管理员)</value>
   </data>
   <data name="ChatType_GmLinkshell2" xml:space="preserve">
-    <value>通讯贝[2](游戏管理员)</value>
+    <value>通讯贝 [2] (游戏管理员)</value>
   </data>
   <data name="ChatType_GmLinkshell3" xml:space="preserve">
-    <value>通讯贝[3](游戏管理员)</value>
+    <value>通讯贝 [3] (游戏管理员)</value>
   </data>
   <data name="ChatType_GmLinkshell4" xml:space="preserve">
-    <value>通讯贝[4](游戏管理员)</value>
+    <value>通讯贝 [4] (游戏管理员)</value>
   </data>
   <data name="ChatType_GmLinkshell5" xml:space="preserve">
-    <value>通讯贝[5](游戏管理员)</value>
+    <value>通讯贝 [5] (游戏管理员)</value>
   </data>
   <data name="ChatType_GmLinkshell6" xml:space="preserve">
-    <value>通讯贝[6](游戏管理员)</value>
+    <value>通讯贝 [6] (游戏管理员)</value>
   </data>
   <data name="ChatType_GmLinkshell7" xml:space="preserve">
-    <value>通讯贝[7](游戏管理员)</value>
+    <value>通讯贝 [7] (游戏管理员)</value>
   </data>
   <data name="ChatType_GmLinkshell8" xml:space="preserve">
-    <value>通讯贝[8](游戏管理员)</value>
+    <value>通讯贝 [8] (游戏管理员)</value>
   </data>
   <data name="ChatType_GmNoviceNetwork" xml:space="preserve">
     <value>新人频道(游戏管理员)</value>
