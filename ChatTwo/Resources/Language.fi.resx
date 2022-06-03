@@ -121,61 +121,27 @@
             PublicKeyToken=b77a5c561934e089
         </value>
   </resheader>
-  <data name="Options_HideChat_Name" xml:space="preserve">
-    <value>Απόκρυψη αρχικού παραθύρου συνομιλιών</value>
-  </data>
-  <data name="Options_HideChat_Description" xml:space="preserve">
-    <value>Απόκρυψη αρχικού παραθύρου συνομιλιών όταν το plugin είναι ενεργό.</value>
-  </data>
   
   
   
   
-  <data name="Options_SidebarTabView_Name" xml:space="preserve">
-    <value>Εμφάνιση καρτελών σε πλαϊνή μπάρα</value>
-  </data>
-  <data name="Options_SidebarTabView_Description" xml:space="preserve">
-    <value>Εμφάνιση καρτελών στο {0} ως πλαϊνή μπάρα αντί για μια μπάρα στην κορυφή.</value>
-  </data>
-  <data name="Options_PrettierTimestamps_Name" xml:space="preserve">
-    <value>Χρήση σύγχρονης διάταξης</value>
-  </data>
-  <data name="Options_PrettierTimestamps_Description" xml:space="preserve">
-    <value>Εμφάνιση μηνυμάτων σε πιο μοντέρνο στυλ.</value>
-  </data>
-  <data name="Options_MoreCompactPretty_Name" xml:space="preserve">
-    <value>Πιο συμπαγής μοντέρνα διάταξη</value>
-  </data>
-  <data name="Options_MoreCompactPretty_Description" xml:space="preserve">
-    <value>Μείωση της απόστασης μεταξύ μηνυμάτων.</value>
-  </data>
-  <data name="Options_ShowNoviceNetwork_Name" xml:space="preserve">
-    <value>Εμφάνιση κουμπιού σύνδεσης στο Δίκτυο Αρχαρίων</value>
-  </data>
-  <data name="Options_ShowNoviceNetwork_Description" xml:space="preserve">
-    <value>Εμφάνιση του κουμπιού σύνδεσης στο Δίκτυο Αρχαρίων δίπλα στο κουμπί ρυθμίσεων, εάν συνδέεστε ως μέντορας.</value>
-  </data>
-  <data name="Options_FontSize_Name" xml:space="preserve">
-    <value>Μέγεθος γραμματοσειράς</value>
-  </data>
-  <data name="Options_WindowOpacity_Name" xml:space="preserve">
-    <value>Διαφάνεια παραθύρου</value>
-  </data>
-  <data name="Options_CanMove_Name" xml:space="preserve">
-    <value>Να επιτρέπεται η μετακίνηση του παραθύρου συνομιλιών</value>
-  </data>
-  <data name="Options_CanResize_Name" xml:space="preserve">
-    <value>Να επιτρέπεται η αλλαγή μεγέθους του παραθύρου συνομιλιών</value>
-  </data>
-  <data name="Options_ShowTitleBar_Name" xml:space="preserve">
-    <value>Να εμφανίζεται η γραμμή τίτλου του παραθύρου συνομιλιών</value>
-  </data>
-  <data name="Options_Display_Tab" xml:space="preserve">
-    <value>Εμφάνιση</value>
-  </data>
-  <data name="Options_ChatColours_Tab" xml:space="preserve">
-    <value>Χρώματα παραθύρου συνομιλιών</value>
-  </data>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   
   
