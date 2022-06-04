@@ -1,3 +1,4 @@
+using System.Numerics;
 using ChatTwo.Code;
 using ChatTwo.GameFunctions.Types;
 using ChatTwo.Util;
@@ -383,9 +384,9 @@ internal sealed unsafe class Chat : IDisposable {
                     return;
                 }
 
-                var bits = NumUtil.NumberOfSetBits((uint) modifier);
+                var bits = BitOperations.PopCount((uint) modifier);
                 if (!turnedOff.TryGetValue(key, out var previousBits) || previousBits.Item1 < bits) {
-                    turnedOff[key] = (bits, toIntercept);
+                    turnedOff[key] = ((uint) bits, toIntercept);
                 }
             }
 

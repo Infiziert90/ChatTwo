@@ -301,9 +301,9 @@ internal sealed class ChatLog : IUiComponent {
                     return;
                 }
 
-                var bits = NumUtil.NumberOfSetBits((uint) modifier);
+                var bits = BitOperations.PopCount((uint) modifier);
                 if (!turnedOff.TryGetValue(key, out var previousBits) || previousBits.Item1 < bits) {
-                    turnedOff[key] = (bits, toIntercept);
+                    turnedOff[key] = ((uint) bits, toIntercept);
                 }
             }
 
