@@ -87,4 +87,8 @@
         </EmbeddedResource>
     </ItemGroup>
 
+    <ItemGroup>
+        <Content Include="..\icon.png" Link="images/icon.png" CopyToOutputDirectory="PreserveNewest" Visible="false"/>
+    </ItemGroup>
+
 </Project>
