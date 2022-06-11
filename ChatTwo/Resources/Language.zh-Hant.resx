@@ -125,7 +125,7 @@
     <value>隱藏原版聊天視窗</value>
   </data>
   <data name="Options_HideChat_Description" xml:space="preserve">
-    <value>當挿件處於啟動狀態時隱藏遊戲內聊天視窗。</value>
+    <value>當挿件處於啓動状態時隱藏遊戲内聊天視窗。</value>
   </data>
   <data name="Options_HideDuringCutscenes_Name" xml:space="preserve">
     <value>播放過場動畫時隱藏聊天視窗</value>
@@ -134,10 +134,10 @@
     <value>播放過場動畫時隱藏{0}。</value>
   </data>
   <data name="Options_NativeItemTooltips_Name" xml:space="preserve">
-    <value>顯示原始道具幫助</value>
+    <value>顯示原始道具幇助</value>
   </data>
   <data name="Options_NativeItemTooltips_Description" xml:space="preserve">
-    <value>當滑鼠懸停在 {0} 中的道具時，顯示遊戲中的道具幫助。</value>
+    <value>當滑鼠懸停在 {0} 中的道具時，顯示遊戲中的道具幇助。</value>
   </data>
   <data name="Options_SidebarTabView_Name" xml:space="preserve">
     <value>在側邊欄中顯示標籤頁</value>
@@ -161,10 +161,10 @@
     <value>顯示新人頻道加入按鈕</value>
   </data>
   <data name="Options_ShowNoviceNetwork_Description" xml:space="preserve">
-    <value>以指導者身份登入時，在設定按鈕旁邊顯示新人頻道加入按鈕。</value>
+    <value>以指導者身分登入時，在設定按鈕旁邊顯示新人頻道加入按鈕。</value>
   </data>
   <data name="Options_FontSize_Name" xml:space="preserve">
-    <value>字體大小</value>
+    <value>字型大小</value>
   </data>
   <data name="Options_WindowOpacity_Name" xml:space="preserve">
     <value>視窗不透明度</value>
@@ -194,7 +194,7 @@
     <value>標籤頁</value>
   </data>
   <data name="Options_Tabs_Add" xml:space="preserve">
-    <value>新增</value>
+    <value>新増</value>
   </data>
   <data name="Options_Tabs_Delete" xml:space="preserve">
     <value>刪除</value>
@@ -308,16 +308,16 @@
     <value>友好的非玩家角色</value>
   </data>
   <data name="ChatSource_SelfPet" xml:space="preserve">
-    <value>召喚獸及搭檔(自己)</value>
+    <value>召喚獸及搭档(自己)</value>
   </data>
   <data name="ChatSource_PartyPet" xml:space="preserve">
-    <value>召喚獸及搭檔(小隊)</value>
+    <value>召喚獸及搭档(小隊)</value>
   </data>
   <data name="ChatSource_AlliancePet" xml:space="preserve">
-    <value>召喚獸及搭檔(團隊)</value>
+    <value>召喚獸及搭档(團隊)</value>
   </data>
   <data name="ChatSource_OtherPet" xml:space="preserve">
-    <value>召喚獸及搭檔(他人)</value>
+    <value>召喚獸及搭档(他人)</value>
   </data>
   <data name="Options_Font_Name" xml:space="preserve">
     <value>字型</value>
@@ -329,7 +329,7 @@
     <value>字型將用於 {0} 顯示非日文文字。</value>
   </data>
   <data name="Options_Font_Warning" xml:space="preserve">
-    <value>使用某些系統字型可能會使您的遊戲崩潰。 已經警告您了。</value>
+    <value>使用某些系統字型可能會使君の遊戲崩潰。 已經警告汝了。</value>
   </data>
   <data name="Options_JapaneseFont_Description" xml:space="preserve">
     <value>字型將用於 {0} 顯示日文文字。</value>
@@ -356,7 +356,7 @@
     <value>未登入時隱藏</value>
   </data>
   <data name="Options_HideWhenNotLoggedIn_Description" xml:space="preserve">
-    <value>當您沒有登入到角色時隱藏 {0}。</value>
+    <value>當汝沒有登入到角色時隱藏 {0}。</value>
   </data>
   <data name="Tabs_Presets_General" xml:space="preserve">
     <value>通常</value>
@@ -374,13 +374,14 @@
     <value>關於</value>
   </data>
   <data name="Options_About_Opening" xml:space="preserve">
-    <value>{0} 是一個完全重新建立遊戲內聊天並使其變得更好的專案。</value>
+    <value>{0} 是一個完全重新建立遊戲内聊天並使其變得更好的專案。
+繁體中文是為了不開補全功能也能與其他玩家正常顯示溝通所翻譯及修改。</value>
   </data>
   <data name="Options_About_ClickUp" xml:space="preserve">
-    <value>點選左邊的按鈕來檢視正在做些什麼以及下一步做什麼。</value>
+    <value>點選左邊的按鈕來檢視正在做些什麼以及下一歩做什麼。</value>
   </data>
   <data name="Options_About_CrowdIn" xml:space="preserve">
-    <value>點選左邊的按鈕來幫助翻譯 {0}。</value>
+    <value>點選左邊的按鈕來幇助翻譯 {0}。</value>
   </data>
   <data name="Options_About_Translators" xml:space="preserve">
     <value>翻譯人員</value>
@@ -395,10 +396,10 @@
     <value>右側</value>
   </data>
   <data name="Options_CommandHelpSide_Name" xml:space="preserve">
-    <value>命令幫助</value>
+    <value>命令幇助</value>
   </data>
   <data name="Options_CommandHelpSide_Description" xml:space="preserve">
-    <value>{0} 的一側顯示命令幫助。</value>
+    <value>{0} 的一側顯示命令幇助。</value>
   </data>
   <data name="Options_HideWhenUiHidden_Name" xml:space="preserve">
     <value>當遊戲介面隱藏時隱藏</value>
@@ -440,13 +441,13 @@
     <value>將戰鬥訊息儲存到資料庫</value>
   </data>
   <data name="Options_DatabaseBattleMessages_Description" xml:space="preserve">
-    <value>如果將戰鬥訊息儲存到資料庫中，資料庫的大小將會更快增長，儲存設定時會出現明顯的卡頓。 建議禁用此功能。</value>
+    <value>如果將戰鬥訊息儲存到資料庫中，資料庫的大小將會更快増長，儲存設定時會出現明顯的遲鈍。 建議禁用此功能。</value>
   </data>
   <data name="Options_LoadPreviousSession_Name" xml:space="preserve">
     <value>登入時顯示之前的聊天會話</value>
   </data>
   <data name="Options_LoadPreviousSession_Description" xml:space="preserve">
-    <value>登入後，將上次登出時的訊息填充聊天內容。</value>
+    <value>登入後，將上次登出時的訊息填充聊天内容。</value>
   </data>
   <data name="Options_Database_Tab" xml:space="preserve">
     <value>資料庫</value>
@@ -455,7 +456,7 @@
     <value>在填充標籤頁時包括以前的會話</value>
   </data>
   <data name="Options_FilterIncludePreviousSessions_Description" xml:space="preserve">
-    <value>填充標籤頁時包括遊戲啟動前的資訊。儲存設定時標籤頁會被填充。</value>
+    <value>填充標籤頁時包括遊戲啓動前的資訊。儲存設定時標籤頁會被填充。</value>
   </data>
   <data name="Options_Database_Advanced_Warning" xml:space="preserve">
     <value>不要點選這些按鈕，除非您知道自己在做什麼。</value>
@@ -464,13 +465,13 @@
     <value>高階選項</value>
   </data>
   <data name="Options_SharedMode_Name" xml:space="preserve">
-    <value>啟用多客戶端模式</value>
+    <value>啓用多客戸端模式</value>
   </data>
   <data name="Options_SharedMode_Description" xml:space="preserve">
-    <value>允許多個客戶端同時執行 {0} ，共享同一個資料庫。</value>
+    <value>允許多個客戸端同時執行 {0} ，共享同一個資料庫。</value>
   </data>
   <data name="Options_SharedMode_Warning" xml:space="preserve">
-    <value>不推薦此選項。 如果您啟用此選項，不會提供任何支持。 此選項將損害 {0} 的效能。</value>
+    <value>不推薦此選項。 如果啓用此選項，不會提供任何支持。 此選項將損害 {0} 的效能。</value>
   </data>
   <data name="ChatLog_Tabs_PopOut" xml:space="preserve">
     <value>彈出</value>
@@ -494,7 +495,7 @@
     <value>視窗不透明度</value>
   </data>
   <data name="Options_FontsEnabled" xml:space="preserve">
-    <value>啟用自定義字型</value>
+    <value>啓用自定義字型</value>
   </data>
   <data name="AutoTranslate_Search_Hint" xml:space="preserve">
     <value>定型文搜尋…</value>
@@ -503,7 +504,7 @@
     <value>定型文列表排序</value>
   </data>
   <data name="Options_SortAutoTranslate_Description" xml:space="preserve">
-    <value>如果啟用此選項，定型文列表將按字母順序排序。</value>
+    <value>如果啓用此選項，定型文列表將按字母順序排序。</value>
   </data>
   <data name="AutoTranslate_Completion_Key" xml:space="preserve">
     <value>Ctrl + {0}</value>
@@ -512,7 +513,7 @@
     <value>額外的字型</value>
   </data>
   <data name="Options_ExtraGlyphs_Description" xml:space="preserve">
-    <value>啟用下面的複選框，可以將額外的字形新增到 {0} 的全域性字型中。這可能需要增加Dalamud字型圖集的大小。</value>
+    <value>啓用下面的複選框，可以將額外的字形新増到 {0} 的全域性字型中。這可能需要増加Dalamud字型圖集的大小。</value>
   </data>
   <data name="ExtraGlyphRanges_ChineseFull_Name" xml:space="preserve">
     <value>中文(完整)</value>
@@ -589,7 +590,7 @@ Note that "full" does not mean "traditional". Full means that all Chinese glyphs
     <value>傳送好友申請</value>
   </data>
   <data name="Context_AddToBlacklist" xml:space="preserve">
-    <value>加入到黑名單</value>
+    <value>加入到黒名單</value>
   </data>
   <data name="Context_InviteToNoviceNetwork" xml:space="preserve">
     <value>邀請到新人頻道中</value>
@@ -610,7 +611,7 @@ Note that "full" does not mean "traditional". Full means that all Chinese glyphs
     <value>通知</value>
   </data>
   <data name="ChatType_Say" xml:space="preserve">
-    <value>說話</value>
+    <value>説話</value>
   </data>
   <data name="ChatType_Shout" xml:space="preserve">
     <value>喊話</value>
@@ -700,7 +701,7 @@ Note that "full" does not mean "traditional". Full means that all Chinese glyphs
     <value>造成傷害</value>
   </data>
   <data name="ChatType_Miss" xml:space="preserve">
-    <value>迴避攻擊</value>
+    <value>迴避攻撃</value>
   </data>
   <data name="ChatType_Action" xml:space="preserve">
     <value>發動技能</value>
@@ -712,16 +713,16 @@ Note that "full" does not mean "traditional". Full means that all Chinese glyphs
     <value>恢復</value>
   </data>
   <data name="ChatType_GainBuff" xml:space="preserve">
-    <value>附加強化狀態</value>
+    <value>附加強化状態</value>
   </data>
   <data name="ChatType_GainDebuff" xml:space="preserve">
-    <value>附加弱化狀態</value>
+    <value>附加弱化状態</value>
   </data>
   <data name="ChatType_LoseBuff" xml:space="preserve">
-    <value>強化狀態效果消失</value>
+    <value>強化状態效果消失</value>
   </data>
   <data name="ChatType_LoseDebuff" xml:space="preserve">
-    <value>弱化狀態效果消失</value>
+    <value>弱化状態效果消失</value>
   </data>
   <data name="ChatType_Alarm" xml:space="preserve">
     <value>鬧鐘通知資訊</value>
@@ -799,7 +800,7 @@ Note that "full" does not mean "traditional". Full means that all Chinese glyphs
     <value>悄悄話(遊戲管理員)</value>
   </data>
   <data name="ChatType_GmSay" xml:space="preserve">
-    <value>說話(遊戲管理員)</value>
+    <value>説話(遊戲管理員)</value>
   </data>
   <data name="ChatType_GmShout" xml:space="preserve">
     <value>喊話(遊戲管理員)</value>
