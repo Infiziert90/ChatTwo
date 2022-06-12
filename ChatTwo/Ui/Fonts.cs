@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using SharpDX;
 using SharpDX.DirectWrite;
 using FontStyle = SharpDX.DirectWrite.FontStyle;
 
@@ -44,13 +45,17 @@ internal static class Fonts {
             using var family = collection.GetFontFamily(i);
             var anyItalic = false;
             for (var j = 0; j < family.FontCount; j++) {
-                using var font = family.GetFont(j);
-                if (font.IsSymbolFont || font.Style is not (FontStyle.Italic or FontStyle.Oblique)) {
-                    continue;
-                }
+                try {
+                    var font = family.GetFont(j);
+                    if (font.IsSymbolFont || font.Style is not (FontStyle.Italic or FontStyle.Oblique)) {
+                        continue;
+                    }
 
-                anyItalic = true;
-                break;
+                    anyItalic = true;
+                    break;
+                } catch (SharpDXException) {
+                    // no-op
+                }
             }
 
             if (!anyItalic) {
@@ -74,13 +79,17 @@ internal static class Fonts {
             using var family = collection.GetFontFamily(i);
             var probablyJp = false;
             for (var j = 0; j < family.FontCount; j++) {
-                using var font = family.GetFont(j);
-                if (!font.HasCharacter('気') || font.IsSymbolFont) {
-                    continue;
-                }
+                try {
+                    using var font = family.GetFont(j);
+                    if (!font.HasCharacter('気') || font.IsSymbolFont) {
+                        continue;
+                    }
 
-                probablyJp = true;
-                break;
+                    probablyJp = true;
+                    break;
+                } catch (SharpDXException) {
+                    // no-op
+                }
             }
 
             if (!probablyJp) {
