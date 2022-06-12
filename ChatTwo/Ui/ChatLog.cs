@@ -915,21 +915,37 @@ internal sealed class ChatLog : IUiComponent {
         ImGui.EndPopup();
     }
 
+    private readonly List<bool> _popOutDocked = new();
+
     private void DrawPopOuts() {
         this.HandlerLender.ResetCounter();
-        foreach (var tab in this.Ui.Plugin.Config.Tabs.Where(tab => tab.PopOut)) {
-            this.DrawPopOut(tab);
+
+        if (this._popOutDocked.Count != this.Ui.Plugin.Config.Tabs.Count) {
+            this._popOutDocked.Clear();
+            this._popOutDocked.AddRange(Enumerable.Repeat(false, this.Ui.Plugin.Config.Tabs.Count));
+        }
+        
+        for (var i = 0; i < this.Ui.Plugin.Config.Tabs.Count; i++) {
+            var tab = this.Ui.Plugin.Config.Tabs[i];
+            if (!tab.PopOut) {
+                continue;
+            }
+            
+            this.DrawPopOut(tab, i);
         }
     }
 
-    private void DrawPopOut(Tab tab) {
+    private void DrawPopOut(Tab tab, int idx) {
         var flags = ImGuiWindowFlags.None;
         if (!this.Ui.Plugin.Config.ShowPopOutTitleBar) {
             flags |= ImGuiWindowFlags.NoTitleBar;
         }
 
-        var alpha = tab.IndependentOpacity ? tab.Opacity : this.Ui.Plugin.Config.WindowAlpha;
-        ImGui.SetNextWindowBgAlpha(alpha / 100f);
+        if (!this._popOutDocked[idx]) {
+            var alpha = tab.IndependentOpacity ? tab.Opacity : this.Ui.Plugin.Config.WindowAlpha;
+            ImGui.SetNextWindowBgAlpha(alpha / 100f);
+        }
+
         ImGui.SetNextWindowSize(new Vector2(350, 350) * ImGuiHelpers.GlobalScale, ImGuiCond.FirstUseEver);
         if (!ImGui.Begin($"{tab.Name}##popout", ref tab.PopOut, flags)) {
             goto End;
@@ -948,6 +964,7 @@ internal sealed class ChatLog : IUiComponent {
         ImGui.PopID();
 
         End:
+        this._popOutDocked[idx] = ImGui.IsWindowDocked();
         ImGui.End();
 
         if (!tab.PopOut) {
