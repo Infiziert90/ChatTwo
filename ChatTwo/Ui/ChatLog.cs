@@ -404,7 +404,7 @@ internal sealed class ChatLog : IUiComponent {
             flags |= ImGuiWindowFlags.NoTitleBar;
         }
 
-        if (this._lastViewport == ImGuiHelpers.MainViewport.NativePtr) {
+        if (this._lastViewport == ImGuiHelpers.MainViewport.NativePtr && !ImGui.IsWindowDocked()) {
             ImGui.SetNextWindowBgAlpha(this.Ui.Plugin.Config.WindowAlpha / 100f);
         }
 
