@@ -11,6 +11,7 @@ internal sealed class About : ISettingsTab {
     public string Name => string.Format(Language.Options_About_Tab, Plugin.PluginName) + "###tabs-about";
 
     private readonly List<string> _translators = new() {
+        "q673135110",
         "Akizem",
         "d0tiKs",
         "Moonlight_Everlit",
@@ -19,13 +20,22 @@ internal sealed class About : ISettingsTab {
         "Button_",
         "Cali666",
         "cassandra308",
+        "lokinmodar",
+        "jtabox",
         "AkiraYorumoto",
         "MKhayle",
         "elena.space",
+        "imlisa",
         "andrei5125",
-        "ShivaInka",
+        "ShivaMaheshvara",
+        "nishinatsu051",
+        "lichuyuan",
         "Risu64",
+        "yummypillow",
         "witchymary",
+        "Yuzumi",
+        "zomsakura",
+        "Sirayuki",
     };
 
     internal About() {
