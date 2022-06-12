@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Globalization;
 using ChatTwo.Resources;
+using ChatTwo.Util;
 using Dalamud.Data;
 using Dalamud.Game;
 using Dalamud.Game.ClientState;
@@ -77,6 +78,10 @@ public sealed class Plugin : IDalamudPlugin {
 
         this.Config = this.Interface!.GetPluginConfig() as Configuration ?? new Configuration();
         this.Config.Migrate();
+
+        if (this.Config.Tabs.Count == 0) {
+            this.Config.Tabs.Add(TabsUtil.VanillaGeneral);
+        }
 
         this.LanguageChanged(this.Interface.UiLanguage);
 
