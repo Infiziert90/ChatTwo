@@ -513,7 +513,7 @@
         <value>Extra font glyphs</value>
     </data>
     <data name="Options_ExtraGlyphs_Description" xml:space="preserve">
-        <value>Extra glyphs can be added to {0}'s font global font by enabling the checkboxes below. This will likely require increasing Dalamud's font atlas size.</value>
+        <value>Extra glyphs can be added to {0}'s global font by enabling the checkboxes below. This will likely require increasing Dalamud's font atlas size.</value>
     </data>
     <data name="ExtraGlyphRanges_ChineseFull_Name" xml:space="preserve">
         <value>Chinese (full)</value>
