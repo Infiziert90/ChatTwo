@@ -28,6 +28,7 @@ internal sealed class About : ISettingsTab {
         "imlisa",
         "andrei5125",
         "ShivaMaheshvara",
+        "aislinn87",
         "nishinatsu051",
         "lichuyuan",
         "Risu64",
