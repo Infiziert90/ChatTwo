@@ -843,6 +843,6 @@
         <value>Collapse duplicate messages</value>
     </data>
     <data name="Options_CollapseDuplicateMessages_Description" xml:space="preserve">
-        <value>Only show the first message and show a counter at the end of messages that have been repeated.</value>
+        <value>Replace consecutive duplicate messages with a counter appended to the first instance of the message.</value>
     </data>
 </root>
