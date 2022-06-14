@@ -60,7 +60,7 @@ internal class Message {
     internal SeString ContentSource { get; }
 
     internal SortCode SortCode { get; }
-    
+
     internal int Hash { get; }
 
     internal Message(ulong receiver, ChatCode code, List<Chunk> sender, List<Chunk> content, SeString senderSource, SeString contentSource) {
@@ -98,8 +98,8 @@ internal class Message {
     }
 
     private int GenerateHash() {
-            return this.SortCode.GetHashCode()
-                    ^ string.Join("", this.Sender.Select(c => c.StringValue())).GetHashCode()
-                    ^ string.Join("", this.Content.Select(c => c.StringValue())).GetHashCode();
+        return this.SortCode.GetHashCode()
+               ^ string.Join("", this.Sender.Select(c => c.StringValue())).GetHashCode()
+               ^ string.Join("", this.Content.Select(c => c.StringValue())).GetHashCode();
     }
 }
