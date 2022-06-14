@@ -22,6 +22,20 @@ internal abstract class Chunk {
         ChunkSource.Content => this.Message?.ContentSource,
         _ => null,
     };
+
+    /// <summary>
+    /// Get some basic text for use in generating hashes.
+    /// </summary>
+    internal string StringValue() {
+        switch (this) {
+            case TextChunk text:
+                return text.Content;
+            case IconChunk icon:
+                return icon.Icon.ToString();
+            default:
+                return "";
+        }
+    }
 }
 
 internal enum ChunkSource {

@@ -671,10 +671,48 @@ internal sealed class ChatLog : IUiComponent {
 
                 var lastPos = ImGui.GetCursorPosY();
                 var lastTimestamp = string.Empty;
-                foreach (var message in tab.Messages) {
+                int? lastMessageHash = null;
+                var sameCount = 0;
+                for (var i = 0; i < tab.Messages.Count; i++) {
+                    var message = tab.Messages[i];
+
                     if (reset) {
                         message.Height = null;
                         message.IsVisible = false;
+                    }
+
+                    if (this.Ui.Plugin.Config.CollapseDuplicateMessages) {
+                        var messageHash = message.Hash;
+                        var same = lastMessageHash == messageHash;
+                        if (same) {
+                            sameCount += 1;
+
+                            if (i != tab.Messages.Count - 1) {
+                                continue;
+                            }
+                        }
+
+                        if (sameCount > 0) {
+                            ImGui.SameLine();
+                            this.DrawChunks(
+                                new[] {
+                                    new TextChunk(ChunkSource.None, null, $" ({sameCount + 1}x)") {
+                                        FallbackColour = ChatType.System,
+                                        Italic = true,
+                                    },
+                                },
+                                true,
+                                handler,
+                                ImGui.GetContentRegionAvail().X
+                            );
+                            sameCount = 0;
+                        }
+
+                        lastMessageHash = messageHash;
+
+                        if (same && i == tab.Messages.Count - 1) {
+                            continue;
+                        }
                     }
 
                     // go to next row
@@ -924,13 +962,13 @@ internal sealed class ChatLog : IUiComponent {
             this._popOutDocked.Clear();
             this._popOutDocked.AddRange(Enumerable.Repeat(false, this.Ui.Plugin.Config.Tabs.Count));
         }
-        
+
         for (var i = 0; i < this.Ui.Plugin.Config.Tabs.Count; i++) {
             var tab = this.Ui.Plugin.Config.Tabs[i];
             if (!tab.PopOut) {
                 continue;
             }
-            
+
             this.DrawPopOut(tab, i);
         }
     }

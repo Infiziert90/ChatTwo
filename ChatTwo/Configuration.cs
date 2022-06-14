@@ -35,6 +35,7 @@ internal class Configuration : IPluginConfiguration {
     public bool FilterIncludePreviousSessions;
     public bool SharedMode;
     public bool SortAutoTranslate;
+    public bool CollapseDuplicateMessages;
 
     public bool FontsEnabled = true;
     public ExtraGlyphRanges ExtraGlyphRanges = 0;
@@ -71,6 +72,7 @@ internal class Configuration : IPluginConfiguration {
         this.FilterIncludePreviousSessions = other.FilterIncludePreviousSessions;
         this.SharedMode = other.SharedMode;
         this.SortAutoTranslate = other.SortAutoTranslate;
+        this.CollapseDuplicateMessages = other.CollapseDuplicateMessages;
         this.FontsEnabled = other.FontsEnabled;
         this.ExtraGlyphRanges = other.ExtraGlyphRanges;
         this.FontSize = other.FontSize;

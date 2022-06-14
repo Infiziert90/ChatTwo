@@ -65,6 +65,9 @@ internal sealed class Display : ISettingsTab {
 
         ImGui.Spacing();
 
+        ImGuiUtil.OptionCheckbox(ref this.Mutable.CollapseDuplicateMessages, Language.Options_CollapseDuplicateMessages_Name, Language.Options_CollapseDuplicateMessages_Description);
+        ImGui.Spacing();
+
         ImGuiUtil.OptionCheckbox(ref this.Mutable.ShowNoviceNetwork, Language.Options_ShowNoviceNetwork_Name, Language.Options_ShowNoviceNetwork_Description);
         ImGui.Spacing();
 
