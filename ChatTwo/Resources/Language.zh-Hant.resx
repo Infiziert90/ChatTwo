@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
+    <!-- 
       Microsoft ResX Schema 
       
       Version 2.0
@@ -59,786 +59,786 @@
               : using a System.ComponentModel.TypeConverter
               : and then encoded with base64 encoding.
       -->
-  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
+    <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+        <xsd:element name="root" msdata:IsDataSet="true">
             <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="metadata">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" use="required" type="xsd:string"/>
+                            <xsd:attribute name="type" type="xsd:string"/>
+                            <xsd:attribute name="mimetype" type="xsd:string"/>
+                            <xsd:attribute ref="xml:space"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="assembly">
+                        <xsd:complexType>
+                            <xsd:attribute name="alias" type="xsd:string"/>
+                            <xsd:attribute name="name" type="xsd:string"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+                            <xsd:attribute ref="xml:space"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
             </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>2.0</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-  </resheader>
-  <data name="Options_HideChat_Name" xml:space="preserve">
+    </resheader>
+    <data name="Options_HideChat_Name" xml:space="preserve">
     <value>隱藏原版聊天視窗</value>
   </data>
-  <data name="Options_HideChat_Description" xml:space="preserve">
+    <data name="Options_HideChat_Description" xml:space="preserve">
     <value>當挿件處於啓動状態時隱藏遊戲内聊天視窗。</value>
   </data>
-  <data name="Options_HideDuringCutscenes_Name" xml:space="preserve">
+    <data name="Options_HideDuringCutscenes_Name" xml:space="preserve">
     <value>播放過場動畫時隱藏聊天視窗</value>
   </data>
-  <data name="Options_HideDuringCutscenes_Description" xml:space="preserve">
+    <data name="Options_HideDuringCutscenes_Description" xml:space="preserve">
     <value>播放過場動畫時隱藏{0}。</value>
   </data>
-  <data name="Options_NativeItemTooltips_Name" xml:space="preserve">
+    <data name="Options_NativeItemTooltips_Name" xml:space="preserve">
     <value>顯示原始道具幇助</value>
   </data>
-  <data name="Options_NativeItemTooltips_Description" xml:space="preserve">
+    <data name="Options_NativeItemTooltips_Description" xml:space="preserve">
     <value>當滑鼠懸停在 {0} 中的道具時，顯示遊戲中的道具幇助。</value>
   </data>
-  <data name="Options_SidebarTabView_Name" xml:space="preserve">
+    <data name="Options_SidebarTabView_Name" xml:space="preserve">
     <value>在側邊欄中顯示標籤頁</value>
   </data>
-  <data name="Options_SidebarTabView_Description" xml:space="preserve">
+    <data name="Options_SidebarTabView_Description" xml:space="preserve">
     <value>在 {0} 中顯示標籤頁作為側邊欄，而不是頂部。</value>
   </data>
-  <data name="Options_PrettierTimestamps_Name" xml:space="preserve">
-    <value>使用現代化布局</value>
-  </data>
-  <data name="Options_PrettierTimestamps_Description" xml:space="preserve">
-    <value>以更現代化的樣式顯示消息。</value>
-  </data>
-  <data name="Options_MoreCompactPretty_Name" xml:space="preserve">
+    <data name="Options_PrettierTimestamps_Name" xml:space="preserve">
+        <value>使用現代化布局</value>
+    </data>
+    <data name="Options_PrettierTimestamps_Description" xml:space="preserve">
+        <value>以更現代化的樣式顯示消息。</value>
+    </data>
+    <data name="Options_MoreCompactPretty_Name" xml:space="preserve">
     <value>更緊湊的現代布局</value>
   </data>
-  <data name="Options_MoreCompactPretty_Description" xml:space="preserve">
+    <data name="Options_MoreCompactPretty_Description" xml:space="preserve">
     <value>縮小消息之間的間距。</value>
   </data>
-  <data name="Options_ShowNoviceNetwork_Name" xml:space="preserve">
+    <data name="Options_ShowNoviceNetwork_Name" xml:space="preserve">
     <value>顯示新人頻道加入按鈕</value>
   </data>
-  <data name="Options_ShowNoviceNetwork_Description" xml:space="preserve">
+    <data name="Options_ShowNoviceNetwork_Description" xml:space="preserve">
     <value>以指導者身分登入時，在設定按鈕旁邊顯示新人頻道加入按鈕。</value>
   </data>
-  <data name="Options_FontSize_Name" xml:space="preserve">
+    <data name="Options_FontSize_Name" xml:space="preserve">
     <value>字型大小</value>
   </data>
-  <data name="Options_WindowOpacity_Name" xml:space="preserve">
+    <data name="Options_WindowOpacity_Name" xml:space="preserve">
     <value>視窗不透明度</value>
   </data>
-  <data name="Options_CanMove_Name" xml:space="preserve">
+    <data name="Options_CanMove_Name" xml:space="preserve">
     <value>允許移動聊天視窗</value>
   </data>
-  <data name="Options_CanResize_Name" xml:space="preserve">
+    <data name="Options_CanResize_Name" xml:space="preserve">
     <value>允許調整聊天窗口大小</value>
   </data>
-  <data name="Options_ShowTitleBar_Name" xml:space="preserve">
+    <data name="Options_ShowTitleBar_Name" xml:space="preserve">
     <value>顯示聊天視窗標題欄</value>
   </data>
-  <data name="Options_Display_Tab" xml:space="preserve">
-    <value>顯示</value>
-  </data>
-  <data name="Options_ChatColours_Tab" xml:space="preserve">
-    <value>聊天頻道顏色</value>
-  </data>
-  <data name="Options_ChatColours_Reset" xml:space="preserve">
-    <value>重置為預設設定</value>
-  </data>
-  <data name="Options_ChatColours_Import" xml:space="preserve">
-    <value>從遊戲中匯入</value>
-  </data>
-  <data name="Options_Tabs_Tab" xml:space="preserve">
-    <value>標籤頁</value>
-  </data>
-  <data name="Options_Tabs_Add" xml:space="preserve">
-    <value>新増</value>
-  </data>
-  <data name="Options_Tabs_Delete" xml:space="preserve">
-    <value>刪除</value>
-  </data>
-  <data name="Options_Tabs_MoveUp" xml:space="preserve">
-    <value>上移</value>
-  </data>
-  <data name="Options_Tabs_MoveDown" xml:space="preserve">
-    <value>下移</value>
-  </data>
-  <data name="Options_Tabs_Name" xml:space="preserve">
-    <value>名稱</value>
-  </data>
-  <data name="Options_Tabs_ShowTimestamps" xml:space="preserve">
-    <value>顯示時間戳</value>
-  </data>
-  <data name="Options_Tabs_UnreadMode" xml:space="preserve">
-    <value>未讀模式</value>
-  </data>
-  <data name="Options_Tabs_NoInputChannel" xml:space="preserve">
-    <value>&lt;無&gt;</value>
-  </data>
-  <data name="Options_Tabs_InputChannel" xml:space="preserve">
-    <value>輸入頻道</value>
-  </data>
-  <data name="Options_Tabs_Channels" xml:space="preserve">
-    <value>頻道</value>
-  </data>
-  <data name="UnreadMode_All_Tooltip" xml:space="preserve">
-    <value>始終顯示未讀數。</value>
-  </data>
-  <data name="UnreadMode_Unseen_Tooltip" xml:space="preserve">
-    <value>僅顯示未看的訊息的未讀數。</value>
-  </data>
-  <data name="UnreadMode_None_Tooltip" xml:space="preserve">
-    <value>永遠不會顯示未讀數。</value>
-  </data>
-  <data name="Tab_DefaultName" xml:space="preserve">
-    <value>新建標籤頁</value>
-  </data>
-  <data name="Settings_Kofi" xml:space="preserve">
-    <value>在 Ko-Fi 上支持 {0}</value>
-  </data>
-  <data name="Settings_SaveAndClose" xml:space="preserve">
-    <value>儲存並關閉</value>
-  </data>
-  <data name="Settings_Save" xml:space="preserve">
-    <value>儲存</value>
-  </data>
-  <data name="Settings_Discard" xml:space="preserve">
-    <value>取消</value>
-  </data>
-  <data name="Settings_Title" xml:space="preserve">
-    <value>{0} 設定</value>
-  </data>
-  <data name="ChatLog_SwitcherDisabled" xml:space="preserve">
-    <value>禁用此標籤頁。</value>
-  </data>
-  <data name="ChatLog_HideChat" xml:space="preserve">
-    <value>隱藏聊天介面</value>
-  </data>
-  <data name="ChatLog_Tabs_MoveUp" xml:space="preserve">
-    <value>上移</value>
-  </data>
-  <data name="ChatLog_Tabs_MoveLeft" xml:space="preserve">
-    <value>左移</value>
-  </data>
-  <data name="ChatLog_Tabs_MoveDown" xml:space="preserve">
-    <value>下移</value>
-  </data>
-  <data name="ChatLog_Tabs_MoveRight" xml:space="preserve">
-    <value>右移</value>
-  </data>
-  <data name="Options_Tabs_ChannelTypes_Chat" xml:space="preserve">
-    <value>聊天</value>
-  </data>
-  <data name="Options_Tabs_ChannelTypes_Battle" xml:space="preserve">
-    <value>戰鬥</value>
-  </data>
-  <data name="Options_Tabs_ChannelTypes_Announcements" xml:space="preserve">
-    <value>公告</value>
-  </data>
-  <data name="UnreadMode_All" xml:space="preserve">
-    <value>所有</value>
-  </data>
-  <data name="UnreadMode_Unseen" xml:space="preserve">
-    <value>未看過的</value>
-  </data>
-  <data name="UnreadMode_None" xml:space="preserve">
-    <value>無</value>
-  </data>
-  <data name="ChatSource_Self" xml:space="preserve">
-    <value>自己</value>
-  </data>
-  <data name="ChatSource_PartyMember" xml:space="preserve">
-    <value>小隊</value>
-  </data>
-  <data name="ChatSource_AllianceMember" xml:space="preserve">
-    <value>團隊</value>
-  </data>
-  <data name="ChatSource_Other" xml:space="preserve">
-    <value>他人</value>
-  </data>
-  <data name="ChatSource_EngagedEnemy" xml:space="preserve">
-    <value>交戰状態下的敵人</value>
-  </data>
-  <data name="ChatSource_UnengagedEnemy" xml:space="preserve">
-    <value>非交戰状態的敵人</value>
-  </data>
-  <data name="ChatSource_FriendlyNpc" xml:space="preserve">
-    <value>友好的非玩家角色</value>
-  </data>
-  <data name="ChatSource_SelfPet" xml:space="preserve">
-    <value>召喚獸及搭档(自己)</value>
-  </data>
-  <data name="ChatSource_PartyPet" xml:space="preserve">
-    <value>召喚獸及搭档(小隊)</value>
-  </data>
-  <data name="ChatSource_AlliancePet" xml:space="preserve">
-    <value>召喚獸及搭档(團隊)</value>
-  </data>
-  <data name="ChatSource_OtherPet" xml:space="preserve">
-    <value>召喚獸及搭档(他人)</value>
-  </data>
-  <data name="Options_Font_Name" xml:space="preserve">
-    <value>字型</value>
-  </data>
-  <data name="Options_JapaneseFont_Name" xml:space="preserve">
-    <value>日文字型</value>
-  </data>
-  <data name="Options_Font_Description" xml:space="preserve">
-    <value>字型將用於 {0} 顯示非日文文字。</value>
-  </data>
-  <data name="Options_Font_Warning" xml:space="preserve">
-    <value>使用某些系統字型可能會使君の遊戲崩潰。 已經警告汝了。</value>
-  </data>
-  <data name="Options_JapaneseFont_Description" xml:space="preserve">
-    <value>字型將用於 {0} 顯示日文文字。</value>
-  </data>
-  <data name="Options_Tabs_ChannelTypes_Special" xml:space="preserve">
-    <value>特殊</value>
-  </data>
-  <data name="Options_Fonts_Tab" xml:space="preserve">
-    <value>字型</value>
-  </data>
-  <data name="Options_SymbolsFontSize_Name" xml:space="preserve">
-    <value>符號字型大小</value>
-  </data>
-  <data name="Options_JapaneseFontSize_Name" xml:space="preserve">
-    <value>日文字型大小</value>
-  </data>
-  <data name="Options_SymbolsFontSize_Description" xml:space="preserve">
-    <value>用於遊戲符號的字型大小</value>
-  </data>
-  <data name="ChatLog_Tabs_Delete" xml:space="preserve">
-    <value>刪除標籤頁</value>
-  </data>
-  <data name="Options_HideWhenNotLoggedIn_Name" xml:space="preserve">
-    <value>未登入時隱藏</value>
-  </data>
-  <data name="Options_HideWhenNotLoggedIn_Description" xml:space="preserve">
-    <value>當汝沒有登入到角色時隱藏 {0}。</value>
-  </data>
-  <data name="Tabs_Presets_General" xml:space="preserve">
-    <value>通常</value>
-  </data>
-  <data name="Options_Tabs_Preset" xml:space="preserve">
-    <value>預設: {0}</value>
-  </data>
-  <data name="Tabs_Presets_Event" xml:space="preserve">
-    <value>劇情</value>
-  </data>
-  <data name="Options_Tabs_NewTab" xml:space="preserve">
-    <value>新建標籤頁</value>
-  </data>
-  <data name="Options_About_Tab" xml:space="preserve">
-    <value>關於</value>
-  </data>
-  <data name="Options_About_Opening" xml:space="preserve">
-    <value>{0} 是一個完全重新建立遊戲内聊天並使其變得更好的專案。
+    <data name="Options_Display_Tab" xml:space="preserve">
+        <value>顯示</value>
+    </data>
+    <data name="Options_ChatColours_Tab" xml:space="preserve">
+        <value>聊天頻道顏色</value>
+    </data>
+    <data name="Options_ChatColours_Reset" xml:space="preserve">
+        <value>重置為預設設定</value>
+    </data>
+    <data name="Options_ChatColours_Import" xml:space="preserve">
+        <value>從遊戲中匯入</value>
+    </data>
+    <data name="Options_Tabs_Tab" xml:space="preserve">
+        <value>標籤頁</value>
+    </data>
+    <data name="Options_Tabs_Add" xml:space="preserve">
+        <value>新増</value>
+    </data>
+    <data name="Options_Tabs_Delete" xml:space="preserve">
+        <value>刪除</value>
+    </data>
+    <data name="Options_Tabs_MoveUp" xml:space="preserve">
+        <value>上移</value>
+    </data>
+    <data name="Options_Tabs_MoveDown" xml:space="preserve">
+        <value>下移</value>
+    </data>
+    <data name="Options_Tabs_Name" xml:space="preserve">
+        <value>名稱</value>
+    </data>
+    <data name="Options_Tabs_ShowTimestamps" xml:space="preserve">
+        <value>顯示時間戳</value>
+    </data>
+    <data name="Options_Tabs_UnreadMode" xml:space="preserve">
+        <value>未讀模式</value>
+    </data>
+    <data name="Options_Tabs_NoInputChannel" xml:space="preserve">
+        <value>&lt;無&gt;</value>
+    </data>
+    <data name="Options_Tabs_InputChannel" xml:space="preserve">
+        <value>輸入頻道</value>
+    </data>
+    <data name="Options_Tabs_Channels" xml:space="preserve">
+        <value>頻道</value>
+    </data>
+    <data name="UnreadMode_All_Tooltip" xml:space="preserve">
+        <value>始終顯示未讀數。</value>
+    </data>
+    <data name="UnreadMode_Unseen_Tooltip" xml:space="preserve">
+        <value>僅顯示未看的訊息的未讀數。</value>
+    </data>
+    <data name="UnreadMode_None_Tooltip" xml:space="preserve">
+        <value>永遠不會顯示未讀數。</value>
+    </data>
+    <data name="Tab_DefaultName" xml:space="preserve">
+        <value>新建標籤頁</value>
+    </data>
+    <data name="Settings_Kofi" xml:space="preserve">
+        <value>在 Ko-Fi 上支持 {0}</value>
+    </data>
+    <data name="Settings_SaveAndClose" xml:space="preserve">
+        <value>儲存並關閉</value>
+    </data>
+    <data name="Settings_Save" xml:space="preserve">
+        <value>儲存</value>
+    </data>
+    <data name="Settings_Discard" xml:space="preserve">
+        <value>取消</value>
+    </data>
+    <data name="Settings_Title" xml:space="preserve">
+        <value>{0} 設定</value>
+    </data>
+    <data name="ChatLog_SwitcherDisabled" xml:space="preserve">
+        <value>禁用此標籤頁。</value>
+    </data>
+    <data name="ChatLog_HideChat" xml:space="preserve">
+        <value>隱藏聊天介面</value>
+    </data>
+    <data name="ChatLog_Tabs_MoveUp" xml:space="preserve">
+        <value>上移</value>
+    </data>
+    <data name="ChatLog_Tabs_MoveLeft" xml:space="preserve">
+        <value>左移</value>
+    </data>
+    <data name="ChatLog_Tabs_MoveDown" xml:space="preserve">
+        <value>下移</value>
+    </data>
+    <data name="ChatLog_Tabs_MoveRight" xml:space="preserve">
+        <value>右移</value>
+    </data>
+    <data name="Options_Tabs_ChannelTypes_Chat" xml:space="preserve">
+        <value>聊天</value>
+    </data>
+    <data name="Options_Tabs_ChannelTypes_Battle" xml:space="preserve">
+        <value>戰鬥</value>
+    </data>
+    <data name="Options_Tabs_ChannelTypes_Announcements" xml:space="preserve">
+        <value>公告</value>
+    </data>
+    <data name="UnreadMode_All" xml:space="preserve">
+        <value>所有</value>
+    </data>
+    <data name="UnreadMode_Unseen" xml:space="preserve">
+        <value>未看過的</value>
+    </data>
+    <data name="UnreadMode_None" xml:space="preserve">
+        <value>無</value>
+    </data>
+    <data name="ChatSource_Self" xml:space="preserve">
+        <value>自己</value>
+    </data>
+    <data name="ChatSource_PartyMember" xml:space="preserve">
+        <value>小隊</value>
+    </data>
+    <data name="ChatSource_AllianceMember" xml:space="preserve">
+        <value>團隊</value>
+    </data>
+    <data name="ChatSource_Other" xml:space="preserve">
+        <value>他人</value>
+    </data>
+    <data name="ChatSource_EngagedEnemy" xml:space="preserve">
+        <value>交戰状態下的敵人</value>
+    </data>
+    <data name="ChatSource_UnengagedEnemy" xml:space="preserve">
+        <value>非交戰状態的敵人</value>
+    </data>
+    <data name="ChatSource_FriendlyNpc" xml:space="preserve">
+        <value>友好的非玩家角色</value>
+    </data>
+    <data name="ChatSource_SelfPet" xml:space="preserve">
+        <value>召喚獸及搭档(自己)</value>
+    </data>
+    <data name="ChatSource_PartyPet" xml:space="preserve">
+        <value>召喚獸及搭档(小隊)</value>
+    </data>
+    <data name="ChatSource_AlliancePet" xml:space="preserve">
+        <value>召喚獸及搭档(團隊)</value>
+    </data>
+    <data name="ChatSource_OtherPet" xml:space="preserve">
+        <value>召喚獸及搭档(他人)</value>
+    </data>
+    <data name="Options_Font_Name" xml:space="preserve">
+        <value>字型</value>
+    </data>
+    <data name="Options_JapaneseFont_Name" xml:space="preserve">
+        <value>日文字型</value>
+    </data>
+    <data name="Options_Font_Description" xml:space="preserve">
+        <value>字型將用於 {0} 顯示非日文文字。</value>
+    </data>
+    <data name="Options_Font_Warning" xml:space="preserve">
+        <value>使用某些系統字型可能會使君の遊戲崩潰。 已經警告汝了。</value>
+    </data>
+    <data name="Options_JapaneseFont_Description" xml:space="preserve">
+        <value>字型將用於 {0} 顯示日文文字。</value>
+    </data>
+    <data name="Options_Tabs_ChannelTypes_Special" xml:space="preserve">
+        <value>特殊</value>
+    </data>
+    <data name="Options_Fonts_Tab" xml:space="preserve">
+        <value>字型</value>
+    </data>
+    <data name="Options_SymbolsFontSize_Name" xml:space="preserve">
+        <value>符號字型大小</value>
+    </data>
+    <data name="Options_JapaneseFontSize_Name" xml:space="preserve">
+        <value>日文字型大小</value>
+    </data>
+    <data name="Options_SymbolsFontSize_Description" xml:space="preserve">
+        <value>用於遊戲符號的字型大小</value>
+    </data>
+    <data name="ChatLog_Tabs_Delete" xml:space="preserve">
+        <value>刪除標籤頁</value>
+    </data>
+    <data name="Options_HideWhenNotLoggedIn_Name" xml:space="preserve">
+        <value>未登入時隱藏</value>
+    </data>
+    <data name="Options_HideWhenNotLoggedIn_Description" xml:space="preserve">
+        <value>當汝沒有登入到角色時隱藏 {0}。</value>
+    </data>
+    <data name="Tabs_Presets_General" xml:space="preserve">
+        <value>通常</value>
+    </data>
+    <data name="Options_Tabs_Preset" xml:space="preserve">
+        <value>預設: {0}</value>
+    </data>
+    <data name="Tabs_Presets_Event" xml:space="preserve">
+        <value>劇情</value>
+    </data>
+    <data name="Options_Tabs_NewTab" xml:space="preserve">
+        <value>新建標籤頁</value>
+    </data>
+    <data name="Options_About_Tab" xml:space="preserve">
+        <value>關於</value>
+    </data>
+    <data name="Options_About_Opening" xml:space="preserve">
+        <value>{0} 是一個完全重新建立遊戲内聊天並使其變得更好的專案。
 繁體中文是為了不開補全功能也能與其他玩家正常顯示溝通所翻譯及修改。</value>
-  </data>
-  <data name="Options_About_ClickUp" xml:space="preserve">
-    <value>點選左邊的按鈕來檢視正在做些什麼以及下一歩做什麼。</value>
-  </data>
-  <data name="Options_About_CrowdIn" xml:space="preserve">
-    <value>點選左邊的按鈕來幇助翻譯 {0}。</value>
-  </data>
-  <data name="Options_About_Translators" xml:space="preserve">
-    <value>翻譯人員</value>
-  </data>
-  <data name="CommandHelpSide_None" xml:space="preserve">
-    <value>無</value>
-  </data>
-  <data name="CommandHelpSide_Left" xml:space="preserve">
-    <value>左側</value>
-  </data>
-  <data name="CommandHelpSide_Right" xml:space="preserve">
-    <value>右側</value>
-  </data>
-  <data name="Options_CommandHelpSide_Name" xml:space="preserve">
-    <value>命令幇助</value>
-  </data>
-  <data name="Options_CommandHelpSide_Description" xml:space="preserve">
-    <value>{0} 的一側顯示命令幇助。</value>
-  </data>
-  <data name="Options_HideWhenUiHidden_Name" xml:space="preserve">
-    <value>當遊戲介面隱藏時隱藏</value>
-  </data>
-  <data name="Options_HideWhenUiHidden_Description" xml:space="preserve">
-    <value>當遊戲介面隱藏時隱藏 {0} 。</value>
-  </data>
-  <data name="Options_KeybindMode_Name" xml:space="preserve">
-    <value>熱鍵模式</value>
-  </data>
-  <data name="Options_KeybindMode_Description" xml:space="preserve">
-    <value>{0} 處理熱鍵的方式。</value>
-  </data>
-  <data name="Options_Miscellaneous_Tab" xml:space="preserve">
-    <value>偏好</value>
-  </data>
-  <data name="LanguageOverride_None" xml:space="preserve">
-    <value>使用Dalamud的預設語言</value>
-  </data>
-  <data name="KeybindMode_Flexible_Name" xml:space="preserve">
-    <value>靈活的</value>
-  </data>
-  <data name="KeybindMode_Strict_Name" xml:space="preserve">
-    <value>精確的</value>
-  </data>
-  <data name="KeybindMode_Flexible_Tooltip" xml:space="preserve">
-    <value>即使其他按鍵被按下時，也能使用鍵盤快捷鍵。</value>
-  </data>
-  <data name="KeybindMode_Strict_Tooltip" xml:space="preserve">
-    <value>僅當沒有按鍵被按下時，才能使用鍵盤快捷鍵。</value>
-  </data>
-  <data name="Options_Language_Name" xml:space="preserve">
-    <value>語言</value>
-  </data>
-  <data name="Options_Language_Description" xml:space="preserve">
-    <value>{0} 顯示的語言。</value>
-  </data>
-  <data name="Options_DatabaseBattleMessages_Name" xml:space="preserve">
-    <value>將戰鬥訊息儲存到資料庫</value>
-  </data>
-  <data name="Options_DatabaseBattleMessages_Description" xml:space="preserve">
-    <value>如果將戰鬥訊息儲存到資料庫中，資料庫的大小將會更快増長，儲存設定時會出現明顯的遲鈍。 建議禁用此功能。</value>
-  </data>
-  <data name="Options_LoadPreviousSession_Name" xml:space="preserve">
-    <value>登入時顯示之前的聊天會話</value>
-  </data>
-  <data name="Options_LoadPreviousSession_Description" xml:space="preserve">
-    <value>登入後，將上次登出時的訊息填充聊天内容。</value>
-  </data>
-  <data name="Options_Database_Tab" xml:space="preserve">
-    <value>資料庫</value>
-  </data>
-  <data name="Options_FilterIncludePreviousSessions_Name" xml:space="preserve">
-    <value>在填充標籤頁時包括以前的會話</value>
-  </data>
-  <data name="Options_FilterIncludePreviousSessions_Description" xml:space="preserve">
-    <value>填充標籤頁時包括遊戲啓動前的資訊。儲存設定時標籤頁會被填充。</value>
-  </data>
-  <data name="Options_Database_Advanced_Warning" xml:space="preserve">
-    <value>不要點選這些按鈕，除非您知道自己在做什麼。</value>
-  </data>
-  <data name="Options_Database_Advanced" xml:space="preserve">
-    <value>高階選項</value>
-  </data>
-  <data name="Options_SharedMode_Name" xml:space="preserve">
-    <value>啓用多客戸端模式</value>
-  </data>
-  <data name="Options_SharedMode_Description" xml:space="preserve">
-    <value>允許多個客戸端同時執行 {0} ，共享同一個資料庫。</value>
-  </data>
-  <data name="Options_SharedMode_Warning" xml:space="preserve">
-    <value>不推薦此選項。 如果啓用此選項，不會提供任何支持。 此選項將損害 {0} 的效能。</value>
-  </data>
-  <data name="ChatLog_Tabs_PopOut" xml:space="preserve">
-    <value>彈出</value>
-  </data>
-  <data name="Options_HideSameTimestamps_Name" xml:space="preserve">
-    <value>隱藏重複的時間戳</value>
-  </data>
-  <data name="Options_HideSameTimestamps_Description" xml:space="preserve">
-    <value>當以前的訊息有相同的時間戳時，隱藏時間戳。</value>
-  </data>
-  <data name="Options_ShowPopOutTitleBar_Name" xml:space="preserve">
-    <value>顯示彈出標籤頁標題欄</value>
-  </data>
-  <data name="Options_Tabs_PopOut" xml:space="preserve">
-    <value>在單獨視窗中顯示</value>
-  </data>
-  <data name="Options_Tabs_IndependentOpacity" xml:space="preserve">
-    <value>使用與主視窗不同的不透明度</value>
-  </data>
-  <data name="Options_Tabs_Opacity" xml:space="preserve">
-    <value>視窗不透明度</value>
-  </data>
-  <data name="Options_FontsEnabled" xml:space="preserve">
-    <value>啓用自定義字型</value>
-  </data>
-  <data name="AutoTranslate_Search_Hint" xml:space="preserve">
-    <value>定型文搜尋…</value>
-  </data>
-  <data name="Options_SortAutoTranslate_Name" xml:space="preserve">
-    <value>定型文列表排序</value>
-  </data>
-  <data name="Options_SortAutoTranslate_Description" xml:space="preserve">
-    <value>如果啓用此選項，定型文列表將按字母順序排序。</value>
-  </data>
-  <data name="AutoTranslate_Completion_Key" xml:space="preserve">
-    <value>Ctrl + {0}</value>
-  </data>
-  <data name="Options_ExtraGlyphs_Name" xml:space="preserve">
-    <value>額外的字型</value>
-  </data>
-  <data name="Options_ExtraGlyphs_Description" xml:space="preserve">
-    <value>啓用下面的複選框，可以將額外的字形新増到 {0} 的全域性字型中。這可能需要増加Dalamud字型圖集的大小。</value>
-  </data>
-  <data name="ExtraGlyphRanges_ChineseFull_Name" xml:space="preserve">
-    <value>中文(完整)</value>
-    <comment>ExtraGlyphRanges_ChineseFull_Name
-Note that "full" does not mean "traditional". Full means that all Chinese glyphs (including simplified and traditional glyphs) will be included.</comment>
-  </data>
-  <data name="ExtraGlyphRanges_ChineseSimplifiedCommon_Name" xml:space="preserve">
-    <value>中文(常用簡體)</value>
-  </data>
-  <data name="ExtraGlyphRanges_Cyrillic_Name" xml:space="preserve">
-    <value>西里爾語</value>
-  </data>
-  <data name="ExtraGlyphRanges_Japanese_Name" xml:space="preserve">
-    <value>日文</value>
-  </data>
-  <data name="ExtraGlyphRanges_Korean_Name" xml:space="preserve">
-    <value>韓文</value>
-  </data>
-  <data name="ExtraGlyphRanges_Thai_Name" xml:space="preserve">
-    <value>泰文</value>
-  </data>
-  <data name="ExtraGlyphRanges_Vietnamese_Name" xml:space="preserve">
-    <value>越南文</value>
-  </data>
-  <data name="Context_Integrations" xml:space="preserve">
-    <value>整合</value>
-  </data>
-  <data name="Context_ScreenshotMode" xml:space="preserve">
-    <value>截圖模式</value>
-  </data>
-  <data name="Context_HideChat" xml:space="preserve">
-    <value>隱藏聊天</value>
-  </data>
-  <data name="Context_Copy" xml:space="preserve">
-    <value>複製</value>
-  </data>
-  <data name="Context_TryOn" xml:space="preserve">
-    <value>試穿</value>
-  </data>
-  <data name="Context_ItemComparison" xml:space="preserve">
-    <value>裝備屬性對比</value>
-  </data>
-  <data name="Context_SearchRecipes" xml:space="preserve">
-    <value>檢視它能用來製作什麼道具</value>
-  </data>
-  <data name="Context_SearchForItem" xml:space="preserve">
-    <value>檢視持有情況</value>
-  </data>
-  <data name="Context_Link" xml:space="preserve">
-    <value>展示道具屬性</value>
-  </data>
-  <data name="Context_CopyItemName" xml:space="preserve">
-    <value>複製物品名稱</value>
-  </data>
-  <data name="Context_SendTell" xml:space="preserve">
-    <value>傳送悄悄話</value>
-  </data>
-  <data name="Context_InviteToParty" xml:space="preserve">
-    <value>傳送組隊邀請</value>
-  </data>
-  <data name="Context_InviteToParty_SameWorld" xml:space="preserve">
-    <value>同服</value>
-  </data>
-  <data name="Context_InviteToParty_DifferentWorld" xml:space="preserve">
-    <value>跨服</value>
-  </data>
-  <data name="Context_Promote" xml:space="preserve">
-    <value>轉讓隊長</value>
-  </data>
-  <data name="Context_KickFromParty" xml:space="preserve">
-    <value>移出小隊</value>
-  </data>
-  <data name="Context_SendFriendRequest" xml:space="preserve">
-    <value>傳送好友申請</value>
-  </data>
-  <data name="Context_AddToBlacklist" xml:space="preserve">
-    <value>加入到黒名單</value>
-  </data>
-  <data name="Context_InviteToNoviceNetwork" xml:space="preserve">
-    <value>邀請到新人頻道中</value>
-  </data>
-  <data name="Context_ReplyInSelectedChatMode" xml:space="preserve">
-    <value>切換到相同頻道回覆</value>
-  </data>
-  <data name="Context_Target" xml:space="preserve">
-    <value>選中</value>
-  </data>
-  <data name="ChatType_Debug" xml:space="preserve">
-    <value>調試</value>
-  </data>
-  <data name="ChatType_Urgent" xml:space="preserve">
-    <value>緊急</value>
-  </data>
-  <data name="ChatType_Notice" xml:space="preserve">
-    <value>通知</value>
-  </data>
-  <data name="ChatType_Say" xml:space="preserve">
-    <value>説話</value>
-  </data>
-  <data name="ChatType_Shout" xml:space="preserve">
-    <value>喊話</value>
-  </data>
-  <data name="ChatType_TellOutgoing" xml:space="preserve">
-    <value>悄悄話(發出)</value>
-  </data>
-  <data name="ChatType_TellIncoming" xml:space="preserve">
-    <value>悄悄話(接收)</value>
-  </data>
-  <data name="ChatType_Party" xml:space="preserve">
-    <value>小隊</value>
-  </data>
-  <data name="ChatType_Alliance" xml:space="preserve">
-    <value>團隊</value>
-  </data>
-  <data name="ChatType_Linkshell1" xml:space="preserve">
-    <value>通訊貝 [1]</value>
-  </data>
-  <data name="ChatType_Linkshell2" xml:space="preserve">
-    <value>通訊貝 [2]</value>
-  </data>
-  <data name="ChatType_Linkshell3" xml:space="preserve">
-    <value>通訊貝 [3]</value>
-  </data>
-  <data name="ChatType_Linkshell4" xml:space="preserve">
-    <value>通訊貝 [4]</value>
-  </data>
-  <data name="ChatType_Linkshell5" xml:space="preserve">
-    <value>通訊貝 [5]</value>
-  </data>
-  <data name="ChatType_Linkshell6" xml:space="preserve">
-    <value>通訊貝 [6]</value>
-  </data>
-  <data name="ChatType_Linkshell7" xml:space="preserve">
-    <value>通訊貝 [7]</value>
-  </data>
-  <data name="ChatType_Linkshell8" xml:space="preserve">
-    <value>通訊貝 [8]</value>
-  </data>
-  <data name="ChatType_FreeCompany" xml:space="preserve">
-    <value>部隊</value>
-  </data>
-  <data name="ChatType_NoviceNetwork" xml:space="preserve">
-    <value>新人頻道</value>
-  </data>
-  <data name="ChatType_CustomEmotes" xml:space="preserve">
-    <value>自定義情感動作</value>
-  </data>
-  <data name="ChatType_StandardEmotes" xml:space="preserve">
-    <value>情感動作</value>
-  </data>
-  <data name="ChatType_Yell" xml:space="preserve">
-    <value>呼喊</value>
-  </data>
-  <data name="ChatType_CrossWorldParty" xml:space="preserve">
-    <value>跨服小隊</value>
-  </data>
-  <data name="ChatType_PvpTeam" xml:space="preserve">
-    <value>戰隊</value>
-  </data>
-  <data name="ChatType_CrossLinkshell1" xml:space="preserve">
-    <value>跨服通訊貝 [1]</value>
-  </data>
-  <data name="ChatType_CrossLinkshell2" xml:space="preserve">
-    <value>跨服通訊貝 [2]</value>
-  </data>
-  <data name="ChatType_CrossLinkshell3" xml:space="preserve">
-    <value>跨服通訊貝 [3]</value>
-  </data>
-  <data name="ChatType_CrossLinkshell4" xml:space="preserve">
-    <value>跨服通訊貝 [4]</value>
-  </data>
-  <data name="ChatType_CrossLinkshell5" xml:space="preserve">
-    <value>跨服通訊貝 [5]</value>
-  </data>
-  <data name="ChatType_CrossLinkshell6" xml:space="preserve">
-    <value>跨服通訊貝 [6]</value>
-  </data>
-  <data name="ChatType_CrossLinkshell7" xml:space="preserve">
-    <value>跨服通訊貝 [7]</value>
-  </data>
-  <data name="ChatType_CrossLinkshell8" xml:space="preserve">
-    <value>跨服通訊貝 [8]</value>
-  </data>
-  <data name="ChatType_Damage" xml:space="preserve">
-    <value>造成傷害</value>
-  </data>
-  <data name="ChatType_Miss" xml:space="preserve">
-    <value>迴避攻撃</value>
-  </data>
-  <data name="ChatType_Action" xml:space="preserve">
-    <value>發動技能</value>
-  </data>
-  <data name="ChatType_Item" xml:space="preserve">
-    <value>使用道具</value>
-  </data>
-  <data name="ChatType_Healing" xml:space="preserve">
-    <value>恢復</value>
-  </data>
-  <data name="ChatType_GainBuff" xml:space="preserve">
-    <value>附加強化状態</value>
-  </data>
-  <data name="ChatType_GainDebuff" xml:space="preserve">
-    <value>附加弱化状態</value>
-  </data>
-  <data name="ChatType_LoseBuff" xml:space="preserve">
-    <value>強化状態效果消失</value>
-  </data>
-  <data name="ChatType_LoseDebuff" xml:space="preserve">
-    <value>弱化状態效果消失</value>
-  </data>
-  <data name="ChatType_Alarm" xml:space="preserve">
-    <value>鬧鐘通知資訊</value>
-  </data>
-  <data name="ChatType_Echo" xml:space="preserve">
-    <value>默語</value>
-  </data>
-  <data name="ChatType_System" xml:space="preserve">
-    <value>系統資訊</value>
-  </data>
-  <data name="ChatType_BattleSystem" xml:space="preserve">
-    <value>戰鬥系統資訊</value>
-  </data>
-  <data name="ChatType_GatheringSystem" xml:space="preserve">
-    <value>採集系統資訊</value>
-  </data>
-  <data name="ChatType_Error" xml:space="preserve">
-    <value>錯誤資訊</value>
-  </data>
-  <data name="ChatType_NpcDialogue" xml:space="preserve">
-    <value>非玩家角色對話</value>
-  </data>
-  <data name="ChatType_LootNotice" xml:space="preserve">
-    <value>掉落品資訊</value>
-  </data>
-  <data name="ChatType_Progress" xml:space="preserve">
-    <value>成長資訊</value>
-  </data>
-  <data name="ChatType_LootRoll" xml:space="preserve">
-    <value>戰利品資訊</value>
-  </data>
-  <data name="ChatType_Crafting" xml:space="preserve">
-    <value>製作資訊</value>
-  </data>
-  <data name="ChatType_Gathering" xml:space="preserve">
-    <value>採集資訊</value>
-  </data>
-  <data name="ChatType_NpcAnnouncement" xml:space="preserve">
-    <value>非玩家角色通告</value>
-  </data>
-  <data name="ChatType_FreeCompanyAnnouncement" xml:space="preserve">
-    <value>部隊通告部隊通告</value>
-  </data>
-  <data name="ChatType_FreeCompanyLoginLogout" xml:space="preserve">
-    <value>部隊成員上線通知</value>
-  </data>
-  <data name="ChatType_RetainerSale" xml:space="preserve">
-    <value>市場出售資訊</value>
-  </data>
-  <data name="ChatType_PeriodicRecruitmentNotification" xml:space="preserve">
-    <value>隊員招募的通知資訊</value>
-  </data>
-  <data name="ChatType_Sign" xml:space="preserve">
-    <value>標記設定資訊</value>
-  </data>
-  <data name="ChatType_RandomNumber" xml:space="preserve">
-    <value>擲骰的資訊</value>
-  </data>
-  <data name="ChatType_NoviceNetworkSystem" xml:space="preserve">
-    <value>新人頻道廣播</value>
-  </data>
-  <data name="ChatType_Orchestrion" xml:space="preserve">
-    <value>管絃樂琴的播放資訊</value>
-  </data>
-  <data name="ChatType_PvpTeamAnnouncement" xml:space="preserve">
-    <value>戰隊通告</value>
-  </data>
-  <data name="ChatType_PvpTeamLoginLogout" xml:space="preserve">
-    <value>戰隊成員上線通知</value>
-  </data>
-  <data name="ChatType_MessageBook" xml:space="preserve">
-    <value>交流簿的新留言</value>
-  </data>
-  <data name="ChatType_GmTell" xml:space="preserve">
-    <value>悄悄話(遊戲管理員)</value>
-  </data>
-  <data name="ChatType_GmSay" xml:space="preserve">
-    <value>説話(遊戲管理員)</value>
-  </data>
-  <data name="ChatType_GmShout" xml:space="preserve">
-    <value>喊話(遊戲管理員)</value>
-  </data>
-  <data name="ChatType_GmYell" xml:space="preserve">
-    <value>呼喊(遊戲管理員)</value>
-  </data>
-  <data name="ChatType_GmParty" xml:space="preserve">
-    <value>小隊(遊戲管理員)</value>
-  </data>
-  <data name="ChatType_GmFreeCompany" xml:space="preserve">
-    <value>部隊(遊戲管理員)</value>
-  </data>
-  <data name="ChatType_GmLinkshell1" xml:space="preserve">
-    <value>通訊貝 [1] (遊戲管理員)</value>
-  </data>
-  <data name="ChatType_GmLinkshell2" xml:space="preserve">
-    <value>通訊貝 [2] (遊戲管理員)</value>
-  </data>
-  <data name="ChatType_GmLinkshell3" xml:space="preserve">
-    <value>通訊貝 [3] (遊戲管理員)</value>
-  </data>
-  <data name="ChatType_GmLinkshell4" xml:space="preserve">
-    <value>通訊貝 [4] (遊戲管理員)</value>
-  </data>
-  <data name="ChatType_GmLinkshell5" xml:space="preserve">
-    <value>通訊貝 [5] (遊戲管理員)</value>
-  </data>
-  <data name="ChatType_GmLinkshell6" xml:space="preserve">
-    <value>通訊貝 [6] (遊戲管理員)</value>
-  </data>
-  <data name="ChatType_GmLinkshell7" xml:space="preserve">
-    <value>通訊貝 [7] (遊戲管理員)</value>
-  </data>
-  <data name="ChatType_GmLinkshell8" xml:space="preserve">
-    <value>通訊貝 [8] (遊戲管理員)</value>
-  </data>
-  <data name="ChatType_GmNoviceNetwork" xml:space="preserve">
-    <value>新人頻道(遊戲管理員)</value>
-  </data>
+    </data>
+    <data name="Options_About_ClickUp" xml:space="preserve">
+        <value>點選左邊的按鈕來檢視正在做些什麼以及下一歩做什麼。</value>
+    </data>
+    <data name="Options_About_CrowdIn" xml:space="preserve">
+        <value>點選左邊的按鈕來幇助翻譯 {0}。</value>
+    </data>
+    <data name="Options_About_Translators" xml:space="preserve">
+        <value>翻譯人員</value>
+    </data>
+    <data name="CommandHelpSide_None" xml:space="preserve">
+        <value>無</value>
+    </data>
+    <data name="CommandHelpSide_Left" xml:space="preserve">
+        <value>左側</value>
+    </data>
+    <data name="CommandHelpSide_Right" xml:space="preserve">
+        <value>右側</value>
+    </data>
+    <data name="Options_CommandHelpSide_Name" xml:space="preserve">
+        <value>命令幇助</value>
+    </data>
+    <data name="Options_CommandHelpSide_Description" xml:space="preserve">
+        <value>{0} 的一側顯示命令幇助。</value>
+    </data>
+    <data name="Options_HideWhenUiHidden_Name" xml:space="preserve">
+        <value>當遊戲介面隱藏時隱藏</value>
+    </data>
+    <data name="Options_HideWhenUiHidden_Description" xml:space="preserve">
+        <value>當遊戲介面隱藏時隱藏 {0} 。</value>
+    </data>
+    <data name="Options_KeybindMode_Name" xml:space="preserve">
+        <value>熱鍵模式</value>
+    </data>
+    <data name="Options_KeybindMode_Description" xml:space="preserve">
+        <value>{0} 處理熱鍵的方式。</value>
+    </data>
+    <data name="Options_Miscellaneous_Tab" xml:space="preserve">
+        <value>偏好</value>
+    </data>
+    <data name="LanguageOverride_None" xml:space="preserve">
+        <value>使用Dalamud的預設語言</value>
+    </data>
+    <data name="KeybindMode_Flexible_Name" xml:space="preserve">
+        <value>靈活的</value>
+    </data>
+    <data name="KeybindMode_Strict_Name" xml:space="preserve">
+        <value>精確的</value>
+    </data>
+    <data name="KeybindMode_Flexible_Tooltip" xml:space="preserve">
+        <value>即使其他按鍵被按下時，也能使用鍵盤快捷鍵。</value>
+    </data>
+    <data name="KeybindMode_Strict_Tooltip" xml:space="preserve">
+        <value>僅當沒有按鍵被按下時，才能使用鍵盤快捷鍵。</value>
+    </data>
+    <data name="Options_Language_Name" xml:space="preserve">
+        <value>語言</value>
+    </data>
+    <data name="Options_Language_Description" xml:space="preserve">
+        <value>{0} 顯示的語言。</value>
+    </data>
+    <data name="Options_DatabaseBattleMessages_Name" xml:space="preserve">
+        <value>將戰鬥訊息儲存到資料庫</value>
+    </data>
+    <data name="Options_DatabaseBattleMessages_Description" xml:space="preserve">
+        <value>如果將戰鬥訊息儲存到資料庫中，資料庫的大小將會更快増長，儲存設定時會出現明顯的遲鈍。 建議禁用此功能。</value>
+    </data>
+    <data name="Options_LoadPreviousSession_Name" xml:space="preserve">
+        <value>登入時顯示之前的聊天會話</value>
+    </data>
+    <data name="Options_LoadPreviousSession_Description" xml:space="preserve">
+        <value>登入後，將上次登出時的訊息填充聊天内容。</value>
+    </data>
+    <data name="Options_Database_Tab" xml:space="preserve">
+        <value>資料庫</value>
+    </data>
+    <data name="Options_FilterIncludePreviousSessions_Name" xml:space="preserve">
+        <value>在填充標籤頁時包括以前的會話</value>
+    </data>
+    <data name="Options_FilterIncludePreviousSessions_Description" xml:space="preserve">
+        <value>填充標籤頁時包括遊戲啓動前的資訊。儲存設定時標籤頁會被填充。</value>
+    </data>
+    <data name="Options_Database_Advanced_Warning" xml:space="preserve">
+        <value>不要點選這些按鈕，除非您知道自己在做什麼。</value>
+    </data>
+    <data name="Options_Database_Advanced" xml:space="preserve">
+        <value>高階選項</value>
+    </data>
+    <data name="Options_SharedMode_Name" xml:space="preserve">
+        <value>啓用多客戸端模式</value>
+    </data>
+    <data name="Options_SharedMode_Description" xml:space="preserve">
+        <value>允許多個客戸端同時執行 {0} ，共享同一個資料庫。</value>
+    </data>
+    <data name="Options_SharedMode_Warning" xml:space="preserve">
+        <value>不推薦此選項。 如果啓用此選項，不會提供任何支持。 此選項將損害 {0} 的效能。</value>
+    </data>
+    <data name="ChatLog_Tabs_PopOut" xml:space="preserve">
+        <value>彈出</value>
+    </data>
+    <data name="Options_HideSameTimestamps_Name" xml:space="preserve">
+        <value>隱藏重複的時間戳</value>
+    </data>
+    <data name="Options_HideSameTimestamps_Description" xml:space="preserve">
+        <value>當以前的訊息有相同的時間戳時，隱藏時間戳。</value>
+    </data>
+    <data name="Options_ShowPopOutTitleBar_Name" xml:space="preserve">
+        <value>顯示彈出標籤頁標題欄</value>
+    </data>
+    <data name="Options_Tabs_PopOut" xml:space="preserve">
+        <value>在單獨視窗中顯示</value>
+    </data>
+    <data name="Options_Tabs_IndependentOpacity" xml:space="preserve">
+        <value>使用與主視窗不同的不透明度</value>
+    </data>
+    <data name="Options_Tabs_Opacity" xml:space="preserve">
+        <value>視窗不透明度</value>
+    </data>
+    <data name="Options_FontsEnabled" xml:space="preserve">
+        <value>啓用自定義字型</value>
+    </data>
+    <data name="AutoTranslate_Search_Hint" xml:space="preserve">
+        <value>定型文搜尋…</value>
+    </data>
+    <data name="Options_SortAutoTranslate_Name" xml:space="preserve">
+        <value>定型文列表排序</value>
+    </data>
+    <data name="Options_SortAutoTranslate_Description" xml:space="preserve">
+        <value>如果啓用此選項，定型文列表將按字母順序排序。</value>
+    </data>
+    <data name="AutoTranslate_Completion_Key" xml:space="preserve">
+        <value>Ctrl + {0}</value>
+    </data>
+    <data name="Options_ExtraGlyphs_Name" xml:space="preserve">
+        <value>額外的字型</value>
+    </data>
+    <data name="Options_ExtraGlyphs_Description" xml:space="preserve">
+        <value>啓用下面的複選框，可以將額外的字形新増到 {0} 的全域性字型中。這可能需要増加Dalamud字型圖集的大小。</value>
+    </data>
+    <data name="ExtraGlyphRanges_ChineseFull_Name" xml:space="preserve">
+        <value>中文(完整)</value>
+    </data>
+    <data name="ExtraGlyphRanges_ChineseSimplifiedCommon_Name" xml:space="preserve">
+        <value>中文(常用簡體)</value>
+    </data>
+    <data name="ExtraGlyphRanges_Cyrillic_Name" xml:space="preserve">
+        <value>西里爾語</value>
+    </data>
+    <data name="ExtraGlyphRanges_Japanese_Name" xml:space="preserve">
+        <value>日文</value>
+    </data>
+    <data name="ExtraGlyphRanges_Korean_Name" xml:space="preserve">
+        <value>韓文</value>
+    </data>
+    <data name="ExtraGlyphRanges_Thai_Name" xml:space="preserve">
+        <value>泰文</value>
+    </data>
+    <data name="ExtraGlyphRanges_Vietnamese_Name" xml:space="preserve">
+        <value>越南文</value>
+    </data>
+    <data name="Context_Integrations" xml:space="preserve">
+        <value>整合</value>
+    </data>
+    <data name="Context_ScreenshotMode" xml:space="preserve">
+        <value>截圖模式</value>
+    </data>
+    <data name="Context_HideChat" xml:space="preserve">
+        <value>隱藏聊天</value>
+    </data>
+    <data name="Context_Copy" xml:space="preserve">
+        <value>複製</value>
+    </data>
+    <data name="Context_TryOn" xml:space="preserve">
+        <value>試穿</value>
+    </data>
+    <data name="Context_ItemComparison" xml:space="preserve">
+        <value>裝備屬性對比</value>
+    </data>
+    <data name="Context_SearchRecipes" xml:space="preserve">
+        <value>檢視它能用來製作什麼道具</value>
+    </data>
+    <data name="Context_SearchForItem" xml:space="preserve">
+        <value>檢視持有情況</value>
+    </data>
+    <data name="Context_Link" xml:space="preserve">
+        <value>展示道具屬性</value>
+    </data>
+    <data name="Context_CopyItemName" xml:space="preserve">
+        <value>複製物品名稱</value>
+    </data>
+    <data name="Context_SendTell" xml:space="preserve">
+        <value>傳送悄悄話</value>
+    </data>
+    <data name="Context_InviteToParty" xml:space="preserve">
+        <value>傳送組隊邀請</value>
+    </data>
+    <data name="Context_InviteToParty_SameWorld" xml:space="preserve">
+        <value>同服</value>
+    </data>
+    <data name="Context_InviteToParty_DifferentWorld" xml:space="preserve">
+        <value>跨服</value>
+    </data>
+    <data name="Context_Promote" xml:space="preserve">
+        <value>轉讓隊長</value>
+    </data>
+    <data name="Context_KickFromParty" xml:space="preserve">
+        <value>移出小隊</value>
+    </data>
+    <data name="Context_SendFriendRequest" xml:space="preserve">
+        <value>傳送好友申請</value>
+    </data>
+    <data name="Context_AddToBlacklist" xml:space="preserve">
+        <value>加入到黒名單</value>
+    </data>
+    <data name="Context_InviteToNoviceNetwork" xml:space="preserve">
+        <value>邀請到新人頻道中</value>
+    </data>
+    <data name="Context_ReplyInSelectedChatMode" xml:space="preserve">
+        <value>切換到相同頻道回覆</value>
+    </data>
+    <data name="Context_Target" xml:space="preserve">
+        <value>選中</value>
+    </data>
+    <data name="ChatType_Debug" xml:space="preserve">
+        <value>調試</value>
+    </data>
+    <data name="ChatType_Urgent" xml:space="preserve">
+        <value>緊急</value>
+    </data>
+    <data name="ChatType_Notice" xml:space="preserve">
+        <value>通知</value>
+    </data>
+    <data name="ChatType_Say" xml:space="preserve">
+        <value>説話</value>
+    </data>
+    <data name="ChatType_Shout" xml:space="preserve">
+        <value>喊話</value>
+    </data>
+    <data name="ChatType_TellOutgoing" xml:space="preserve">
+        <value>悄悄話(發出)</value>
+    </data>
+    <data name="ChatType_TellIncoming" xml:space="preserve">
+        <value>悄悄話(接收)</value>
+    </data>
+    <data name="ChatType_Party" xml:space="preserve">
+        <value>小隊</value>
+    </data>
+    <data name="ChatType_Alliance" xml:space="preserve">
+        <value>團隊</value>
+    </data>
+    <data name="ChatType_Linkshell1" xml:space="preserve">
+        <value>通訊貝 [1]</value>
+    </data>
+    <data name="ChatType_Linkshell2" xml:space="preserve">
+        <value>通訊貝 [2]</value>
+    </data>
+    <data name="ChatType_Linkshell3" xml:space="preserve">
+        <value>通訊貝 [3]</value>
+    </data>
+    <data name="ChatType_Linkshell4" xml:space="preserve">
+        <value>通訊貝 [4]</value>
+    </data>
+    <data name="ChatType_Linkshell5" xml:space="preserve">
+        <value>通訊貝 [5]</value>
+    </data>
+    <data name="ChatType_Linkshell6" xml:space="preserve">
+        <value>通訊貝 [6]</value>
+    </data>
+    <data name="ChatType_Linkshell7" xml:space="preserve">
+        <value>通訊貝 [7]</value>
+    </data>
+    <data name="ChatType_Linkshell8" xml:space="preserve">
+        <value>通訊貝 [8]</value>
+    </data>
+    <data name="ChatType_FreeCompany" xml:space="preserve">
+        <value>部隊</value>
+    </data>
+    <data name="ChatType_NoviceNetwork" xml:space="preserve">
+        <value>新人頻道</value>
+    </data>
+    <data name="ChatType_CustomEmotes" xml:space="preserve">
+        <value>自定義情感動作</value>
+    </data>
+    <data name="ChatType_StandardEmotes" xml:space="preserve">
+        <value>情感動作</value>
+    </data>
+    <data name="ChatType_Yell" xml:space="preserve">
+        <value>呼喊</value>
+    </data>
+    <data name="ChatType_CrossWorldParty" xml:space="preserve">
+        <value>跨服小隊</value>
+    </data>
+    <data name="ChatType_PvpTeam" xml:space="preserve">
+        <value>戰隊</value>
+    </data>
+    <data name="ChatType_CrossLinkshell1" xml:space="preserve">
+        <value>跨服通訊貝 [1]</value>
+    </data>
+    <data name="ChatType_CrossLinkshell2" xml:space="preserve">
+        <value>跨服通訊貝 [2]</value>
+    </data>
+    <data name="ChatType_CrossLinkshell3" xml:space="preserve">
+        <value>跨服通訊貝 [3]</value>
+    </data>
+    <data name="ChatType_CrossLinkshell4" xml:space="preserve">
+        <value>跨服通訊貝 [4]</value>
+    </data>
+    <data name="ChatType_CrossLinkshell5" xml:space="preserve">
+        <value>跨服通訊貝 [5]</value>
+    </data>
+    <data name="ChatType_CrossLinkshell6" xml:space="preserve">
+        <value>跨服通訊貝 [6]</value>
+    </data>
+    <data name="ChatType_CrossLinkshell7" xml:space="preserve">
+        <value>跨服通訊貝 [7]</value>
+    </data>
+    <data name="ChatType_CrossLinkshell8" xml:space="preserve">
+        <value>跨服通訊貝 [8]</value>
+    </data>
+    <data name="ChatType_Damage" xml:space="preserve">
+        <value>造成傷害</value>
+    </data>
+    <data name="ChatType_Miss" xml:space="preserve">
+        <value>迴避攻撃</value>
+    </data>
+    <data name="ChatType_Action" xml:space="preserve">
+        <value>發動技能</value>
+    </data>
+    <data name="ChatType_Item" xml:space="preserve">
+        <value>使用道具</value>
+    </data>
+    <data name="ChatType_Healing" xml:space="preserve">
+        <value>恢復</value>
+    </data>
+    <data name="ChatType_GainBuff" xml:space="preserve">
+        <value>附加強化状態</value>
+    </data>
+    <data name="ChatType_GainDebuff" xml:space="preserve">
+        <value>附加弱化状態</value>
+    </data>
+    <data name="ChatType_LoseBuff" xml:space="preserve">
+        <value>強化状態效果消失</value>
+    </data>
+    <data name="ChatType_LoseDebuff" xml:space="preserve">
+        <value>弱化状態效果消失</value>
+    </data>
+    <data name="ChatType_Alarm" xml:space="preserve">
+        <value>鬧鐘通知資訊</value>
+    </data>
+    <data name="ChatType_Echo" xml:space="preserve">
+        <value>默語</value>
+    </data>
+    <data name="ChatType_System" xml:space="preserve">
+        <value>系統資訊</value>
+    </data>
+    <data name="ChatType_BattleSystem" xml:space="preserve">
+        <value>戰鬥系統資訊</value>
+    </data>
+    <data name="ChatType_GatheringSystem" xml:space="preserve">
+        <value>採集系統資訊</value>
+    </data>
+    <data name="ChatType_Error" xml:space="preserve">
+        <value>錯誤資訊</value>
+    </data>
+    <data name="ChatType_NpcDialogue" xml:space="preserve">
+        <value>非玩家角色對話</value>
+    </data>
+    <data name="ChatType_LootNotice" xml:space="preserve">
+        <value>掉落品資訊</value>
+    </data>
+    <data name="ChatType_Progress" xml:space="preserve">
+        <value>成長資訊</value>
+    </data>
+    <data name="ChatType_LootRoll" xml:space="preserve">
+        <value>戰利品資訊</value>
+    </data>
+    <data name="ChatType_Crafting" xml:space="preserve">
+        <value>製作資訊</value>
+    </data>
+    <data name="ChatType_Gathering" xml:space="preserve">
+        <value>採集資訊</value>
+    </data>
+    <data name="ChatType_NpcAnnouncement" xml:space="preserve">
+        <value>非玩家角色通告</value>
+    </data>
+    <data name="ChatType_FreeCompanyAnnouncement" xml:space="preserve">
+        <value>部隊通告部隊通告</value>
+    </data>
+    <data name="ChatType_FreeCompanyLoginLogout" xml:space="preserve">
+        <value>部隊成員上線通知</value>
+    </data>
+    <data name="ChatType_RetainerSale" xml:space="preserve">
+        <value>市場出售資訊</value>
+    </data>
+    <data name="ChatType_PeriodicRecruitmentNotification" xml:space="preserve">
+        <value>隊員招募的通知資訊</value>
+    </data>
+    <data name="ChatType_Sign" xml:space="preserve">
+        <value>標記設定資訊</value>
+    </data>
+    <data name="ChatType_RandomNumber" xml:space="preserve">
+        <value>擲骰的資訊</value>
+    </data>
+    <data name="ChatType_NoviceNetworkSystem" xml:space="preserve">
+        <value>新人頻道廣播</value>
+    </data>
+    <data name="ChatType_Orchestrion" xml:space="preserve">
+        <value>管絃樂琴的播放資訊</value>
+    </data>
+    <data name="ChatType_PvpTeamAnnouncement" xml:space="preserve">
+        <value>戰隊通告</value>
+    </data>
+    <data name="ChatType_PvpTeamLoginLogout" xml:space="preserve">
+        <value>戰隊成員上線通知</value>
+    </data>
+    <data name="ChatType_MessageBook" xml:space="preserve">
+        <value>交流簿的新留言</value>
+    </data>
+    <data name="ChatType_GmTell" xml:space="preserve">
+        <value>悄悄話(遊戲管理員)</value>
+    </data>
+    <data name="ChatType_GmSay" xml:space="preserve">
+        <value>説話(遊戲管理員)</value>
+    </data>
+    <data name="ChatType_GmShout" xml:space="preserve">
+        <value>喊話(遊戲管理員)</value>
+    </data>
+    <data name="ChatType_GmYell" xml:space="preserve">
+        <value>呼喊(遊戲管理員)</value>
+    </data>
+    <data name="ChatType_GmParty" xml:space="preserve">
+        <value>小隊(遊戲管理員)</value>
+    </data>
+    <data name="ChatType_GmFreeCompany" xml:space="preserve">
+        <value>部隊(遊戲管理員)</value>
+    </data>
+    <data name="ChatType_GmLinkshell1" xml:space="preserve">
+        <value>通訊貝 [1] (遊戲管理員)</value>
+    </data>
+    <data name="ChatType_GmLinkshell2" xml:space="preserve">
+        <value>通訊貝 [2] (遊戲管理員)</value>
+    </data>
+    <data name="ChatType_GmLinkshell3" xml:space="preserve">
+        <value>通訊貝 [3] (遊戲管理員)</value>
+    </data>
+    <data name="ChatType_GmLinkshell4" xml:space="preserve">
+        <value>通訊貝 [4] (遊戲管理員)</value>
+    </data>
+    <data name="ChatType_GmLinkshell5" xml:space="preserve">
+        <value>通訊貝 [5] (遊戲管理員)</value>
+    </data>
+    <data name="ChatType_GmLinkshell6" xml:space="preserve">
+        <value>通訊貝 [6] (遊戲管理員)</value>
+    </data>
+    <data name="ChatType_GmLinkshell7" xml:space="preserve">
+        <value>通訊貝 [7] (遊戲管理員)</value>
+    </data>
+    <data name="ChatType_GmLinkshell8" xml:space="preserve">
+        <value>通訊貝 [8] (遊戲管理員)</value>
+    </data>
+    <data name="ChatType_GmNoviceNetwork" xml:space="preserve">
+        <value>新人頻道(遊戲管理員)</value>
+    </data>
+    
+    
 </root>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
+    <!-- 
       Microsoft ResX Schema 
       
       Version 2.0
@@ -59,785 +59,789 @@
               : using a System.ComponentModel.TypeConverter
               : and then encoded with base64 encoding.
       -->
-  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
+    <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+        <xsd:element name="root" msdata:IsDataSet="true">
             <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="metadata">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" use="required" type="xsd:string"/>
+                            <xsd:attribute name="type" type="xsd:string"/>
+                            <xsd:attribute name="mimetype" type="xsd:string"/>
+                            <xsd:attribute ref="xml:space"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="assembly">
+                        <xsd:complexType>
+                            <xsd:attribute name="alias" type="xsd:string"/>
+                            <xsd:attribute name="name" type="xsd:string"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+                            <xsd:attribute ref="xml:space"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
             </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>2.0</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-  </resheader>
-  <data name="Options_HideChat_Name" xml:space="preserve">
+    </resheader>
+    <data name="Options_HideChat_Name" xml:space="preserve">
     <value>Скрыть стандартный чат</value>
   </data>
-  <data name="Options_HideChat_Description" xml:space="preserve">
+    <data name="Options_HideChat_Description" xml:space="preserve">
     <value>Скрыть окно стандартного чата, когда плагин активен.</value>
   </data>
-  <data name="Options_HideDuringCutscenes_Name" xml:space="preserve">
+    <data name="Options_HideDuringCutscenes_Name" xml:space="preserve">
     <value>Скрыть чат во время катсцен</value>
   </data>
-  <data name="Options_HideDuringCutscenes_Description" xml:space="preserve">
+    <data name="Options_HideDuringCutscenes_Description" xml:space="preserve">
     <value>Скрыть {0} во время катсцен.</value>
   </data>
-  <data name="Options_NativeItemTooltips_Name" xml:space="preserve">
+    <data name="Options_NativeItemTooltips_Name" xml:space="preserve">
     <value>Показывать подсказки для предметов</value>
   </data>
-  <data name="Options_NativeItemTooltips_Description" xml:space="preserve">
+    <data name="Options_NativeItemTooltips_Description" xml:space="preserve">
     <value>Показывать подсказки при наведении курсора на предметы внутри {0}.</value>
   </data>
-  <data name="Options_SidebarTabView_Name" xml:space="preserve">
+    <data name="Options_SidebarTabView_Name" xml:space="preserve">
     <value>Отображать вкладки в боковой панели</value>
   </data>
-  <data name="Options_SidebarTabView_Description" xml:space="preserve">
+    <data name="Options_SidebarTabView_Description" xml:space="preserve">
     <value>Показывать вкладки в {0} как боковую панель вместо полосы в верхней части чата.</value>
   </data>
-  <data name="Options_PrettierTimestamps_Name" xml:space="preserve">
-    <value>Использовать современное оформление</value>
-  </data>
-  <data name="Options_PrettierTimestamps_Description" xml:space="preserve">
-    <value>Отображение сообщений в более современном стиле.</value>
-  </data>
-  <data name="Options_MoreCompactPretty_Name" xml:space="preserve">
+    <data name="Options_PrettierTimestamps_Name" xml:space="preserve">
+        <value>Использовать современное оформление</value>
+    </data>
+    <data name="Options_PrettierTimestamps_Description" xml:space="preserve">
+        <value>Отображение сообщений в более современном стиле.</value>
+    </data>
+    <data name="Options_MoreCompactPretty_Name" xml:space="preserve">
     <value>Более компактный вид чата</value>
   </data>
-  <data name="Options_MoreCompactPretty_Description" xml:space="preserve">
+    <data name="Options_MoreCompactPretty_Description" xml:space="preserve">
     <value>Уменьшить промежуток между строками.</value>
   </data>
-  <data name="Options_ShowNoviceNetwork_Name" xml:space="preserve">
+    <data name="Options_ShowNoviceNetwork_Name" xml:space="preserve">
     <value>Показать кнопку "Присоединиться к Novice Network"</value>
   </data>
-  <data name="Options_ShowNoviceNetwork_Description" xml:space="preserve">
+    <data name="Options_ShowNoviceNetwork_Description" xml:space="preserve">
     <value>Показать кнопку "Присоединиться к Novice Network" рядом с настройками, если вы вошли в систему как наставник.</value>
   </data>
-  <data name="Options_FontSize_Name" xml:space="preserve">
+    <data name="Options_FontSize_Name" xml:space="preserve">
     <value>Размер шрифта</value>
   </data>
-  <data name="Options_WindowOpacity_Name" xml:space="preserve">
+    <data name="Options_WindowOpacity_Name" xml:space="preserve">
     <value>Прозрачность окна</value>
   </data>
-  <data name="Options_CanMove_Name" xml:space="preserve">
+    <data name="Options_CanMove_Name" xml:space="preserve">
     <value>Разрешить перемещение окна чата</value>
   </data>
-  <data name="Options_CanResize_Name" xml:space="preserve">
+    <data name="Options_CanResize_Name" xml:space="preserve">
     <value>Разрешить изменение размера окна чата</value>
   </data>
-  <data name="Options_ShowTitleBar_Name" xml:space="preserve">
+    <data name="Options_ShowTitleBar_Name" xml:space="preserve">
     <value>Показывать заголовок для окна чата</value>
   </data>
-  <data name="Options_Display_Tab" xml:space="preserve">
-    <value>Внешний вид</value>
-  </data>
-  <data name="Options_ChatColours_Tab" xml:space="preserve">
-    <value>Цвета чата</value>
-  </data>
-  <data name="Options_ChatColours_Reset" xml:space="preserve">
-    <value>Сбросить настройки</value>
-  </data>
-  <data name="Options_ChatColours_Import" xml:space="preserve">
-    <value>Импортировать из игры</value>
-  </data>
-  <data name="Options_Tabs_Tab" xml:space="preserve">
-    <value>Вкладки</value>
-  </data>
-  <data name="Options_Tabs_Add" xml:space="preserve">
-    <value>Добавить</value>
-  </data>
-  <data name="Options_Tabs_Delete" xml:space="preserve">
-    <value>Удалить</value>
-  </data>
-  <data name="Options_Tabs_MoveUp" xml:space="preserve">
-    <value>Поднять</value>
-  </data>
-  <data name="Options_Tabs_MoveDown" xml:space="preserve">
-    <value>Опустить</value>
-  </data>
-  <data name="Options_Tabs_Name" xml:space="preserve">
-    <value>Имя</value>
-  </data>
-  <data name="Options_Tabs_ShowTimestamps" xml:space="preserve">
-    <value>Показать метки времени</value>
-  </data>
-  <data name="Options_Tabs_UnreadMode" xml:space="preserve">
-    <value>Режим отображения непрочитанных</value>
-  </data>
-  <data name="Options_Tabs_NoInputChannel" xml:space="preserve">
-    <value>&lt;Не выбран&gt;</value>
-  </data>
-  <data name="Options_Tabs_InputChannel" xml:space="preserve">
-    <value>Канал ввода</value>
-  </data>
-  <data name="Options_Tabs_Channels" xml:space="preserve">
-    <value>Каналы</value>
-  </data>
-  <data name="UnreadMode_All_Tooltip" xml:space="preserve">
-    <value>Всегда отображать индикаторы непрочитанных сообщений.</value>
-  </data>
-  <data name="UnreadMode_Unseen_Tooltip" xml:space="preserve">
-    <value>Показывать индикаторы непрочитанных только для сообщений, которые вы не видели.</value>
-  </data>
-  <data name="UnreadMode_None_Tooltip" xml:space="preserve">
-    <value>Не отображать метки непрочитанных сообщений.</value>
-  </data>
-  <data name="Tab_DefaultName" xml:space="preserve">
-    <value>Новая вкладка</value>
-  </data>
-  <data name="Settings_Kofi" xml:space="preserve">
-    <value>Поддержать {0} через Ko-fi</value>
-  </data>
-  <data name="Settings_SaveAndClose" xml:space="preserve">
-    <value>Сохранить и закрыть</value>
-  </data>
-  <data name="Settings_Save" xml:space="preserve">
-    <value>Сохранить</value>
-  </data>
-  <data name="Settings_Discard" xml:space="preserve">
-    <value>Отменить</value>
-  </data>
-  <data name="Settings_Title" xml:space="preserve">
-    <value>Настройки {0}</value>
-  </data>
-  <data name="ChatLog_SwitcherDisabled" xml:space="preserve">
-    <value>Отключено для этой вкладки.</value>
-  </data>
-  <data name="ChatLog_HideChat" xml:space="preserve">
-    <value>Cкрыть чат</value>
-  </data>
-  <data name="ChatLog_Tabs_MoveUp" xml:space="preserve">
-    <value>Поднять</value>
-  </data>
-  <data name="ChatLog_Tabs_MoveLeft" xml:space="preserve">
-    <value>Сдвинуть влево</value>
-  </data>
-  <data name="ChatLog_Tabs_MoveDown" xml:space="preserve">
-    <value>Опустить</value>
-  </data>
-  <data name="ChatLog_Tabs_MoveRight" xml:space="preserve">
-    <value>Сдвинуть вправо</value>
-  </data>
-  <data name="Options_Tabs_ChannelTypes_Chat" xml:space="preserve">
-    <value>Чат</value>
-  </data>
-  <data name="Options_Tabs_ChannelTypes_Battle" xml:space="preserve">
-    <value>Бой</value>
-  </data>
-  <data name="Options_Tabs_ChannelTypes_Announcements" xml:space="preserve">
-    <value>Оповещения</value>
-  </data>
-  <data name="UnreadMode_All" xml:space="preserve">
-    <value>Все</value>
-  </data>
-  <data name="UnreadMode_Unseen" xml:space="preserve">
-    <value>Непрочитанные</value>
-  </data>
-  <data name="UnreadMode_None" xml:space="preserve">
-    <value>Не выбран</value>
-  </data>
-  <data name="ChatSource_Self" xml:space="preserve">
-    <value>Свой</value>
-  </data>
-  <data name="ChatSource_PartyMember" xml:space="preserve">
-    <value>Участники группы</value>
-  </data>
-  <data name="ChatSource_AllianceMember" xml:space="preserve">
-    <value>Участники альянса</value>
-  </data>
-  <data name="ChatSource_Other" xml:space="preserve">
-    <value>Прочие</value>
-  </data>
-  <data name="ChatSource_EngagedEnemy" xml:space="preserve">
-    <value>Захваченные враги</value>
-  </data>
-  <data name="ChatSource_UnengagedEnemy" xml:space="preserve">
-    <value>Незахваченные враги</value>
-  </data>
-  <data name="ChatSource_FriendlyNpc" xml:space="preserve">
-    <value>Дружественные NPC</value>
-  </data>
-  <data name="ChatSource_SelfPet" xml:space="preserve">
-    <value>Пет (свой)</value>
-  </data>
-  <data name="ChatSource_PartyPet" xml:space="preserve">
-    <value>Пет (группа)</value>
-  </data>
-  <data name="ChatSource_AlliancePet" xml:space="preserve">
-    <value>Пет (альянс)</value>
-  </data>
-  <data name="ChatSource_OtherPet" xml:space="preserve">
-    <value>Пет (прочие)</value>
-  </data>
-  <data name="Options_Font_Name" xml:space="preserve">
-    <value>Шрифт</value>
-  </data>
-  <data name="Options_JapaneseFont_Name" xml:space="preserve">
-    <value>Японский шрифт</value>
-  </data>
-  <data name="Options_Font_Description" xml:space="preserve">
-    <value>Шрифт {0} для всех языков кроме японского.</value>
-  </data>
-  <data name="Options_Font_Warning" xml:space="preserve">
-    <value>Использование некоторых шрифтов может привести к крашу игры. Вы были предупреждены.</value>
-  </data>
-  <data name="Options_JapaneseFont_Description" xml:space="preserve">
-    <value>Шрифт {0} для отображения японского текста.</value>
-  </data>
-  <data name="Options_Tabs_ChannelTypes_Special" xml:space="preserve">
-    <value>Особые</value>
-  </data>
-  <data name="Options_Fonts_Tab" xml:space="preserve">
-    <value>Шрифты</value>
-  </data>
-  <data name="Options_SymbolsFontSize_Name" xml:space="preserve">
-    <value>Размер шрифта символов</value>
-  </data>
-  <data name="Options_JapaneseFontSize_Name" xml:space="preserve">
-    <value>Размер японского шрифта</value>
-  </data>
-  <data name="Options_SymbolsFontSize_Description" xml:space="preserve">
-    <value>Размер шрифта для игровых символов.</value>
-  </data>
-  <data name="ChatLog_Tabs_Delete" xml:space="preserve">
-    <value>Удалить вкладку</value>
-  </data>
-  <data name="Options_HideWhenNotLoggedIn_Name" xml:space="preserve">
-    <value>Скрывать, когда не залогинен</value>
-  </data>
-  <data name="Options_HideWhenNotLoggedIn_Description" xml:space="preserve">
-    <value>Скрывать {0}, когда вы не вошли на персонажа.</value>
-  </data>
-  <data name="Tabs_Presets_General" xml:space="preserve">
-    <value>Основной</value>
-  </data>
-  <data name="Options_Tabs_Preset" xml:space="preserve">
-    <value>Пресет: {0}</value>
-  </data>
-  <data name="Tabs_Presets_Event" xml:space="preserve">
-    <value>События</value>
-  </data>
-  <data name="Options_Tabs_NewTab" xml:space="preserve">
-    <value>Новая вкладка</value>
-  </data>
-  <data name="Options_About_Tab" xml:space="preserve">
-    <value>О проекте</value>
-  </data>
-  <data name="Options_About_Opening" xml:space="preserve">
-    <value>{0} - проект, полностью пересоздаёт внутриигровой чат и делает его еще лучше.</value>
-  </data>
-  <data name="Options_About_ClickUp" xml:space="preserve">
-    <value>Нажмите на кнопку слева, чтобы увидеть, что в работе и что будет дальше.</value>
-  </data>
-  <data name="Options_About_CrowdIn" xml:space="preserve">
-    <value>Нажмите кнопку слева, чтобы помочь перевести {0}.</value>
-  </data>
-  <data name="Options_About_Translators" xml:space="preserve">
-    <value>Переводчики</value>
-  </data>
-  <data name="CommandHelpSide_None" xml:space="preserve">
-    <value>Не выбран</value>
-  </data>
-  <data name="CommandHelpSide_Left" xml:space="preserve">
-    <value>Слева</value>
-  </data>
-  <data name="CommandHelpSide_Right" xml:space="preserve">
-    <value>Справа</value>
-  </data>
-  <data name="Options_CommandHelpSide_Name" xml:space="preserve">
-    <value>Сторона помощи по команде</value>
-  </data>
-  <data name="Options_CommandHelpSide_Description" xml:space="preserve">
-    <value>Сторона {0}, на которой отображается помощь по командам.</value>
-  </data>
-  <data name="Options_HideWhenUiHidden_Name" xml:space="preserve">
-    <value>Скрывать, когда игровой интерфейс скрыт</value>
-  </data>
-  <data name="Options_HideWhenUiHidden_Description" xml:space="preserve">
-    <value>Скрыть {0}, когда скрыт игровой интерфейс.</value>
-  </data>
-  <data name="Options_KeybindMode_Name" xml:space="preserve">
-    <value>Режим сочетания клавиш</value>
-  </data>
-  <data name="Options_KeybindMode_Description" xml:space="preserve">
-    <value>Способ обработки клавиш {0}.</value>
-  </data>
-  <data name="Options_Miscellaneous_Tab" xml:space="preserve">
-    <value>Прочее</value>
-  </data>
-  <data name="LanguageOverride_None" xml:space="preserve">
-    <value>Использовать по умолчанию язык Dalamud 'а</value>
-  </data>
-  <data name="KeybindMode_Flexible_Name" xml:space="preserve">
-    <value>Гибкий</value>
-  </data>
-  <data name="KeybindMode_Strict_Name" xml:space="preserve">
-    <value>Строгий</value>
-  </data>
-  <data name="KeybindMode_Flexible_Tooltip" xml:space="preserve">
-    <value>Обработать комбинации клавиш с модификаторами даже при нажатии других модификаторов.</value>
-  </data>
-  <data name="KeybindMode_Strict_Tooltip" xml:space="preserve">
-    <value>Обработать комбинации клавиш с модификаторами если не нажаты другие модификаторы.</value>
-  </data>
-  <data name="Options_Language_Name" xml:space="preserve">
-    <value>Язык</value>
-  </data>
-  <data name="Options_Language_Description" xml:space="preserve">
-    <value>Язык для отображения {0}.</value>
-  </data>
-  <data name="Options_DatabaseBattleMessages_Name" xml:space="preserve">
-    <value>Сохранять сообщения о битвах в базу данных</value>
-  </data>
-  <data name="Options_DatabaseBattleMessages_Description" xml:space="preserve">
-    <value>Если в базу данных сохранены боевые сообщения, то размер базы данных будет расти намного быстрее, и при сохранении настроек будет заметно заморожено. Рекомендуется оставить это отключено.</value>
-  </data>
-  <data name="Options_LoadPreviousSession_Name" xml:space="preserve">
-    <value>Показывать чат предыдущий сессии при входе</value>
-  </data>
-  <data name="Options_LoadPreviousSession_Description" xml:space="preserve">
-    <value>После входа в систему, заполните чат сообщениями с момента последнего выхода из системы.</value>
-  </data>
-  <data name="Options_Database_Tab" xml:space="preserve">
-    <value>База данных</value>
-  </data>
-  <data name="Options_FilterIncludePreviousSessions_Name" xml:space="preserve">
-    <value>Включать предыдущие сессии при заполнении вкладок</value>
-  </data>
-  <data name="Options_FilterIncludePreviousSessions_Description" xml:space="preserve">
-    <value>Включать сообщения до начала игры при заполнении вкладок. Вкладки заполняются при сохранении настроек.</value>
-  </data>
-  <data name="Options_Database_Advanced_Warning" xml:space="preserve">
-    <value>Не нажимайте на эти кнопки, если не знаете, что вы делаете.</value>
-  </data>
-  <data name="Options_Database_Advanced" xml:space="preserve">
-    <value>Расширенные</value>
-  </data>
-  <data name="Options_SharedMode_Name" xml:space="preserve">
-    <value>Включить режим нескольких клиентов</value>
-  </data>
-  <data name="Options_SharedMode_Description" xml:space="preserve">
-    <value>Разрешить нескольким клиентам запускать {0} одновременно, обмениваясь одной и той же базой данных.</value>
-  </data>
-  <data name="Options_SharedMode_Warning" xml:space="preserve">
-    <value>Эта опция не рекомендуется. Если вы включите эту опцию, то поддержка не будет предоставляться. Эта опция значитьльно навредит производительности {0}.</value>
-  </data>
-  <data name="ChatLog_Tabs_PopOut" xml:space="preserve">
-    <value>Отделить</value>
-  </data>
-  <data name="Options_HideSameTimestamps_Name" xml:space="preserve">
-    <value>Скрыть избыточные временные метки</value>
-  </data>
-  <data name="Options_HideSameTimestamps_Description" xml:space="preserve">
-    <value>Скрывать метку времени, когда предыдущие сообщения имеют одинаковую метку.</value>
-  </data>
-  <data name="Options_ShowPopOutTitleBar_Name" xml:space="preserve">
-    <value>Показывать заголовок для всплывающих вкладок</value>
-  </data>
-  <data name="Options_Tabs_PopOut" xml:space="preserve">
-    <value>Показывать в отдельном окне</value>
-  </data>
-  <data name="Options_Tabs_IndependentOpacity" xml:space="preserve">
-    <value>Использовать отличную от главного окна прозрачность</value>
-  </data>
-  <data name="Options_Tabs_Opacity" xml:space="preserve">
-    <value>Прозрачность</value>
-  </data>
-  <data name="Options_FontsEnabled" xml:space="preserve">
-    <value>Включение пользовательских шрифтов</value>
-  </data>
-  <data name="AutoTranslate_Search_Hint" xml:space="preserve">
-    <value>Поиск автоперевода...</value>
-  </data>
-  <data name="Options_SortAutoTranslate_Name" xml:space="preserve">
-    <value>Сортировка списка автоперевода</value>
-  </data>
-  <data name="Options_SortAutoTranslate_Description" xml:space="preserve">
-    <value>Сортировать список автоматических переводов по алфавиту.</value>
-  </data>
-  <data name="AutoTranslate_Completion_Key" xml:space="preserve">
-    <value>Ctrl+{0}</value>
-  </data>
-  <data name="Options_ExtraGlyphs_Name" xml:space="preserve">
-    <value>Дополнительные символы шрифта</value>
-  </data>
-  <data name="Options_ExtraGlyphs_Description" xml:space="preserve">
-    <value>Дополнительные глифы могут быть добавлены в глобальный шрифт {0}, включив флажки ниже. Это скорее всего потребует увеличения размера атласа шрифта Dalamudd.</value>
-  </data>
-  <data name="ExtraGlyphRanges_ChineseFull_Name" xml:space="preserve">
-    <value>Китайский (полный)</value>
-    <comment>ExtraGlyphRanges_ChineseFull_Name
-Note that "full" does not mean "traditional". Full means that all Chinese glyphs (including simplified and traditional glyphs) will be included.</comment>
-  </data>
-  <data name="ExtraGlyphRanges_ChineseSimplifiedCommon_Name" xml:space="preserve">
-    <value>Китайский (упрощенный)</value>
-  </data>
-  <data name="ExtraGlyphRanges_Cyrillic_Name" xml:space="preserve">
-    <value>Кириллица</value>
-  </data>
-  <data name="ExtraGlyphRanges_Japanese_Name" xml:space="preserve">
-    <value>Японский</value>
-  </data>
-  <data name="ExtraGlyphRanges_Korean_Name" xml:space="preserve">
-    <value>Корейский</value>
-  </data>
-  <data name="ExtraGlyphRanges_Thai_Name" xml:space="preserve">
-    <value>Тайский</value>
-  </data>
-  <data name="ExtraGlyphRanges_Vietnamese_Name" xml:space="preserve">
-    <value>Вьетнамский</value>
-  </data>
-  <data name="Context_Integrations" xml:space="preserve">
-    <value>Интеграции</value>
-  </data>
-  <data name="Context_ScreenshotMode" xml:space="preserve">
-    <value>Режим скриншота</value>
-  </data>
-  <data name="Context_HideChat" xml:space="preserve">
-    <value>Cкрыть чат</value>
-  </data>
-  <data name="Context_Copy" xml:space="preserve">
-    <value>Копировать</value>
-  </data>
-  <data name="Context_TryOn" xml:space="preserve">
-    <value>Попробовать</value>
-  </data>
-  <data name="Context_ItemComparison" xml:space="preserve">
-    <value>Сравнение предметов</value>
-  </data>
-  <data name="Context_SearchRecipes" xml:space="preserve">
-    <value>Поиск рецептов с использованием этого материала</value>
-  </data>
-  <data name="Context_SearchForItem" xml:space="preserve">
-    <value>Поиск предмета</value>
-  </data>
-  <data name="Context_Link" xml:space="preserve">
-    <value>Ссылка</value>
-  </data>
-  <data name="Context_CopyItemName" xml:space="preserve">
-    <value>Копировать имя предмета</value>
-  </data>
-  <data name="Context_SendTell" xml:space="preserve">
-    <value>Послать сообщение</value>
-  </data>
-  <data name="Context_InviteToParty" xml:space="preserve">
-    <value>Пригласить в группу</value>
-  </data>
-  <data name="Context_InviteToParty_SameWorld" xml:space="preserve">
-    <value>Тот же мир</value>
-  </data>
-  <data name="Context_InviteToParty_DifferentWorld" xml:space="preserve">
-    <value>Другой мир</value>
-  </data>
-  <data name="Context_Promote" xml:space="preserve">
-    <value>Повысить</value>
-  </data>
-  <data name="Context_KickFromParty" xml:space="preserve">
-    <value>Исключить из группы</value>
-  </data>
-  <data name="Context_SendFriendRequest" xml:space="preserve">
-    <value>Отправить заявку в друзья</value>
-  </data>
-  <data name="Context_AddToBlacklist" xml:space="preserve">
-    <value>Добавить в «черный список»</value>
-  </data>
-  <data name="Context_InviteToNoviceNetwork" xml:space="preserve">
-    <value>Пригласить в сеть новичков</value>
-  </data>
-  <data name="Context_ReplyInSelectedChatMode" xml:space="preserve">
-    <value>Ответ в Выбранном режиме чата</value>
-  </data>
-  <data name="Context_Target" xml:space="preserve">
-    <value>Цель</value>
-  </data>
-  <data name="ChatType_Debug" xml:space="preserve">
-    <value>Отладка</value>
-  </data>
-  <data name="ChatType_Urgent" xml:space="preserve">
-    <value>Чрезвычайное</value>
-  </data>
-  <data name="ChatType_Notice" xml:space="preserve">
-    <value>Уведомления</value>
-  </data>
-  <data name="ChatType_Say" xml:space="preserve">
-    <value>Сказать</value>
-  </data>
-  <data name="ChatType_Shout" xml:space="preserve">
-    <value>Крик</value>
-  </data>
-  <data name="ChatType_TellOutgoing" xml:space="preserve">
-    <value>ЛС (Исходящие)</value>
-  </data>
-  <data name="ChatType_TellIncoming" xml:space="preserve">
-    <value>ЛС (Входящие)</value>
-  </data>
-  <data name="ChatType_Party" xml:space="preserve">
-    <value>Группа</value>
-  </data>
-  <data name="ChatType_Alliance" xml:space="preserve">
-    <value>Альянс</value>
-  </data>
-  <data name="ChatType_Linkshell1" xml:space="preserve">
-    <value>Linkshell [1]</value>
-  </data>
-  <data name="ChatType_Linkshell2" xml:space="preserve">
-    <value>Linkshell [2]</value>
-  </data>
-  <data name="ChatType_Linkshell3" xml:space="preserve">
-    <value>Linkshell [3]</value>
-  </data>
-  <data name="ChatType_Linkshell4" xml:space="preserve">
-    <value>Linkshell [4]</value>
-  </data>
-  <data name="ChatType_Linkshell5" xml:space="preserve">
-    <value>Linkshell [5]</value>
-  </data>
-  <data name="ChatType_Linkshell6" xml:space="preserve">
-    <value>Linkshell [6]</value>
-  </data>
-  <data name="ChatType_Linkshell7" xml:space="preserve">
-    <value>Linkshell [7]</value>
-  </data>
-  <data name="ChatType_Linkshell8" xml:space="preserve">
-    <value>Linkshell [8]</value>
-  </data>
-  <data name="ChatType_FreeCompany" xml:space="preserve">
-    <value>Свободная компания</value>
-  </data>
-  <data name="ChatType_NoviceNetwork" xml:space="preserve">
-    <value>Сеть новичков</value>
-  </data>
-  <data name="ChatType_CustomEmotes" xml:space="preserve">
-    <value>Пользовательские эмоции</value>
-  </data>
-  <data name="ChatType_StandardEmotes" xml:space="preserve">
-    <value>Стандартные эмоции</value>
-  </data>
-  <data name="ChatType_Yell" xml:space="preserve">
-    <value>Вопль</value>
-  </data>
-  <data name="ChatType_CrossWorldParty" xml:space="preserve">
-    <value>Межмировая группа</value>
-  </data>
-  <data name="ChatType_PvpTeam" xml:space="preserve">
-    <value>Команда PvP</value>
-  </data>
-  <data name="ChatType_CrossLinkshell1" xml:space="preserve">
-    <value>Межмировой Linkshell [1]</value>
-  </data>
-  <data name="ChatType_CrossLinkshell2" xml:space="preserve">
-    <value>Межмировой Linkshell [2]</value>
-  </data>
-  <data name="ChatType_CrossLinkshell3" xml:space="preserve">
-    <value>Межмировой Linkshell [3]</value>
-  </data>
-  <data name="ChatType_CrossLinkshell4" xml:space="preserve">
-    <value>Межмировой Linkshell [4]</value>
-  </data>
-  <data name="ChatType_CrossLinkshell5" xml:space="preserve">
-    <value>Межмировой Linkshell [5]</value>
-  </data>
-  <data name="ChatType_CrossLinkshell6" xml:space="preserve">
-    <value>Межмировой Linkshell [6]</value>
-  </data>
-  <data name="ChatType_CrossLinkshell7" xml:space="preserve">
-    <value>Межмировой Linkshell [7]</value>
-  </data>
-  <data name="ChatType_CrossLinkshell8" xml:space="preserve">
-    <value>Межмировой Linkshell [8]</value>
-  </data>
-  <data name="ChatType_Damage" xml:space="preserve">
-    <value>Нанесённый урон</value>
-  </data>
-  <data name="ChatType_Miss" xml:space="preserve">
-    <value>Неудачные атаки</value>
-  </data>
-  <data name="ChatType_Action" xml:space="preserve">
-    <value>Действия</value>
-  </data>
-  <data name="ChatType_Item" xml:space="preserve">
-    <value>Использование предмета</value>
-  </data>
-  <data name="ChatType_Healing" xml:space="preserve">
-    <value>Лечение</value>
-  </data>
-  <data name="ChatType_GainBuff" xml:space="preserve">
-    <value>Баф получен</value>
-  </data>
-  <data name="ChatType_GainDebuff" xml:space="preserve">
-    <value>Дебаф получен</value>
-  </data>
-  <data name="ChatType_LoseBuff" xml:space="preserve">
-    <value>Баф закончился</value>
-  </data>
-  <data name="ChatType_LoseDebuff" xml:space="preserve">
-    <value>Дебаф снят</value>
-  </data>
-  <data name="ChatType_Alarm" xml:space="preserve">
-    <value>Оповещения</value>
-  </data>
-  <data name="ChatType_Echo" xml:space="preserve">
-    <value>Эхо</value>
-  </data>
-  <data name="ChatType_System" xml:space="preserve">
-    <value>Системные сообщения</value>
-  </data>
-  <data name="ChatType_BattleSystem" xml:space="preserve">
-    <value>Сообщения боевой системы</value>
-  </data>
-  <data name="ChatType_GatheringSystem" xml:space="preserve">
-    <value>Сообщения системы собирания</value>
-  </data>
-  <data name="ChatType_Error" xml:space="preserve">
-    <value>Сообщения об ошибках</value>
-  </data>
-  <data name="ChatType_NpcDialogue" xml:space="preserve">
-    <value>Диалог NPC</value>
-  </data>
-  <data name="ChatType_LootNotice" xml:space="preserve">
-    <value>Добыча</value>
-  </data>
-  <data name="ChatType_Progress" xml:space="preserve">
-    <value>Сообщения прогресса</value>
-  </data>
-  <data name="ChatType_LootRoll" xml:space="preserve">
-    <value>Сообщения Добычи</value>
-  </data>
-  <data name="ChatType_Crafting" xml:space="preserve">
-    <value>Сообщения синтеза</value>
-  </data>
-  <data name="ChatType_Gathering" xml:space="preserve">
-    <value>Сообщения собирателя</value>
-  </data>
-  <data name="ChatType_NpcAnnouncement" xml:space="preserve">
-    <value>Диалог NPC (объявления)</value>
-  </data>
-  <data name="ChatType_FreeCompanyAnnouncement" xml:space="preserve">
-    <value>Объявления свободной компании</value>
-  </data>
-  <data name="ChatType_FreeCompanyLoginLogout" xml:space="preserve">
-    <value>Уведомления о входе членов свободной компании</value>
-  </data>
-  <data name="ChatType_RetainerSale" xml:space="preserve">
-    <value>Оповещения Слуг о продаже</value>
-  </data>
-  <data name="ChatType_PeriodicRecruitmentNotification" xml:space="preserve">
-    <value>Периодические уведомления о вербовке</value>
-  </data>
-  <data name="ChatType_Sign" xml:space="preserve">
-    <value>Сообщения о метки цели</value>
-  </data>
-  <data name="ChatType_RandomNumber" xml:space="preserve">
-    <value>Сообщения о случайном числе</value>
-  </data>
-  <data name="ChatType_NoviceNetworkSystem" xml:space="preserve">
-    <value>Объявления сети новичков</value>
-  </data>
-  <data name="ChatType_Orchestrion" xml:space="preserve">
-    <value>Текущие сообщения оркестра</value>
-  </data>
-  <data name="ChatType_PvpTeamAnnouncement" xml:space="preserve">
-    <value>Объявления команды PvP</value>
-  </data>
-  <data name="ChatType_PvpTeamLoginLogout" xml:space="preserve">
-    <value>Уведомления о входе члена команды PvP</value>
-  </data>
-  <data name="ChatType_MessageBook" xml:space="preserve">
-    <value>Сообщение в книге сообщений</value>
-  </data>
-  <data name="ChatType_GmTell" xml:space="preserve">
-    <value>ЛС (GM)</value>
-  </data>
-  <data name="ChatType_GmSay" xml:space="preserve">
-    <value>Разговор (GM)</value>
-  </data>
-  <data name="ChatType_GmShout" xml:space="preserve">
-    <value>Крик (GM)</value>
-  </data>
-  <data name="ChatType_GmYell" xml:space="preserve">
-    <value>Вопль (GM)</value>
-  </data>
-  <data name="ChatType_GmParty" xml:space="preserve">
-    <value>Группа (ГМ)</value>
-  </data>
-  <data name="ChatType_GmFreeCompany" xml:space="preserve">
-    <value>Свободная компания (GM)</value>
-  </data>
-  <data name="ChatType_GmLinkshell1" xml:space="preserve">
-    <value>Linkshell [1] (GM)</value>
-  </data>
-  <data name="ChatType_GmLinkshell2" xml:space="preserve">
-    <value>Linkshell [2] (GM)</value>
-  </data>
-  <data name="ChatType_GmLinkshell3" xml:space="preserve">
-    <value>Linkshell [3] (GM)</value>
-  </data>
-  <data name="ChatType_GmLinkshell4" xml:space="preserve">
-    <value>Linkshell [4] (GM)</value>
-  </data>
-  <data name="ChatType_GmLinkshell5" xml:space="preserve">
-    <value>Linkshell [5] (GM)</value>
-  </data>
-  <data name="ChatType_GmLinkshell6" xml:space="preserve">
-    <value>Linkshell [6] (GM)</value>
-  </data>
-  <data name="ChatType_GmLinkshell7" xml:space="preserve">
-    <value>Linkshell [7] (GM)</value>
-  </data>
-  <data name="ChatType_GmLinkshell8" xml:space="preserve">
-    <value>Linkshell [8] (GM)</value>
-  </data>
-  <data name="ChatType_GmNoviceNetwork" xml:space="preserve">
-    <value>Сеть новичков (GM)</value>
-  </data>
+    <data name="Options_Display_Tab" xml:space="preserve">
+        <value>Внешний вид</value>
+    </data>
+    <data name="Options_ChatColours_Tab" xml:space="preserve">
+        <value>Цвета чата</value>
+    </data>
+    <data name="Options_ChatColours_Reset" xml:space="preserve">
+        <value>Сбросить настройки</value>
+    </data>
+    <data name="Options_ChatColours_Import" xml:space="preserve">
+        <value>Импортировать из игры</value>
+    </data>
+    <data name="Options_Tabs_Tab" xml:space="preserve">
+        <value>Вкладки</value>
+    </data>
+    <data name="Options_Tabs_Add" xml:space="preserve">
+        <value>Добавить</value>
+    </data>
+    <data name="Options_Tabs_Delete" xml:space="preserve">
+        <value>Удалить</value>
+    </data>
+    <data name="Options_Tabs_MoveUp" xml:space="preserve">
+        <value>Поднять</value>
+    </data>
+    <data name="Options_Tabs_MoveDown" xml:space="preserve">
+        <value>Опустить</value>
+    </data>
+    <data name="Options_Tabs_Name" xml:space="preserve">
+        <value>Имя</value>
+    </data>
+    <data name="Options_Tabs_ShowTimestamps" xml:space="preserve">
+        <value>Показать метки времени</value>
+    </data>
+    <data name="Options_Tabs_UnreadMode" xml:space="preserve">
+        <value>Режим отображения непрочитанных</value>
+    </data>
+    <data name="Options_Tabs_NoInputChannel" xml:space="preserve">
+        <value>&lt;Не выбран&gt;</value>
+    </data>
+    <data name="Options_Tabs_InputChannel" xml:space="preserve">
+        <value>Канал ввода</value>
+    </data>
+    <data name="Options_Tabs_Channels" xml:space="preserve">
+        <value>Каналы</value>
+    </data>
+    <data name="UnreadMode_All_Tooltip" xml:space="preserve">
+        <value>Всегда отображать индикаторы непрочитанных сообщений.</value>
+    </data>
+    <data name="UnreadMode_Unseen_Tooltip" xml:space="preserve">
+        <value>Показывать индикаторы непрочитанных только для сообщений, которые вы не видели.</value>
+    </data>
+    <data name="UnreadMode_None_Tooltip" xml:space="preserve">
+        <value>Не отображать метки непрочитанных сообщений.</value>
+    </data>
+    <data name="Tab_DefaultName" xml:space="preserve">
+        <value>Новая вкладка</value>
+    </data>
+    <data name="Settings_Kofi" xml:space="preserve">
+        <value>Поддержать {0} через Ko-fi</value>
+    </data>
+    <data name="Settings_SaveAndClose" xml:space="preserve">
+        <value>Сохранить и закрыть</value>
+    </data>
+    <data name="Settings_Save" xml:space="preserve">
+        <value>Сохранить</value>
+    </data>
+    <data name="Settings_Discard" xml:space="preserve">
+        <value>Отменить</value>
+    </data>
+    <data name="Settings_Title" xml:space="preserve">
+        <value>Настройки {0}</value>
+    </data>
+    <data name="ChatLog_SwitcherDisabled" xml:space="preserve">
+        <value>Отключено для этой вкладки.</value>
+    </data>
+    <data name="ChatLog_HideChat" xml:space="preserve">
+        <value>Cкрыть чат</value>
+    </data>
+    <data name="ChatLog_Tabs_MoveUp" xml:space="preserve">
+        <value>Поднять</value>
+    </data>
+    <data name="ChatLog_Tabs_MoveLeft" xml:space="preserve">
+        <value>Сдвинуть влево</value>
+    </data>
+    <data name="ChatLog_Tabs_MoveDown" xml:space="preserve">
+        <value>Опустить</value>
+    </data>
+    <data name="ChatLog_Tabs_MoveRight" xml:space="preserve">
+        <value>Сдвинуть вправо</value>
+    </data>
+    <data name="Options_Tabs_ChannelTypes_Chat" xml:space="preserve">
+        <value>Чат</value>
+    </data>
+    <data name="Options_Tabs_ChannelTypes_Battle" xml:space="preserve">
+        <value>Бой</value>
+    </data>
+    <data name="Options_Tabs_ChannelTypes_Announcements" xml:space="preserve">
+        <value>Оповещения</value>
+    </data>
+    <data name="UnreadMode_All" xml:space="preserve">
+        <value>Все</value>
+    </data>
+    <data name="UnreadMode_Unseen" xml:space="preserve">
+        <value>Непрочитанные</value>
+    </data>
+    <data name="UnreadMode_None" xml:space="preserve">
+        <value>Не выбран</value>
+    </data>
+    <data name="ChatSource_Self" xml:space="preserve">
+        <value>Свой</value>
+    </data>
+    <data name="ChatSource_PartyMember" xml:space="preserve">
+        <value>Участники группы</value>
+    </data>
+    <data name="ChatSource_AllianceMember" xml:space="preserve">
+        <value>Участники альянса</value>
+    </data>
+    <data name="ChatSource_Other" xml:space="preserve">
+        <value>Прочие</value>
+    </data>
+    <data name="ChatSource_EngagedEnemy" xml:space="preserve">
+        <value>Захваченные враги</value>
+    </data>
+    <data name="ChatSource_UnengagedEnemy" xml:space="preserve">
+        <value>Незахваченные враги</value>
+    </data>
+    <data name="ChatSource_FriendlyNpc" xml:space="preserve">
+        <value>Дружественные NPC</value>
+    </data>
+    <data name="ChatSource_SelfPet" xml:space="preserve">
+        <value>Пет (свой)</value>
+    </data>
+    <data name="ChatSource_PartyPet" xml:space="preserve">
+        <value>Пет (группа)</value>
+    </data>
+    <data name="ChatSource_AlliancePet" xml:space="preserve">
+        <value>Пет (альянс)</value>
+    </data>
+    <data name="ChatSource_OtherPet" xml:space="preserve">
+        <value>Пет (прочие)</value>
+    </data>
+    <data name="Options_Font_Name" xml:space="preserve">
+        <value>Шрифт</value>
+    </data>
+    <data name="Options_JapaneseFont_Name" xml:space="preserve">
+        <value>Японский шрифт</value>
+    </data>
+    <data name="Options_Font_Description" xml:space="preserve">
+        <value>Шрифт {0} для всех языков кроме японского.</value>
+    </data>
+    <data name="Options_Font_Warning" xml:space="preserve">
+        <value>Использование некоторых шрифтов может привести к крашу игры. Вы были предупреждены.</value>
+    </data>
+    <data name="Options_JapaneseFont_Description" xml:space="preserve">
+        <value>Шрифт {0} для отображения японского текста.</value>
+    </data>
+    <data name="Options_Tabs_ChannelTypes_Special" xml:space="preserve">
+        <value>Особые</value>
+    </data>
+    <data name="Options_Fonts_Tab" xml:space="preserve">
+        <value>Шрифты</value>
+    </data>
+    <data name="Options_SymbolsFontSize_Name" xml:space="preserve">
+        <value>Размер шрифта символов</value>
+    </data>
+    <data name="Options_JapaneseFontSize_Name" xml:space="preserve">
+        <value>Размер японского шрифта</value>
+    </data>
+    <data name="Options_SymbolsFontSize_Description" xml:space="preserve">
+        <value>Размер шрифта для игровых символов.</value>
+    </data>
+    <data name="ChatLog_Tabs_Delete" xml:space="preserve">
+        <value>Удалить вкладку</value>
+    </data>
+    <data name="Options_HideWhenNotLoggedIn_Name" xml:space="preserve">
+        <value>Скрывать, когда не залогинен</value>
+    </data>
+    <data name="Options_HideWhenNotLoggedIn_Description" xml:space="preserve">
+        <value>Скрывать {0}, когда вы не вошли на персонажа.</value>
+    </data>
+    <data name="Tabs_Presets_General" xml:space="preserve">
+        <value>Основной</value>
+    </data>
+    <data name="Options_Tabs_Preset" xml:space="preserve">
+        <value>Пресет: {0}</value>
+    </data>
+    <data name="Tabs_Presets_Event" xml:space="preserve">
+        <value>События</value>
+    </data>
+    <data name="Options_Tabs_NewTab" xml:space="preserve">
+        <value>Новая вкладка</value>
+    </data>
+    <data name="Options_About_Tab" xml:space="preserve">
+        <value>О проекте</value>
+    </data>
+    <data name="Options_About_Opening" xml:space="preserve">
+        <value>{0} - проект, полностью пересоздаёт внутриигровой чат и делает его еще лучше.</value>
+    </data>
+    <data name="Options_About_ClickUp" xml:space="preserve">
+        <value>Нажмите на кнопку слева, чтобы увидеть, что в работе и что будет дальше.</value>
+    </data>
+    <data name="Options_About_CrowdIn" xml:space="preserve">
+        <value>Нажмите кнопку слева, чтобы помочь перевести {0}.</value>
+    </data>
+    <data name="Options_About_Translators" xml:space="preserve">
+        <value>Переводчики</value>
+    </data>
+    <data name="CommandHelpSide_None" xml:space="preserve">
+        <value>Не выбран</value>
+    </data>
+    <data name="CommandHelpSide_Left" xml:space="preserve">
+        <value>Слева</value>
+    </data>
+    <data name="CommandHelpSide_Right" xml:space="preserve">
+        <value>Справа</value>
+    </data>
+    <data name="Options_CommandHelpSide_Name" xml:space="preserve">
+        <value>Сторона помощи по команде</value>
+    </data>
+    <data name="Options_CommandHelpSide_Description" xml:space="preserve">
+        <value>Сторона {0}, на которой отображается помощь по командам.</value>
+    </data>
+    <data name="Options_HideWhenUiHidden_Name" xml:space="preserve">
+        <value>Скрывать, когда игровой интерфейс скрыт</value>
+    </data>
+    <data name="Options_HideWhenUiHidden_Description" xml:space="preserve">
+        <value>Скрыть {0}, когда скрыт игровой интерфейс.</value>
+    </data>
+    <data name="Options_KeybindMode_Name" xml:space="preserve">
+        <value>Режим сочетания клавиш</value>
+    </data>
+    <data name="Options_KeybindMode_Description" xml:space="preserve">
+        <value>Способ обработки клавиш {0}.</value>
+    </data>
+    <data name="Options_Miscellaneous_Tab" xml:space="preserve">
+        <value>Прочее</value>
+    </data>
+    <data name="LanguageOverride_None" xml:space="preserve">
+        <value>Использовать по умолчанию язык Dalamud 'а</value>
+    </data>
+    <data name="KeybindMode_Flexible_Name" xml:space="preserve">
+        <value>Гибкий</value>
+    </data>
+    <data name="KeybindMode_Strict_Name" xml:space="preserve">
+        <value>Строгий</value>
+    </data>
+    <data name="KeybindMode_Flexible_Tooltip" xml:space="preserve">
+        <value>Обработать комбинации клавиш с модификаторами даже при нажатии других модификаторов.</value>
+    </data>
+    <data name="KeybindMode_Strict_Tooltip" xml:space="preserve">
+        <value>Обработать комбинации клавиш с модификаторами если не нажаты другие модификаторы.</value>
+    </data>
+    <data name="Options_Language_Name" xml:space="preserve">
+        <value>Язык</value>
+    </data>
+    <data name="Options_Language_Description" xml:space="preserve">
+        <value>Язык для отображения {0}.</value>
+    </data>
+    <data name="Options_DatabaseBattleMessages_Name" xml:space="preserve">
+        <value>Сохранять сообщения о битвах в базу данных</value>
+    </data>
+    <data name="Options_DatabaseBattleMessages_Description" xml:space="preserve">
+        <value>Если в базу данных сохранены боевые сообщения, то размер базы данных будет расти намного быстрее, и при сохранении настроек будет заметно заморожено. Рекомендуется оставить это отключено.</value>
+    </data>
+    <data name="Options_LoadPreviousSession_Name" xml:space="preserve">
+        <value>Показывать чат предыдущий сессии при входе</value>
+    </data>
+    <data name="Options_LoadPreviousSession_Description" xml:space="preserve">
+        <value>После входа в систему, заполните чат сообщениями с момента последнего выхода из системы.</value>
+    </data>
+    <data name="Options_Database_Tab" xml:space="preserve">
+        <value>База данных</value>
+    </data>
+    <data name="Options_FilterIncludePreviousSessions_Name" xml:space="preserve">
+        <value>Включать предыдущие сессии при заполнении вкладок</value>
+    </data>
+    <data name="Options_FilterIncludePreviousSessions_Description" xml:space="preserve">
+        <value>Включать сообщения до начала игры при заполнении вкладок. Вкладки заполняются при сохранении настроек.</value>
+    </data>
+    <data name="Options_Database_Advanced_Warning" xml:space="preserve">
+        <value>Не нажимайте на эти кнопки, если не знаете, что вы делаете.</value>
+    </data>
+    <data name="Options_Database_Advanced" xml:space="preserve">
+        <value>Расширенные</value>
+    </data>
+    <data name="Options_SharedMode_Name" xml:space="preserve">
+        <value>Включить режим нескольких клиентов</value>
+    </data>
+    <data name="Options_SharedMode_Description" xml:space="preserve">
+        <value>Разрешить нескольким клиентам запускать {0} одновременно, обмениваясь одной и той же базой данных.</value>
+    </data>
+    <data name="Options_SharedMode_Warning" xml:space="preserve">
+        <value>Эта опция не рекомендуется. Если вы включите эту опцию, то поддержка не будет предоставляться. Эта опция значитьльно навредит производительности {0}.</value>
+    </data>
+    <data name="ChatLog_Tabs_PopOut" xml:space="preserve">
+        <value>Отделить</value>
+    </data>
+    <data name="Options_HideSameTimestamps_Name" xml:space="preserve">
+        <value>Скрыть избыточные временные метки</value>
+    </data>
+    <data name="Options_HideSameTimestamps_Description" xml:space="preserve">
+        <value>Скрывать метку времени, когда предыдущие сообщения имеют одинаковую метку.</value>
+    </data>
+    <data name="Options_ShowPopOutTitleBar_Name" xml:space="preserve">
+        <value>Показывать заголовок для всплывающих вкладок</value>
+    </data>
+    <data name="Options_Tabs_PopOut" xml:space="preserve">
+        <value>Показывать в отдельном окне</value>
+    </data>
+    <data name="Options_Tabs_IndependentOpacity" xml:space="preserve">
+        <value>Использовать отличную от главного окна прозрачность</value>
+    </data>
+    <data name="Options_Tabs_Opacity" xml:space="preserve">
+        <value>Прозрачность</value>
+    </data>
+    <data name="Options_FontsEnabled" xml:space="preserve">
+        <value>Включение пользовательских шрифтов</value>
+    </data>
+    <data name="AutoTranslate_Search_Hint" xml:space="preserve">
+        <value>Поиск автоперевода...</value>
+    </data>
+    <data name="Options_SortAutoTranslate_Name" xml:space="preserve">
+        <value>Сортировка списка автоперевода</value>
+    </data>
+    <data name="Options_SortAutoTranslate_Description" xml:space="preserve">
+        <value>Сортировать список автоматических переводов по алфавиту.</value>
+    </data>
+    <data name="AutoTranslate_Completion_Key" xml:space="preserve">
+        <value>Ctrl+{0}</value>
+    </data>
+    <data name="Options_ExtraGlyphs_Name" xml:space="preserve">
+        <value>Дополнительные символы шрифта</value>
+    </data>
+    <data name="Options_ExtraGlyphs_Description" xml:space="preserve">
+        <value>Дополнительные глифы могут быть добавлены в глобальный шрифт {0}, включив флажки ниже. Это скорее всего потребует увеличения размера атласа шрифта Dalamudd.</value>
+    </data>
+    <data name="ExtraGlyphRanges_ChineseFull_Name" xml:space="preserve">
+        <value>Китайский (полный)</value>
+    </data>
+    <data name="ExtraGlyphRanges_ChineseSimplifiedCommon_Name" xml:space="preserve">
+        <value>Китайский (упрощенный)</value>
+    </data>
+    <data name="ExtraGlyphRanges_Cyrillic_Name" xml:space="preserve">
+        <value>Кириллица</value>
+    </data>
+    <data name="ExtraGlyphRanges_Japanese_Name" xml:space="preserve">
+        <value>Японский</value>
+    </data>
+    <data name="ExtraGlyphRanges_Korean_Name" xml:space="preserve">
+        <value>Корейский</value>
+    </data>
+    <data name="ExtraGlyphRanges_Thai_Name" xml:space="preserve">
+        <value>Тайский</value>
+    </data>
+    <data name="ExtraGlyphRanges_Vietnamese_Name" xml:space="preserve">
+        <value>Вьетнамский</value>
+    </data>
+    <data name="Context_Integrations" xml:space="preserve">
+        <value>Интеграции</value>
+    </data>
+    <data name="Context_ScreenshotMode" xml:space="preserve">
+        <value>Режим скриншота</value>
+    </data>
+    <data name="Context_HideChat" xml:space="preserve">
+        <value>Cкрыть чат</value>
+    </data>
+    <data name="Context_Copy" xml:space="preserve">
+        <value>Копировать</value>
+    </data>
+    <data name="Context_TryOn" xml:space="preserve">
+        <value>Попробовать</value>
+    </data>
+    <data name="Context_ItemComparison" xml:space="preserve">
+        <value>Сравнение предметов</value>
+    </data>
+    <data name="Context_SearchRecipes" xml:space="preserve">
+        <value>Поиск рецептов с использованием этого материала</value>
+    </data>
+    <data name="Context_SearchForItem" xml:space="preserve">
+        <value>Поиск предмета</value>
+    </data>
+    <data name="Context_Link" xml:space="preserve">
+        <value>Ссылка</value>
+    </data>
+    <data name="Context_CopyItemName" xml:space="preserve">
+        <value>Копировать имя предмета</value>
+    </data>
+    <data name="Context_SendTell" xml:space="preserve">
+        <value>Послать сообщение</value>
+    </data>
+    <data name="Context_InviteToParty" xml:space="preserve">
+        <value>Пригласить в группу</value>
+    </data>
+    <data name="Context_InviteToParty_SameWorld" xml:space="preserve">
+        <value>Тот же мир</value>
+    </data>
+    <data name="Context_InviteToParty_DifferentWorld" xml:space="preserve">
+        <value>Другой мир</value>
+    </data>
+    <data name="Context_Promote" xml:space="preserve">
+        <value>Повысить</value>
+    </data>
+    <data name="Context_KickFromParty" xml:space="preserve">
+        <value>Исключить из группы</value>
+    </data>
+    <data name="Context_SendFriendRequest" xml:space="preserve">
+        <value>Отправить заявку в друзья</value>
+    </data>
+    <data name="Context_AddToBlacklist" xml:space="preserve">
+        <value>Добавить в «черный список»</value>
+    </data>
+    <data name="Context_InviteToNoviceNetwork" xml:space="preserve">
+        <value>Пригласить в сеть новичков</value>
+    </data>
+    <data name="Context_ReplyInSelectedChatMode" xml:space="preserve">
+        <value>Ответ в Выбранном режиме чата</value>
+    </data>
+    <data name="Context_Target" xml:space="preserve">
+        <value>Цель</value>
+    </data>
+    <data name="ChatType_Debug" xml:space="preserve">
+        <value>Отладка</value>
+    </data>
+    <data name="ChatType_Urgent" xml:space="preserve">
+        <value>Чрезвычайное</value>
+    </data>
+    <data name="ChatType_Notice" xml:space="preserve">
+        <value>Уведомления</value>
+    </data>
+    <data name="ChatType_Say" xml:space="preserve">
+        <value>Сказать</value>
+    </data>
+    <data name="ChatType_Shout" xml:space="preserve">
+        <value>Крик</value>
+    </data>
+    <data name="ChatType_TellOutgoing" xml:space="preserve">
+        <value>ЛС (Исходящие)</value>
+    </data>
+    <data name="ChatType_TellIncoming" xml:space="preserve">
+        <value>ЛС (Входящие)</value>
+    </data>
+    <data name="ChatType_Party" xml:space="preserve">
+        <value>Группа</value>
+    </data>
+    <data name="ChatType_Alliance" xml:space="preserve">
+        <value>Альянс</value>
+    </data>
+    <data name="ChatType_Linkshell1" xml:space="preserve">
+        <value>Linkshell [1]</value>
+    </data>
+    <data name="ChatType_Linkshell2" xml:space="preserve">
+        <value>Linkshell [2]</value>
+    </data>
+    <data name="ChatType_Linkshell3" xml:space="preserve">
+        <value>Linkshell [3]</value>
+    </data>
+    <data name="ChatType_Linkshell4" xml:space="preserve">
+        <value>Linkshell [4]</value>
+    </data>
+    <data name="ChatType_Linkshell5" xml:space="preserve">
+        <value>Linkshell [5]</value>
+    </data>
+    <data name="ChatType_Linkshell6" xml:space="preserve">
+        <value>Linkshell [6]</value>
+    </data>
+    <data name="ChatType_Linkshell7" xml:space="preserve">
+        <value>Linkshell [7]</value>
+    </data>
+    <data name="ChatType_Linkshell8" xml:space="preserve">
+        <value>Linkshell [8]</value>
+    </data>
+    <data name="ChatType_FreeCompany" xml:space="preserve">
+        <value>Свободная компания</value>
+    </data>
+    <data name="ChatType_NoviceNetwork" xml:space="preserve">
+        <value>Сеть новичков</value>
+    </data>
+    <data name="ChatType_CustomEmotes" xml:space="preserve">
+        <value>Пользовательские эмоции</value>
+    </data>
+    <data name="ChatType_StandardEmotes" xml:space="preserve">
+        <value>Стандартные эмоции</value>
+    </data>
+    <data name="ChatType_Yell" xml:space="preserve">
+        <value>Вопль</value>
+    </data>
+    <data name="ChatType_CrossWorldParty" xml:space="preserve">
+        <value>Межмировая группа</value>
+    </data>
+    <data name="ChatType_PvpTeam" xml:space="preserve">
+        <value>Команда PvP</value>
+    </data>
+    <data name="ChatType_CrossLinkshell1" xml:space="preserve">
+        <value>Межмировой Linkshell [1]</value>
+    </data>
+    <data name="ChatType_CrossLinkshell2" xml:space="preserve">
+        <value>Межмировой Linkshell [2]</value>
+    </data>
+    <data name="ChatType_CrossLinkshell3" xml:space="preserve">
+        <value>Межмировой Linkshell [3]</value>
+    </data>
+    <data name="ChatType_CrossLinkshell4" xml:space="preserve">
+        <value>Межмировой Linkshell [4]</value>
+    </data>
+    <data name="ChatType_CrossLinkshell5" xml:space="preserve">
+        <value>Межмировой Linkshell [5]</value>
+    </data>
+    <data name="ChatType_CrossLinkshell6" xml:space="preserve">
+        <value>Межмировой Linkshell [6]</value>
+    </data>
+    <data name="ChatType_CrossLinkshell7" xml:space="preserve">
+        <value>Межмировой Linkshell [7]</value>
+    </data>
+    <data name="ChatType_CrossLinkshell8" xml:space="preserve">
+        <value>Межмировой Linkshell [8]</value>
+    </data>
+    <data name="ChatType_Damage" xml:space="preserve">
+        <value>Нанесённый урон</value>
+    </data>
+    <data name="ChatType_Miss" xml:space="preserve">
+        <value>Неудачные атаки</value>
+    </data>
+    <data name="ChatType_Action" xml:space="preserve">
+        <value>Действия</value>
+    </data>
+    <data name="ChatType_Item" xml:space="preserve">
+        <value>Использование предмета</value>
+    </data>
+    <data name="ChatType_Healing" xml:space="preserve">
+        <value>Лечение</value>
+    </data>
+    <data name="ChatType_GainBuff" xml:space="preserve">
+        <value>Баф получен</value>
+    </data>
+    <data name="ChatType_GainDebuff" xml:space="preserve">
+        <value>Дебаф получен</value>
+    </data>
+    <data name="ChatType_LoseBuff" xml:space="preserve">
+        <value>Баф закончился</value>
+    </data>
+    <data name="ChatType_LoseDebuff" xml:space="preserve">
+        <value>Дебаф снят</value>
+    </data>
+    <data name="ChatType_Alarm" xml:space="preserve">
+        <value>Оповещения</value>
+    </data>
+    <data name="ChatType_Echo" xml:space="preserve">
+        <value>Эхо</value>
+    </data>
+    <data name="ChatType_System" xml:space="preserve">
+        <value>Системные сообщения</value>
+    </data>
+    <data name="ChatType_BattleSystem" xml:space="preserve">
+        <value>Сообщения боевой системы</value>
+    </data>
+    <data name="ChatType_GatheringSystem" xml:space="preserve">
+        <value>Сообщения системы собирания</value>
+    </data>
+    <data name="ChatType_Error" xml:space="preserve">
+        <value>Сообщения об ошибках</value>
+    </data>
+    <data name="ChatType_NpcDialogue" xml:space="preserve">
+        <value>Диалог NPC</value>
+    </data>
+    <data name="ChatType_LootNotice" xml:space="preserve">
+        <value>Добыча</value>
+    </data>
+    <data name="ChatType_Progress" xml:space="preserve">
+        <value>Сообщения прогресса</value>
+    </data>
+    <data name="ChatType_LootRoll" xml:space="preserve">
+        <value>Сообщения Добычи</value>
+    </data>
+    <data name="ChatType_Crafting" xml:space="preserve">
+        <value>Сообщения синтеза</value>
+    </data>
+    <data name="ChatType_Gathering" xml:space="preserve">
+        <value>Сообщения собирателя</value>
+    </data>
+    <data name="ChatType_NpcAnnouncement" xml:space="preserve">
+        <value>Диалог NPC (объявления)</value>
+    </data>
+    <data name="ChatType_FreeCompanyAnnouncement" xml:space="preserve">
+        <value>Объявления свободной компании</value>
+    </data>
+    <data name="ChatType_FreeCompanyLoginLogout" xml:space="preserve">
+        <value>Уведомления о входе членов свободной компании</value>
+    </data>
+    <data name="ChatType_RetainerSale" xml:space="preserve">
+        <value>Оповещения Слуг о продаже</value>
+    </data>
+    <data name="ChatType_PeriodicRecruitmentNotification" xml:space="preserve">
+        <value>Периодические уведомления о вербовке</value>
+    </data>
+    <data name="ChatType_Sign" xml:space="preserve">
+        <value>Сообщения о метки цели</value>
+    </data>
+    <data name="ChatType_RandomNumber" xml:space="preserve">
+        <value>Сообщения о случайном числе</value>
+    </data>
+    <data name="ChatType_NoviceNetworkSystem" xml:space="preserve">
+        <value>Объявления сети новичков</value>
+    </data>
+    <data name="ChatType_Orchestrion" xml:space="preserve">
+        <value>Текущие сообщения оркестра</value>
+    </data>
+    <data name="ChatType_PvpTeamAnnouncement" xml:space="preserve">
+        <value>Объявления команды PvP</value>
+    </data>
+    <data name="ChatType_PvpTeamLoginLogout" xml:space="preserve">
+        <value>Уведомления о входе члена команды PvP</value>
+    </data>
+    <data name="ChatType_MessageBook" xml:space="preserve">
+        <value>Сообщение в книге сообщений</value>
+    </data>
+    <data name="ChatType_GmTell" xml:space="preserve">
+        <value>ЛС (GM)</value>
+    </data>
+    <data name="ChatType_GmSay" xml:space="preserve">
+        <value>Разговор (GM)</value>
+    </data>
+    <data name="ChatType_GmShout" xml:space="preserve">
+        <value>Крик (GM)</value>
+    </data>
+    <data name="ChatType_GmYell" xml:space="preserve">
+        <value>Вопль (GM)</value>
+    </data>
+    <data name="ChatType_GmParty" xml:space="preserve">
+        <value>Группа (ГМ)</value>
+    </data>
+    <data name="ChatType_GmFreeCompany" xml:space="preserve">
+        <value>Свободная компания (GM)</value>
+    </data>
+    <data name="ChatType_GmLinkshell1" xml:space="preserve">
+        <value>Linkshell [1] (GM)</value>
+    </data>
+    <data name="ChatType_GmLinkshell2" xml:space="preserve">
+        <value>Linkshell [2] (GM)</value>
+    </data>
+    <data name="ChatType_GmLinkshell3" xml:space="preserve">
+        <value>Linkshell [3] (GM)</value>
+    </data>
+    <data name="ChatType_GmLinkshell4" xml:space="preserve">
+        <value>Linkshell [4] (GM)</value>
+    </data>
+    <data name="ChatType_GmLinkshell5" xml:space="preserve">
+        <value>Linkshell [5] (GM)</value>
+    </data>
+    <data name="ChatType_GmLinkshell6" xml:space="preserve">
+        <value>Linkshell [6] (GM)</value>
+    </data>
+    <data name="ChatType_GmLinkshell7" xml:space="preserve">
+        <value>Linkshell [7] (GM)</value>
+    </data>
+    <data name="ChatType_GmLinkshell8" xml:space="preserve">
+        <value>Linkshell [8] (GM)</value>
+    </data>
+    <data name="ChatType_GmNoviceNetwork" xml:space="preserve">
+        <value>Сеть новичков (GM)</value>
+    </data>
+    <data name="Options_CollapseDuplicateMessages_Name" xml:space="preserve">
+        <value>Свернуть повторяющиеся сообщения</value>
+    </data>
+    <data name="Options_CollapseDuplicateMessages_Description" xml:space="preserve">
+        <value>Замените повторяющиеся последовательные сообщения счётчиком, добавленным к первому экземпляру сообщения.</value>
+    </data>
 </root>

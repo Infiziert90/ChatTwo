@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
+    <!-- 
       Microsoft ResX Schema 
       
       Version 2.0
@@ -59,399 +59,401 @@
               : using a System.ComponentModel.TypeConverter
               : and then encoded with base64 encoding.
       -->
-  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
+    <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+        <xsd:element name="root" msdata:IsDataSet="true">
             <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="metadata">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" use="required" type="xsd:string"/>
+                            <xsd:attribute name="type" type="xsd:string"/>
+                            <xsd:attribute name="mimetype" type="xsd:string"/>
+                            <xsd:attribute ref="xml:space"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="assembly">
+                        <xsd:complexType>
+                            <xsd:attribute name="alias" type="xsd:string"/>
+                            <xsd:attribute name="name" type="xsd:string"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+                            <xsd:attribute ref="xml:space"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
             </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>2.0</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-  </resheader>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  <data name="Context_HideChat" xml:space="preserve">
-    <value>ログウィンドウを隠す</value>
-  </data>
-  <data name="Context_Copy" xml:space="preserve">
-    <value>コピーする</value>
-  </data>
-  <data name="Context_TryOn" xml:space="preserve">
-    <value>装備試着</value>
-  </data>
-  <data name="Context_ItemComparison" xml:space="preserve">
-    <value>装備詳細を比較</value>
-  </data>
-  <data name="Context_SearchRecipes" xml:space="preserve">
-    <value>この素材から作れるものを確認</value>
-  </data>
-  <data name="Context_SearchForItem" xml:space="preserve">
-    <value>所持状況を確認</value>
-  </data>
-  <data name="Context_Link" xml:space="preserve">
-    <value>基本性能を伝える</value>
-  </data>
-  <data name="Context_CopyItemName" xml:space="preserve">
-    <value>アイテム名をコピーする</value>
-  </data>
-  <data name="Context_SendTell" xml:space="preserve">
-    <value>Tellする</value>
-  </data>
-  <data name="Context_InviteToParty" xml:space="preserve">
-    <value>パーティに誘う</value>
-  </data>
-  
-  
-  <data name="Context_Promote" xml:space="preserve">
-    <value>パーティリーダーを委譲する</value>
-  </data>
-  <data name="Context_KickFromParty" xml:space="preserve">
-    <value>パーティから除外する</value>
-  </data>
-  <data name="Context_SendFriendRequest" xml:space="preserve">
-    <value>フレンド申請をする</value>
-  </data>
-  <data name="Context_AddToBlacklist" xml:space="preserve">
-    <value>ブラックリストに登録する</value>
-  </data>
-  <data name="Context_InviteToNoviceNetwork" xml:space="preserve">
-    <value>ビギナーチャンネルに招待する</value>
-  </data>
-  <data name="Context_ReplyInSelectedChatMode" xml:space="preserve">
-    <value>選択した会話モードに返信する</value>
-  </data>
-  <data name="Context_Target" xml:space="preserve">
-    <value>ターゲットする</value>
-  </data>
-  
-  
-  
-  
-  
-  
-  
-  
-  <data name="ChatType_Alliance" xml:space="preserve">
-    <value>アライアンス</value>
-  </data>
-  <data name="ChatType_Linkshell1" xml:space="preserve">
-    <value>Linkshell[1]</value>
-  </data>
-  <data name="ChatType_Linkshell2" xml:space="preserve">
-    <value>Linkshell[2]</value>
-  </data>
-  <data name="ChatType_Linkshell3" xml:space="preserve">
-    <value>Linkshell[3]</value>
-  </data>
-  <data name="ChatType_Linkshell4" xml:space="preserve">
-    <value>Linkshell[4]</value>
-  </data>
-  <data name="ChatType_Linkshell5" xml:space="preserve">
-    <value>Linkshell[5]</value>
-  </data>
-  <data name="ChatType_Linkshell6" xml:space="preserve">
-    <value>Linkshell[6]</value>
-  </data>
-  <data name="ChatType_Linkshell7" xml:space="preserve">
-    <value>Linkshell[7]</value>
-  </data>
-  <data name="ChatType_Linkshell8" xml:space="preserve">
-    <value>Linkshell[8]</value>
-  </data>
-  <data name="ChatType_FreeCompany" xml:space="preserve">
-    <value>フリーカンパニー</value>
-  </data>
-  <data name="ChatType_NoviceNetwork" xml:space="preserve">
-    <value>ビギナーチャンネル</value>
-  </data>
-  
-  
-  
-  
-  <data name="ChatType_PvpTeam" xml:space="preserve">
-    <value>PvPチーム</value>
-  </data>
-  <data name="ChatType_CrossLinkshell1" xml:space="preserve">
-    <value>クロスワールドリンクシェル：チャンネル1</value>
-  </data>
-  <data name="ChatType_CrossLinkshell2" xml:space="preserve">
-    <value>クロスワールドリンクシェル：チャンネル2</value>
-  </data>
-  <data name="ChatType_CrossLinkshell3" xml:space="preserve">
-    <value>クロスワールドリンクシェル：チャンネル3</value>
-  </data>
-  <data name="ChatType_CrossLinkshell4" xml:space="preserve">
-    <value>クロスワールドリンクシェル：チャンネル4</value>
-  </data>
-  <data name="ChatType_CrossLinkshell5" xml:space="preserve">
-    <value>クロスワールドリンクシェル：チャンネル5</value>
-  </data>
-  <data name="ChatType_CrossLinkshell6" xml:space="preserve">
-    <value>クロスワールドリンクシェル：チャンネル6</value>
-  </data>
-  <data name="ChatType_CrossLinkshell7" xml:space="preserve">
-    <value>クロスワールドリンクシェル：チャンネル7</value>
-  </data>
-  <data name="ChatType_CrossLinkshell8" xml:space="preserve">
-    <value>クロスワールドリンクシェル：チャンネル8</value>
-  </data>
-  <data name="ChatType_Damage" xml:space="preserve">
-    <value>ダメージを与えた</value>
-  </data>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  <data name="ChatType_Echo" xml:space="preserve">
-    <value>/echoで出力するテキスト</value>
-  </data>
-  <data name="ChatType_System" xml:space="preserve">
-    <value>システムメッセージ</value>
-  </data>
-  <data name="ChatType_BattleSystem" xml:space="preserve">
-    <value>戦闘に関するシステムメッセージ</value>
-  </data>
-  <data name="ChatType_GatheringSystem" xml:space="preserve">
-    <value>採集に関するシステムメッセージ</value>
-  </data>
-  <data name="ChatType_Error" xml:space="preserve">
-    <value>エラーメッセージ</value>
-  </data>
-  <data name="ChatType_NpcDialogue" xml:space="preserve">
-    <value>NPC会話</value>
-  </data>
-  
-  
-  
-  
-  
-  
-  <data name="ChatType_FreeCompanyAnnouncement" xml:space="preserve">
-    <value>フリーカンパニーアナウンス</value>
-  </data>
-  
-  
-  
-  
-  
-  <data name="ChatType_NoviceNetworkSystem" xml:space="preserve">
-    <value>ビギナーチャンネルアナウンス</value>
-  </data>
-  
-  <data name="ChatType_PvpTeamAnnouncement" xml:space="preserve">
-    <value>PvPチームアナウンス</value>
-  </data>
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+    </resheader>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <data name="Context_HideChat" xml:space="preserve">
+        <value>ログウィンドウを隠す</value>
+    </data>
+    <data name="Context_Copy" xml:space="preserve">
+        <value>コピーする</value>
+    </data>
+    <data name="Context_TryOn" xml:space="preserve">
+        <value>装備試着</value>
+    </data>
+    <data name="Context_ItemComparison" xml:space="preserve">
+        <value>装備詳細を比較</value>
+    </data>
+    <data name="Context_SearchRecipes" xml:space="preserve">
+        <value>この素材から作れるものを確認</value>
+    </data>
+    <data name="Context_SearchForItem" xml:space="preserve">
+        <value>所持状況を確認</value>
+    </data>
+    <data name="Context_Link" xml:space="preserve">
+        <value>基本性能を伝える</value>
+    </data>
+    <data name="Context_CopyItemName" xml:space="preserve">
+        <value>アイテム名をコピーする</value>
+    </data>
+    <data name="Context_SendTell" xml:space="preserve">
+        <value>Tellする</value>
+    </data>
+    <data name="Context_InviteToParty" xml:space="preserve">
+        <value>パーティに誘う</value>
+    </data>
+    
+    
+    <data name="Context_Promote" xml:space="preserve">
+        <value>パーティリーダーを委譲する</value>
+    </data>
+    <data name="Context_KickFromParty" xml:space="preserve">
+        <value>パーティから除外する</value>
+    </data>
+    <data name="Context_SendFriendRequest" xml:space="preserve">
+        <value>フレンド申請をする</value>
+    </data>
+    <data name="Context_AddToBlacklist" xml:space="preserve">
+        <value>ブラックリストに登録する</value>
+    </data>
+    <data name="Context_InviteToNoviceNetwork" xml:space="preserve">
+        <value>ビギナーチャンネルに招待する</value>
+    </data>
+    <data name="Context_ReplyInSelectedChatMode" xml:space="preserve">
+        <value>選択した会話モードに返信する</value>
+    </data>
+    <data name="Context_Target" xml:space="preserve">
+        <value>ターゲットする</value>
+    </data>
+    
+    
+    
+    
+    
+    
+    
+    
+    <data name="ChatType_Alliance" xml:space="preserve">
+        <value>アライアンス</value>
+    </data>
+    <data name="ChatType_Linkshell1" xml:space="preserve">
+        <value>Linkshell[1]</value>
+    </data>
+    <data name="ChatType_Linkshell2" xml:space="preserve">
+        <value>Linkshell[2]</value>
+    </data>
+    <data name="ChatType_Linkshell3" xml:space="preserve">
+        <value>Linkshell[3]</value>
+    </data>
+    <data name="ChatType_Linkshell4" xml:space="preserve">
+        <value>Linkshell[4]</value>
+    </data>
+    <data name="ChatType_Linkshell5" xml:space="preserve">
+        <value>Linkshell[5]</value>
+    </data>
+    <data name="ChatType_Linkshell6" xml:space="preserve">
+        <value>Linkshell[6]</value>
+    </data>
+    <data name="ChatType_Linkshell7" xml:space="preserve">
+        <value>Linkshell[7]</value>
+    </data>
+    <data name="ChatType_Linkshell8" xml:space="preserve">
+        <value>Linkshell[8]</value>
+    </data>
+    <data name="ChatType_FreeCompany" xml:space="preserve">
+        <value>フリーカンパニー</value>
+    </data>
+    <data name="ChatType_NoviceNetwork" xml:space="preserve">
+        <value>ビギナーチャンネル</value>
+    </data>
+    
+    
+    
+    
+    <data name="ChatType_PvpTeam" xml:space="preserve">
+        <value>PvPチーム</value>
+    </data>
+    <data name="ChatType_CrossLinkshell1" xml:space="preserve">
+        <value>クロスワールドリンクシェル：チャンネル1</value>
+    </data>
+    <data name="ChatType_CrossLinkshell2" xml:space="preserve">
+        <value>クロスワールドリンクシェル：チャンネル2</value>
+    </data>
+    <data name="ChatType_CrossLinkshell3" xml:space="preserve">
+        <value>クロスワールドリンクシェル：チャンネル3</value>
+    </data>
+    <data name="ChatType_CrossLinkshell4" xml:space="preserve">
+        <value>クロスワールドリンクシェル：チャンネル4</value>
+    </data>
+    <data name="ChatType_CrossLinkshell5" xml:space="preserve">
+        <value>クロスワールドリンクシェル：チャンネル5</value>
+    </data>
+    <data name="ChatType_CrossLinkshell6" xml:space="preserve">
+        <value>クロスワールドリンクシェル：チャンネル6</value>
+    </data>
+    <data name="ChatType_CrossLinkshell7" xml:space="preserve">
+        <value>クロスワールドリンクシェル：チャンネル7</value>
+    </data>
+    <data name="ChatType_CrossLinkshell8" xml:space="preserve">
+        <value>クロスワールドリンクシェル：チャンネル8</value>
+    </data>
+    <data name="ChatType_Damage" xml:space="preserve">
+        <value>ダメージを与えた</value>
+    </data>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <data name="ChatType_Echo" xml:space="preserve">
+        <value>/echoで出力するテキスト</value>
+    </data>
+    <data name="ChatType_System" xml:space="preserve">
+        <value>システムメッセージ</value>
+    </data>
+    <data name="ChatType_BattleSystem" xml:space="preserve">
+        <value>戦闘に関するシステムメッセージ</value>
+    </data>
+    <data name="ChatType_GatheringSystem" xml:space="preserve">
+        <value>採集に関するシステムメッセージ</value>
+    </data>
+    <data name="ChatType_Error" xml:space="preserve">
+        <value>エラーメッセージ</value>
+    </data>
+    <data name="ChatType_NpcDialogue" xml:space="preserve">
+        <value>NPC会話</value>
+    </data>
+    
+    
+    
+    
+    
+    
+    <data name="ChatType_FreeCompanyAnnouncement" xml:space="preserve">
+        <value>フリーカンパニーアナウンス</value>
+    </data>
+    
+    
+    
+    
+    
+    <data name="ChatType_NoviceNetworkSystem" xml:space="preserve">
+        <value>ビギナーチャンネルアナウンス</value>
+    </data>
+    
+    <data name="ChatType_PvpTeamAnnouncement" xml:space="preserve">
+        <value>PvPチームアナウンス</value>
+    </data>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 </root>

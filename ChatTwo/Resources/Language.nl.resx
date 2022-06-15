@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-  <!-- 
+    <!-- 
       Microsoft ResX Schema 
       
       Version 2.0
@@ -59,785 +59,785 @@
               : using a System.ComponentModel.TypeConverter
               : and then encoded with base64 encoding.
       -->
-  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
-    <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexType>
-        <xsd:choice maxOccurs="unbounded">
-          <xsd:element name="metadata">
+    <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+        <xsd:element name="root" msdata:IsDataSet="true">
             <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
-              </xsd:sequence>
-              <xsd:attribute name="name" use="required" type="xsd:string"/>
-              <xsd:attribute name="type" type="xsd:string"/>
-              <xsd:attribute name="mimetype" type="xsd:string"/>
-              <xsd:attribute ref="xml:space"/>
+                <xsd:choice maxOccurs="unbounded">
+                    <xsd:element name="metadata">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" use="required" type="xsd:string"/>
+                            <xsd:attribute name="type" type="xsd:string"/>
+                            <xsd:attribute name="mimetype" type="xsd:string"/>
+                            <xsd:attribute ref="xml:space"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="assembly">
+                        <xsd:complexType>
+                            <xsd:attribute name="alias" type="xsd:string"/>
+                            <xsd:attribute name="name" type="xsd:string"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="data">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+                            <xsd:attribute ref="xml:space"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="resheader">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                            </xsd:sequence>
+                            <xsd:attribute name="name" type="xsd:string" use="required"/>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:choice>
             </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="assembly">
-            <xsd:complexType>
-              <xsd:attribute name="alias" type="xsd:string"/>
-              <xsd:attribute name="name" type="xsd:string"/>
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="data">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-              <xsd:attribute ref="xml:space"/>
-            </xsd:complexType>
-          </xsd:element>
-          <xsd:element name="resheader">
-            <xsd:complexType>
-              <xsd:sequence>
-                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-              </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" use="required"/>
-            </xsd:complexType>
-          </xsd:element>
-        </xsd:choice>
-      </xsd:complexType>
-    </xsd:element>
-  </xsd:schema>
-  <resheader name="resmimetype">
-    <value>text/microsoft-resx</value>
-  </resheader>
-  <resheader name="version">
-    <value>2.0</value>
-  </resheader>
-  <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>2.0</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-  </resheader>
-  <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-  </resheader>
-  <data name="Options_HideChat_Name" xml:space="preserve">
+    </resheader>
+    <data name="Options_HideChat_Name" xml:space="preserve">
     <value>Verberg vanilla chat</value>
   </data>
-  <data name="Options_HideChat_Description" xml:space="preserve">
+    <data name="Options_HideChat_Description" xml:space="preserve">
     <value>Verberg het in-game chatvenster wanneer de plug-in actief is.</value>
   </data>
-  <data name="Options_HideDuringCutscenes_Name" xml:space="preserve">
+    <data name="Options_HideDuringCutscenes_Name" xml:space="preserve">
     <value>Verberg chat tijdens cutscenes</value>
   </data>
-  <data name="Options_HideDuringCutscenes_Description" xml:space="preserve">
+    <data name="Options_HideDuringCutscenes_Description" xml:space="preserve">
     <value>Verberg {0} tijdens cutscenes.</value>
   </data>
-  <data name="Options_NativeItemTooltips_Name" xml:space="preserve">
+    <data name="Options_NativeItemTooltips_Name" xml:space="preserve">
     <value>Toon native item tooltips</value>
   </data>
-  <data name="Options_NativeItemTooltips_Description" xml:space="preserve">
+    <data name="Options_NativeItemTooltips_Description" xml:space="preserve">
     <value>Toon in-game item tooltips bij zweven het over items in {0}.</value>
   </data>
-  <data name="Options_SidebarTabView_Name" xml:space="preserve">
+    <data name="Options_SidebarTabView_Name" xml:space="preserve">
     <value>Tabbladen in een zijbalk weergeven</value>
   </data>
-  <data name="Options_SidebarTabView_Description" xml:space="preserve">
+    <data name="Options_SidebarTabView_Description" xml:space="preserve">
     <value>Tabbladen in {0} weergeven als zijbalk in plaats van een balk bovenaan.</value>
   </data>
-  <data name="Options_PrettierTimestamps_Name" xml:space="preserve">
-    <value>Gebruik moderne lay-out</value>
-  </data>
-  <data name="Options_PrettierTimestamps_Description" xml:space="preserve">
-    <value>Berichten in een modernere stijl weergeven.</value>
-  </data>
-  <data name="Options_MoreCompactPretty_Name" xml:space="preserve">
+    <data name="Options_PrettierTimestamps_Name" xml:space="preserve">
+        <value>Gebruik moderne lay-out</value>
+    </data>
+    <data name="Options_PrettierTimestamps_Description" xml:space="preserve">
+        <value>Berichten in een modernere stijl weergeven.</value>
+    </data>
+    <data name="Options_MoreCompactPretty_Name" xml:space="preserve">
     <value>Meer compacte moderne lay-out</value>
   </data>
-  <data name="Options_MoreCompactPretty_Description" xml:space="preserve">
+    <data name="Options_MoreCompactPretty_Description" xml:space="preserve">
     <value>Verminder de afstand tussen berichten.</value>
   </data>
-  <data name="Options_ShowNoviceNetwork_Name" xml:space="preserve">
+    <data name="Options_ShowNoviceNetwork_Name" xml:space="preserve">
     <value>Toon "Join Novice Network" knop</value>
   </data>
-  <data name="Options_ShowNoviceNetwork_Description" xml:space="preserve">
+    <data name="Options_ShowNoviceNetwork_Description" xml:space="preserve">
     <value>Toon de knop om deel te nemen aan de Novice Network naast de instellingen knop indien ingelogd als mentor.</value>
   </data>
-  <data name="Options_FontSize_Name" xml:space="preserve">
+    <data name="Options_FontSize_Name" xml:space="preserve">
     <value>Lettergrootte</value>
   </data>
-  <data name="Options_WindowOpacity_Name" xml:space="preserve">
+    <data name="Options_WindowOpacity_Name" xml:space="preserve">
     <value>Venster doorzichtigheid</value>
   </data>
-  <data name="Options_CanMove_Name" xml:space="preserve">
+    <data name="Options_CanMove_Name" xml:space="preserve">
     <value>Sta verplaatsen chat toe</value>
   </data>
-  <data name="Options_CanResize_Name" xml:space="preserve">
+    <data name="Options_CanResize_Name" xml:space="preserve">
     <value>Aanpassen formaat chat toestaan</value>
   </data>
-  <data name="Options_ShowTitleBar_Name" xml:space="preserve">
+    <data name="Options_ShowTitleBar_Name" xml:space="preserve">
     <value>Titelbalk voor chat tonen</value>
   </data>
-  <data name="Options_Display_Tab" xml:space="preserve">
-    <value>Weergave</value>
-  </data>
-  <data name="Options_ChatColours_Tab" xml:space="preserve">
-    <value>Chat kleuren</value>
-  </data>
-  <data name="Options_ChatColours_Reset" xml:space="preserve">
-    <value>Standaardinstellingen herstellen</value>
-  </data>
-  <data name="Options_ChatColours_Import" xml:space="preserve">
-    <value>Uit spel importeren</value>
-  </data>
-  <data name="Options_Tabs_Tab" xml:space="preserve">
-    <value>Tabbladen</value>
-  </data>
-  <data name="Options_Tabs_Add" xml:space="preserve">
-    <value>Voeg toe</value>
-  </data>
-  <data name="Options_Tabs_Delete" xml:space="preserve">
-    <value>Verwijder</value>
-  </data>
-  <data name="Options_Tabs_MoveUp" xml:space="preserve">
-    <value>Verplaats naar boven</value>
-  </data>
-  <data name="Options_Tabs_MoveDown" xml:space="preserve">
-    <value>Verplaats naar beneden</value>
-  </data>
-  <data name="Options_Tabs_Name" xml:space="preserve">
-    <value>Naam</value>
-  </data>
-  <data name="Options_Tabs_ShowTimestamps" xml:space="preserve">
-    <value>Tijdsaanduiding weergeven</value>
-  </data>
-  <data name="Options_Tabs_UnreadMode" xml:space="preserve">
-    <value>Ongelezen modus</value>
-  </data>
-  <data name="Options_Tabs_NoInputChannel" xml:space="preserve">
-    <value>&lt;Geen&gt;</value>
-  </data>
-  <data name="Options_Tabs_InputChannel" xml:space="preserve">
-    <value>Chat kanaal</value>
-  </data>
-  <data name="Options_Tabs_Channels" xml:space="preserve">
-    <value>Kanalen</value>
-  </data>
-  <data name="UnreadMode_All_Tooltip" xml:space="preserve">
-    <value>Altijd ongelezen indicatoren tonen.</value>
-  </data>
-  <data name="UnreadMode_Unseen_Tooltip" xml:space="preserve">
-    <value>Toon alleen ongelezen indicatoren voor berichten die je nog niet hebt gezien.</value>
-  </data>
-  <data name="UnreadMode_None_Tooltip" xml:space="preserve">
-    <value>Toon nooit ongelezen indicatoren.</value>
-  </data>
-  <data name="Tab_DefaultName" xml:space="preserve">
-    <value>Nieuw Tabblad</value>
-  </data>
-  <data name="Settings_Kofi" xml:space="preserve">
-    <value>Ondersteun {0} op Ko-fi</value>
-  </data>
-  <data name="Settings_SaveAndClose" xml:space="preserve">
-    <value>Opslaan en afsluiten</value>
-  </data>
-  <data name="Settings_Save" xml:space="preserve">
-    <value>Opslaan</value>
-  </data>
-  <data name="Settings_Discard" xml:space="preserve">
-    <value>Annuleren</value>
-  </data>
-  <data name="Settings_Title" xml:space="preserve">
-    <value>{0} Instellingen</value>
-  </data>
-  <data name="ChatLog_SwitcherDisabled" xml:space="preserve">
-    <value>Uitgeschakeld voor dit tabblad.</value>
-  </data>
-  <data name="ChatLog_HideChat" xml:space="preserve">
-    <value>Verberg chat</value>
-  </data>
-  <data name="ChatLog_Tabs_MoveUp" xml:space="preserve">
-    <value>Verplaats naar boven</value>
-  </data>
-  <data name="ChatLog_Tabs_MoveLeft" xml:space="preserve">
-    <value>Verplaats naar links</value>
-  </data>
-  <data name="ChatLog_Tabs_MoveDown" xml:space="preserve">
-    <value>Verplaats naar beneden</value>
-  </data>
-  <data name="ChatLog_Tabs_MoveRight" xml:space="preserve">
-    <value>Verplaats naar rechts</value>
-  </data>
-  <data name="Options_Tabs_ChannelTypes_Chat" xml:space="preserve">
-    <value>Chat</value>
-  </data>
-  <data name="Options_Tabs_ChannelTypes_Battle" xml:space="preserve">
-    <value>Gevecht</value>
-  </data>
-  <data name="Options_Tabs_ChannelTypes_Announcements" xml:space="preserve">
-    <value>Mededelingen</value>
-  </data>
-  <data name="UnreadMode_All" xml:space="preserve">
-    <value>Alles</value>
-  </data>
-  <data name="UnreadMode_Unseen" xml:space="preserve">
-    <value>Nieuw</value>
-  </data>
-  <data name="UnreadMode_None" xml:space="preserve">
-    <value>Geen</value>
-  </data>
-  <data name="ChatSource_Self" xml:space="preserve">
-    <value>Zelf</value>
-  </data>
-  <data name="ChatSource_PartyMember" xml:space="preserve">
-    <value>Groep Lid</value>
-  </data>
-  <data name="ChatSource_AllianceMember" xml:space="preserve">
-    <value>Alliantie Lid</value>
-  </data>
-  <data name="ChatSource_Other" xml:space="preserve">
-    <value>Andere</value>
-  </data>
-  <data name="ChatSource_EngagedEnemy" xml:space="preserve">
-    <value>Engaged Vijand</value>
-  </data>
-  <data name="ChatSource_UnengagedEnemy" xml:space="preserve">
-    <value>Unengaged Vijand</value>
-  </data>
-  <data name="ChatSource_FriendlyNpc" xml:space="preserve">
-    <value>Vriendelijke NPC</value>
-  </data>
-  <data name="ChatSource_SelfPet" xml:space="preserve">
-    <value>Kameraad (Zelf)</value>
-  </data>
-  <data name="ChatSource_PartyPet" xml:space="preserve">
-    <value>Kameraad (groep)</value>
-  </data>
-  <data name="ChatSource_AlliancePet" xml:space="preserve">
-    <value>Kameraad (Alliantielid)</value>
-  </data>
-  <data name="ChatSource_OtherPet" xml:space="preserve">
-    <value>Kameraad (Andere)</value>
-  </data>
-  <data name="Options_Font_Name" xml:space="preserve">
-    <value>Lettertype</value>
-  </data>
-  <data name="Options_JapaneseFont_Name" xml:space="preserve">
-    <value>Japanse lettertype</value>
-  </data>
-  <data name="Options_Font_Description" xml:space="preserve">
-    <value>Het lettertype {0} gebruikt om niet-Japanse tekst weer te geven.</value>
-  </data>
-  <data name="Options_Font_Warning" xml:space="preserve">
-    <value>Het gebruik van bepaalde systeemlettertypen kan je spel crashen. Je bent gewaarschuwd.</value>
-  </data>
-  <data name="Options_JapaneseFont_Description" xml:space="preserve">
-    <value>Het lettertype {0} gebruikt om Japanse tekst weer te geven.</value>
-  </data>
-  <data name="Options_Tabs_ChannelTypes_Special" xml:space="preserve">
-    <value>Speciaal</value>
-  </data>
-  <data name="Options_Fonts_Tab" xml:space="preserve">
-    <value>Lettertypen</value>
-  </data>
-  <data name="Options_SymbolsFontSize_Name" xml:space="preserve">
-    <value>Symbolen lettergrootte</value>
-  </data>
-  <data name="Options_JapaneseFontSize_Name" xml:space="preserve">
-    <value>Japanse lettergrootte</value>
-  </data>
-  <data name="Options_SymbolsFontSize_Description" xml:space="preserve">
-    <value>De lettergrootte om te gebruiken voor spelsymbolen.</value>
-  </data>
-  <data name="ChatLog_Tabs_Delete" xml:space="preserve">
-    <value>Verwijder tabblad</value>
-  </data>
-  <data name="Options_HideWhenNotLoggedIn_Name" xml:space="preserve">
-    <value>Verberg wanneer niet ingelogd</value>
-  </data>
-  <data name="Options_HideWhenNotLoggedIn_Description" xml:space="preserve">
-    <value>Verberg {0} wanneer je niet bent ingelogd op een karakter.</value>
-  </data>
-  <data name="Tabs_Presets_General" xml:space="preserve">
-    <value>Algemeen</value>
-  </data>
-  <data name="Options_Tabs_Preset" xml:space="preserve">
-    <value>Preset: {0}</value>
-  </data>
-  <data name="Tabs_Presets_Event" xml:space="preserve">
-    <value>Event</value>
-  </data>
-  <data name="Options_Tabs_NewTab" xml:space="preserve">
-    <value>Nieuw Tabblad</value>
-  </data>
-  <data name="Options_About_Tab" xml:space="preserve">
-    <value>Over</value>
-  </data>
-  <data name="Options_About_Opening" xml:space="preserve">
-    <value>{0} is een project om de in-game chat volledig opnieuw te maken en nog beter te maken.</value>
-  </data>
-  <data name="Options_About_ClickUp" xml:space="preserve">
-    <value>Klik op de knop links om te zien waar aan gewerkt wordt en wat er daarna komt.</value>
-  </data>
-  <data name="Options_About_CrowdIn" xml:space="preserve">
-    <value>Klik op de knop links om {0} te helpen vertalen.</value>
-  </data>
-  <data name="Options_About_Translators" xml:space="preserve">
-    <value>Vertalers</value>
-  </data>
-  <data name="CommandHelpSide_None" xml:space="preserve">
-    <value>Geen</value>
-  </data>
-  <data name="CommandHelpSide_Left" xml:space="preserve">
-    <value>Links</value>
-  </data>
-  <data name="CommandHelpSide_Right" xml:space="preserve">
-    <value>Rechts</value>
-  </data>
-  <data name="Options_CommandHelpSide_Name" xml:space="preserve">
-    <value>Commando hulp zijde</value>
-  </data>
-  <data name="Options_CommandHelpSide_Description" xml:space="preserve">
-    <value>De zijde van {0} om hulp weer te geven voor commando's.</value>
-  </data>
-  <data name="Options_HideWhenUiHidden_Name" xml:space="preserve">
-    <value>Verberg als spel-UI is verborgen</value>
-  </data>
-  <data name="Options_HideWhenUiHidden_Description" xml:space="preserve">
-    <value>Verberg {0} wanneer de spel-UI is verborgen.</value>
-  </data>
-  <data name="Options_KeybindMode_Name" xml:space="preserve">
-    <value>Sneltoets modus</value>
-  </data>
-  <data name="Options_KeybindMode_Description" xml:space="preserve">
-    <value>De manier waarop {0} sneltoetsen moet behandelen.</value>
-  </data>
-  <data name="Options_Miscellaneous_Tab" xml:space="preserve">
-    <value>Overig</value>
-  </data>
-  <data name="LanguageOverride_None" xml:space="preserve">
-    <value>Gebruik de standaard taal van Dalamud</value>
-  </data>
-  <data name="KeybindMode_Flexible_Name" xml:space="preserve">
-    <value>Flexibel</value>
-  </data>
-  <data name="KeybindMode_Strict_Name" xml:space="preserve">
-    <value>Strikt</value>
-  </data>
-  <data name="KeybindMode_Flexible_Tooltip" xml:space="preserve">
-    <value>Verwerk sneltoetsen met speciale toetsen, ook al zijn andere speciale toetsen ingedrukt.</value>
-  </data>
-  <data name="KeybindMode_Strict_Tooltip" xml:space="preserve">
-    <value>Verwerk alleen sneltoetsen met speciale toetsen alleen als er geen andere speciale toetsen worden ingedrukt.</value>
-  </data>
-  <data name="Options_Language_Name" xml:space="preserve">
-    <value>Taal</value>
-  </data>
-  <data name="Options_Language_Description" xml:space="preserve">
-    <value>De taal waarin {0} wordt weergegeven.</value>
-  </data>
-  <data name="Options_DatabaseBattleMessages_Name" xml:space="preserve">
-    <value>Sla gevechtsberichten op in database</value>
-  </data>
-  <data name="Options_DatabaseBattleMessages_Description" xml:space="preserve">
-    <value>Als gevechtsberichten worden opgeslagen in de database, zal de grootte van de database veel sneller groeien, en er zal een merkbare bevriezing zijn bij het opslaan van de instellingen. Het is aan te raden om dit uit te schakelen.</value>
-  </data>
-  <data name="Options_LoadPreviousSession_Name" xml:space="preserve">
-    <value>Toon vorige chatsessie bij inloggen</value>
-  </data>
-  <data name="Options_LoadPreviousSession_Description" xml:space="preserve">
-    <value>Nadat je bent ingelogd, vul de chat met de berichten van wanneer je voor het laatst bent uitgelogd.</value>
-  </data>
-  <data name="Options_Database_Tab" xml:space="preserve">
-    <value>Database</value>
-  </data>
-  <data name="Options_FilterIncludePreviousSessions_Name" xml:space="preserve">
-    <value>Eerdere sessies opnemen bij het vullen van tabbladen</value>
-  </data>
-  <data name="Options_FilterIncludePreviousSessions_Description" xml:space="preserve">
-    <value>Berichten van voordat het spel werd gelanceerd opnemen bij het vullen van tabbladen. Tabbladen worden gevuld wanneer de instellingen worden opgeslagen.</value>
-  </data>
-  <data name="Options_Database_Advanced_Warning" xml:space="preserve">
-    <value>Klik niet op deze knoppen tenzij je weet wat je aan het doen bent.</value>
-  </data>
-  <data name="Options_Database_Advanced" xml:space="preserve">
-    <value>Geavanceerd</value>
-  </data>
-  <data name="Options_SharedMode_Name" xml:space="preserve">
-    <value>Modus voor meerdere vensters inschakelen</value>
-  </data>
-  <data name="Options_SharedMode_Description" xml:space="preserve">
-    <value>Meerdere vensters toestaan om {0} tegelijkertijd uit te voeren en dezelfde database te delen.</value>
-  </data>
-  <data name="Options_SharedMode_Warning" xml:space="preserve">
-    <value>Deze optie wordt niet aanbevolen. Er wordt geen ondersteuning aangeboden als je deze optie inschakelt. Deze optie is schadelijk voor de snelheid van {0}.</value>
-  </data>
-  <data name="ChatLog_Tabs_PopOut" xml:space="preserve">
-    <value>Uitvouwen</value>
-  </data>
-  <data name="Options_HideSameTimestamps_Name" xml:space="preserve">
-    <value>Verberg tijdstempels wanneer overbodig</value>
-  </data>
-  <data name="Options_HideSameTimestamps_Description" xml:space="preserve">
-    <value>Verberg tijdstempels wanneer vorige berichten dezelfde tijdstempel hebben.</value>
-  </data>
-  <data name="Options_ShowPopOutTitleBar_Name" xml:space="preserve">
-    <value>Titelbalk voor uitgevouwen tabbladen weergeven</value>
-  </data>
-  <data name="Options_Tabs_PopOut" xml:space="preserve">
-    <value>In apart venster weergeven</value>
-  </data>
-  <data name="Options_Tabs_IndependentOpacity" xml:space="preserve">
-    <value>Gebruik andere doorzichtigheid dan het hoofdvenster</value>
-  </data>
-  <data name="Options_Tabs_Opacity" xml:space="preserve">
-    <value>Doorzichtigheid</value>
-  </data>
-  <data name="Options_FontsEnabled" xml:space="preserve">
-    <value>Aangepaste lettertypen inschakelen</value>
-  </data>
-  <data name="AutoTranslate_Search_Hint" xml:space="preserve">
-    <value>Automatische vertaling zoeken...</value>
-  </data>
-  <data name="Options_SortAutoTranslate_Name" xml:space="preserve">
-    <value>Sorteer de lijst met automatische vertalingen</value>
-  </data>
-  <data name="Options_SortAutoTranslate_Description" xml:space="preserve">
-    <value>Als dit is ingeschakeld, zal de Automatisch Vertalingen lijst alfabetisch worden gesorteerd.</value>
-  </data>
-  <data name="AutoTranslate_Completion_Key" xml:space="preserve">
-    <value>Ctrl + {0}</value>
-  </data>
-  <data name="Options_ExtraGlyphs_Name" xml:space="preserve">
-    <value>Extra lettertype tekens</value>
-  </data>
-  <data name="Options_ExtraGlyphs_Description" xml:space="preserve">
-    <value>Extra tekens kunnen worden toegevoegd aan het algemene lettertype van {0} door de onderstaande selectievakjes in te schakelen. Dit vereist waarschijnlijk een verhoging van de atlas lettertype grootte van Dalamud.</value>
-  </data>
-  <data name="ExtraGlyphRanges_ChineseFull_Name" xml:space="preserve">
-    <value>Chinees (volledig)</value>
-    <comment>ExtraGlyphRanges_ChineseFull_Name
-Note that "full" does not mean "traditional". Full means that all Chinese glyphs (including simplified and traditional glyphs) will be included.</comment>
-  </data>
-  <data name="ExtraGlyphRanges_ChineseSimplifiedCommon_Name" xml:space="preserve">
-    <value>Chinees (vereenvoudigd)</value>
-  </data>
-  <data name="ExtraGlyphRanges_Cyrillic_Name" xml:space="preserve">
-    <value>Cyrillisch</value>
-  </data>
-  <data name="ExtraGlyphRanges_Japanese_Name" xml:space="preserve">
-    <value>Japans</value>
-  </data>
-  <data name="ExtraGlyphRanges_Korean_Name" xml:space="preserve">
-    <value>Koreaans</value>
-  </data>
-  <data name="ExtraGlyphRanges_Thai_Name" xml:space="preserve">
-    <value>Thais</value>
-  </data>
-  <data name="ExtraGlyphRanges_Vietnamese_Name" xml:space="preserve">
-    <value>Vietnamees</value>
-  </data>
-  <data name="Context_Integrations" xml:space="preserve">
-    <value>Integraties</value>
-  </data>
-  <data name="Context_ScreenshotMode" xml:space="preserve">
-    <value>Schermafbeelding modus</value>
-  </data>
-  <data name="Context_HideChat" xml:space="preserve">
-    <value>Verberg chat</value>
-  </data>
-  <data name="Context_Copy" xml:space="preserve">
-    <value>Kopiëer</value>
-  </data>
-  <data name="Context_TryOn" xml:space="preserve">
-    <value>Probeer Aan</value>
-  </data>
-  <data name="Context_ItemComparison" xml:space="preserve">
-    <value>Item Vergelijken</value>
-  </data>
-  <data name="Context_SearchRecipes" xml:space="preserve">
-    <value>Zoek Recepten die dit materiaal gebruiken</value>
-  </data>
-  <data name="Context_SearchForItem" xml:space="preserve">
-    <value>Zoek naar Item</value>
-  </data>
-  <data name="Context_Link" xml:space="preserve">
-    <value>Geef Door</value>
-  </data>
-  <data name="Context_CopyItemName" xml:space="preserve">
-    <value>Item naam kopiëren</value>
-  </data>
-  <data name="Context_SendTell" xml:space="preserve">
-    <value>Stuur Vertel</value>
-  </data>
-  <data name="Context_InviteToParty" xml:space="preserve">
-    <value>Stuur Groepsuitnodiging</value>
-  </data>
-  <data name="Context_InviteToParty_SameWorld" xml:space="preserve">
-    <value>Dezelfde wereld</value>
-  </data>
-  <data name="Context_InviteToParty_DifferentWorld" xml:space="preserve">
-    <value>Andere wereld</value>
-  </data>
-  <data name="Context_Promote" xml:space="preserve">
-    <value>Promoveren</value>
-  </data>
-  <data name="Context_KickFromParty" xml:space="preserve">
-    <value>Uit Groep zetten</value>
-  </data>
-  <data name="Context_SendFriendRequest" xml:space="preserve">
-    <value>Verstuur een vriendschapsverzoek</value>
-  </data>
-  <data name="Context_AddToBlacklist" xml:space="preserve">
-    <value>Voeg toe aan zwarte lijst</value>
-  </data>
-  <data name="Context_InviteToNoviceNetwork" xml:space="preserve">
-    <value>Nodig uit voor Novice Network</value>
-  </data>
-  <data name="Context_ReplyInSelectedChatMode" xml:space="preserve">
-    <value>Beantwoord in geselecteerde chatmodus</value>
-  </data>
-  <data name="Context_Target" xml:space="preserve">
-    <value>Selecteer</value>
-  </data>
-  <data name="ChatType_Debug" xml:space="preserve">
-    <value>Debug</value>
-  </data>
-  <data name="ChatType_Urgent" xml:space="preserve">
-    <value>Dringend</value>
-  </data>
-  <data name="ChatType_Notice" xml:space="preserve">
-    <value>Melding</value>
-  </data>
-  <data name="ChatType_Say" xml:space="preserve">
-    <value>Zeg</value>
-  </data>
-  <data name="ChatType_Shout" xml:space="preserve">
-    <value>Schreeuw</value>
-  </data>
-  <data name="ChatType_TellOutgoing" xml:space="preserve">
-    <value>Vertel (Vertrekkend)</value>
-  </data>
-  <data name="ChatType_TellIncoming" xml:space="preserve">
-    <value>Vertel (Inkomend)</value>
-  </data>
-  <data name="ChatType_Party" xml:space="preserve">
-    <value>Groep</value>
-  </data>
-  <data name="ChatType_Alliance" xml:space="preserve">
-    <value>Alliantie</value>
-  </data>
-  <data name="ChatType_Linkshell1" xml:space="preserve">
-    <value>Linkshell [1]</value>
-  </data>
-  <data name="ChatType_Linkshell2" xml:space="preserve">
-    <value>Linkshell [2]</value>
-  </data>
-  <data name="ChatType_Linkshell3" xml:space="preserve">
-    <value>Linkshell [3]</value>
-  </data>
-  <data name="ChatType_Linkshell4" xml:space="preserve">
-    <value>Linkshell [4]</value>
-  </data>
-  <data name="ChatType_Linkshell5" xml:space="preserve">
-    <value>Linkshell [5]</value>
-  </data>
-  <data name="ChatType_Linkshell6" xml:space="preserve">
-    <value>Linkshell [6]</value>
-  </data>
-  <data name="ChatType_Linkshell7" xml:space="preserve">
-    <value>Linkshell [7]</value>
-  </data>
-  <data name="ChatType_Linkshell8" xml:space="preserve">
-    <value>Linkshell [8]</value>
-  </data>
-  <data name="ChatType_FreeCompany" xml:space="preserve">
-    <value>Free Company</value>
-  </data>
-  <data name="ChatType_NoviceNetwork" xml:space="preserve">
-    <value>Novice Network</value>
-  </data>
-  <data name="ChatType_CustomEmotes" xml:space="preserve">
-    <value>Eigen Handeling</value>
-  </data>
-  <data name="ChatType_StandardEmotes" xml:space="preserve">
-    <value>Standaard Handeling</value>
-  </data>
-  <data name="ChatType_Yell" xml:space="preserve">
-    <value>Roep</value>
-  </data>
-  <data name="ChatType_CrossWorldParty" xml:space="preserve">
-    <value>Wereldoverschrijdende Groep</value>
-  </data>
-  <data name="ChatType_PvpTeam" xml:space="preserve">
-    <value>PvP Team</value>
-  </data>
-  <data name="ChatType_CrossLinkshell1" xml:space="preserve">
-    <value>Wereldoverschrijdende Linkshell [1]</value>
-  </data>
-  <data name="ChatType_CrossLinkshell2" xml:space="preserve">
-    <value>Wereldoverschrijdende Linkshell [2]</value>
-  </data>
-  <data name="ChatType_CrossLinkshell3" xml:space="preserve">
-    <value>Wereldoverschrijdende Linkshell [3]</value>
-  </data>
-  <data name="ChatType_CrossLinkshell4" xml:space="preserve">
-    <value>Wereldoverschrijdende Linkshell [4]</value>
-  </data>
-  <data name="ChatType_CrossLinkshell5" xml:space="preserve">
-    <value>Wereldoverschrijdende Linkshell [5]</value>
-  </data>
-  <data name="ChatType_CrossLinkshell6" xml:space="preserve">
-    <value>Wereldoverschrijdende Linkshell [6]</value>
-  </data>
-  <data name="ChatType_CrossLinkshell7" xml:space="preserve">
-    <value>Wereldoverschrijdende Linkshell [7]</value>
-  </data>
-  <data name="ChatType_CrossLinkshell8" xml:space="preserve">
-    <value>Wereldoverschrijdende Linkshell [8]</value>
-  </data>
-  <data name="ChatType_Damage" xml:space="preserve">
-    <value>Uitgedeelde schade</value>
-  </data>
-  <data name="ChatType_Miss" xml:space="preserve">
-    <value>Mislukte aanvallen</value>
-  </data>
-  <data name="ChatType_Action" xml:space="preserve">
-    <value>Gebruikte acties</value>
-  </data>
-  <data name="ChatType_Item" xml:space="preserve">
-    <value>Gebruikte items</value>
-  </data>
-  <data name="ChatType_Healing" xml:space="preserve">
-    <value>Genezing</value>
-  </data>
-  <data name="ChatType_GainBuff" xml:space="preserve">
-    <value>Begunstigde effecten toegekend</value>
-  </data>
-  <data name="ChatType_GainDebuff" xml:space="preserve">
-    <value>Detrimentele effecten aangebracht</value>
-  </data>
-  <data name="ChatType_LoseBuff" xml:space="preserve">
-    <value>Begunstigde effecten verloren</value>
-  </data>
-  <data name="ChatType_LoseDebuff" xml:space="preserve">
-    <value>Detrimentale effecten genezen</value>
-  </data>
-  <data name="ChatType_Alarm" xml:space="preserve">
-    <value>Alarm notificaties</value>
-  </data>
-  <data name="ChatType_Echo" xml:space="preserve">
-    <value>Echo</value>
-  </data>
-  <data name="ChatType_System" xml:space="preserve">
-    <value>Systeemberichten</value>
-  </data>
-  <data name="ChatType_BattleSystem" xml:space="preserve">
-    <value>Gevechtssysteem berichten</value>
-  </data>
-  <data name="ChatType_GatheringSystem" xml:space="preserve">
-    <value>Verzamelsysteem berichten</value>
-  </data>
-  <data name="ChatType_Error" xml:space="preserve">
-    <value>Foutmeldingen</value>
-  </data>
-  <data name="ChatType_NpcDialogue" xml:space="preserve">
-    <value>NPC Dialoog</value>
-  </data>
-  <data name="ChatType_LootNotice" xml:space="preserve">
-    <value>Buit meldingen</value>
-  </data>
-  <data name="ChatType_Progress" xml:space="preserve">
-    <value>Voortgangs berichten</value>
-  </data>
-  <data name="ChatType_LootRoll" xml:space="preserve">
-    <value>Buit Berichten</value>
-  </data>
-  <data name="ChatType_Crafting" xml:space="preserve">
-    <value>Synthese Berichten</value>
-  </data>
-  <data name="ChatType_Gathering" xml:space="preserve">
-    <value>Verzamel berichten</value>
-  </data>
-  <data name="ChatType_NpcAnnouncement" xml:space="preserve">
-    <value>NPC Dialoog (Mededelingen)</value>
-  </data>
-  <data name="ChatType_FreeCompanyAnnouncement" xml:space="preserve">
-    <value>Free Company Mededelingen</value>
-  </data>
-  <data name="ChatType_FreeCompanyLoginLogout" xml:space="preserve">
-    <value>Free Company Lid Inlog Notificaties</value>
-  </data>
-  <data name="ChatType_RetainerSale" xml:space="preserve">
-    <value>Bediende Verkoop Notificaties</value>
-  </data>
-  <data name="ChatType_PeriodicRecruitmentNotification" xml:space="preserve">
-    <value>Periodieke Werving Meldingen</value>
-  </data>
-  <data name="ChatType_Sign" xml:space="preserve">
-    <value>Merkteken Berichten voor PC-objecten</value>
-  </data>
-  <data name="ChatType_RandomNumber" xml:space="preserve">
-    <value>Willekeurig Nummer Berichten</value>
-  </data>
-  <data name="ChatType_NoviceNetworkSystem" xml:space="preserve">
-    <value>Novice Network Mededelingen</value>
-  </data>
-  <data name="ChatType_Orchestrion" xml:space="preserve">
-    <value>Huidige Orchestrion Nummer Berichten</value>
-  </data>
-  <data name="ChatType_PvpTeamAnnouncement" xml:space="preserve">
-    <value>PvP Team Mededelingen</value>
-  </data>
-  <data name="ChatType_PvpTeamLoginLogout" xml:space="preserve">
-    <value>PvP Team Lid Inlog Meldingen</value>
-  </data>
-  <data name="ChatType_MessageBook" xml:space="preserve">
-    <value>Berichtenboek Melding</value>
-  </data>
-  <data name="ChatType_GmTell" xml:space="preserve">
-    <value>Vertel (GM)</value>
-  </data>
-  <data name="ChatType_GmSay" xml:space="preserve">
-    <value>Zeg (GM)</value>
-  </data>
-  <data name="ChatType_GmShout" xml:space="preserve">
-    <value>Schreeuw (GM)</value>
-  </data>
-  <data name="ChatType_GmYell" xml:space="preserve">
-    <value>Roep (GM)</value>
-  </data>
-  <data name="ChatType_GmParty" xml:space="preserve">
-    <value>Groep (GM)</value>
-  </data>
-  <data name="ChatType_GmFreeCompany" xml:space="preserve">
-    <value>Free Company (GM)</value>
-  </data>
-  <data name="ChatType_GmLinkshell1" xml:space="preserve">
-    <value>Linkshell [1] (GM)</value>
-  </data>
-  <data name="ChatType_GmLinkshell2" xml:space="preserve">
-    <value>Linkshell [2] (GM)</value>
-  </data>
-  <data name="ChatType_GmLinkshell3" xml:space="preserve">
-    <value>Linkshell [3] (GM)</value>
-  </data>
-  <data name="ChatType_GmLinkshell4" xml:space="preserve">
-    <value>Linkshell [4] (GM)</value>
-  </data>
-  <data name="ChatType_GmLinkshell5" xml:space="preserve">
-    <value>Linkshell [5] (GM)</value>
-  </data>
-  <data name="ChatType_GmLinkshell6" xml:space="preserve">
-    <value>Linkshell [6] (GM)</value>
-  </data>
-  <data name="ChatType_GmLinkshell7" xml:space="preserve">
-    <value>Linkshell [7] (GM)</value>
-  </data>
-  <data name="ChatType_GmLinkshell8" xml:space="preserve">
-    <value>Linkshell [8] (GM)</value>
-  </data>
-  <data name="ChatType_GmNoviceNetwork" xml:space="preserve">
-    <value>Novice Network (GM)</value>
-  </data>
+    <data name="Options_Display_Tab" xml:space="preserve">
+        <value>Weergave</value>
+    </data>
+    <data name="Options_ChatColours_Tab" xml:space="preserve">
+        <value>Chat kleuren</value>
+    </data>
+    <data name="Options_ChatColours_Reset" xml:space="preserve">
+        <value>Standaardinstellingen herstellen</value>
+    </data>
+    <data name="Options_ChatColours_Import" xml:space="preserve">
+        <value>Uit spel importeren</value>
+    </data>
+    <data name="Options_Tabs_Tab" xml:space="preserve">
+        <value>Tabbladen</value>
+    </data>
+    <data name="Options_Tabs_Add" xml:space="preserve">
+        <value>Voeg toe</value>
+    </data>
+    <data name="Options_Tabs_Delete" xml:space="preserve">
+        <value>Verwijder</value>
+    </data>
+    <data name="Options_Tabs_MoveUp" xml:space="preserve">
+        <value>Verplaats naar boven</value>
+    </data>
+    <data name="Options_Tabs_MoveDown" xml:space="preserve">
+        <value>Verplaats naar beneden</value>
+    </data>
+    <data name="Options_Tabs_Name" xml:space="preserve">
+        <value>Naam</value>
+    </data>
+    <data name="Options_Tabs_ShowTimestamps" xml:space="preserve">
+        <value>Tijdsaanduiding weergeven</value>
+    </data>
+    <data name="Options_Tabs_UnreadMode" xml:space="preserve">
+        <value>Ongelezen modus</value>
+    </data>
+    <data name="Options_Tabs_NoInputChannel" xml:space="preserve">
+        <value>&lt;Geen&gt;</value>
+    </data>
+    <data name="Options_Tabs_InputChannel" xml:space="preserve">
+        <value>Chat kanaal</value>
+    </data>
+    <data name="Options_Tabs_Channels" xml:space="preserve">
+        <value>Kanalen</value>
+    </data>
+    <data name="UnreadMode_All_Tooltip" xml:space="preserve">
+        <value>Altijd ongelezen indicatoren tonen.</value>
+    </data>
+    <data name="UnreadMode_Unseen_Tooltip" xml:space="preserve">
+        <value>Toon alleen ongelezen indicatoren voor berichten die je nog niet hebt gezien.</value>
+    </data>
+    <data name="UnreadMode_None_Tooltip" xml:space="preserve">
+        <value>Toon nooit ongelezen indicatoren.</value>
+    </data>
+    <data name="Tab_DefaultName" xml:space="preserve">
+        <value>Nieuw Tabblad</value>
+    </data>
+    <data name="Settings_Kofi" xml:space="preserve">
+        <value>Ondersteun {0} op Ko-fi</value>
+    </data>
+    <data name="Settings_SaveAndClose" xml:space="preserve">
+        <value>Opslaan en afsluiten</value>
+    </data>
+    <data name="Settings_Save" xml:space="preserve">
+        <value>Opslaan</value>
+    </data>
+    <data name="Settings_Discard" xml:space="preserve">
+        <value>Annuleren</value>
+    </data>
+    <data name="Settings_Title" xml:space="preserve">
+        <value>{0} Instellingen</value>
+    </data>
+    <data name="ChatLog_SwitcherDisabled" xml:space="preserve">
+        <value>Uitgeschakeld voor dit tabblad.</value>
+    </data>
+    <data name="ChatLog_HideChat" xml:space="preserve">
+        <value>Verberg chat</value>
+    </data>
+    <data name="ChatLog_Tabs_MoveUp" xml:space="preserve">
+        <value>Verplaats naar boven</value>
+    </data>
+    <data name="ChatLog_Tabs_MoveLeft" xml:space="preserve">
+        <value>Verplaats naar links</value>
+    </data>
+    <data name="ChatLog_Tabs_MoveDown" xml:space="preserve">
+        <value>Verplaats naar beneden</value>
+    </data>
+    <data name="ChatLog_Tabs_MoveRight" xml:space="preserve">
+        <value>Verplaats naar rechts</value>
+    </data>
+    <data name="Options_Tabs_ChannelTypes_Chat" xml:space="preserve">
+        <value>Chat</value>
+    </data>
+    <data name="Options_Tabs_ChannelTypes_Battle" xml:space="preserve">
+        <value>Gevecht</value>
+    </data>
+    <data name="Options_Tabs_ChannelTypes_Announcements" xml:space="preserve">
+        <value>Mededelingen</value>
+    </data>
+    <data name="UnreadMode_All" xml:space="preserve">
+        <value>Alles</value>
+    </data>
+    <data name="UnreadMode_Unseen" xml:space="preserve">
+        <value>Nieuw</value>
+    </data>
+    <data name="UnreadMode_None" xml:space="preserve">
+        <value>Geen</value>
+    </data>
+    <data name="ChatSource_Self" xml:space="preserve">
+        <value>Zelf</value>
+    </data>
+    <data name="ChatSource_PartyMember" xml:space="preserve">
+        <value>Groep Lid</value>
+    </data>
+    <data name="ChatSource_AllianceMember" xml:space="preserve">
+        <value>Alliantie Lid</value>
+    </data>
+    <data name="ChatSource_Other" xml:space="preserve">
+        <value>Andere</value>
+    </data>
+    <data name="ChatSource_EngagedEnemy" xml:space="preserve">
+        <value>Engaged Vijand</value>
+    </data>
+    <data name="ChatSource_UnengagedEnemy" xml:space="preserve">
+        <value>Unengaged Vijand</value>
+    </data>
+    <data name="ChatSource_FriendlyNpc" xml:space="preserve">
+        <value>Vriendelijke NPC</value>
+    </data>
+    <data name="ChatSource_SelfPet" xml:space="preserve">
+        <value>Kameraad (Zelf)</value>
+    </data>
+    <data name="ChatSource_PartyPet" xml:space="preserve">
+        <value>Kameraad (groep)</value>
+    </data>
+    <data name="ChatSource_AlliancePet" xml:space="preserve">
+        <value>Kameraad (Alliantielid)</value>
+    </data>
+    <data name="ChatSource_OtherPet" xml:space="preserve">
+        <value>Kameraad (Andere)</value>
+    </data>
+    <data name="Options_Font_Name" xml:space="preserve">
+        <value>Lettertype</value>
+    </data>
+    <data name="Options_JapaneseFont_Name" xml:space="preserve">
+        <value>Japanse lettertype</value>
+    </data>
+    <data name="Options_Font_Description" xml:space="preserve">
+        <value>Het lettertype {0} gebruikt om niet-Japanse tekst weer te geven.</value>
+    </data>
+    <data name="Options_Font_Warning" xml:space="preserve">
+        <value>Het gebruik van bepaalde systeemlettertypen kan je spel crashen. Je bent gewaarschuwd.</value>
+    </data>
+    <data name="Options_JapaneseFont_Description" xml:space="preserve">
+        <value>Het lettertype {0} gebruikt om Japanse tekst weer te geven.</value>
+    </data>
+    <data name="Options_Tabs_ChannelTypes_Special" xml:space="preserve">
+        <value>Speciaal</value>
+    </data>
+    <data name="Options_Fonts_Tab" xml:space="preserve">
+        <value>Lettertypen</value>
+    </data>
+    <data name="Options_SymbolsFontSize_Name" xml:space="preserve">
+        <value>Symbolen lettergrootte</value>
+    </data>
+    <data name="Options_JapaneseFontSize_Name" xml:space="preserve">
+        <value>Japanse lettergrootte</value>
+    </data>
+    <data name="Options_SymbolsFontSize_Description" xml:space="preserve">
+        <value>De lettergrootte om te gebruiken voor spelsymbolen.</value>
+    </data>
+    <data name="ChatLog_Tabs_Delete" xml:space="preserve">
+        <value>Verwijder tabblad</value>
+    </data>
+    <data name="Options_HideWhenNotLoggedIn_Name" xml:space="preserve">
+        <value>Verberg wanneer niet ingelogd</value>
+    </data>
+    <data name="Options_HideWhenNotLoggedIn_Description" xml:space="preserve">
+        <value>Verberg {0} wanneer je niet bent ingelogd op een karakter.</value>
+    </data>
+    <data name="Tabs_Presets_General" xml:space="preserve">
+        <value>Algemeen</value>
+    </data>
+    <data name="Options_Tabs_Preset" xml:space="preserve">
+        <value>Preset: {0}</value>
+    </data>
+    <data name="Tabs_Presets_Event" xml:space="preserve">
+        <value>Event</value>
+    </data>
+    <data name="Options_Tabs_NewTab" xml:space="preserve">
+        <value>Nieuw Tabblad</value>
+    </data>
+    <data name="Options_About_Tab" xml:space="preserve">
+        <value>Over</value>
+    </data>
+    <data name="Options_About_Opening" xml:space="preserve">
+        <value>{0} is een project om de in-game chat volledig opnieuw te maken en nog beter te maken.</value>
+    </data>
+    <data name="Options_About_ClickUp" xml:space="preserve">
+        <value>Klik op de knop links om te zien waar aan gewerkt wordt en wat er daarna komt.</value>
+    </data>
+    <data name="Options_About_CrowdIn" xml:space="preserve">
+        <value>Klik op de knop links om {0} te helpen vertalen.</value>
+    </data>
+    <data name="Options_About_Translators" xml:space="preserve">
+        <value>Vertalers</value>
+    </data>
+    <data name="CommandHelpSide_None" xml:space="preserve">
+        <value>Geen</value>
+    </data>
+    <data name="CommandHelpSide_Left" xml:space="preserve">
+        <value>Links</value>
+    </data>
+    <data name="CommandHelpSide_Right" xml:space="preserve">
+        <value>Rechts</value>
+    </data>
+    <data name="Options_CommandHelpSide_Name" xml:space="preserve">
+        <value>Commando hulp zijde</value>
+    </data>
+    <data name="Options_CommandHelpSide_Description" xml:space="preserve">
+        <value>De zijde van {0} om hulp weer te geven voor commando's.</value>
+    </data>
+    <data name="Options_HideWhenUiHidden_Name" xml:space="preserve">
+        <value>Verberg als spel-UI is verborgen</value>
+    </data>
+    <data name="Options_HideWhenUiHidden_Description" xml:space="preserve">
+        <value>Verberg {0} wanneer de spel-UI is verborgen.</value>
+    </data>
+    <data name="Options_KeybindMode_Name" xml:space="preserve">
+        <value>Sneltoets modus</value>
+    </data>
+    <data name="Options_KeybindMode_Description" xml:space="preserve">
+        <value>De manier waarop {0} sneltoetsen moet behandelen.</value>
+    </data>
+    <data name="Options_Miscellaneous_Tab" xml:space="preserve">
+        <value>Overig</value>
+    </data>
+    <data name="LanguageOverride_None" xml:space="preserve">
+        <value>Gebruik de standaard taal van Dalamud</value>
+    </data>
+    <data name="KeybindMode_Flexible_Name" xml:space="preserve">
+        <value>Flexibel</value>
+    </data>
+    <data name="KeybindMode_Strict_Name" xml:space="preserve">
+        <value>Strikt</value>
+    </data>
+    <data name="KeybindMode_Flexible_Tooltip" xml:space="preserve">
+        <value>Verwerk sneltoetsen met speciale toetsen, ook al zijn andere speciale toetsen ingedrukt.</value>
+    </data>
+    <data name="KeybindMode_Strict_Tooltip" xml:space="preserve">
+        <value>Verwerk alleen sneltoetsen met speciale toetsen alleen als er geen andere speciale toetsen worden ingedrukt.</value>
+    </data>
+    <data name="Options_Language_Name" xml:space="preserve">
+        <value>Taal</value>
+    </data>
+    <data name="Options_Language_Description" xml:space="preserve">
+        <value>De taal waarin {0} wordt weergegeven.</value>
+    </data>
+    <data name="Options_DatabaseBattleMessages_Name" xml:space="preserve">
+        <value>Sla gevechtsberichten op in database</value>
+    </data>
+    <data name="Options_DatabaseBattleMessages_Description" xml:space="preserve">
+        <value>Als gevechtsberichten worden opgeslagen in de database, zal de grootte van de database veel sneller groeien, en er zal een merkbare bevriezing zijn bij het opslaan van de instellingen. Het is aan te raden om dit uit te schakelen.</value>
+    </data>
+    <data name="Options_LoadPreviousSession_Name" xml:space="preserve">
+        <value>Toon vorige chatsessie bij inloggen</value>
+    </data>
+    <data name="Options_LoadPreviousSession_Description" xml:space="preserve">
+        <value>Nadat je bent ingelogd, vul de chat met de berichten van wanneer je voor het laatst bent uitgelogd.</value>
+    </data>
+    <data name="Options_Database_Tab" xml:space="preserve">
+        <value>Database</value>
+    </data>
+    <data name="Options_FilterIncludePreviousSessions_Name" xml:space="preserve">
+        <value>Eerdere sessies opnemen bij het vullen van tabbladen</value>
+    </data>
+    <data name="Options_FilterIncludePreviousSessions_Description" xml:space="preserve">
+        <value>Berichten van voordat het spel werd gelanceerd opnemen bij het vullen van tabbladen. Tabbladen worden gevuld wanneer de instellingen worden opgeslagen.</value>
+    </data>
+    <data name="Options_Database_Advanced_Warning" xml:space="preserve">
+        <value>Klik niet op deze knoppen tenzij je weet wat je aan het doen bent.</value>
+    </data>
+    <data name="Options_Database_Advanced" xml:space="preserve">
+        <value>Geavanceerd</value>
+    </data>
+    <data name="Options_SharedMode_Name" xml:space="preserve">
+        <value>Modus voor meerdere vensters inschakelen</value>
+    </data>
+    <data name="Options_SharedMode_Description" xml:space="preserve">
+        <value>Meerdere vensters toestaan om {0} tegelijkertijd uit te voeren en dezelfde database te delen.</value>
+    </data>
+    <data name="Options_SharedMode_Warning" xml:space="preserve">
+        <value>Deze optie wordt niet aanbevolen. Er wordt geen ondersteuning aangeboden als je deze optie inschakelt. Deze optie is schadelijk voor de snelheid van {0}.</value>
+    </data>
+    <data name="ChatLog_Tabs_PopOut" xml:space="preserve">
+        <value>Uitvouwen</value>
+    </data>
+    <data name="Options_HideSameTimestamps_Name" xml:space="preserve">
+        <value>Verberg tijdstempels wanneer overbodig</value>
+    </data>
+    <data name="Options_HideSameTimestamps_Description" xml:space="preserve">
+        <value>Verberg tijdstempels wanneer vorige berichten dezelfde tijdstempel hebben.</value>
+    </data>
+    <data name="Options_ShowPopOutTitleBar_Name" xml:space="preserve">
+        <value>Titelbalk voor uitgevouwen tabbladen weergeven</value>
+    </data>
+    <data name="Options_Tabs_PopOut" xml:space="preserve">
+        <value>In apart venster weergeven</value>
+    </data>
+    <data name="Options_Tabs_IndependentOpacity" xml:space="preserve">
+        <value>Gebruik andere doorzichtigheid dan het hoofdvenster</value>
+    </data>
+    <data name="Options_Tabs_Opacity" xml:space="preserve">
+        <value>Doorzichtigheid</value>
+    </data>
+    <data name="Options_FontsEnabled" xml:space="preserve">
+        <value>Aangepaste lettertypen inschakelen</value>
+    </data>
+    <data name="AutoTranslate_Search_Hint" xml:space="preserve">
+        <value>Automatische vertaling zoeken...</value>
+    </data>
+    <data name="Options_SortAutoTranslate_Name" xml:space="preserve">
+        <value>Sorteer de lijst met automatische vertalingen</value>
+    </data>
+    <data name="Options_SortAutoTranslate_Description" xml:space="preserve">
+        <value>Als dit is ingeschakeld, zal de Automatisch Vertalingen lijst alfabetisch worden gesorteerd.</value>
+    </data>
+    <data name="AutoTranslate_Completion_Key" xml:space="preserve">
+        <value>Ctrl + {0}</value>
+    </data>
+    <data name="Options_ExtraGlyphs_Name" xml:space="preserve">
+        <value>Extra lettertype tekens</value>
+    </data>
+    <data name="Options_ExtraGlyphs_Description" xml:space="preserve">
+        <value>Extra tekens kunnen worden toegevoegd aan het algemene lettertype van {0} door de onderstaande selectievakjes in te schakelen. Dit vereist waarschijnlijk een verhoging van de atlas lettertype grootte van Dalamud.</value>
+    </data>
+    <data name="ExtraGlyphRanges_ChineseFull_Name" xml:space="preserve">
+        <value>Chinees (volledig)</value>
+    </data>
+    <data name="ExtraGlyphRanges_ChineseSimplifiedCommon_Name" xml:space="preserve">
+        <value>Chinees (vereenvoudigd)</value>
+    </data>
+    <data name="ExtraGlyphRanges_Cyrillic_Name" xml:space="preserve">
+        <value>Cyrillisch</value>
+    </data>
+    <data name="ExtraGlyphRanges_Japanese_Name" xml:space="preserve">
+        <value>Japans</value>
+    </data>
+    <data name="ExtraGlyphRanges_Korean_Name" xml:space="preserve">
+        <value>Koreaans</value>
+    </data>
+    <data name="ExtraGlyphRanges_Thai_Name" xml:space="preserve">
+        <value>Thais</value>
+    </data>
+    <data name="ExtraGlyphRanges_Vietnamese_Name" xml:space="preserve">
+        <value>Vietnamees</value>
+    </data>
+    <data name="Context_Integrations" xml:space="preserve">
+        <value>Integraties</value>
+    </data>
+    <data name="Context_ScreenshotMode" xml:space="preserve">
+        <value>Schermafbeelding modus</value>
+    </data>
+    <data name="Context_HideChat" xml:space="preserve">
+        <value>Verberg chat</value>
+    </data>
+    <data name="Context_Copy" xml:space="preserve">
+        <value>Kopiëer</value>
+    </data>
+    <data name="Context_TryOn" xml:space="preserve">
+        <value>Probeer Aan</value>
+    </data>
+    <data name="Context_ItemComparison" xml:space="preserve">
+        <value>Item Vergelijken</value>
+    </data>
+    <data name="Context_SearchRecipes" xml:space="preserve">
+        <value>Zoek Recepten die dit materiaal gebruiken</value>
+    </data>
+    <data name="Context_SearchForItem" xml:space="preserve">
+        <value>Zoek naar Item</value>
+    </data>
+    <data name="Context_Link" xml:space="preserve">
+        <value>Geef Door</value>
+    </data>
+    <data name="Context_CopyItemName" xml:space="preserve">
+        <value>Item naam kopiëren</value>
+    </data>
+    <data name="Context_SendTell" xml:space="preserve">
+        <value>Stuur Vertel</value>
+    </data>
+    <data name="Context_InviteToParty" xml:space="preserve">
+        <value>Stuur Groepsuitnodiging</value>
+    </data>
+    <data name="Context_InviteToParty_SameWorld" xml:space="preserve">
+        <value>Dezelfde wereld</value>
+    </data>
+    <data name="Context_InviteToParty_DifferentWorld" xml:space="preserve">
+        <value>Andere wereld</value>
+    </data>
+    <data name="Context_Promote" xml:space="preserve">
+        <value>Promoveren</value>
+    </data>
+    <data name="Context_KickFromParty" xml:space="preserve">
+        <value>Uit Groep zetten</value>
+    </data>
+    <data name="Context_SendFriendRequest" xml:space="preserve">
+        <value>Verstuur een vriendschapsverzoek</value>
+    </data>
+    <data name="Context_AddToBlacklist" xml:space="preserve">
+        <value>Voeg toe aan zwarte lijst</value>
+    </data>
+    <data name="Context_InviteToNoviceNetwork" xml:space="preserve">
+        <value>Nodig uit voor Novice Network</value>
+    </data>
+    <data name="Context_ReplyInSelectedChatMode" xml:space="preserve">
+        <value>Beantwoord in geselecteerde chatmodus</value>
+    </data>
+    <data name="Context_Target" xml:space="preserve">
+        <value>Selecteer</value>
+    </data>
+    <data name="ChatType_Debug" xml:space="preserve">
+        <value>Debug</value>
+    </data>
+    <data name="ChatType_Urgent" xml:space="preserve">
+        <value>Dringend</value>
+    </data>
+    <data name="ChatType_Notice" xml:space="preserve">
+        <value>Melding</value>
+    </data>
+    <data name="ChatType_Say" xml:space="preserve">
+        <value>Zeg</value>
+    </data>
+    <data name="ChatType_Shout" xml:space="preserve">
+        <value>Schreeuw</value>
+    </data>
+    <data name="ChatType_TellOutgoing" xml:space="preserve">
+        <value>Vertel (Vertrekkend)</value>
+    </data>
+    <data name="ChatType_TellIncoming" xml:space="preserve">
+        <value>Vertel (Inkomend)</value>
+    </data>
+    <data name="ChatType_Party" xml:space="preserve">
+        <value>Groep</value>
+    </data>
+    <data name="ChatType_Alliance" xml:space="preserve">
+        <value>Alliantie</value>
+    </data>
+    <data name="ChatType_Linkshell1" xml:space="preserve">
+        <value>Linkshell [1]</value>
+    </data>
+    <data name="ChatType_Linkshell2" xml:space="preserve">
+        <value>Linkshell [2]</value>
+    </data>
+    <data name="ChatType_Linkshell3" xml:space="preserve">
+        <value>Linkshell [3]</value>
+    </data>
+    <data name="ChatType_Linkshell4" xml:space="preserve">
+        <value>Linkshell [4]</value>
+    </data>
+    <data name="ChatType_Linkshell5" xml:space="preserve">
+        <value>Linkshell [5]</value>
+    </data>
+    <data name="ChatType_Linkshell6" xml:space="preserve">
+        <value>Linkshell [6]</value>
+    </data>
+    <data name="ChatType_Linkshell7" xml:space="preserve">
+        <value>Linkshell [7]</value>
+    </data>
+    <data name="ChatType_Linkshell8" xml:space="preserve">
+        <value>Linkshell [8]</value>
+    </data>
+    <data name="ChatType_FreeCompany" xml:space="preserve">
+        <value>Free Company</value>
+    </data>
+    <data name="ChatType_NoviceNetwork" xml:space="preserve">
+        <value>Novice Network</value>
+    </data>
+    <data name="ChatType_CustomEmotes" xml:space="preserve">
+        <value>Eigen Handeling</value>
+    </data>
+    <data name="ChatType_StandardEmotes" xml:space="preserve">
+        <value>Standaard Handeling</value>
+    </data>
+    <data name="ChatType_Yell" xml:space="preserve">
+        <value>Roep</value>
+    </data>
+    <data name="ChatType_CrossWorldParty" xml:space="preserve">
+        <value>Wereldoverschrijdende Groep</value>
+    </data>
+    <data name="ChatType_PvpTeam" xml:space="preserve">
+        <value>PvP Team</value>
+    </data>
+    <data name="ChatType_CrossLinkshell1" xml:space="preserve">
+        <value>Wereldoverschrijdende Linkshell [1]</value>
+    </data>
+    <data name="ChatType_CrossLinkshell2" xml:space="preserve">
+        <value>Wereldoverschrijdende Linkshell [2]</value>
+    </data>
+    <data name="ChatType_CrossLinkshell3" xml:space="preserve">
+        <value>Wereldoverschrijdende Linkshell [3]</value>
+    </data>
+    <data name="ChatType_CrossLinkshell4" xml:space="preserve">
+        <value>Wereldoverschrijdende Linkshell [4]</value>
+    </data>
+    <data name="ChatType_CrossLinkshell5" xml:space="preserve">
+        <value>Wereldoverschrijdende Linkshell [5]</value>
+    </data>
+    <data name="ChatType_CrossLinkshell6" xml:space="preserve">
+        <value>Wereldoverschrijdende Linkshell [6]</value>
+    </data>
+    <data name="ChatType_CrossLinkshell7" xml:space="preserve">
+        <value>Wereldoverschrijdende Linkshell [7]</value>
+    </data>
+    <data name="ChatType_CrossLinkshell8" xml:space="preserve">
+        <value>Wereldoverschrijdende Linkshell [8]</value>
+    </data>
+    <data name="ChatType_Damage" xml:space="preserve">
+        <value>Uitgedeelde schade</value>
+    </data>
+    <data name="ChatType_Miss" xml:space="preserve">
+        <value>Mislukte aanvallen</value>
+    </data>
+    <data name="ChatType_Action" xml:space="preserve">
+        <value>Gebruikte acties</value>
+    </data>
+    <data name="ChatType_Item" xml:space="preserve">
+        <value>Gebruikte items</value>
+    </data>
+    <data name="ChatType_Healing" xml:space="preserve">
+        <value>Genezing</value>
+    </data>
+    <data name="ChatType_GainBuff" xml:space="preserve">
+        <value>Begunstigde effecten toegekend</value>
+    </data>
+    <data name="ChatType_GainDebuff" xml:space="preserve">
+        <value>Detrimentele effecten aangebracht</value>
+    </data>
+    <data name="ChatType_LoseBuff" xml:space="preserve">
+        <value>Begunstigde effecten verloren</value>
+    </data>
+    <data name="ChatType_LoseDebuff" xml:space="preserve">
+        <value>Detrimentale effecten genezen</value>
+    </data>
+    <data name="ChatType_Alarm" xml:space="preserve">
+        <value>Alarm notificaties</value>
+    </data>
+    <data name="ChatType_Echo" xml:space="preserve">
+        <value>Echo</value>
+    </data>
+    <data name="ChatType_System" xml:space="preserve">
+        <value>Systeemberichten</value>
+    </data>
+    <data name="ChatType_BattleSystem" xml:space="preserve">
+        <value>Gevechtssysteem berichten</value>
+    </data>
+    <data name="ChatType_GatheringSystem" xml:space="preserve">
+        <value>Verzamelsysteem berichten</value>
+    </data>
+    <data name="ChatType_Error" xml:space="preserve">
+        <value>Foutmeldingen</value>
+    </data>
+    <data name="ChatType_NpcDialogue" xml:space="preserve">
+        <value>NPC Dialoog</value>
+    </data>
+    <data name="ChatType_LootNotice" xml:space="preserve">
+        <value>Buit meldingen</value>
+    </data>
+    <data name="ChatType_Progress" xml:space="preserve">
+        <value>Voortgangs berichten</value>
+    </data>
+    <data name="ChatType_LootRoll" xml:space="preserve">
+        <value>Buit Berichten</value>
+    </data>
+    <data name="ChatType_Crafting" xml:space="preserve">
+        <value>Synthese Berichten</value>
+    </data>
+    <data name="ChatType_Gathering" xml:space="preserve">
+        <value>Verzamel berichten</value>
+    </data>
+    <data name="ChatType_NpcAnnouncement" xml:space="preserve">
+        <value>NPC Dialoog (Mededelingen)</value>
+    </data>
+    <data name="ChatType_FreeCompanyAnnouncement" xml:space="preserve">
+        <value>Free Company Mededelingen</value>
+    </data>
+    <data name="ChatType_FreeCompanyLoginLogout" xml:space="preserve">
+        <value>Free Company Lid Inlog Notificaties</value>
+    </data>
+    <data name="ChatType_RetainerSale" xml:space="preserve">
+        <value>Bediende Verkoop Notificaties</value>
+    </data>
+    <data name="ChatType_PeriodicRecruitmentNotification" xml:space="preserve">
+        <value>Periodieke Werving Meldingen</value>
+    </data>
+    <data name="ChatType_Sign" xml:space="preserve">
+        <value>Merkteken Berichten voor PC-objecten</value>
+    </data>
+    <data name="ChatType_RandomNumber" xml:space="preserve">
+        <value>Willekeurig Nummer Berichten</value>
+    </data>
+    <data name="ChatType_NoviceNetworkSystem" xml:space="preserve">
+        <value>Novice Network Mededelingen</value>
+    </data>
+    <data name="ChatType_Orchestrion" xml:space="preserve">
+        <value>Huidige Orchestrion Nummer Berichten</value>
+    </data>
+    <data name="ChatType_PvpTeamAnnouncement" xml:space="preserve">
+        <value>PvP Team Mededelingen</value>
+    </data>
+    <data name="ChatType_PvpTeamLoginLogout" xml:space="preserve">
+        <value>PvP Team Lid Inlog Meldingen</value>
+    </data>
+    <data name="ChatType_MessageBook" xml:space="preserve">
+        <value>Berichtenboek Melding</value>
+    </data>
+    <data name="ChatType_GmTell" xml:space="preserve">
+        <value>Vertel (GM)</value>
+    </data>
+    <data name="ChatType_GmSay" xml:space="preserve">
+        <value>Zeg (GM)</value>
+    </data>
+    <data name="ChatType_GmShout" xml:space="preserve">
+        <value>Schreeuw (GM)</value>
+    </data>
+    <data name="ChatType_GmYell" xml:space="preserve">
+        <value>Roep (GM)</value>
+    </data>
+    <data name="ChatType_GmParty" xml:space="preserve">
+        <value>Groep (GM)</value>
+    </data>
+    <data name="ChatType_GmFreeCompany" xml:space="preserve">
+        <value>Free Company (GM)</value>
+    </data>
+    <data name="ChatType_GmLinkshell1" xml:space="preserve">
+        <value>Linkshell [1] (GM)</value>
+    </data>
+    <data name="ChatType_GmLinkshell2" xml:space="preserve">
+        <value>Linkshell [2] (GM)</value>
+    </data>
+    <data name="ChatType_GmLinkshell3" xml:space="preserve">
+        <value>Linkshell [3] (GM)</value>
+    </data>
+    <data name="ChatType_GmLinkshell4" xml:space="preserve">
+        <value>Linkshell [4] (GM)</value>
+    </data>
+    <data name="ChatType_GmLinkshell5" xml:space="preserve">
+        <value>Linkshell [5] (GM)</value>
+    </data>
+    <data name="ChatType_GmLinkshell6" xml:space="preserve">
+        <value>Linkshell [6] (GM)</value>
+    </data>
+    <data name="ChatType_GmLinkshell7" xml:space="preserve">
+        <value>Linkshell [7] (GM)</value>
+    </data>
+    <data name="ChatType_GmLinkshell8" xml:space="preserve">
+        <value>Linkshell [8] (GM)</value>
+    </data>
+    <data name="ChatType_GmNoviceNetwork" xml:space="preserve">
+        <value>Novice Network (GM)</value>
+    </data>
+    
+    
 </root>
