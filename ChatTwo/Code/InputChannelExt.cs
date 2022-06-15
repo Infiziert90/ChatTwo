@@ -62,7 +62,7 @@ internal static class InputChannelExt {
         InputChannel.Shout => "/shout",
         InputChannel.FreeCompany => "/freecompany",
         InputChannel.PvpTeam => "/pvpteam",
-        InputChannel.NoviceNetwork => "/novice",
+        InputChannel.NoviceNetwork => "/beginner",
         InputChannel.CrossLinkshell1 => "/cwlinkshell1",
         InputChannel.CrossLinkshell2 => "/cwlinkshell2",
         InputChannel.CrossLinkshell3 => "/cwlinkshell3",
