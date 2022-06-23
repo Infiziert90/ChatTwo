@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Globalization;
+using ChatTwo.Ipc;
 using ChatTwo.Resources;
 using ChatTwo.Util;
 using Dalamud.Data;
@@ -66,6 +67,7 @@ public sealed class Plugin : IDalamudPlugin {
     internal GameFunctions.GameFunctions Functions { get; }
     internal Store Store { get; }
     internal IpcManager Ipc { get; }
+    internal ExtraChat ExtraChat { get; }
     internal PluginUi Ui { get; }
 
     internal int DeferredSaveFrames = -1;
@@ -91,6 +93,7 @@ public sealed class Plugin : IDalamudPlugin {
         this.Functions = new GameFunctions.GameFunctions(this);
         this.Store = new Store(this);
         this.Ipc = new IpcManager(this.Interface);
+        this.ExtraChat = new ExtraChat(this);
         this.Ui = new PluginUi(this);
 
         // let all the other components register, then initialise commands
@@ -111,6 +114,7 @@ public sealed class Plugin : IDalamudPlugin {
         GameFunctions.GameFunctions.SetChatInteractable(true);
 
         this.Ui.Dispose();
+        this.ExtraChat.Dispose();
         this.Ipc.Dispose();
         this.Store.Dispose();
         this.Functions.Dispose();

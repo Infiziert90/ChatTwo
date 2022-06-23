@@ -470,6 +470,8 @@ internal sealed class ChatLog : IUiComponent {
                 }
             } else if (activeTab is { Channel: { } channel }) {
                 ImGui.TextUnformatted(channel.ToChatType().Name());
+            } else if (this.Ui.Plugin.ExtraChat.ChannelOverride is { } overriden) {
+                ImGui.TextUnformatted(overriden);
             } else {
                 this.DrawChunks(this.Ui.Plugin.Functions.Chat.Channel.name);
             }
