@@ -1332,7 +1332,7 @@ internal sealed class ChatLog : IUiComponent {
                 pushed = true;
             }
 
-            if (!this.Ui.Plugin.Config.FontsEnabled && this.Ui.AxisItalic.Available) {
+            if (!this.Ui.Plugin.Config.FontsEnabled && (this.Ui.AxisItalic?.Available ?? false)) {
                 ImGui.PushFont(this.Ui.AxisItalic.ImFont);
                 pushed = true;
             }

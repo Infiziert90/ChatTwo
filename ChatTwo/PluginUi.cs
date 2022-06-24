@@ -15,8 +15,8 @@ internal sealed class PluginUi : IDisposable {
     internal bool ScreenshotMode;
     internal string Salt { get; }
 
-    internal GameFontHandle Axis { get; private set; }
-    internal GameFontHandle AxisItalic { get; private set; }
+    internal GameFontHandle? Axis { get; private set; }
+    internal GameFontHandle? AxisItalic { get; private set; }
 
     internal ImFontPtr? RegularFont { get; private set; }
     internal ImFontPtr? ItalicFont { get; private set; }
@@ -135,12 +135,12 @@ internal sealed class PluginUi : IDisposable {
 
         var font = this.RegularFont.HasValue;
         var pushed = font && this.Plugin.Config.FontsEnabled;
-        var axis = !this.Plugin.Config.FontsEnabled && this.Axis.Available;
+        var axis = !this.Plugin.Config.FontsEnabled && (this.Axis?.Available ?? false);
 
         if (pushed) {
             ImGui.PushFont(this.RegularFont!.Value);
         } else if (axis) {
-            ImGui.PushFont(this.Axis.ImFont);
+            ImGui.PushFont(this.Axis!.ImFont);
         }
 
         foreach (var component in this.Components) {
