@@ -56,7 +56,5 @@ internal sealed class ChatColours : ISettingsTab {
                 }
             }
         }
-
-        ImGui.TreePop();
     }
 }
