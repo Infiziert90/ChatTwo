@@ -5,14 +5,14 @@ namespace ChatTwo.Ipc;
 internal sealed class ExtraChat : IDisposable {
     private Plugin Plugin { get; }
 
-    private ICallGateSubscriber<string?, object> OverrideChannelGate { get; }
+    private ICallGateSubscriber<(string, ushort, uint)?, object> OverrideChannelGate { get; }
 
-    internal string? ChannelOverride { get; set; }
+    internal (string, uint)? ChannelOverride { get; set; }
 
     internal ExtraChat(Plugin plugin) {
         this.Plugin = plugin;
 
-        this.OverrideChannelGate = this.Plugin.Interface.GetIpcSubscriber<string?, object>("ExtraChat.OverrideChannel");
+        this.OverrideChannelGate = this.Plugin.Interface.GetIpcSubscriber<(string, ushort, uint)?, object>("ExtraChat.OverrideChannelColour");
 
         this.OverrideChannelGate.Subscribe(this.OnOverrideChannel);
     }
@@ -21,7 +21,12 @@ internal sealed class ExtraChat : IDisposable {
         this.OverrideChannelGate.Unsubscribe(this.OnOverrideChannel);
     }
 
-    private void OnOverrideChannel(string? channel) {
-        this.ChannelOverride = channel;
+    private void OnOverrideChannel((string, ushort, uint)? info) {
+        if (info == null) {
+            this.ChannelOverride = null;
+            return;
+        }
+
+        this.ChannelOverride = (info.Value.Item1, info.Value.Item3);
     }
 }

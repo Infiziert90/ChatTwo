@@ -470,8 +470,8 @@ internal sealed class ChatLog : IUiComponent {
                 }
             } else if (activeTab is { Channel: { } channel }) {
                 ImGui.TextUnformatted(channel.ToChatType().Name());
-            } else if (this.Ui.Plugin.ExtraChat.ChannelOverride is { } overriden) {
-                ImGui.TextUnformatted(overriden);
+            } else if (this.Ui.Plugin.ExtraChat.ChannelOverride is var (overrideName, _)) {
+                ImGui.TextUnformatted(overrideName);
             } else {
                 this.DrawChunks(this.Ui.Plugin.Functions.Chat.Channel.name);
             }
@@ -532,6 +532,10 @@ internal sealed class ChatLog : IUiComponent {
             ? inputCol
             : inputType.DefaultColour();
 
+        if (this.Ui.Plugin.ExtraChat.ChannelOverride is var (_, overrideColour)) {
+            inputColour = overrideColour;
+        }
+
         if (inputColour != null) {
             ImGui.PushStyleColor(ImGuiCol.Text, ColourUtil.RgbaToAbgr(inputColour.Value));
         }
@@ -548,7 +552,7 @@ internal sealed class ChatLog : IUiComponent {
             if (ImGui.IsKeyDown(ImGui.GetKeyIndex(ImGuiKey.Escape))) {
                 this.Chat = chatCopy;
             }
-            
+
             var enter = ImGui.IsKeyDown(ImGui.GetKeyIndex(ImGuiKey.Enter))
                         || ImGui.IsKeyDown(ImGui.GetKeyIndex(ImGuiKey.KeyPadEnter));
             if (enter) {
