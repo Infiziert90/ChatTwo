@@ -515,7 +515,8 @@ internal sealed class ChatLog : IUiComponent {
         var inputWidth = ImGui.GetContentRegionAvail().X - buttonWidth * (showNovice ? 2 : 1);
 
         var inputType = this._tempChannel?.ToChatType() ?? activeTab?.Channel?.ToChatType() ?? this.Ui.Plugin.Functions.Chat.Channel.channel.ToChatType();
-        if (this.Chat.Trim().StartsWith('/')) {
+        var isCommand = this.Chat.Trim().StartsWith('/');
+        if (isCommand) {
             var command = this.Chat.Split(' ')[0];
             if (this.TextCommandChannels.TryGetValue(command, out var channel)) {
                 inputType = channel;
@@ -532,7 +533,7 @@ internal sealed class ChatLog : IUiComponent {
             ? inputCol
             : inputType.DefaultColour();
 
-        if (this.Ui.Plugin.ExtraChat.ChannelOverride is var (_, overrideColour)) {
+        if (!isCommand && this.Ui.Plugin.ExtraChat.ChannelOverride is var (_, overrideColour)) {
             inputColour = overrideColour;
         }
 
