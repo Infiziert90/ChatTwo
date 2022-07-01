@@ -537,6 +537,10 @@ internal sealed class ChatLog : IUiComponent {
             inputColour = overrideColour;
         }
 
+        if (isCommand && this.Ui.Plugin.ExtraChat.ChannelCommandColours.TryGetValue(this.Chat.Split(' ')[0], out var ecColour)) {
+            inputColour = ecColour;
+        }
+
         if (inputColour != null) {
             ImGui.PushStyleColor(ImGuiCol.Text, ColourUtil.RgbaToAbgr(inputColour.Value));
         }
