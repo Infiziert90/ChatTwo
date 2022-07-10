@@ -424,11 +424,19 @@ internal sealed class PayloadHandler {
     }
 
     private void DrawPlayerPopup(Chunk chunk, PlayerPayload player) {
+        var world = player.World;
+
+        if (chunk.Message?.Code.Type == ChatType.FreeCompanyLoginLogout) {
+            if (this.Ui.Plugin.ClientState.LocalPlayer?.HomeWorld.GameData is { } homeWorld) {
+                world = homeWorld;
+            }
+        }
+
         var name = new List<Chunk> { new TextChunk(ChunkSource.None, null, player.PlayerName) };
-        if (player.World.IsPublic) {
+        if (world.IsPublic) {
             name.AddRange(new Chunk[] {
                 new IconChunk(ChunkSource.None, null, BitmapFontIcon.CrossWorld),
-                new TextChunk(ChunkSource.None, null, player.World.Name),
+                new TextChunk(ChunkSource.None, null, world.Name),
             });
         }
 
@@ -437,19 +445,19 @@ internal sealed class PayloadHandler {
 
         if (ImGui.Selectable(Language.Context_SendTell)) {
             this.Log.Chat = $"/tell {player.PlayerName}";
-            if (player.World.IsPublic) {
-                this.Log.Chat += $"@{player.World.Name}";
+            if (world.IsPublic) {
+                this.Log.Chat += $"@{world.Name}";
             }
 
             this.Log.Chat += " ";
             this.Log.Activate = true;
         }
 
-        if (player.World.IsPublic) {
+        if (world.IsPublic) {
             var party = this.Ui.Plugin.PartyList;
             var leader = (ulong?) party[(int) party.PartyLeaderIndex]?.ContentId;
             var isLeader = party.Length == 0 || this.Ui.Plugin.ClientState.LocalContentId == leader;
-            var member = party.FirstOrDefault(member => member.Name.TextValue == player.PlayerName && member.World.Id == player.World.RowId);
+            var member = party.FirstOrDefault(member => member.Name.TextValue == player.PlayerName && member.World.Id == world.RowId);
             var isInParty = member != default;
             var inInstance = this.Ui.Plugin.Functions.IsInInstance();
             var inPartyInstance = this.Ui.Plugin.DataManager.GetExcelSheet<TerritoryType>()!.GetRow(this.Ui.Plugin.ClientState.TerritoryType)?.TerritoryIntendedUse is (41 or 47 or 48 or 52 or 53);
@@ -461,7 +469,7 @@ internal sealed class PayloadHandler {
                         }
                     } else if (!inInstance && ImGui.BeginMenu(Language.Context_InviteToParty)) {
                         if (ImGui.Selectable(Language.Context_InviteToParty_SameWorld)) {
-                            this.Ui.Plugin.Functions.Party.InviteSameWorld(player.PlayerName, (ushort) player.World.RowId, chunk.Message?.ContentId ?? 0);
+                            this.Ui.Plugin.Functions.Party.InviteSameWorld(player.PlayerName, (ushort) world.RowId, chunk.Message?.ContentId ?? 0);
                         }
 
                         if (chunk.Message?.ContentId is not null or 0 && ImGui.Selectable(Language.Context_InviteToParty_DifferentWorld)) {
@@ -483,17 +491,17 @@ internal sealed class PayloadHandler {
                 }
             }
 
-            var isFriend = this.Ui.Plugin.Common.Functions.FriendList.List.Any(friend => friend.Name.TextValue == player.PlayerName && friend.HomeWorld == player.World.RowId);
+            var isFriend = this.Ui.Plugin.Common.Functions.FriendList.List.Any(friend => friend.Name.TextValue == player.PlayerName && friend.HomeWorld == world.RowId);
             if (!isFriend && ImGui.Selectable(Language.Context_SendFriendRequest)) {
-                this.Ui.Plugin.Functions.SendFriendRequest(player.PlayerName, (ushort) player.World.RowId);
+                this.Ui.Plugin.Functions.SendFriendRequest(player.PlayerName, (ushort) world.RowId);
             }
 
             if (ImGui.Selectable(Language.Context_AddToBlacklist)) {
-                this.Ui.Plugin.Functions.AddToBlacklist(player.PlayerName, (ushort) player.World.RowId);
+                this.Ui.Plugin.Functions.AddToBlacklist(player.PlayerName, (ushort) world.RowId);
             }
 
             if (this.Ui.Plugin.Functions.IsMentor() && ImGui.Selectable(Language.Context_InviteToNoviceNetwork)) {
-                this.Ui.Plugin.Functions.Context.InviteToNoviceNetwork(player.PlayerName, (ushort) player.World.RowId);
+                this.Ui.Plugin.Functions.Context.InviteToNoviceNetwork(player.PlayerName, (ushort) world.RowId);
             }
         }
 
