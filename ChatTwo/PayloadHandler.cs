@@ -93,12 +93,20 @@ internal sealed class PayloadHandler {
             .FirstOrDefault(chunk => chunk is PlayerPayload) as PlayerPayload;
 
         if (ImGui.BeginMenu(Language.Context_Integrations)) {
+            var cursor = ImGui.GetCursorPos();
+
             foreach (var id in registered) {
                 try {
                     this.Ui.Plugin.Ipc.Invoke(id, sender, contentId, payload, chunk.Message?.SenderSource, chunk.Message?.ContentSource);
                 } catch (Exception ex) {
                     PluginLog.Error(ex, "Error executing integration");
                 }
+            }
+
+            if (cursor == ImGui.GetCursorPos()) {
+                ImGui.PushStyleColor(ImGuiCol.Text, ImGui.GetStyle().Colors[(int) ImGuiCol.TextDisabled]);
+                ImGui.Text("No integrations available");
+                ImGui.PopStyleColor();
             }
 
             ImGui.EndMenu();
