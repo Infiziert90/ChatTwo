@@ -433,10 +433,6 @@ internal sealed class ChatLog : IUiComponent {
             ? this.DrawTabSidebar()
             : this.DrawTabBar();
 
-        if (this.Activate) {
-            ImGui.SetKeyboardFocusHere();
-        }
-
         Tab? activeTab = null;
         if (currentTab > -1 && currentTab < this.Ui.Plugin.Config.Tabs.Count) {
             activeTab = this.Ui.Plugin.Config.Tabs[currentTab];
@@ -543,6 +539,10 @@ internal sealed class ChatLog : IUiComponent {
 
         if (inputColour != null) {
             ImGui.PushStyleColor(ImGuiCol.Text, ColourUtil.RgbaToAbgr(inputColour.Value));
+        }
+
+        if (this.Activate) {
+            ImGui.SetKeyboardFocusHere();
         }
 
         var chatCopy = this.Chat;
@@ -1093,7 +1093,7 @@ internal sealed class ChatLog : IUiComponent {
 
         if (ImGui.IsWindowAppearing()) {
             this._fixCursor = true;
-            ImGui.SetKeyboardFocusHere();
+            ImGui.SetKeyboardFocusHere(-1);
         }
 
         if (ImGui.BeginChild("##auto-complete-list", Vector2.Zero, false, ImGuiWindowFlags.HorizontalScrollbar)) {
