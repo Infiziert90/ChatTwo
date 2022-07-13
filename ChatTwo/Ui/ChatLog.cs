@@ -494,6 +494,20 @@ internal sealed class ChatLog : IUiComponent {
                     ?.Name
                     ?.RawString ?? channel.ToString();
 
+                if (channel.IsLinkshell()) {
+                    var lsName = this.Ui.Plugin.Functions.Chat.GetLinkshellName(channel.LinkshellIndex());
+                    if (!string.IsNullOrWhiteSpace(lsName)) {
+                        name += $": {lsName}";
+                    }
+                }
+
+                if (channel.IsCrossLinkshell()) {
+                    var lsName = this.Ui.Plugin.Functions.Chat.GetCrossLinkshellName(channel.LinkshellIndex());
+                    if (!string.IsNullOrWhiteSpace(lsName)) {
+                        name += $": {lsName}";
+                    }
+                }
+
                 if (ImGui.Selectable(name)) {
                     this.Ui.Plugin.Functions.Chat.SetChannel(channel);
                     this._tellTarget = null;
