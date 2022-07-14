@@ -292,19 +292,23 @@ internal sealed class ChatLog : IUiComponent {
                 continue;
             }
 
-            void Intercept(VirtualKey key, ModifierFlag modifier) {
+            void Intercept(VirtualKey vk, ModifierFlag modifier) {
+                if (!vk.TryToImGui(out var key)) {
+                    return;
+                }
+
                 var modifierPressed = this.Ui.Plugin.Config.KeybindMode switch {
                     KeybindMode.Strict => modifier == modifierState,
                     KeybindMode.Flexible => modifierState.HasFlag(modifier),
                     _ => false,
                 };
-                if (!ImGui.IsKeyPressed((int) key) || !modifierPressed || modifier == 0 && modifiersOnly) {
+                if (!ImGui.IsKeyPressed(key) || !modifierPressed || modifier == 0 && modifiersOnly) {
                     return;
                 }
 
                 var bits = BitOperations.PopCount((uint) modifier);
-                if (!turnedOff.TryGetValue(key, out var previousBits) || previousBits.Item1 < bits) {
-                    turnedOff[key] = ((uint) bits, toIntercept);
+                if (!turnedOff.TryGetValue(vk, out var previousBits) || previousBits.Item1 < bits) {
+                    turnedOff[vk] = ((uint) bits, toIntercept);
                 }
             }
 
@@ -496,16 +500,20 @@ internal sealed class ChatLog : IUiComponent {
 
                 if (channel.IsLinkshell()) {
                     var lsName = this.Ui.Plugin.Functions.Chat.GetLinkshellName(channel.LinkshellIndex());
-                    if (!string.IsNullOrWhiteSpace(lsName)) {
-                        name += $": {lsName}";
+                    if (string.IsNullOrWhiteSpace(lsName)) {
+                        continue;
                     }
+
+                    name += $": {lsName}";
                 }
 
                 if (channel.IsCrossLinkshell()) {
                     var lsName = this.Ui.Plugin.Functions.Chat.GetCrossLinkshellName(channel.LinkshellIndex());
-                    if (!string.IsNullOrWhiteSpace(lsName)) {
-                        name += $": {lsName}";
+                    if (string.IsNullOrWhiteSpace(lsName)) {
+                        continue;
                     }
+
+                    name += $": {lsName}";
                 }
 
                 if (ImGui.Selectable(name)) {
@@ -568,12 +576,12 @@ internal sealed class ChatLog : IUiComponent {
         ImGui.InputText("##chat2-input", ref this.Chat, 500, inputFlags, this.Callback);
 
         if (ImGui.IsItemDeactivated()) {
-            if (ImGui.IsKeyDown(ImGui.GetKeyIndex(ImGuiKey.Escape))) {
+            if (ImGui.IsKeyDown(ImGuiKey.Escape)) {
                 this.Chat = chatCopy;
             }
 
-            var enter = ImGui.IsKeyDown(ImGui.GetKeyIndex(ImGuiKey.Enter))
-                        || ImGui.IsKeyDown(ImGui.GetKeyIndex(ImGuiKey.KeyPadEnter));
+            var enter = ImGui.IsKeyDown(ImGuiKey.Enter)
+                        || ImGui.IsKeyDown(ImGuiKey.KeypadEnter);
             if (enter) {
                 this.SendChatBox(activeTab);
             }
@@ -1084,8 +1092,8 @@ internal sealed class ChatLog : IUiComponent {
         if (ImGui.IsItemActive() && ImGui.GetIO().KeyCtrl) {
             for (var i = 0; i < 10 && i < this._autoCompleteList.Count; i++) {
                 var num = (i + 1) % 10;
-                var key = (int) VirtualKey.KEY_0 + num;
-                var key2 = (int) VirtualKey.NUMPAD0 + num;
+                var key = ImGuiKey._0 + num;
+                var key2 = ImGuiKey.Keypad0 + num;
                 if (ImGui.IsKeyDown(key) || ImGui.IsKeyDown(key2)) {
                     selected = i;
                 }
@@ -1093,13 +1101,13 @@ internal sealed class ChatLog : IUiComponent {
         }
 
         if (ImGui.IsItemDeactivated()) {
-            if (ImGui.IsKeyDown(ImGui.GetKeyIndex(ImGuiKey.Escape))) {
+            if (ImGui.IsKeyDown(ImGuiKey.Escape)) {
                 ImGui.CloseCurrentPopup();
                 goto End;
             }
 
-            var enter = ImGui.IsKeyDown(ImGui.GetKeyIndex(ImGuiKey.Enter))
-                        || ImGui.IsKeyDown(ImGui.GetKeyIndex(ImGuiKey.KeyPadEnter));
+            var enter = ImGui.IsKeyDown(ImGuiKey.Enter)
+                        || ImGui.IsKeyDown(ImGuiKey.KeypadEnter);
             if (this._autoCompleteList.Count > 0 && enter) {
                 selected = this._autoCompleteSelection;
             }
