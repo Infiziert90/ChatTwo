@@ -430,7 +430,7 @@ internal sealed unsafe class Chat : IDisposable {
         }
 
         string? input = null;
-        var option = Framework.Instance()->GetUiModule()->GetConfigModule()->GetValueById(572);
+        var option = Framework.Instance()->GetUiModule()->GetConfigModule()->GetValue(ConfigOption.DirectChat);
         if (option != null) {
             var directChat = option->Int > 0;
             if (directChat && this._currentCharacter != null) {
