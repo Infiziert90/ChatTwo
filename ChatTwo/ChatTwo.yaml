@@ -14,3 +14,4 @@ description: |-
   - Unread counts
   - Screenshot mode (obfuscate names)
 repo_url: https://git.annaclemens.io/ascclemens/ChatTwo
+dalamud_api_level: 7
