@@ -189,7 +189,7 @@ internal unsafe class GameFunctions : IDisposable {
         // this just probably needs to be set
         agent->AddonId = addon->ID;
 
-        // vcall from E8 ?? ?? ?? ?? 0F B7 C0 48 83 C4 60
+        // vcall from E8 ?? ?? ?? ?? 0F B7 C0 48 83 C4 60 (FF 50 28 48 8B D3 48 8B CF)
         var vf5 = (delegate* unmanaged<AtkUnitBase*, byte, uint, void>*) ((IntPtr) addon->VTable + 40);
         // EA8BED: lets vf5 actually run
         *(byte*) ((IntPtr) atkStage + 0x2B4) |= 2;
@@ -210,7 +210,7 @@ internal unsafe class GameFunctions : IDisposable {
     }
 
     internal static void OpenPartyFinder() {
-        // this whole method: 6.05: 84433A
+        // this whole method: 6.05: 84433A (FF 97 ?? ?? ?? ?? 41 B4 01)
         var lfg = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.LookingForGroup);
         if (lfg->IsAgentActive()) {
             var addonId = lfg->GetAddonID();
@@ -273,7 +273,7 @@ internal unsafe class GameFunctions : IDisposable {
             Type = ValueType.Int,
             Int = 3,
         };
-        int result = 0;
+        var result = 0;
         var vf0 = *(delegate* unmanaged<AgentInterface*, int*, AtkValue*, ulong, ulong, int*>*) agent->VTable;
         vf0(agent, &result, &value, 0, 0);
     }

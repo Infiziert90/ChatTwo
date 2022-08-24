@@ -26,6 +26,16 @@ internal sealed unsafe class Context {
     [Signature("E8 ?? ?? ?? ?? EB 45 45 33 C9", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<void*, uint, byte, void> _searchForItem = null!;
 
+    #region Offsets
+
+    [Signature(
+        "FF 90 ?? ?? ?? ?? 8B 93 ?? ?? ?? ?? 48 8B C8 E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 41 B4 01",
+        Offset = 2
+    )]
+    private readonly int? _searchForRecipesUsingItemVfunc;
+
+    #endregion
+
     private Plugin Plugin { get; }
 
     internal Context(Plugin plugin) {
@@ -82,13 +92,13 @@ internal sealed unsafe class Context {
     }
 
     internal void SearchForRecipesUsingItem(uint itemId) {
-        if (this._searchForRecipesUsingItem == null) {
+        if (this._searchForRecipesUsingItem == null || this._searchForRecipesUsingItemVfunc is not { } offset) {
             return;
         }
 
         var uiModule = Framework.Instance()->GetUiModule();
-        var vf36 = (delegate* unmanaged<UIModule*, IntPtr>) uiModule->vfunc[36];
-        var a1 = vf36(uiModule);
+        var vf = (delegate* unmanaged<UIModule*, IntPtr>) uiModule->vfunc[offset / 8];
+        var a1 = vf(uiModule);
         this._searchForRecipesUsingItem(a1, itemId);
     }
 
