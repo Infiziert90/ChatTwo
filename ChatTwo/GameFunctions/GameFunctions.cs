@@ -33,7 +33,7 @@ internal unsafe class GameFunctions : IDisposable {
     [Signature("E8 ?? ?? ?? ?? EB 20 48 8B 46 28", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<AgentInterface*, uint, void> _openAchievement = null!;
 
-    [Signature("E8 ?? ?? ?? ?? 84 C0 49 8B DE", Fallibility = Fallibility.Fallible)]
+    [Signature("E8 ?? ?? ?? ?? 41 8D 4F 08 84 C0", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<byte> _inInstance = null!;
 
     #endregion
