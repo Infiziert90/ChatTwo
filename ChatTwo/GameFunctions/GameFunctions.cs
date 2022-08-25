@@ -57,6 +57,9 @@ internal unsafe class GameFunctions : IDisposable {
 
     #pragma warning restore 0649
 
+    [Signature("FF 90 ?? ?? ?? ?? 48 8B C8 BA ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8B F0 48 85 C0 0F 84 ?? ?? ?? ?? 48 8B 10 33 ED", Offset = 2)]
+    private readonly int? _infoModuleVfunc;
+
     private Plugin Plugin { get; }
     internal Party Party { get; }
     internal Chat Chat { get; }
@@ -81,14 +84,18 @@ internal unsafe class GameFunctions : IDisposable {
         Marshal.FreeHGlobal(this._placeholderNamePtr);
     }
 
-    private static IntPtr GetInfoModule() {
+    private IntPtr GetInfoModule() {
+        if (this._infoModuleVfunc is not { } vfunc) {
+            return IntPtr.Zero;
+        }
+
         var uiModule = Framework.Instance()->GetUiModule();
-        var getInfoModule = (delegate* unmanaged<UIModule*, IntPtr>) uiModule->vfunc[33];
+        var getInfoModule = (delegate* unmanaged<UIModule*, IntPtr>) uiModule->vfunc[vfunc / 8];
         return getInfoModule(uiModule);
     }
 
     internal IntPtr GetInfoProxyByIndex(uint idx) {
-        var infoModule = GetInfoModule();
+        var infoModule = this.GetInfoModule();
         return infoModule == IntPtr.Zero ? IntPtr.Zero : this._getInfoProxyByIndex(infoModule, idx);
     }
 

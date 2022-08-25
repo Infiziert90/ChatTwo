@@ -56,6 +56,12 @@ internal sealed unsafe class Chat : IDisposable {
     [Signature("E8 ?? ?? ?? ?? 4C 8B C0 FF C3")]
     private readonly delegate* unmanaged<IntPtr, ulong, byte*> _getLinkshellName = null!;
 
+    [Signature("40 56 41 54 41 55 41 57 48 83 EC 28 48 8B 01", Fallibility = Fallibility.Fallible)]
+    private readonly delegate* unmanaged<UIModule*, int, ulong> _rotateLinkshellHistory;
+
+    [Signature("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 41 56 41 57 48 83 EC 20 48 8B 01 44 8B F2", Fallibility = Fallibility.Fallible)]
+    private readonly delegate* unmanaged<UIModule*, int, ulong> _rotateCrossLinkshellHistory;
+
     [Signature("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 48 83 EC 20 8B F2 48 8D B9")]
     private readonly delegate* unmanaged<IntPtr, uint, IntPtr> _getColourInfo = null!;
 
@@ -109,6 +115,12 @@ internal sealed unsafe class Chat : IDisposable {
     [Signature("4C 8D B6 ?? ?? ?? ?? 41 8B 1E 45 85 E4 74 7A 33 FF 8B EF 66 0F 1F 44 00", Offset = 3)]
     private readonly int? _linkshellCycleOffset;
 
+    [Signature("BA ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8B F0 48 85 C0 0F 84 ?? ?? ?? ?? 48 8B 10 33", Offset = 1)]
+    private readonly uint? _linkshellInfoProxyIdx;
+
+    [Signature("BA ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 89 6C 24 ?? 4C 8B E0 48 89 74 24", Offset = 1)]
+    private readonly uint? _crossLinkshellInfoProxyIdx;
+
     #pragma warning restore 0649
 
     // Pointers
@@ -155,7 +167,11 @@ internal sealed unsafe class Chat : IDisposable {
     }
 
     internal string? GetLinkshellName(uint idx) {
-        var infoProxy = this.Plugin.Functions.GetInfoProxyByIndex(2);
+        if (this._linkshellInfoProxyIdx is not { } proxyIdx) {
+            return null;
+        }
+
+        var infoProxy = this.Plugin.Functions.GetInfoProxyByIndex(proxyIdx);
         if (infoProxy == IntPtr.Zero) {
             return null;
         }
@@ -170,7 +186,11 @@ internal sealed unsafe class Chat : IDisposable {
     }
 
     internal string? GetCrossLinkshellName(uint idx) {
-        var infoProxy = this.Plugin.Functions.GetInfoProxyByIndex(26);
+        if (this._crossLinkshellInfoProxyIdx is not { } proxyIdx) {
+            return null;
+        }
+
+        var infoProxy = this.Plugin.Functions.GetInfoProxyByIndex(proxyIdx);
         if (infoProxy == IntPtr.Zero) {
             return null;
         }
@@ -186,12 +206,17 @@ internal sealed unsafe class Chat : IDisposable {
             *(int*) (uiModule + this._linkshellCycleOffset.Value) = -1;
         }
 
-        return RotateLinkshellHistoryInternal(201, mode);
+        return RotateLinkshellHistoryInternal(this._rotateLinkshellHistory, mode);
     }
 
-    internal ulong RotateCrossLinkshellHistory(RotateMode mode) => RotateLinkshellHistoryInternal(203, mode);
+    internal ulong RotateCrossLinkshellHistory(RotateMode mode) => RotateLinkshellHistoryInternal(this._rotateCrossLinkshellHistory, mode);
 
-    private static ulong RotateLinkshellHistoryInternal(int vfunc, RotateMode mode) {
+    private static ulong RotateLinkshellHistoryInternal(delegate* unmanaged<UIModule*, int, ulong> func, RotateMode mode) {
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+        if (func == null) {
+            return 0;
+        }
+
         var idx = mode switch {
             RotateMode.Forward => 1,
             RotateMode.Reverse => -1,
@@ -199,8 +224,7 @@ internal sealed unsafe class Chat : IDisposable {
         };
 
         var uiModule = Framework.Instance()->GetUiModule();
-        var cycleFunc = (delegate* unmanaged<UIModule*, int, ulong>) uiModule->vfunc[vfunc];
-        return cycleFunc(uiModule, idx);
+        return func(uiModule, idx);
     }
 
     // This function looks up a channel's user-defined colour.
