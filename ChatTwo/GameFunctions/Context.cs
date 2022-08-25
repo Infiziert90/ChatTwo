@@ -49,7 +49,7 @@ internal sealed unsafe class Context {
         }
 
         // 6.05: 20E4CB
-        var a1 = this.Plugin.Functions.GetInfoProxyByIndex(0x11);
+        var a1 = this.Plugin.Functions.GetInfoProxyByIndex(0x14);
 
         fixed (byte* namePtr = name.ToTerminatedBytes()) {
             // can specify content id if we have it, but there's no need

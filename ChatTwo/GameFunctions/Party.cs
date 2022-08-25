@@ -35,7 +35,7 @@ internal sealed unsafe class Party {
         }
 
         // 6.11: 214A55
-        var a1 = this.Plugin.Functions.GetInfoProxyByIndex(1);
+        var a1 = this.Plugin.Functions.GetInfoProxyByIndex(2);
         fixed (byte* namePtr = name.ToTerminatedBytes()) {
             // this only works if target is on the same world
             this._inviteToParty(a1, contentId, namePtr, world);
@@ -48,7 +48,7 @@ internal sealed unsafe class Party {
         }
 
         // 6.11: 214A55
-        var a1 = this.Plugin.Functions.GetInfoProxyByIndex(1);
+        var a1 = this.Plugin.Functions.GetInfoProxyByIndex(2);
         if (contentId != 0) {
             // third param is world, but it requires a specific world
             // if they're not on that world, it will fail
@@ -64,7 +64,7 @@ internal sealed unsafe class Party {
         }
 
         // 6.11: 214A55
-        var a1 = this.Plugin.Functions.GetInfoProxyByIndex(1);
+        var a1 = this.Plugin.Functions.GetInfoProxyByIndex(2);
         if (contentId != 0) {
             // third param is world, but it requires a specific world
             // if they're not on that world, it will fail
