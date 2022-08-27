@@ -165,6 +165,10 @@ internal sealed class Tabs : ISettingsTab {
 
                     ImGui.Separator();
 
+                    if (tab.ExtraChatAll) {
+                        ImGui.BeginDisabled();
+                    }
+
                     foreach (var (id, name) in this.Plugin.ExtraChat.ChannelNames) {
                         var enabled = tab.ExtraChatChannels.Contains(id);
                         if (!ImGui.Checkbox($"{name}##ec-{id}", ref enabled)) {
@@ -176,6 +180,10 @@ internal sealed class Tabs : ISettingsTab {
                         } else {
                             tab.ExtraChatChannels.Remove(id);
                         }
+                    }
+
+                    if (tab.ExtraChatAll) {
+                        ImGui.EndDisabled();
                     }
 
                     ImGui.TreePop();

@@ -175,17 +175,16 @@ internal class Tab {
     }
 
     internal bool Matches(Message message) {
-        var extraChatChannel = Guid.Empty;
         if (message.ContentSource.Payloads.Count > 0 && message.ContentSource.Payloads[0] is RawPayload raw) {
             // this does an encode and clone every time it's accessed, so cache
             var data = raw.Data;
-            if (data[1] == 0x27 && data[2] == 19 && data[3] == 0x20) {
-                extraChatChannel = new Guid(data[4..]);
+            if (data[1] == 0x27 && data[2] == 18 && data[3] == 0x20) {
+                var extraChatChannel = new Guid(data[4..^1]);
+                return this.ExtraChatAll || this.ExtraChatChannels.Contains(extraChatChannel);
             }
         }
 
         return message.Code.Type.IsGm()
-               || (extraChatChannel != Guid.Empty && (this.ExtraChatAll || this.ExtraChatChannels.Contains(extraChatChannel)))
                || this.ChatCodes.TryGetValue(message.Code.Type, out var sources) && (message.Code.Source is 0 or (ChatSource) 1 || sources.HasFlag(message.Code.Source));
     }
 

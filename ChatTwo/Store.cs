@@ -229,7 +229,10 @@ internal class Store : IDisposable {
             .ToEnumerable()
             .Reverse();
         foreach (var message in messages) {
-            tab.AddMessage(message, unread);
+            // redundant matches check for extrachat
+            if (tab.Matches(message)) {
+                tab.AddMessage(message, unread);
+            }
         }
     }
 
