@@ -2,7 +2,6 @@ using ChatTwo.Code;
 using ChatTwo.Resources;
 using ChatTwo.Ui;
 using Dalamud.Configuration;
-using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Logging;
 using ImGuiNET;
 
@@ -50,6 +49,8 @@ internal class Configuration : IPluginConfiguration {
     public Dictionary<ChatType, uint> ChatColours = new();
     public List<Tab> Tabs = new();
 
+    public uint DatabaseMigration;
+
     internal void UpdateFrom(Configuration other) {
         this.HideChat = other.HideChat;
         this.HideDuringCutscenes = other.HideDuringCutscenes;
@@ -84,6 +85,7 @@ internal class Configuration : IPluginConfiguration {
         this.WindowAlpha = other.WindowAlpha;
         this.ChatColours = other.ChatColours.ToDictionary(entry => entry.Key, entry => entry.Value);
         this.Tabs = other.Tabs.Select(t => t.Clone()).ToList();
+        this.DatabaseMigration = other.DatabaseMigration;
     }
 
     public void Migrate() {
@@ -183,13 +185,8 @@ internal class Tab {
     }
 
     internal bool Matches(Message message) {
-        if (message.ContentSource.Payloads.Count > 0 && message.ContentSource.Payloads[0] is RawPayload raw) {
-            // this does an encode and clone every time it's accessed, so cache
-            var data = raw.Data;
-            if (data[1] == 0x27 && data[2] == 18 && data[3] == 0x20) {
-                var extraChatChannel = new Guid(data[4..^1]);
-                return this.ExtraChatAll || this.ExtraChatChannels.Contains(extraChatChannel);
-            }
+        if (message.ExtraChatChannel != Guid.Empty) {
+            return this.ExtraChatAll || this.ExtraChatChannels.Contains(message.ExtraChatChannel);
         }
 
         return message.Code.Type.IsGm()

@@ -5,6 +5,7 @@ using ChatTwo.Util;
 using Dalamud.Game;
 using Dalamud.Game.Text;
 using Dalamud.Game.Text.SeStringHandling;
+using Dalamud.Logging;
 using LiteDB;
 using Lumina.Excel.GeneratedSheets;
 
@@ -39,20 +40,40 @@ internal class Store : IDisposable {
             TrimWhitespace = false,
             // EnumAsInteger = true,
         };
-        BsonMapper.Global.Entity<Message>()
-            .Id(msg => msg.Id)
-            .Ctor(doc => new Message(
-                doc["_id"].AsObjectId,
-                (ulong) doc["Receiver"].AsInt64,
-                (ulong) doc["ContentId"].AsInt64,
-                DateTime.UnixEpoch.AddMilliseconds(doc["Date"].AsInt64),
-                doc["Code"].AsDocument,
-                doc["Sender"].AsArray,
-                doc["Content"].AsArray,
-                doc["SenderSource"],
-                doc["ContentSource"],
-                doc["SortCode"].AsDocument
-            ));
+
+        if (this.Plugin.Config.DatabaseMigration == 0) {
+            BsonMapper.Global.Entity<Message>()
+                .Id(msg => msg.Id)
+                .Ctor(doc => new Message(
+                    doc["_id"].AsObjectId,
+                    (ulong) doc["Receiver"].AsInt64,
+                    (ulong) doc["ContentId"].AsInt64,
+                    DateTime.UnixEpoch.AddMilliseconds(doc["Date"].AsInt64),
+                    doc["Code"].AsDocument,
+                    doc["Sender"].AsArray,
+                    doc["Content"].AsArray,
+                    doc["SenderSource"],
+                    doc["ContentSource"],
+                    doc["SortCode"].AsDocument
+                ));
+        } else {
+            BsonMapper.Global.Entity<Message>()
+                .Id(msg => msg.Id)
+                .Ctor(doc => new Message(
+                    doc["_id"].AsObjectId,
+                    (ulong) doc["Receiver"].AsInt64,
+                    (ulong) doc["ContentId"].AsInt64,
+                    DateTime.UnixEpoch.AddMilliseconds(doc["Date"].AsInt64),
+                    doc["Code"].AsDocument,
+                    doc["Sender"].AsArray,
+                    doc["Content"].AsArray,
+                    doc["SenderSource"],
+                    doc["ContentSource"],
+                    doc["SortCode"].AsDocument,
+                    doc["ExtraChatChannel"]
+                ));
+        }
+
         BsonMapper.Global.RegisterType<Payload?>(
             payload => {
                 switch (payload) {
@@ -116,6 +137,48 @@ internal class Store : IDisposable {
         this.Database = this.Connect();
         this.Messages.EnsureIndex(msg => msg.Date);
         this.Messages.EnsureIndex(msg => msg.SortCode);
+        this.Messages.EnsureIndex(msg => msg.ExtraChatChannel);
+
+        // re-save all messages, which will add the ExtraChat channel
+        if (this.Plugin.Config.DatabaseMigration == 0) {
+            var total = (float) this.Messages.LongCount() / 10_000.0;
+            var rounds = (long) Math.Ceiling(total);
+            var lastId = ObjectId.Empty;
+            for (var i = 0; i < rounds; i++) {
+                PluginLog.Log($"Update round {i}/{rounds}");
+                var messages = this.Messages.Query()
+                    .OrderBy(msg => msg.Id)
+                    .Where(msg => msg.Id > lastId)
+                    .Limit(10_000)
+                    .ToArray();
+
+                foreach (var message in messages) {
+                    this.Messages.Update(message);
+                    lastId = message.Id;
+                }
+            }
+
+            this.Database.Checkpoint();
+
+            this.Plugin.Config.DatabaseMigration = 1;
+            this.Plugin.SaveConfig();
+
+            BsonMapper.Global.Entity<Message>()
+                .Id(msg => msg.Id)
+                .Ctor(doc => new Message(
+                    doc["_id"].AsObjectId,
+                    (ulong) doc["Receiver"].AsInt64,
+                    (ulong) doc["ContentId"].AsInt64,
+                    DateTime.UnixEpoch.AddMilliseconds(doc["Date"].AsInt64),
+                    doc["Code"].AsDocument,
+                    doc["Sender"].AsArray,
+                    doc["Content"].AsArray,
+                    doc["SenderSource"],
+                    doc["ContentSource"],
+                    doc["SortCode"].AsDocument,
+                    doc["ExtraChatChannel"]
+                ));
+        }
 
         this.Plugin.ChatGui.ChatMessageUnhandled += this.ChatMessage;
         this.Plugin.Framework.Update += this.GetMessageInfo;
@@ -218,7 +281,7 @@ internal class Store : IDisposable {
         var query = this.Messages
             .Query()
             .OrderByDescending(msg => msg.Date)
-            .Where(msg => sortCodes.Contains(msg.SortCode))
+            .Where(msg => sortCodes.Contains(msg.SortCode) || msg.ExtraChatChannel != Guid.Empty)
             .Where(msg => msg.Receiver == this.CurrentContentId);
         if (!this.Plugin.Config.FilterIncludePreviousSessions) {
             query = query.Where(msg => msg.Date >= this.Plugin.GameStarted);

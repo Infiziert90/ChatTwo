@@ -1,5 +1,6 @@
 using ChatTwo.Code;
 using Dalamud.Game.Text.SeStringHandling;
+using Dalamud.Game.Text.SeStringHandling.Payloads;
 using LiteDB;
 
 namespace ChatTwo;
@@ -60,6 +61,7 @@ internal class Message {
     internal SeString ContentSource { get; }
 
     internal SortCode SortCode { get; }
+    internal Guid ExtraChatChannel { get; }
 
     internal int Hash { get; }
 
@@ -72,6 +74,7 @@ internal class Message {
         this.SenderSource = senderSource;
         this.ContentSource = contentSource;
         this.SortCode = new SortCode(this.Code.Type, this.Code.Source);
+        this.ExtraChatChannel = this.ExtractExtraChatChannel();
         this.Hash = this.GenerateHash();
 
         foreach (var chunk in sender.Concat(content)) {
@@ -90,6 +93,26 @@ internal class Message {
         this.SenderSource = BsonMapper.Global.Deserialize<SeString>(senderSource);
         this.ContentSource = BsonMapper.Global.Deserialize<SeString>(contentSource);
         this.SortCode = BsonMapper.Global.ToObject<SortCode>(sortCode);
+        this.ExtraChatChannel = this.ExtractExtraChatChannel();
+        this.Hash = this.GenerateHash();
+
+        foreach (var chunk in this.Sender.Concat(this.Content)) {
+            chunk.Message = this;
+        }
+    }
+
+    internal Message(ObjectId id, ulong receiver, ulong contentId, DateTime date, BsonDocument code, BsonArray sender, BsonArray content, BsonValue senderSource, BsonValue contentSource, BsonDocument sortCode, BsonValue extraChatChannel) {
+        this.Id = id;
+        this.Receiver = receiver;
+        this.ContentId = contentId;
+        this.Date = date;
+        this.Code = BsonMapper.Global.ToObject<ChatCode>(code);
+        this.Sender = BsonMapper.Global.Deserialize<List<Chunk>>(sender);
+        this.Content = BsonMapper.Global.Deserialize<List<Chunk>>(content);
+        this.SenderSource = BsonMapper.Global.Deserialize<SeString>(senderSource);
+        this.ContentSource = BsonMapper.Global.Deserialize<SeString>(contentSource);
+        this.SortCode = BsonMapper.Global.ToObject<SortCode>(sortCode);
+        this.ExtraChatChannel = BsonMapper.Global.Deserialize<Guid>(extraChatChannel);
         this.Hash = this.GenerateHash();
 
         foreach (var chunk in this.Sender.Concat(this.Content)) {
@@ -99,7 +122,20 @@ internal class Message {
 
     private int GenerateHash() {
         return this.SortCode.GetHashCode()
+               ^ this.ExtraChatChannel.GetHashCode()
                ^ string.Join("", this.Sender.Select(c => c.StringValue())).GetHashCode()
                ^ string.Join("", this.Content.Select(c => c.StringValue())).GetHashCode();
+    }
+
+    private Guid ExtractExtraChatChannel() {
+        if (this.ContentSource.Payloads.Count > 0 && this.ContentSource.Payloads[0] is RawPayload raw) {
+            // this does an encode and clone every time it's accessed, so cache
+            var data = raw.Data;
+            if (data[1] == 0x27 && data[2] == 18 && data[3] == 0x20) {
+                return new Guid(data[4..^1]);
+            }
+        }
+
+        return Guid.Empty;
     }
 }
