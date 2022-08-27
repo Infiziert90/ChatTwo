@@ -14,3 +14,5 @@ description: |-
   - Unread counts
   - Screenshot mode (obfuscate names)
 repo_url: https://git.annaclemens.io/ascclemens/ChatTwo
+accepts_feedback: false
+feedback_message: Submit only bugs to https://github.com/ascclemens/plugin-issues
