@@ -10,7 +10,7 @@ namespace ChatTwo;
 
 [Serializable]
 internal class Configuration : IPluginConfiguration {
-    private const int LatestVersion = 4;
+    private const int LatestVersion = 5;
 
     public int Version { get; set; } = LatestVersion;
 
@@ -111,6 +111,14 @@ internal class Configuration : IPluginConfiguration {
                     this.Version = 4;
 
                     this.WindowAlpha *= 100f;
+                    break;
+                case 4:
+                    this.Version = 5;
+
+                    foreach (var tab in this.Tabs) {
+                        tab.ExtraChatAll = true;
+                    }
+
                     break;
                 default:
                     PluginLog.Warning($"Couldn't migrate config version {this.Version}");
