@@ -2,6 +2,7 @@ using ChatTwo.Code;
 using ChatTwo.Resources;
 using ChatTwo.Ui;
 using Dalamud.Configuration;
+using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Logging;
 using ImGuiNET;
 
@@ -147,6 +148,8 @@ internal static class UnreadModeExt {
 internal class Tab {
     public string Name = Language.Tab_DefaultName;
     public Dictionary<ChatType, ChatSource> ChatCodes = new();
+    public bool ExtraChatAll;
+    public HashSet<Guid> ExtraChatChannels = new();
 
     [Obsolete("Use UnreadMode instead")]
     public bool DisplayUnread = true;
@@ -172,7 +175,18 @@ internal class Tab {
     }
 
     internal bool Matches(Message message) {
-        return message.Code.Type.IsGm() || this.ChatCodes.TryGetValue(message.Code.Type, out var sources) && (message.Code.Source is 0 or (ChatSource) 1 || sources.HasFlag(message.Code.Source));
+        var extraChatChannel = Guid.Empty;
+        if (message.ContentSource.Payloads.Count > 0 && message.ContentSource.Payloads[0] is RawPayload raw) {
+            // this does an encode and clone every time it's accessed, so cache
+            var data = raw.Data;
+            if (data[1] == 0x27 && data[2] == 19 && data[3] == 0x20) {
+                extraChatChannel = new Guid(data[4..]);
+            }
+        }
+
+        return message.Code.Type.IsGm()
+               || (extraChatChannel != Guid.Empty && (this.ExtraChatAll || this.ExtraChatChannels.Contains(extraChatChannel)))
+               || this.ChatCodes.TryGetValue(message.Code.Type, out var sources) && (message.Code.Source is 0 or (ChatSource) 1 || sources.HasFlag(message.Code.Source));
     }
 
     internal void AddMessage(Message message, bool unread = true) {
@@ -199,6 +213,8 @@ internal class Tab {
         return new Tab {
             Name = this.Name,
             ChatCodes = this.ChatCodes.ToDictionary(entry => entry.Key, entry => entry.Value),
+            ExtraChatAll = this.ExtraChatAll,
+            ExtraChatChannels = this.ExtraChatChannels.ToHashSet(),
             #pragma warning disable CS0618
             DisplayUnread = this.DisplayUnread,
             #pragma warning restore CS0618
@@ -258,8 +274,10 @@ internal enum LanguageOverride {
     French,
     German,
     Greek,
+
     // Italian,
     Japanese,
+
     // Korean,
     // Norwegian,
     PortugueseBrazil,

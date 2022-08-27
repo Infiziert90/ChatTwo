@@ -7,13 +7,15 @@ using ImGuiNET;
 namespace ChatTwo.Ui.SettingsTabs;
 
 internal sealed class Tabs : ISettingsTab {
+    private Plugin Plugin { get; }
     private Configuration Mutable { get; }
 
     public string Name => Language.Options_Tabs_Tab + "###tabs-tabs";
 
     private int _toOpen = -2;
 
-    internal Tabs(Configuration mutable) {
+    internal Tabs(Plugin plugin, Configuration mutable) {
+        this.Plugin = plugin;
         this.Mutable = mutable;
     }
 
@@ -152,6 +154,27 @@ internal sealed class Tabs : ISettingsTab {
                             }
 
                             ImGui.TreePop();
+                        }
+                    }
+
+                    ImGui.TreePop();
+                }
+
+                if (this.Plugin.ExtraChat.ChannelNames.Count > 0 && ImGui.TreeNodeEx(Language.Options_Tabs_ExtraChatChannels)) {
+                    ImGui.Checkbox(Language.Options_Tabs_ExtraChatAll, ref tab.ExtraChatAll);
+
+                    ImGui.Separator();
+
+                    foreach (var (id, name) in this.Plugin.ExtraChat.ChannelNames) {
+                        var enabled = tab.ExtraChatChannels.Contains(id);
+                        if (!ImGui.Checkbox($"{name}##ec-{id}", ref enabled)) {
+                            continue;
+                        }
+
+                        if (enabled) {
+                            tab.ExtraChatChannels.Add(id);
+                        } else {
+                            tab.ExtraChatChannels.Remove(id);
                         }
                     }
 
