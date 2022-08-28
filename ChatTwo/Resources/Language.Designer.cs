@@ -1502,5 +1502,29 @@ namespace ChatTwo.Resources {
                 return ResourceManager.GetString("Options_Tabs_ExtraChatAll", resourceCulture);
             }
         }
+        
+        internal static string Migration_Line1 {
+            get {
+                return ResourceManager.GetString("Migration_Line1", resourceCulture);
+            }
+        }
+        
+        internal static string Migration_Line2 {
+            get {
+                return ResourceManager.GetString("Migration_Line2", resourceCulture);
+            }
+        }
+        
+        internal static string Migration_Line3 {
+            get {
+                return ResourceManager.GetString("Migration_Line3", resourceCulture);
+            }
+        }
+        
+        internal static string Migration_Line4 {
+            get {
+                return ResourceManager.GetString("Migration_Line4", resourceCulture);
+            }
+        }
     }
 }

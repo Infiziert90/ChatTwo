@@ -851,4 +851,16 @@
     <data name="Options_Tabs_ExtraChatAll" xml:space="preserve">
         <value>All</value>
     </data>
+    <data name="Migration_Line1" xml:space="preserve">
+        <value>Chat 2 is performing a database migration.</value>
+    </data>
+    <data name="Migration_Line2" xml:space="preserve">
+        <value>Chat 2 and the plugin installer will be unavailable until it is complete.</value>
+    </data>
+    <data name="Migration_Line3" xml:space="preserve">
+        <value>This may take a few minutes depending on the size of your chat database.</value>
+    </data>
+    <data name="Migration_Line4" xml:space="preserve">
+        <value>Do not close FFXIV, unload Dalamud, or turn off your computer during this time.</value>
+    </data>
 </root>

@@ -1,11 +1,14 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Numerics;
 using ChatTwo.Code;
+using ChatTwo.Resources;
 using ChatTwo.Util;
 using Dalamud.Game;
 using Dalamud.Game.Text;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Logging;
+using ImGuiNET;
 using LiteDB;
 using Lumina.Excel.GeneratedSheets;
 
@@ -139,46 +142,7 @@ internal class Store : IDisposable {
         this.Messages.EnsureIndex(msg => msg.SortCode);
         this.Messages.EnsureIndex(msg => msg.ExtraChatChannel);
 
-        // re-save all messages, which will add the ExtraChat channel
-        if (this.Plugin.Config.DatabaseMigration == 0) {
-            var total = (float) this.Messages.LongCount() / 10_000.0;
-            var rounds = (long) Math.Ceiling(total);
-            var lastId = ObjectId.Empty;
-            for (var i = 0; i < rounds; i++) {
-                PluginLog.Log($"Update round {i}/{rounds}");
-                var messages = this.Messages.Query()
-                    .OrderBy(msg => msg.Id)
-                    .Where(msg => msg.Id > lastId)
-                    .Limit(10_000)
-                    .ToArray();
-
-                foreach (var message in messages) {
-                    this.Messages.Update(message);
-                    lastId = message.Id;
-                }
-            }
-
-            this.Database.Checkpoint();
-
-            this.Plugin.Config.DatabaseMigration = 1;
-            this.Plugin.SaveConfig();
-
-            BsonMapper.Global.Entity<Message>()
-                .Id(msg => msg.Id)
-                .Ctor(doc => new Message(
-                    doc["_id"].AsObjectId,
-                    (ulong) doc["Receiver"].AsInt64,
-                    (ulong) doc["ContentId"].AsInt64,
-                    DateTime.UnixEpoch.AddMilliseconds(doc["Date"].AsInt64),
-                    doc["Code"].AsDocument,
-                    doc["Sender"].AsArray,
-                    doc["Content"].AsArray,
-                    doc["SenderSource"],
-                    doc["ContentSource"],
-                    doc["SortCode"].AsDocument,
-                    doc["ExtraChatChannel"]
-                ));
-        }
+        this.MigrateWrapper();
 
         this.Plugin.ChatGui.ChatMessageUnhandled += this.ChatMessage;
         this.Plugin.Framework.Update += this.GetMessageInfo;
@@ -238,6 +202,87 @@ internal class Store : IDisposable {
         entry.Item2.ContentId = contentId ?? 0;
         if (this.Plugin.Config.DatabaseBattleMessages || !entry.Item2.Code.IsBattle()) {
             this.Messages.Update(entry.Item2);
+        }
+    }
+
+    private long _migrateCurrent;
+    private long _migrateMax;
+
+    private void MigrateDraw() {
+        ImGui.SetNextWindowSizeConstraints(new Vector2(450, 0), new Vector2(450, float.MaxValue));
+        if (!ImGui.Begin($"{this.Plugin.Name}##migration-window", ImGuiWindowFlags.AlwaysAutoResize)) {
+            ImGui.End();
+            return;
+        }
+
+        ImGui.PushTextWrapPos();
+        ImGui.TextUnformatted(Language.Migration_Line1);
+        ImGui.TextUnformatted(Language.Migration_Line2);
+        ImGui.TextUnformatted(Language.Migration_Line3);
+        ImGui.TextUnformatted(Language.Migration_Line4);
+        ImGui.PopTextWrapPos();
+
+        ImGui.Spacing();
+        ImGui.ProgressBar((float) this._migrateCurrent / this._migrateMax, new Vector2(-1, 0), $"{this._migrateCurrent} / {this._migrateMax}");
+
+        ImGui.End();
+    }
+
+    internal void MigrateWrapper() {
+        if (this.Plugin.Config.DatabaseMigration < Configuration.LatestDbVersion) {
+            this.Plugin.Interface.UiBuilder.Draw += this.MigrateDraw;
+        }
+
+        try {
+            this.Migrate();
+        } finally {
+            this.Plugin.Interface.UiBuilder.Draw -= this.MigrateDraw;
+        }
+    }
+
+    internal void Migrate() {
+        // re-save all messages, which will add the ExtraChat channel
+        if (this.Plugin.Config.DatabaseMigration == 0) {
+            var total = (float) this.Messages.LongCount() / 10_000.0;
+            var rounds = (long) Math.Ceiling(total);
+            this._migrateMax = rounds;
+
+            var lastId = ObjectId.Empty;
+            for (var i = 0; i < rounds; i++) {
+                this._migrateCurrent = i + 1;
+                PluginLog.Log($"Update round {i + 1}/{rounds}");
+                var messages = this.Messages.Query()
+                    .OrderBy(msg => msg.Id)
+                    .Where(msg => msg.Id > lastId)
+                    .Limit(10_000)
+                    .ToArray();
+
+                foreach (var message in messages) {
+                    this.Messages.Update(message);
+                    lastId = message.Id;
+                }
+            }
+
+            this.Database.Checkpoint();
+
+            BsonMapper.Global.Entity<Message>()
+                .Id(msg => msg.Id)
+                .Ctor(doc => new Message(
+                    doc["_id"].AsObjectId,
+                    (ulong) doc["Receiver"].AsInt64,
+                    (ulong) doc["ContentId"].AsInt64,
+                    DateTime.UnixEpoch.AddMilliseconds(doc["Date"].AsInt64),
+                    doc["Code"].AsDocument,
+                    doc["Sender"].AsArray,
+                    doc["Content"].AsArray,
+                    doc["SenderSource"],
+                    doc["ContentSource"],
+                    doc["SortCode"].AsDocument,
+                    doc["ExtraChatChannel"]
+                ));
+
+            this.Plugin.Config.DatabaseMigration = 1;
+            this.Plugin.SaveConfig();
         }
     }
 

@@ -130,6 +130,10 @@ internal sealed class PluginUi : IDisposable {
     }
 
     private void Draw() {
+        if (this.Plugin.Config.DatabaseMigration != Configuration.LatestDbVersion) {
+            return;
+        }
+
         this.Plugin.Interface.UiBuilder.DisableUserUiHide = !this.Plugin.Config.HideWhenUiHidden;
         this.DefaultText = ImGui.GetStyle().Colors[(int) ImGuiCol.Text];
 

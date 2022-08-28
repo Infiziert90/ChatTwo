@@ -10,6 +10,7 @@ namespace ChatTwo;
 [Serializable]
 internal class Configuration : IPluginConfiguration {
     private const int LatestVersion = 5;
+    internal const int LatestDbVersion = 1;
 
     public int Version { get; set; } = LatestVersion;
 
@@ -49,7 +50,7 @@ internal class Configuration : IPluginConfiguration {
     public Dictionary<ChatType, uint> ChatColours = new();
     public List<Tab> Tabs = new();
 
-    public uint DatabaseMigration;
+    public uint DatabaseMigration = LatestDbVersion;
 
     internal void UpdateFrom(Configuration other) {
         this.HideChat = other.HideChat;
