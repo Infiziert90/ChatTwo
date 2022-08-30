@@ -852,10 +852,10 @@
         <value>All</value>
     </data>
     <data name="Migration_Line1" xml:space="preserve">
-        <value>Chat 2 is performing a database migration.</value>
+        <value>{0} is performing a database migration.</value>
     </data>
     <data name="Migration_Line2" xml:space="preserve">
-        <value>Chat 2 and the plugin installer will be unavailable until it is complete.</value>
+        <value>{0} and the plugin installer will be unavailable until it is complete.</value>
     </data>
     <data name="Migration_Line3" xml:space="preserve">
         <value>This may take a few minutes depending on the size of your chat database.</value>

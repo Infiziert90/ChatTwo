@@ -216,8 +216,8 @@ internal class Store : IDisposable {
         }
 
         ImGui.PushTextWrapPos();
-        ImGui.TextUnformatted(Language.Migration_Line1);
-        ImGui.TextUnformatted(Language.Migration_Line2);
+        ImGui.TextUnformatted(string.Format(Language.Migration_Line1, Plugin.PluginName));
+        ImGui.TextUnformatted(string.Format(Language.Migration_Line2, Plugin.PluginName));
         ImGui.TextUnformatted(Language.Migration_Line3);
         ImGui.TextUnformatted(Language.Migration_Line4);
         ImGui.PopTextWrapPos();
