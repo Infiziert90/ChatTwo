@@ -820,7 +820,12 @@ internal sealed class ChatLog : IUiComponent {
                         ImGui.SameLine();
                     }
 
-                    this.DrawChunks(message.Content, true, handler, lineWidth);
+                    if (message.Content.Count == 0) {
+                        this.DrawChunks(new[] { new TextChunk(ChunkSource.Content, null, " ") }, true, handler, lineWidth);
+                    } else {
+                        this.DrawChunks(message.Content, true, handler, lineWidth);
+                    }
+
                     var afterDraw = ImGui.GetCursorScreenPos();
 
                     message.Height = ImGui.GetCursorPosY() - lastPos;
