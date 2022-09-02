@@ -176,7 +176,7 @@ internal class Tab {
     public uint Unread;
 
     [NonSerialized]
-    public Mutex MessagesMutex = new();
+    public SemaphoreSlim MessagesMutex = new(1, 1);
 
     [NonSerialized]
     public List<Message> Messages = new();
@@ -195,13 +195,13 @@ internal class Tab {
     }
 
     internal void AddMessage(Message message, bool unread = true) {
-        this.MessagesMutex.WaitOne();
+        this.MessagesMutex.Wait();
         this.Messages.Add(message);
         while (this.Messages.Count > Store.MessagesLimit) {
             this.Messages.RemoveAt(0);
         }
 
-        this.MessagesMutex.ReleaseMutex();
+        this.MessagesMutex.Release();
 
         if (unread) {
             this.Unread += 1;
@@ -209,9 +209,9 @@ internal class Tab {
     }
 
     internal void Clear() {
-        this.MessagesMutex.WaitOne();
+        this.MessagesMutex.Wait();
         this.Messages.Clear();
-        this.MessagesMutex.ReleaseMutex();
+        this.MessagesMutex.Release();
     }
 
     internal Tab Clone() {
