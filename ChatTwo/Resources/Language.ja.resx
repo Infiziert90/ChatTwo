@@ -121,339 +121,145 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <data name="Context_HideChat" xml:space="preserve">
+    <data name="Context_HideChat">
         <value>ログウィンドウを隠す</value>
     </data>
-    <data name="Context_Copy" xml:space="preserve">
+    <data name="Context_Copy">
         <value>コピーする</value>
     </data>
-    <data name="Context_TryOn" xml:space="preserve">
+    <data name="Context_TryOn">
         <value>装備試着</value>
     </data>
-    <data name="Context_ItemComparison" xml:space="preserve">
+    <data name="Context_ItemComparison">
         <value>装備詳細を比較</value>
     </data>
-    <data name="Context_SearchRecipes" xml:space="preserve">
+    <data name="Context_SearchRecipes">
         <value>この素材から作れるものを確認</value>
     </data>
-    <data name="Context_SearchForItem" xml:space="preserve">
+    <data name="Context_SearchForItem">
         <value>所持状況を確認</value>
     </data>
-    <data name="Context_Link" xml:space="preserve">
+    <data name="Context_Link">
         <value>基本性能を伝える</value>
     </data>
-    <data name="Context_CopyItemName" xml:space="preserve">
+    <data name="Context_CopyItemName">
         <value>アイテム名をコピーする</value>
     </data>
-    <data name="Context_SendTell" xml:space="preserve">
+    <data name="Context_SendTell">
         <value>Tellする</value>
     </data>
-    <data name="Context_InviteToParty" xml:space="preserve">
+    <data name="Context_InviteToParty">
         <value>パーティに誘う</value>
     </data>
-    
-    
-    <data name="Context_Promote" xml:space="preserve">
+    <data name="Context_Promote">
         <value>パーティリーダーを委譲する</value>
     </data>
-    <data name="Context_KickFromParty" xml:space="preserve">
+    <data name="Context_KickFromParty">
         <value>パーティから除外する</value>
     </data>
-    <data name="Context_SendFriendRequest" xml:space="preserve">
+    <data name="Context_SendFriendRequest">
         <value>フレンド申請をする</value>
     </data>
-    <data name="Context_AddToBlacklist" xml:space="preserve">
+    <data name="Context_AddToBlacklist">
         <value>ブラックリストに登録する</value>
     </data>
-    <data name="Context_InviteToNoviceNetwork" xml:space="preserve">
+    <data name="Context_InviteToNoviceNetwork">
         <value>ビギナーチャンネルに招待する</value>
     </data>
-    <data name="Context_ReplyInSelectedChatMode" xml:space="preserve">
+    <data name="Context_ReplyInSelectedChatMode">
         <value>選択した会話モードに返信する</value>
     </data>
-    <data name="Context_Target" xml:space="preserve">
+    <data name="Context_Target">
         <value>ターゲットする</value>
     </data>
-    
-    
-    
-    
-    
-    
-    
-    
-    <data name="ChatType_Alliance" xml:space="preserve">
+    <data name="ChatType_Alliance">
         <value>アライアンス</value>
     </data>
-    <data name="ChatType_Linkshell1" xml:space="preserve">
+    <data name="ChatType_Linkshell1">
         <value>Linkshell[1]</value>
     </data>
-    <data name="ChatType_Linkshell2" xml:space="preserve">
+    <data name="ChatType_Linkshell2">
         <value>Linkshell[2]</value>
     </data>
-    <data name="ChatType_Linkshell3" xml:space="preserve">
+    <data name="ChatType_Linkshell3">
         <value>Linkshell[3]</value>
     </data>
-    <data name="ChatType_Linkshell4" xml:space="preserve">
+    <data name="ChatType_Linkshell4">
         <value>Linkshell[4]</value>
     </data>
-    <data name="ChatType_Linkshell5" xml:space="preserve">
+    <data name="ChatType_Linkshell5">
         <value>Linkshell[5]</value>
     </data>
-    <data name="ChatType_Linkshell6" xml:space="preserve">
+    <data name="ChatType_Linkshell6">
         <value>Linkshell[6]</value>
     </data>
-    <data name="ChatType_Linkshell7" xml:space="preserve">
+    <data name="ChatType_Linkshell7">
         <value>Linkshell[7]</value>
     </data>
-    <data name="ChatType_Linkshell8" xml:space="preserve">
+    <data name="ChatType_Linkshell8">
         <value>Linkshell[8]</value>
     </data>
-    <data name="ChatType_FreeCompany" xml:space="preserve">
+    <data name="ChatType_FreeCompany">
         <value>フリーカンパニー</value>
     </data>
-    <data name="ChatType_NoviceNetwork" xml:space="preserve">
+    <data name="ChatType_NoviceNetwork">
         <value>ビギナーチャンネル</value>
     </data>
-    
-    
-    
-    
-    <data name="ChatType_PvpTeam" xml:space="preserve">
+    <data name="ChatType_PvpTeam">
         <value>PvPチーム</value>
     </data>
-    <data name="ChatType_CrossLinkshell1" xml:space="preserve">
+    <data name="ChatType_CrossLinkshell1">
         <value>クロスワールドリンクシェル：チャンネル1</value>
     </data>
-    <data name="ChatType_CrossLinkshell2" xml:space="preserve">
+    <data name="ChatType_CrossLinkshell2">
         <value>クロスワールドリンクシェル：チャンネル2</value>
     </data>
-    <data name="ChatType_CrossLinkshell3" xml:space="preserve">
+    <data name="ChatType_CrossLinkshell3">
         <value>クロスワールドリンクシェル：チャンネル3</value>
     </data>
-    <data name="ChatType_CrossLinkshell4" xml:space="preserve">
+    <data name="ChatType_CrossLinkshell4">
         <value>クロスワールドリンクシェル：チャンネル4</value>
     </data>
-    <data name="ChatType_CrossLinkshell5" xml:space="preserve">
+    <data name="ChatType_CrossLinkshell5">
         <value>クロスワールドリンクシェル：チャンネル5</value>
     </data>
-    <data name="ChatType_CrossLinkshell6" xml:space="preserve">
+    <data name="ChatType_CrossLinkshell6">
         <value>クロスワールドリンクシェル：チャンネル6</value>
     </data>
-    <data name="ChatType_CrossLinkshell7" xml:space="preserve">
+    <data name="ChatType_CrossLinkshell7">
         <value>クロスワールドリンクシェル：チャンネル7</value>
     </data>
-    <data name="ChatType_CrossLinkshell8" xml:space="preserve">
+    <data name="ChatType_CrossLinkshell8">
         <value>クロスワールドリンクシェル：チャンネル8</value>
     </data>
-    <data name="ChatType_Damage" xml:space="preserve">
+    <data name="ChatType_Damage">
         <value>ダメージを与えた</value>
     </data>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <data name="ChatType_Echo" xml:space="preserve">
+    <data name="ChatType_Echo">
         <value>/echoで出力するテキスト</value>
     </data>
-    <data name="ChatType_System" xml:space="preserve">
+    <data name="ChatType_System">
         <value>システムメッセージ</value>
     </data>
-    <data name="ChatType_BattleSystem" xml:space="preserve">
+    <data name="ChatType_BattleSystem">
         <value>戦闘に関するシステムメッセージ</value>
     </data>
-    <data name="ChatType_GatheringSystem" xml:space="preserve">
+    <data name="ChatType_GatheringSystem">
         <value>採集に関するシステムメッセージ</value>
     </data>
-    <data name="ChatType_Error" xml:space="preserve">
+    <data name="ChatType_Error">
         <value>エラーメッセージ</value>
     </data>
-    <data name="ChatType_NpcDialogue" xml:space="preserve">
+    <data name="ChatType_NpcDialogue">
         <value>NPC会話</value>
     </data>
-    
-    
-    
-    
-    
-    
-    <data name="ChatType_FreeCompanyAnnouncement" xml:space="preserve">
+    <data name="ChatType_FreeCompanyAnnouncement">
         <value>フリーカンパニーアナウンス</value>
     </data>
-    
-    
-    
-    
-    
-    <data name="ChatType_NoviceNetworkSystem" xml:space="preserve">
+    <data name="ChatType_NoviceNetworkSystem">
         <value>ビギナーチャンネルアナウンス</value>
     </data>
-    
-    <data name="ChatType_PvpTeamAnnouncement" xml:space="preserve">
+    <data name="ChatType_PvpTeamAnnouncement">
         <value>PvPチームアナウンス</value>
     </data>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 </root>
