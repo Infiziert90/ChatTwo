@@ -48,7 +48,7 @@ internal sealed unsafe class Context {
             return;
         }
 
-        // 6.05: 20E4CB
+        // 6.3: 221EFD
         var a1 = this.Plugin.Functions.GetInfoProxyByIndex(0x14);
 
         fixed (byte* namePtr = name.ToTerminatedBytes()) {

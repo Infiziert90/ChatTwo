@@ -13,7 +13,6 @@ internal sealed class Settings : IUiComponent {
 
     private Configuration Mutable { get; }
     private List<ISettingsTab> Tabs { get; }
-
     private int _currentTab;
 
     internal Settings(PluginUi ui) {
