@@ -14,6 +14,7 @@ using ImGuiNET;
 using ImGuiScene;
 using Lumina.Excel.GeneratedSheets;
 using Action = System.Action;
+using PartyFinderPayload = Dalamud.Game.Text.SeStringHandling.Payloads.PartyFinderPayload;
 
 namespace ChatTwo;
 
@@ -295,18 +296,16 @@ internal sealed class PayloadHandler {
                 break;
             }
             case PartyFinderPayload pf: {
-                this.Ui.Plugin.Functions.OpenPartyFinder(pf.Id);
+                if (pf.LinkType == PartyFinderPayload.PartyFinderLinkType.PartyFinderNotification) {
+                    GameFunctions.GameFunctions.OpenPartyFinder();
+                } else {
+                    this.Ui.Plugin.Functions.OpenPartyFinder(pf.ListingId);
+                }
+
                 break;
             }
             case AchievementPayload achievement: {
                 this.Ui.Plugin.Functions.OpenAchievement(achievement.Id);
-                break;
-            }
-            case RawPayload raw: {
-                if (Equals(raw, ChunkUtil.PeriodicRecruitmentLink)) {
-                    GameFunctions.GameFunctions.OpenPartyFinder();
-                }
-
                 break;
             }
         }

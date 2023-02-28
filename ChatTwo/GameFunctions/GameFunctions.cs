@@ -227,7 +227,7 @@ internal unsafe class GameFunctions : IDisposable {
             vf27(atkModule, addonId, 1);
         } else {
             // 6.05: 8443DD
-            if (*(uint*) ((IntPtr) lfg + 0x2AB8) > 0) {
+            if (*(uint*) ((IntPtr) lfg + 0x2C20) > 0) {
                 lfg->Hide();
             } else {
                 lfg->Show();
