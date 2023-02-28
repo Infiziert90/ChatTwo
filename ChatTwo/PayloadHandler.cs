@@ -14,7 +14,8 @@ using ImGuiNET;
 using ImGuiScene;
 using Lumina.Excel.GeneratedSheets;
 using Action = System.Action;
-using PartyFinderPayload = Dalamud.Game.Text.SeStringHandling.Payloads.PartyFinderPayload;
+using DalamudPartyFinderPayload = Dalamud.Game.Text.SeStringHandling.Payloads.PartyFinderPayload;
+using ChatTwoPartyFinderPayload = ChatTwo.Util.PartyFinderPayload;
 
 namespace ChatTwo;
 
@@ -295,8 +296,8 @@ internal sealed class PayloadHandler {
                 this.ClickLinkPayload(chunk, payload, link);
                 break;
             }
-            case PartyFinderPayload pf: {
-                if (pf.LinkType == PartyFinderPayload.PartyFinderLinkType.PartyFinderNotification) {
+            case DalamudPartyFinderPayload pf: {
+                if (pf.LinkType == DalamudPartyFinderPayload.PartyFinderLinkType.PartyFinderNotification) {
                     GameFunctions.GameFunctions.OpenPartyFinder();
                 } else {
                     this.Ui.Plugin.Functions.OpenPartyFinder(pf.ListingId);
@@ -304,8 +305,19 @@ internal sealed class PayloadHandler {
 
                 break;
             }
+            case ChatTwoPartyFinderPayload pf: {
+                this.Ui.Plugin.Functions.OpenPartyFinder(pf.Id);
+                break;
+            }
             case AchievementPayload achievement: {
                 this.Ui.Plugin.Functions.OpenAchievement(achievement.Id);
+                break;
+            }
+            case RawPayload raw: {
+                if (Equals(raw, ChunkUtil.PeriodicRecruitmentLink)) {
+                    GameFunctions.GameFunctions.OpenPartyFinder();
+                }
+
                 break;
             }
         }

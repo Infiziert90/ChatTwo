@@ -71,6 +71,11 @@ internal static class ChunkUtil {
                     if (rawPayload.Data.Length > 1 && rawPayload.Data[1] == 0x13) {
                         foreground.Pop();
                         glow.Pop();
+                    } else if (rawPayload.Data.Length > 7 && rawPayload.Data[1] == 0x27 && rawPayload.Data[3] == 0x0A) {
+                        // pf payload
+                        var reader = new BinaryReader(new MemoryStream(rawPayload.Data[4..]));
+                        var id = GetInteger(reader);
+                        link = new PartyFinderPayload(id);
                     } else if (rawPayload.Data.Length > 5 && rawPayload.Data[1] == 0x27 && rawPayload.Data[3] == 0x06) {
                         // achievement payload
                         var reader = new BinaryReader(new MemoryStream(rawPayload.Data[4..]));
