@@ -20,7 +20,7 @@ internal sealed unsafe class Context {
     [Signature("E8 ?? ?? ?? ?? EB 3F 83 F8 FE", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<AgentInterface*, ushort, uint, byte, void> _itemComparison = null!;
 
-    [Signature("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 41 B4 01", Fallibility = Fallibility.Fallible)]
+    [Signature("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 83 F8 0F", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<IntPtr, uint, void> _searchForRecipesUsingItem = null!;
 
     [Signature("E8 ?? ?? ?? ?? EB 45 45 33 C9", Fallibility = Fallibility.Fallible)]
