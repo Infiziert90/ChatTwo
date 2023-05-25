@@ -53,7 +53,7 @@ internal sealed unsafe class Chat : IDisposable {
     [Signature("3B 51 10 73 0F 8B C2 48 83 C0 0B")]
     private readonly delegate* unmanaged<IntPtr, uint, ulong*> _getLinkshellInfo = null!;
 
-    [Signature("E8 ?? ?? ?? ?? 4C 8B C0 FF C3")]
+    [Signature("E8 ?? ?? ?? ?? 4C 8B C8 44 8D 47 01")]
     private readonly delegate* unmanaged<IntPtr, ulong, byte*> _getLinkshellName = null!;
 
     [Signature("40 56 41 54 41 55 41 57 48 83 EC 28 48 8B 01", Fallibility = Fallibility.Fallible)]
