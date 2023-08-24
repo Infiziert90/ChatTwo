@@ -1,5 +1,5 @@
 name: Chat 2
-author: ascclemens
+author: Anna
 punchline: Electric Boogaloo - ♪ A whole new chat, a new fantastic chat window ♪
 description: |-
   Chat 2 is a complete rewrite of the in-game chat window as a plugin. It
@@ -13,6 +13,6 @@ description: |-
   - Sidebar tabs
   - Unread counts
   - Screenshot mode (obfuscate names)
-repo_url: https://git.annaclemens.io/ascclemens/ChatTwo
+repo_url: https://git.anna.lgbt/anna/ChatTwo
 accepts_feedback: false
-feedback_message: Submit only bugs to https://github.com/ascclemens/plugin-issues
+feedback_message: Submit only bugs to https://github.com/anna/plugin-issues

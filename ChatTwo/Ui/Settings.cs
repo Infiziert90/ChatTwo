@@ -129,7 +129,7 @@ internal sealed class Settings : IUiComponent {
             ImGui.SameLine(ImGui.GetContentRegionAvail().X - buttonWidth);
 
             if (ImGui.Button(buttonLabel)) {
-                Process.Start(new ProcessStartInfo("https://ko-fi.com/ascclemens") {
+                Process.Start(new ProcessStartInfo("https://ko-fi.com/lojewalo") {
                     UseShellExecute = true,
                 });
             }
