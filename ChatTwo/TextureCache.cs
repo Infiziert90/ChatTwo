@@ -1,22 +1,22 @@
-using Dalamud.Data;
-using ImGuiScene;
+using Dalamud.Interface.Internal;
+using Dalamud.Plugin.Services;
 using Lumina.Excel.GeneratedSheets;
 
 namespace ChatTwo;
 
 internal class TextureCache : IDisposable {
-    private DataManager Data { get; }
+    private ITextureProvider TextureProvider { get; }
 
-    private readonly Dictionary<(uint, bool), TextureWrap> _itemIcons = new();
-    private readonly Dictionary<(uint, bool), TextureWrap> _statusIcons = new();
-    private readonly Dictionary<(uint, bool), TextureWrap> _eventItemIcons = new();
+    private readonly Dictionary<(uint, bool), IDalamudTextureWrap> _itemIcons = new();
+    private readonly Dictionary<(uint, bool), IDalamudTextureWrap> _statusIcons = new();
+    private readonly Dictionary<(uint, bool), IDalamudTextureWrap> _eventItemIcons = new();
 
-    internal IReadOnlyDictionary<(uint, bool), TextureWrap> ItemIcons => this._itemIcons;
-    internal IReadOnlyDictionary<(uint, bool), TextureWrap> StatusIcons => this._statusIcons;
-    internal IReadOnlyDictionary<(uint, bool), TextureWrap> EventItemIcons => this._eventItemIcons;
+    internal IReadOnlyDictionary<(uint, bool), IDalamudTextureWrap> ItemIcons => this._itemIcons;
+    internal IReadOnlyDictionary<(uint, bool), IDalamudTextureWrap> StatusIcons => this._statusIcons;
+    internal IReadOnlyDictionary<(uint, bool), IDalamudTextureWrap> EventItemIcons => this._eventItemIcons;
 
-    internal TextureCache(DataManager data) {
-        this.Data = data;
+    internal TextureCache(ITextureProvider textureProvider) {
+        this.TextureProvider = textureProvider;
     }
 
     public void Dispose() {
@@ -28,14 +28,14 @@ internal class TextureCache : IDisposable {
         }
     }
 
-    private void AddIcon(IDictionary<(uint, bool), TextureWrap> dict, uint icon, bool hq = false) {
+    private void AddIcon(IDictionary<(uint, bool), IDalamudTextureWrap> dict, uint icon, bool hq = false) {
         if (dict.ContainsKey((icon, hq))) {
             return;
         }
 
         var tex = hq
-            ? this.Data.GetImGuiTextureHqIcon(icon)
-            : this.Data.GetImGuiTextureIcon(icon);
+            ? this.TextureProvider.GetIcon(icon, ITextureProvider.IconFlags.ItemHighQuality)
+            : this.TextureProvider.GetIcon(icon);
         if (tex != null) {
             dict[(icon, hq)] = tex;
         }
@@ -53,19 +53,19 @@ internal class TextureCache : IDisposable {
         this.AddIcon(this._eventItemIcons, item.Icon);
     }
 
-    internal TextureWrap? GetItem(Item item, bool hq = false) {
+    internal IDalamudTextureWrap? GetItem(Item item, bool hq = false) {
         this.AddItem(item, hq);
         this.ItemIcons.TryGetValue((item.Icon, hq), out var icon);
         return icon;
     }
 
-    internal TextureWrap? GetStatus(Status status) {
+    internal IDalamudTextureWrap? GetStatus(Status status) {
         this.AddStatus(status);
         this.StatusIcons.TryGetValue((status.Icon, false), out var icon);
         return icon;
     }
 
-    internal TextureWrap? GetEventItem(EventItem item) {
+    internal IDalamudTextureWrap? GetEventItem(EventItem item) {
         this.AddEventItem(item);
         this.EventItemIcons.TryGetValue((item.Icon, false), out var icon);
         return icon;

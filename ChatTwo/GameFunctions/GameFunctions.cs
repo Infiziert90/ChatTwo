@@ -71,7 +71,7 @@ internal unsafe class GameFunctions : IDisposable {
         this.Chat = new Chat(this.Plugin);
         this.Context = new Context(this.Plugin);
 
-        SignatureHelper.Initialise(this);
+        this.Plugin.GameInteropProvider.InitializeFromAttributes(this);
 
         this.ResolveTextCommandPlaceholderHook?.Enable();
     }
@@ -207,7 +207,7 @@ internal unsafe class GameFunctions : IDisposable {
         // hide addon first to prevent the "addon close" sound
         var addon = AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName("ItemDetail");
         if (addon != null) {
-            addon->Hide(true);
+            addon->Hide(true, false, 0);
         }
 
         var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.ItemDetail);

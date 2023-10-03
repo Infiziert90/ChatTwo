@@ -40,7 +40,7 @@ internal sealed unsafe class Context {
 
     internal Context(Plugin plugin) {
         this.Plugin = plugin;
-        SignatureHelper.Initialise(this);
+        this.Plugin.GameInteropProvider.InitializeFromAttributes(this);
     }
 
     internal void InviteToNoviceNetwork(string name, ushort world) {

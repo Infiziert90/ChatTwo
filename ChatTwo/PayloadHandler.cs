@@ -7,11 +7,11 @@ using ChatTwo.Util;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
-using Dalamud.Interface;
+using Dalamud.Interface.Internal;
+using Dalamud.Interface.Utility;
 using Dalamud.Logging;
 using Dalamud.Utility;
 using ImGuiNET;
-using ImGuiScene;
 using Lumina.Excel.GeneratedSheets;
 using Action = System.Action;
 using DalamudPartyFinderPayload = Dalamud.Game.Text.SeStringHandling.Payloads.PartyFinderPayload;
@@ -120,7 +120,7 @@ internal sealed class PayloadHandler {
             ImGui.Separator();
         }
 
-        if (!ImGui.BeginMenu(this.Ui.Plugin.Name)) {
+        if (!ImGui.BeginMenu(Plugin.Name)) {
             return;
         }
 
@@ -216,7 +216,7 @@ internal sealed class PayloadHandler {
         }
     }
 
-    private static void InlineIcon(TextureWrap icon) {
+    private static void InlineIcon(IDalamudTextureWrap icon) {
         var lineHeight = ImGui.CalcTextSize("A").Y;
 
         var cursor = ImGui.GetCursorPos();
@@ -531,7 +531,7 @@ internal sealed class PayloadHandler {
         }
 
         if (ImGui.Selectable(Language.Context_Target) && this.FindCharacterForPayload(player) is { } obj) {
-            this.Ui.Plugin.TargetManager.SetTarget(obj);
+            this.Ui.Plugin.TargetManager.Target = obj;
         }
 
         // View Party Finder 0x2E

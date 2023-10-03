@@ -3,17 +3,10 @@ using System.Globalization;
 using ChatTwo.Ipc;
 using ChatTwo.Resources;
 using ChatTwo.Util;
-using Dalamud.Data;
-using Dalamud.Game;
-using Dalamud.Game.ClientState;
-using Dalamud.Game.ClientState.Conditions;
-using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.ClientState.Objects;
-using Dalamud.Game.ClientState.Party;
-using Dalamud.Game.Command;
-using Dalamud.Game.Gui;
 using Dalamud.IoC;
 using Dalamud.Plugin;
+using Dalamud.Plugin.Services;
 using XivCommon;
 
 namespace ChatTwo;
@@ -22,43 +15,55 @@ namespace ChatTwo;
 public sealed class Plugin : IDalamudPlugin {
     internal const string PluginName = "Chat 2";
 
-    public string Name => PluginName;
+    internal static string Name => PluginName;
+
+    [PluginService]
+    internal static IPluginLog Log { get; private set; }
 
     [PluginService]
     internal DalamudPluginInterface Interface { get; init; }
 
     [PluginService]
-    internal ChatGui ChatGui { get; init; }
+    internal IChatGui ChatGui { get; init; }
 
     [PluginService]
-    internal ClientState ClientState { get; init; }
+    internal IClientState ClientState { get; init; }
 
     [PluginService]
-    internal CommandManager CommandManager { get; init; }
+    internal ICommandManager CommandManager { get; init; }
 
     [PluginService]
-    internal Condition Condition { get; init; }
+    internal ICondition Condition { get; init; }
 
     [PluginService]
-    internal DataManager DataManager { get; init; }
+    internal IDataManager DataManager { get; init; }
 
     [PluginService]
-    internal Framework Framework { get; init; }
+    internal IFramework Framework { get; init; }
 
     [PluginService]
-    internal GameGui GameGui { get; init; }
+    internal IGameGui GameGui { get; init; }
 
     [PluginService]
-    internal KeyState KeyState { get; init; }
+    internal IKeyState KeyState { get; init; }
 
     [PluginService]
-    internal ObjectTable ObjectTable { get; init; }
+    internal IObjectTable ObjectTable { get; init; }
 
     [PluginService]
-    internal PartyList PartyList { get; init; }
+    internal IPartyList PartyList { get; init; }
 
     [PluginService]
-    internal TargetManager TargetManager { get; init; }
+    internal ITargetManager TargetManager { get; init; }
+
+    [PluginService]
+    internal ITextureProvider TextureProvider { get; init; }
+
+    [PluginService]
+    internal IGameInteropProvider GameInteropProvider { get; init; }
+
+    [PluginService]
+    internal IGameConfig GameConfig { get; init; }
 
     internal Configuration Config { get; }
     internal Commands Commands { get; }
@@ -89,7 +94,7 @@ public sealed class Plugin : IDalamudPlugin {
 
         this.Commands = new Commands(this);
         this.Common = new XivCommonBase();
-        this.TextureCache = new TextureCache(this.DataManager!);
+        this.TextureCache = new TextureCache(this.TextureProvider!);
         this.Functions = new GameFunctions.GameFunctions(this);
         this.Store = new Store(this);
         this.Ipc = new IpcManager(this.Interface);
@@ -143,7 +148,7 @@ public sealed class Plugin : IDalamudPlugin {
         "ChatLogPanel_3",
     };
 
-    private void FrameworkUpdate(Framework framework) {
+    private void FrameworkUpdate(IFramework framework) {
         if (this.DeferredSaveFrames >= 0 && this.DeferredSaveFrames-- == 0) {
             this.SaveConfig();
         }

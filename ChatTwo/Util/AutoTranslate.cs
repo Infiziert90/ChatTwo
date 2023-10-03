@@ -1,9 +1,9 @@
 using System.Runtime.InteropServices;
 using System.Text;
 using Dalamud;
-using Dalamud.Data;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
+using Dalamud.Plugin.Services;
 using Dalamud.Utility;
 using Lumina.Excel;
 using Lumina.Excel.GeneratedSheets;
@@ -89,7 +89,7 @@ internal static class AutoTranslate {
         return string.Join("", payloads);
     }
 
-    private static List<AutoTranslateEntry> AllEntries(DataManager data) {
+    private static List<AutoTranslateEntry> AllEntries(IDataManager data) {
         if (Entries.TryGetValue(data.Language, out var entries)) {
             return entries;
         }
@@ -197,7 +197,7 @@ internal static class AutoTranslate {
         return list;
     }
 
-    internal static List<AutoTranslateEntry> Matching(DataManager data, string prefix, bool sort) {
+    internal static List<AutoTranslateEntry> Matching(IDataManager data, string prefix, bool sort) {
         var wholeMatches = new List<AutoTranslateEntry>();
         var prefixMatches = new List<AutoTranslateEntry>();
         var otherMatches = new List<AutoTranslateEntry>();
@@ -227,7 +227,7 @@ internal static class AutoTranslate {
     [DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
     private static extern int memcmp(byte[] b1, byte[] b2, UIntPtr count);
 
-    internal static void ReplaceWithPayload(DataManager data, ref byte[] bytes) {
+    internal static void ReplaceWithPayload(IDataManager data, ref byte[] bytes) {
         var search = Encoding.UTF8.GetBytes("<at:");
         if (bytes.Length <= search.Length) {
             return;

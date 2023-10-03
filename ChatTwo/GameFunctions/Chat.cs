@@ -3,10 +3,12 @@ using ChatTwo.Code;
 using ChatTwo.GameFunctions.Types;
 using ChatTwo.Util;
 using Dalamud.Game.ClientState.Keys;
+using Dalamud.Game.Config;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Hooking;
 using Dalamud.Logging;
 using Dalamud.Memory;
+using Dalamud.Plugin.Services;
 using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Client.System.Memory;
@@ -142,7 +144,7 @@ internal sealed unsafe class Chat : IDisposable {
 
     internal Chat(Plugin plugin) {
         this.Plugin = plugin;
-        SignatureHelper.Initialise(this);
+        this.Plugin.GameInteropProvider.InitializeFromAttributes(this);
 
         this.ChatLogRefreshHook?.Enable();
         this.ChangeChannelNameHook?.Enable();
@@ -151,7 +153,7 @@ internal sealed unsafe class Chat : IDisposable {
 
         this.Plugin.Framework.Update += this.InterceptKeybinds;
         this.Plugin.ClientState.Login += this.Login;
-        this.Login(null, null);
+        this.Login();
     }
 
     public void Dispose() {
@@ -368,7 +370,7 @@ internal sealed unsafe class Chat : IDisposable {
         }
     }
 
-    private void InterceptKeybinds(Dalamud.Game.Framework framework) {
+    private void InterceptKeybinds(IFramework framework1) {
         this.CheckFocus();
         this.UpdateKeybinds();
 
@@ -435,7 +437,7 @@ internal sealed unsafe class Chat : IDisposable {
         }
     }
 
-    private void Login(object? sender, EventArgs? e) {
+    private void Login() {
         if (this.ChangeChannelNameHook == null) {
             return;
         }
@@ -454,10 +456,8 @@ internal sealed unsafe class Chat : IDisposable {
         }
 
         string? input = null;
-        var option = Framework.Instance()->GetUiModule()->GetConfigModule()->GetValue(ConfigOption.DirectChat);
-        if (option != null) {
-            var directChat = option->Int > 0;
-            if (directChat && this._currentCharacter != null) {
+        if (this.Plugin.GameConfig.TryGet(UiControlOption.DirectChat, out bool option) && option) {
+            if (this._currentCharacter != null) {
                 // FIXME: this whole system sucks
                 var c = *this._currentCharacter;
                 if (c != '\0' && !char.IsControl(c)) {
@@ -592,7 +592,7 @@ internal sealed unsafe class Chat : IDisposable {
             idx = 0;
         }
 
-        this._changeChatChannel(RaptureShellModule.Instance, (int) channel, idx, target, 1);
+        this._changeChatChannel(RaptureShellModule.Instance(), (int) channel, idx, target, 1);
         target->Dtor();
         IMemorySpace.Free(target);
     }

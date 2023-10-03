@@ -1,6 +1,6 @@
 using System.Numerics;
 using ChatTwo.Util;
-using Dalamud.Interface;
+using Dalamud.Interface.Utility;
 using Dalamud.Utility;
 using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;

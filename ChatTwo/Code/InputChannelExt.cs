@@ -1,4 +1,4 @@
-using Dalamud.Data;
+using Dalamud.Plugin.Services;
 using Lumina.Excel.GeneratedSheets;
 
 namespace ChatTwo.Code;
@@ -82,7 +82,7 @@ internal static class InputChannelExt {
         _ => "",
     };
 
-    public static IEnumerable<TextCommand>? TextCommands(this InputChannel channel, DataManager data) {
+    public static IEnumerable<TextCommand>? TextCommands(this InputChannel channel, IDataManager data) {
         var ids = channel switch {
             InputChannel.Tell => new uint[] { 104, 118 },
             InputChannel.Say => new uint[] { 102 },
