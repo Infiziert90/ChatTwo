@@ -4,21 +4,21 @@
     "net7.0-windows7.0": {
       "DalamudPackager": {
         "type": "Direct",
-        "requested": "[2.1.10, )",
-        "resolved": "2.1.10",
-        "contentHash": "S6NrvvOnLgT4GDdgwuKVJjbFo+8ZEj+JsEYk9ojjOR/MMfv1dIFpT8aRJQfI24rtDcw1uF+GnSSMN4WW1yt7fw=="
+        "requested": "[2.1.12, )",
+        "resolved": "2.1.12",
+        "contentHash": "Sc0PVxvgg4NQjcI8n10/VfUQBAS4O+Fw2pZrAqBdRMbthYGeogzu5+xmIGCGmsEZ/ukMOBuAqiNiB5qA3MRalg=="
       },
       "LiteDB": {
         "type": "Direct",
-        "requested": "[5.0.15, )",
-        "resolved": "5.0.15",
-        "contentHash": "nucyfCOGSATH553BxplxExP3BOqEwmHt0B57426EIaQjD3CC1Odb52VVCGgTxyYaD2oe3B/cJk8jDo6XiBJqPg=="
+        "requested": "[5.0.17, )",
+        "resolved": "5.0.17",
+        "contentHash": "cKPvkdlzIts3ZKu/BzoIc/Y71e4VFKlij4LyioPFATZMot+wB7EAm1FFbZSJez6coJmQUoIg/3yHE1MMU+zOdg=="
       },
       "Pidgin": {
         "type": "Direct",
-        "requested": "[3.2.1, )",
-        "resolved": "3.2.1",
-        "contentHash": "Jl7OaTEcyMxh4bCLTyh8Tnk0Efwd4hIYvszaLkFhU6oDIa7rdZF1s9f1MAvC4xyevzGwR8ZmVTQwoDyih6/66A=="
+        "requested": "[3.2.2, )",
+        "resolved": "3.2.2",
+        "contentHash": "imvuRt8fzxJCJs9kCk7s418NRyEdP6aDtz2qL9XYcn1ywTkpnrSq4IORVTQ879HNoTfJkyGkFadmEoCZEsebGg=="
       },
       "SharpDX.Direct2D1": {
         "type": "Direct",
@@ -33,9 +33,9 @@
       },
       "XivCommon": {
         "type": "Direct",
-        "requested": "[7.0.0-alpha.1, )",
-        "resolved": "7.0.0-alpha.1",
-        "contentHash": "4Yy4Wg3bnI/g9BSEYAqOZALmVMJZS0wcP847VlUIThBqIS/47O6tw2BI84he4KuPSTfIsYOzrcz3vAia8+Pn3g=="
+        "requested": "[9.0.0, )",
+        "resolved": "9.0.0",
+        "contentHash": "avaBp3FmSCi/PiQhntCeBDYOHejdyTWmFtz4pRBVQQ8vHkmRx+YTk1la9dkYBMlXxRXKckEdH1iI1Fu61JlE7w=="
       },
       "Microsoft.NETCore.Platforms": {
         "type": "Transitive",
