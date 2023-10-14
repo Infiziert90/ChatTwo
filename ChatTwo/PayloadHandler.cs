@@ -336,9 +336,18 @@ internal sealed class PayloadHandler {
 
         var payloads = source.Payloads.Skip(start).Take(end - start + 1).ToList();
 
-        var chatGui = this.Ui.Plugin.ChatGui;
-        var field = chatGui.GetType().GetField("dalamudLinkHandlers", BindingFlags.Instance | BindingFlags.NonPublic);
-        if (field == null || field.GetValue(chatGui) is not Dictionary<(string PluginName, uint CommandId), Action<uint, SeString>> dict || !dict.TryGetValue((link.Plugin, link.CommandId), out var action)) {
+        var chatGuiScoped = this.Ui.Plugin.ChatGui;
+        var chatGuiService = chatGuiScoped.GetType()
+            .GetField("chatGuiService", BindingFlags.Instance | BindingFlags.NonPublic)!
+            .GetValue(chatGuiScoped);
+        if (chatGuiService == null) {
+            Plugin.Log.Warning("could not find chatGuiService");
+            return;
+        }
+
+        var field = chatGuiService.GetType().GetField("dalamudLinkHandlers", BindingFlags.Instance | BindingFlags.NonPublic);
+        if (field == null || field.GetValue(chatGuiService) is not Dictionary<(string PluginName, uint CommandId), Action<uint, SeString>> dict || !dict.TryGetValue((link.Plugin, link.CommandId), out var action)) {
+            Plugin.Log.Warning("could not find dalamudLinkHandlers");
             return;
         }
 
