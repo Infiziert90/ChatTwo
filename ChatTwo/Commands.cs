@@ -1,5 +1,4 @@
 using Dalamud.Game.Command;
-using Dalamud.Logging;
 
 namespace ChatTwo;
 
@@ -45,14 +44,14 @@ internal sealed class Commands : IDisposable {
 
     private void Invoke(string command, string arguments) {
         if (!this.Registered.TryGetValue(command, out var wrapper)) {
-            PluginLog.Warning($"Missing registration for command {command}");
+            Plugin.Log.Warning($"Missing registration for command {command}");
             return;
         }
 
         try {
             wrapper.Invoke(command, arguments);
         } catch (Exception ex) {
-            PluginLog.Error(ex, $"Error while executing command {command}");
+            Plugin.Log.Error(ex, $"Error while executing command {command}");
         }
     }
 }

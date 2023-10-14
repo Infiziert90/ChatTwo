@@ -2,7 +2,6 @@ using ChatTwo.Code;
 using ChatTwo.Resources;
 using ChatTwo.Ui;
 using Dalamud.Configuration;
-using Dalamud.Logging;
 using ImGuiNET;
 
 namespace ChatTwo;
@@ -124,7 +123,7 @@ internal class Configuration : IPluginConfiguration {
 
                     break;
                 default:
-                    PluginLog.Warning($"Couldn't migrate config version {this.Version}");
+                    Plugin.Log.Warning($"Couldn't migrate config version {this.Version}");
                     loop = false;
                     break;
             }

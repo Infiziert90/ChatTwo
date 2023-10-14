@@ -13,7 +13,6 @@ using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface;
 using Dalamud.Interface.Internal;
 using Dalamud.Interface.Utility;
-using Dalamud.Logging;
 using Dalamud.Memory;
 using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
@@ -328,7 +327,7 @@ internal sealed class ChatLog : IUiComponent {
                     TellReason = reason,
                 });
             } catch (Exception ex) {
-                PluginLog.LogError(ex, "Error in chat Activated event");
+                Plugin.Log.Error(ex, "Error in chat Activated event");
             }
         }
     }

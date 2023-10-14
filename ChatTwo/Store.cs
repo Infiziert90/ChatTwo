@@ -6,7 +6,6 @@ using ChatTwo.Resources;
 using ChatTwo.Util;
 using Dalamud.Game.Text;
 using Dalamud.Game.Text.SeStringHandling;
-using Dalamud.Logging;
 using Dalamud.Plugin.Services;
 using ImGuiNET;
 using LiteDB;
@@ -250,7 +249,7 @@ internal class Store : IDisposable {
             var lastId = ObjectId.Empty;
             for (var i = 0; i < rounds; i++) {
                 this._migrateCurrent = i + 1;
-                PluginLog.Log($"Update round {i + 1}/{rounds}");
+                Plugin.Log.Info($"Update round {i + 1}/{rounds}");
                 var messages = this.Messages.Query()
                     .OrderBy(msg => msg.Id)
                     .Where(msg => msg.Id > lastId)

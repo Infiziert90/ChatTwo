@@ -3,7 +3,6 @@ using System.Runtime.InteropServices;
 using ChatTwo.Ui;
 using Dalamud.Interface;
 using Dalamud.Interface.GameFonts;
-using Dalamud.Logging;
 using ImGuiNET;
 
 namespace ChatTwo;
@@ -151,7 +150,7 @@ internal sealed class PluginUi : IDisposable {
             try {
                 component.Draw();
             } catch (Exception ex) {
-                PluginLog.LogError(ex, "Error drawing component");
+                Plugin.Log.Error(ex, "Error drawing component");
             }
         }
 
