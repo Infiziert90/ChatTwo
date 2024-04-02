@@ -2,8 +2,8 @@ name: Chat 2
 author: Infi, Anna
 punchline: Electric Boogaloo - ♪ A whole new chat, a new fantastic chat window ♪
 description: |-
-  Chat 2 is a complete rewrite of the in-game chat window as a plugin. It
-  supports:
+  Chat 2 is a complete rewrite of the in-game chat window as a plugin. 
+  It supports:
   
   - Unlimited tabs
   - Tabs that always send to a certain channel
@@ -13,5 +13,5 @@ description: |-
   - Sidebar tabs
   - Unread counts
   - Screenshot mode (obfuscate names)
-repo_url: https://git.anna.lgbt/anna/ChatTwo
+repo_url: https://github.com/Infiziert90/ChatTwo
 accepts_feedback: true
