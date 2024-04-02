@@ -23,10 +23,10 @@ internal sealed class ChatColours : ISettingsTab {
             .ToHashSet();
         var total = Enum.GetValues<ChatType>().Where(type => !type.IsGm()).ToHashSet();
         if (sortable.Count != total.Count) {
-            Dalamud.Logging.Plugin.Log.Warning($"There are {sortable.Count} sortable channels, but there are {total.Count} total channels.");
+            Plugin.Log.Warning($"There are {sortable.Count} sortable channels, but there are {total.Count} total channels.");
             total.ExceptWith(sortable);
             foreach (var missing in total) {
-                Dalamud.Logging.Plugin.Log.Log($"Missing {missing}");
+                Plugin.Log.Information($"Missing {missing}");
             }
         }
         #endif

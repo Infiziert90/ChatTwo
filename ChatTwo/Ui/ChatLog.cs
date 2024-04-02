@@ -62,16 +62,16 @@ internal sealed class ChatLog : IUiComponent {
         this.Ui.Plugin.Commands.Register("/clearlog2", "Clear the Chat 2 chat log").Execute += this.ClearLog;
         this.Ui.Plugin.Commands.Register("/chat2").Execute += this.ToggleChat;
 
-        this._fontIcon = this.Ui.Plugin.TextureProvider.GetTextureFromGame("common/font/fonticon_ps5.tex");
+        this._fontIcon = Plugin.TextureProvider.GetTextureFromGame("common/font/fonticon_ps5.tex");
 
         this.Ui.Plugin.Functions.Chat.Activated += this.Activated;
-        this.Ui.Plugin.ClientState.Login += this.Login;
-        this.Ui.Plugin.ClientState.Logout += this.Logout;
+        Plugin.ClientState.Login += this.Login;
+        Plugin.ClientState.Logout += this.Logout;
     }
 
     public void Dispose() {
-        this.Ui.Plugin.ClientState.Logout -= this.Logout;
-        this.Ui.Plugin.ClientState.Login -= this.Login;
+        Plugin.ClientState.Logout -= this.Logout;
+        Plugin.ClientState.Login -= this.Login;
         this.Ui.Plugin.Functions.Chat.Activated -= this.Activated;
         this._fontIcon?.Dispose();
         this.Ui.Plugin.Commands.Register("/chat2").Execute -= this.ToggleChat;
@@ -151,7 +151,7 @@ internal sealed class ChatLog : IUiComponent {
     }
 
     private bool IsValidCommand(string command) {
-        return this.Ui.Plugin.CommandManager.Commands.ContainsKey(command)
+        return Plugin.CommandManager.Commands.ContainsKey(command)
                || this.AllCommands.Contains(command);
     }
 
@@ -164,9 +164,9 @@ internal sealed class ChatLog : IUiComponent {
 
                 break;
             case "help":
-                this.Ui.Plugin.ChatGui.Print("- /clearlog2: clears the active tab's log");
-                this.Ui.Plugin.ChatGui.Print("- /clearlog2 all: clears all tabs' logs and the global history");
-                this.Ui.Plugin.ChatGui.Print("- /clearlog2 help: shows this help");
+                Plugin.ChatGui.Print("- /clearlog2: clears the active tab's log");
+                Plugin.ChatGui.Print("- /clearlog2 all: clears all tabs' logs and the global history");
+                Plugin.ChatGui.Print("- /clearlog2 help: shows this help");
 
                 break;
             default:
@@ -207,7 +207,7 @@ internal sealed class ChatLog : IUiComponent {
         this.TextCommandChannels.Clear();
 
         foreach (var input in Enum.GetValues<InputChannel>()) {
-            var commands = input.TextCommands(this.Ui.Plugin.DataManager);
+            var commands = input.TextCommands(Plugin.DataManager);
             if (commands == null) {
                 continue;
             }
@@ -218,7 +218,7 @@ internal sealed class ChatLog : IUiComponent {
             }
         }
 
-        var echo = this.Ui.Plugin.DataManager.GetExcelSheet<TextCommand>()?.GetRow(116);
+        var echo = Plugin.DataManager.GetExcelSheet<TextCommand>()?.GetRow(116);
         if (echo != null) {
             this.AddTextCommandChannel(echo, ChatType.Echo);
         }
@@ -232,7 +232,7 @@ internal sealed class ChatLog : IUiComponent {
     }
 
     private void SetUpAllCommands() {
-        if (this.Ui.Plugin.DataManager.GetExcelSheet<TextCommand>() is not { } commands) {
+        if (Plugin.DataManager.GetExcelSheet<TextCommand>() is not { } commands) {
             return;
         }
 
@@ -334,16 +334,14 @@ internal sealed class ChatLog : IUiComponent {
 
     private bool CutsceneActive {
         get {
-            var condition = this.Ui.Plugin.Condition;
-            return condition[ConditionFlag.OccupiedInCutSceneEvent]
-                   || condition[ConditionFlag.WatchingCutscene78];
+            return Plugin.Condition[ConditionFlag.OccupiedInCutSceneEvent]
+                   || Plugin.Condition[ConditionFlag.WatchingCutscene78];
         }
     }
 
     private bool GposeActive {
         get {
-            var condition = this.Ui.Plugin.Condition;
-            return condition[ConditionFlag.WatchingCutscene];
+            return Plugin.Condition[ConditionFlag.WatchingCutscene];
         }
     }
 
@@ -392,7 +390,7 @@ internal sealed class ChatLog : IUiComponent {
             return false;
         }
 
-        if (this.Ui.Plugin.Config.HideWhenNotLoggedIn && !this.Ui.Plugin.ClientState.IsLoggedIn) {
+        if (this.Ui.Plugin.Config.HideWhenNotLoggedIn && !Plugin.ClientState.IsLoggedIn) {
             return false;
         }
 
@@ -415,7 +413,7 @@ internal sealed class ChatLog : IUiComponent {
 
         ImGui.SetNextWindowSize(new Vector2(500, 250) * ImGuiHelpers.GlobalScale, ImGuiCond.FirstUseEver);
 
-        if (!ImGui.Begin($"{Plugin.Name}###chat2", flags)) {
+        if (!ImGui.Begin($"{Plugin.PluginName}###chat2", flags)) {
             this._lastViewport = ImGui.GetWindowViewport().NativePtr;
             this._wasDocked = ImGui.IsWindowDocked();
             ImGui.End();
@@ -445,7 +443,7 @@ internal sealed class ChatLog : IUiComponent {
         ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, Vector2.Zero);
         try {
             if (this._tellTarget != null) {
-                var world = this.Ui.Plugin.DataManager.GetExcelSheet<World>()
+                var world = Plugin.DataManager.GetExcelSheet<World>()
                     ?.GetRow(this._tellTarget.World)
                     ?.Name
                     ?.RawString ?? "???";
@@ -493,7 +491,7 @@ internal sealed class ChatLog : IUiComponent {
 
         if (ImGui.BeginPopup(ChatChannelPicker)) {
             foreach (var channel in Enum.GetValues<InputChannel>()) {
-                var name = this.Ui.Plugin.DataManager.GetExcelSheet<LogFilter>()!
+                var name = Plugin.DataManager.GetExcelSheet<LogFilter>()!
                     .FirstOrDefault(row => row.LogKind == (byte) channel.ToChatType())
                     ?.Name
                     ?.RawString ?? channel.ToString();
@@ -646,7 +644,7 @@ internal sealed class ChatLog : IUiComponent {
                 if (this._tellTarget != null) {
                     var target = this._tellTarget;
                     var reason = target.Reason;
-                    var world = this.Ui.Plugin.DataManager.GetExcelSheet<World>()?.GetRow(target.World);
+                    var world = Plugin.DataManager.GetExcelSheet<World>()?.GetRow(target.World);
                     if (world is { IsPublic: true }) {
                         if (reason == TellReason.Reply && this.Ui.Plugin.Common.Functions.FriendList.List.Any(friend => friend.ContentId == target.ContentId)) {
                             reason = TellReason.Friend;
@@ -671,7 +669,7 @@ internal sealed class ChatLog : IUiComponent {
             }
 
             var bytes = Encoding.UTF8.GetBytes(trimmed);
-            AutoTranslate.ReplaceWithPayload(this.Ui.Plugin.DataManager, ref bytes);
+            AutoTranslate.ReplaceWithPayload(Plugin.DataManager, ref bytes);
 
             this.Ui.Plugin.Common.Functions.Chat.SendMessageUnsafe(bytes);
         }
@@ -1067,7 +1065,7 @@ internal sealed class ChatLog : IUiComponent {
             return;
         }
 
-        this._autoCompleteList ??= AutoTranslate.Matching(this.Ui.Plugin.DataManager, this._autoCompleteInfo.ToComplete, this.Ui.Plugin.Config.SortAutoTranslate);
+        this._autoCompleteList ??= AutoTranslate.Matching(Plugin.DataManager, this._autoCompleteInfo.ToComplete, this.Ui.Plugin.Config.SortAutoTranslate);
 
         if (this._autoCompleteOpen) {
             ImGui.OpenPopup(AutoCompleteId);
@@ -1088,7 +1086,7 @@ internal sealed class ChatLog : IUiComponent {
 
         ImGui.SetNextItemWidth(-1);
         if (ImGui.InputTextWithHint("##auto-complete-filter", Language.AutoTranslate_Search_Hint, ref this._autoCompleteInfo.ToComplete, 256, ImGuiInputTextFlags.CallbackAlways | ImGuiInputTextFlags.CallbackHistory, this.AutoCompleteCallback)) {
-            this._autoCompleteList = AutoTranslate.Matching(this.Ui.Plugin.DataManager, this._autoCompleteInfo.ToComplete, this.Ui.Plugin.Config.SortAutoTranslate);
+            this._autoCompleteList = AutoTranslate.Matching(Plugin.DataManager, this._autoCompleteInfo.ToComplete, this.Ui.Plugin.Config.SortAutoTranslate);
             this._autoCompleteSelection = 0;
             this._autoCompleteShouldScroll = true;
         }
@@ -1260,7 +1258,7 @@ internal sealed class ChatLog : IUiComponent {
         var text = MemoryHelper.ReadString((IntPtr) data->Buf, data->BufTextLen);
         if (text.StartsWith('/')) {
             var command = text.Split(' ')[0];
-            var cmd = this.Ui.Plugin.DataManager.GetExcelSheet<TextCommand>()?.FirstOrDefault(cmd => cmd.Command.RawString == command
+            var cmd = Plugin.DataManager.GetExcelSheet<TextCommand>()?.FirstOrDefault(cmd => cmd.Command.RawString == command
                                                                                                      || cmd.Alias.RawString == command
                                                                                                      || cmd.ShortCommand.RawString == command
                                                                                                      || cmd.ShortAlias.RawString == command);
@@ -1377,15 +1375,8 @@ internal sealed class ChatLog : IUiComponent {
 
         var pushed = false;
         if (text.Italic) {
-            if (this.Ui.ItalicFont.HasValue && this.Ui.Plugin.Config.FontsEnabled) {
-                ImGui.PushFont(this.Ui.ItalicFont.Value);
-                pushed = true;
-            }
-
-            if (!this.Ui.Plugin.Config.FontsEnabled && (this.Ui.AxisItalic?.Available ?? false)) {
-                ImGui.PushFont(this.Ui.AxisItalic.ImFont);
-                pushed = true;
-            }
+            pushed = true;
+            (Ui.Plugin.Config.FontsEnabled && Ui.ItalicFont != null ? Ui.ItalicFont : Ui.AxisItalic).Push();
         }
 
         var content = text.Content;
@@ -1393,7 +1384,7 @@ internal sealed class ChatLog : IUiComponent {
             if (chunk.Link is PlayerPayload playerPayload) {
                 var hashCode = $"{this.Ui.Salt}{playerPayload.PlayerName}{playerPayload.World.RowId}".GetHashCode();
                 content = $"Player {hashCode:X8}";
-            } else if (this.Ui.Plugin.ClientState.LocalPlayer is { } player && content.Contains(player.Name.TextValue)) {
+            } else if (Plugin.ClientState.LocalPlayer is { } player && content.Contains(player.Name.TextValue)) {
                 var hashCode = $"{this.Ui.Salt}{player.Name.TextValue}{player.HomeWorld.Id}".GetHashCode();
                 content = content.Replace(player.Name.TextValue, $"Player {hashCode:X8}");
             }
@@ -1407,7 +1398,7 @@ internal sealed class ChatLog : IUiComponent {
         }
 
         if (pushed) {
-            ImGui.PopFont();
+            (Ui.Plugin.Config.FontsEnabled && Ui.ItalicFont != null ? Ui.ItalicFont : Ui.AxisItalic).Pop();
         }
 
         if (colour != null) {

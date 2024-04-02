@@ -143,21 +143,21 @@ internal sealed unsafe class Chat : IDisposable {
 
     internal Chat(Plugin plugin) {
         this.Plugin = plugin;
-        this.Plugin.GameInteropProvider.InitializeFromAttributes(this);
+        Plugin.GameInteropProvider.InitializeFromAttributes(this);
 
         this.ChatLogRefreshHook?.Enable();
         this.ChangeChannelNameHook?.Enable();
         this.ReplyInSelectedChatModeHook?.Enable();
         this.SetChatLogTellTargetHook?.Enable();
 
-        this.Plugin.Framework.Update += this.InterceptKeybinds;
-        this.Plugin.ClientState.Login += this.Login;
+        Plugin.Framework.Update += this.InterceptKeybinds;
+        Plugin.ClientState.Login += this.Login;
         this.Login();
     }
 
     public void Dispose() {
-        this.Plugin.ClientState.Login -= this.Login;
-        this.Plugin.Framework.Update -= this.InterceptKeybinds;
+        Plugin.ClientState.Login -= this.Login;
+        Plugin.Framework.Update -= this.InterceptKeybinds;
 
         this.SetChatLogTellTargetHook?.Dispose();
         this.ReplyInSelectedChatModeHook?.Dispose();
@@ -380,7 +380,7 @@ internal sealed unsafe class Chat : IDisposable {
         var modifierState = (ModifierFlag) 0;
         foreach (var modifier in Enum.GetValues<ModifierFlag>()) {
             var modifierKey = GetKeyForModifier(modifier);
-            if (modifierKey != VirtualKey.NO_KEY && this.Plugin.KeyState[modifierKey]) {
+            if (modifierKey != VirtualKey.NO_KEY && Plugin.KeyState[modifierKey]) {
                 modifierState |= modifier;
             }
         }
@@ -392,7 +392,7 @@ internal sealed unsafe class Chat : IDisposable {
             }
 
             void Intercept(VirtualKey key, ModifierFlag modifier) {
-                if (!this.Plugin.KeyState.IsVirtualKeyValid(key)) {
+                if (!Plugin.KeyState.IsVirtualKeyValid(key)) {
                     return;
                 }
 
@@ -405,7 +405,7 @@ internal sealed unsafe class Chat : IDisposable {
                     return;
                 }
 
-                if (!this.Plugin.KeyState[key]) {
+                if (!Plugin.KeyState[key]) {
                     return;
                 }
 
@@ -420,7 +420,7 @@ internal sealed unsafe class Chat : IDisposable {
         }
 
         foreach (var (key, (_, keybind)) in turnedOff) {
-            this.Plugin.KeyState[key] = false;
+            Plugin.KeyState[key] = false;
 
             if (!KeybindsToIntercept.TryGetValue(keybind, out var info)) {
                 continue;
@@ -455,7 +455,7 @@ internal sealed unsafe class Chat : IDisposable {
         }
 
         string? input = null;
-        if (this.Plugin.GameConfig.TryGet(UiControlOption.DirectChat, out bool option) && option) {
+        if (Plugin.GameConfig.TryGet(UiControlOption.DirectChat, out bool option) && option) {
             if (this._currentCharacter != null) {
                 // FIXME: this whole system sucks
                 var c = *this._currentCharacter;

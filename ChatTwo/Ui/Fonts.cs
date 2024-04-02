@@ -135,10 +135,7 @@ internal static class Fonts {
 
                 stream.ReleaseFileFragment(release);
 
-                var metrics = font.Metrics;
-                var ratio = (metrics.Ascent + metrics.Descent + metrics.LineGap) / (float) metrics.DesignUnitsPerEm;
-
-                return new FaceData(data, ratio);
+                return new FaceData(data);
             }
 
             var normalData = GetFontData(normal);
@@ -170,11 +167,9 @@ internal static class Fonts {
 
 internal sealed class FaceData {
     internal byte[] Data { get; }
-    internal float Ratio { get; }
 
-    internal FaceData(byte[] data, float ratio) {
+    internal FaceData(byte[] data) {
         this.Data = data;
-        this.Ratio = ratio;
     }
 }
 

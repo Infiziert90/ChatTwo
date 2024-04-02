@@ -1,5 +1,4 @@
 using System.Numerics;
-using System.Reflection;
 using ChatTwo.Code;
 using ChatTwo.Resources;
 using ChatTwo.Ui;
@@ -119,7 +118,7 @@ internal sealed class PayloadHandler {
             ImGui.Separator();
         }
 
-        if (!ImGui.BeginMenu(Plugin.Name)) {
+        if (!ImGui.BeginMenu(Plugin.PluginName)) {
             return;
         }
 
@@ -261,7 +260,7 @@ internal sealed class PayloadHandler {
     }
 
     private void HoverEventItem(ItemPayload payload) {
-        var item = this.Ui.Plugin.DataManager.GetExcelSheet<EventItem>()?.GetRow(payload.RawItemId);
+        var item = Plugin.DataManager.GetExcelSheet<EventItem>()?.GetRow(payload.RawItemId);
         if (item == null) {
             return;
         }
@@ -274,7 +273,7 @@ internal sealed class PayloadHandler {
         this.Log.DrawChunks(name.ToList());
         ImGui.Separator();
 
-        var help = this.Ui.Plugin.DataManager.GetExcelSheet<EventItemHelp>()?.GetRow(payload.RawItemId);
+        var help = Plugin.DataManager.GetExcelSheet<EventItemHelp>()?.GetRow(payload.RawItemId);
         if (help != null) {
             var desc = ChunkUtil.ToChunks(help.Description.ToDalamudString(), ChunkSource.None, null);
             this.Log.DrawChunks(desc.ToList());
@@ -284,7 +283,7 @@ internal sealed class PayloadHandler {
     private void LeftClickPayload(Chunk chunk, Payload? payload) {
         switch (payload) {
             case MapLinkPayload map: {
-                this.Ui.Plugin.GameGui.OpenMapWithMapLink(map);
+                Plugin.GameGui.OpenMapWithMapLink(map);
                 break;
             }
             case QuestPayload quest: {
@@ -334,24 +333,16 @@ internal sealed class PayloadHandler {
         }
 
         var payloads = source.Payloads.Skip(start).Take(end - start + 1).ToList();
-
-        var chatGuiScoped = this.Ui.Plugin.ChatGui;
-        var chatGuiService = chatGuiScoped.GetType()
-            .GetField("chatGuiService", BindingFlags.Instance | BindingFlags.NonPublic)!
-            .GetValue(chatGuiScoped);
-        if (chatGuiService == null) {
-            Plugin.Log.Warning("could not find chatGuiService");
-            return;
-        }
-
-        var field = chatGuiService.GetType().GetField("dalamudLinkHandlers", BindingFlags.Instance | BindingFlags.NonPublic);
-        if (field == null || field.GetValue(chatGuiService) is not Dictionary<(string PluginName, uint CommandId), Action<uint, SeString>> dict || !dict.TryGetValue((link.Plugin, link.CommandId), out var action)) {
+        if (!Plugin.ChatGui.RegisteredLinkHandlers.TryGetValue((link.Plugin, link.CommandId), out var value))
+        {
             Plugin.Log.Warning("could not find dalamudLinkHandlers");
             return;
         }
 
-        try {
-            action(link.CommandId, new SeString(payloads));
+        try
+        {
+            // Running XivCommon SendChat instantly leads to a game freeze, for whatever reason
+            Plugin.Framework.RunOnTick(() => value.Invoke(link.CommandId, new SeString(payloads)));
         } catch (Exception ex) {
             Plugin.Log.Error(ex, "Error executing DalamudLinkPayload handler");
         }
@@ -368,7 +359,7 @@ internal sealed class PayloadHandler {
             return;
         }
 
-        var item = this.Ui.Plugin.DataManager.GetExcelSheet<Item>()?.GetRow(payload.ItemId);
+        var item = Plugin.DataManager.GetExcelSheet<Item>()?.GetRow(payload.ItemId);
         if (item == null) {
             return;
         }
@@ -426,7 +417,7 @@ internal sealed class PayloadHandler {
             return;
         }
 
-        var item = this.Ui.Plugin.DataManager.GetExcelSheet<EventItem>()?.GetRow(payload.ItemId);
+        var item = Plugin.DataManager.GetExcelSheet<EventItem>()?.GetRow(payload.ItemId);
         if (item == null) {
             return;
         }
@@ -450,11 +441,16 @@ internal sealed class PayloadHandler {
         }
     }
 
-    private void DrawPlayerPopup(Chunk chunk, PlayerPayload player) {
+    private void DrawPlayerPopup(Chunk chunk, PlayerPayload player)
+    {
+        // Possible that GMs return a null payload
+        if (player == null)
+            return;
+
         var world = player.World;
 
         if (chunk.Message?.Code.Type == ChatType.FreeCompanyLoginLogout) {
-            if (this.Ui.Plugin.ClientState.LocalPlayer?.HomeWorld.GameData is { } homeWorld) {
+            if (Plugin.ClientState.LocalPlayer?.HomeWorld.GameData is { } homeWorld) {
                 world = homeWorld;
             }
         }
@@ -481,13 +477,13 @@ internal sealed class PayloadHandler {
         }
 
         if (world.IsPublic) {
-            var party = this.Ui.Plugin.PartyList;
+            var party = Plugin.PartyList;
             var leader = (ulong?) party[(int) party.PartyLeaderIndex]?.ContentId;
-            var isLeader = party.Length == 0 || this.Ui.Plugin.ClientState.LocalContentId == leader;
+            var isLeader = party.Length == 0 || Plugin.ClientState.LocalContentId == leader;
             var member = party.FirstOrDefault(member => member.Name.TextValue == player.PlayerName && member.World.Id == world.RowId);
             var isInParty = member != default;
             var inInstance = this.Ui.Plugin.Functions.IsInInstance();
-            var inPartyInstance = this.Ui.Plugin.DataManager.GetExcelSheet<TerritoryType>()!.GetRow(this.Ui.Plugin.ClientState.TerritoryType)?.TerritoryIntendedUse is (41 or 47 or 48 or 52 or 53);
+            var inPartyInstance = Plugin.DataManager.GetExcelSheet<TerritoryType>()!.GetRow(Plugin.ClientState.TerritoryType)?.TerritoryIntendedUse is (41 or 47 or 48 or 52 or 53);
             if (isLeader) {
                 if (!isInParty) {
                     if (inInstance && inPartyInstance) {
@@ -539,14 +535,14 @@ internal sealed class PayloadHandler {
         }
 
         if (ImGui.Selectable(Language.Context_Target) && this.FindCharacterForPayload(player) is { } obj) {
-            this.Ui.Plugin.TargetManager.Target = obj;
+            Plugin.TargetManager.Target = obj;
         }
 
         // View Party Finder 0x2E
     }
 
     private PlayerCharacter? FindCharacterForPayload(PlayerPayload payload) {
-        foreach (var obj in this.Ui.Plugin.ObjectTable) {
+        foreach (var obj in Plugin.ObjectTable) {
             if (obj is not PlayerCharacter character) {
                 continue;
             }

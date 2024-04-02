@@ -71,7 +71,7 @@ internal unsafe class GameFunctions : IDisposable {
         this.Chat = new Chat(this.Plugin);
         this.Context = new Context(this.Plugin);
 
-        this.Plugin.GameInteropProvider.InitializeFromAttributes(this);
+        Plugin.GameInteropProvider.InitializeFromAttributes(this);
 
         this.ResolveTextCommandPlaceholderHook?.Enable();
     }
@@ -117,7 +117,7 @@ internal unsafe class GameFunctions : IDisposable {
     }
 
     private void ListCommand(string name, ushort world, string commandName) {
-        var row = this.Plugin.DataManager.GetExcelSheet<World>()!.GetRow(world);
+        var row = Plugin.DataManager.GetExcelSheet<World>()!.GetRow(world);
         if (row == null) {
             return;
         }

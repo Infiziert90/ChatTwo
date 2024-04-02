@@ -28,7 +28,7 @@ internal class Store : IDisposable {
 
     private ulong CurrentContentId {
         get {
-            var contentId = this.Plugin.ClientState.LocalContentId;
+            var contentId = Plugin.ClientState.LocalContentId;
             return contentId == 0 ? this.LastContentId : contentId;
         }
     }
@@ -143,23 +143,23 @@ internal class Store : IDisposable {
 
         this.MigrateWrapper();
 
-        this.Plugin.ChatGui.ChatMessageUnhandled += this.ChatMessage;
-        this.Plugin.Framework.Update += this.GetMessageInfo;
-        this.Plugin.Framework.Update += this.UpdateReceiver;
-        this.Plugin.ClientState.Logout += this.Logout;
+        Plugin.ChatGui.ChatMessageUnhandled += this.ChatMessage;
+        Plugin.Framework.Update += this.GetMessageInfo;
+        Plugin.Framework.Update += this.UpdateReceiver;
+        Plugin.ClientState.Logout += this.Logout;
     }
 
     public void Dispose() {
-        this.Plugin.ClientState.Logout -= this.Logout;
-        this.Plugin.Framework.Update -= this.UpdateReceiver;
-        this.Plugin.Framework.Update -= this.GetMessageInfo;
-        this.Plugin.ChatGui.ChatMessageUnhandled -= this.ChatMessage;
+        Plugin.ClientState.Logout -= this.Logout;
+        Plugin.Framework.Update -= this.UpdateReceiver;
+        Plugin.Framework.Update -= this.GetMessageInfo;
+        Plugin.ChatGui.ChatMessageUnhandled -= this.ChatMessage;
 
         this.Database.Dispose();
     }
 
     private ILiteDatabase Connect() {
-        var dir = this.Plugin.Interface.ConfigDirectory;
+        var dir = Plugin.Interface.ConfigDirectory;
         dir.Create();
 
         var dbPath = Path.Join(dir.FullName, "chat.db");
@@ -181,7 +181,7 @@ internal class Store : IDisposable {
     }
 
     private void UpdateReceiver(IFramework framework) {
-        var contentId = this.Plugin.ClientState.LocalContentId;
+        var contentId = Plugin.ClientState.LocalContentId;
         if (contentId != 0) {
             this.LastContentId = contentId;
         }
@@ -209,7 +209,7 @@ internal class Store : IDisposable {
 
     private void MigrateDraw() {
         ImGui.SetNextWindowSizeConstraints(new Vector2(450, 0), new Vector2(450, float.MaxValue));
-        if (!ImGui.Begin($"{Plugin.Name}##migration-window", ImGuiWindowFlags.AlwaysAutoResize)) {
+        if (!ImGui.Begin($"{Plugin.PluginName}##migration-window", ImGuiWindowFlags.AlwaysAutoResize)) {
             ImGui.End();
             return;
         }
@@ -229,13 +229,13 @@ internal class Store : IDisposable {
 
     internal void MigrateWrapper() {
         if (this.Plugin.Config.DatabaseMigration < Configuration.LatestDbVersion) {
-            this.Plugin.Interface.UiBuilder.Draw += this.MigrateDraw;
+            Plugin.Interface.UiBuilder.Draw += this.MigrateDraw;
         }
 
         try {
             this.Migrate();
         } finally {
-            this.Plugin.Interface.UiBuilder.Draw -= this.MigrateDraw;
+            Plugin.Interface.UiBuilder.Draw -= this.MigrateDraw;
         }
     }
 
@@ -365,7 +365,7 @@ internal class Store : IDisposable {
         var messageChunks = ChunkUtil.ToChunks(message, ChunkSource.Content, chatCode.Type).ToList();
 
         var msg = new Message(this.CurrentContentId, chatCode, senderChunks, messageChunks, sender, message);
-        this.AddMessage(msg, this.Plugin.Ui.CurrentTab);
+        this.AddMessage(msg, this.Plugin.Ui.CurrentTab ?? null);
 
         var idx = this.Plugin.Functions.GetCurrentChatLogEntryIndex();
         if (idx != null) {
@@ -397,7 +397,7 @@ internal class Store : IDisposable {
             return cached;
         }
 
-        var logKind = this.Plugin.DataManager.GetExcelSheet<LogKind>()!.GetRow((ushort) type);
+        var logKind = Plugin.DataManager.GetExcelSheet<LogKind>()!.GetRow((ushort) type);
 
         if (logKind == null) {
             return null;

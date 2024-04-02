@@ -12,13 +12,13 @@ internal sealed class Commands : IDisposable {
 
     public void Dispose() {
         foreach (var name in this.Registered.Keys) {
-            this.Plugin.CommandManager.RemoveHandler(name);
+            Plugin.CommandManager.RemoveHandler(name);
         }
     }
 
     internal void Initialise() {
         foreach (var wrapper in this.Registered.Values) {
-            this.Plugin.CommandManager.AddHandler(wrapper.Name, new CommandInfo(this.Invoke) {
+            Plugin.CommandManager.AddHandler(wrapper.Name, new CommandInfo(this.Invoke) {
                 HelpMessage = wrapper.Description ?? string.Empty,
                 ShowInHelp = wrapper.ShowInHelp,
             });

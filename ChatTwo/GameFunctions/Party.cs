@@ -26,7 +26,7 @@ internal sealed unsafe class Party {
 
     internal Party(Plugin plugin) {
         this.Plugin = plugin;
-        this.Plugin.GameInteropProvider.InitializeFromAttributes(this);
+        Plugin.GameInteropProvider.InitializeFromAttributes(this);
     }
 
     internal void InviteSameWorld(string name, ushort world, ulong contentId) {

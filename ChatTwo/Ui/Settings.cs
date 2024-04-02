@@ -32,11 +32,11 @@ internal sealed class Settings : IUiComponent {
         this.Initialise();
 
         this.Ui.Plugin.Commands.Register("/chat2", "Perform various actions with Chat 2.").Execute += this.Command;
-        this.Ui.Plugin.Interface.UiBuilder.OpenConfigUi += this.Toggle;
+        Plugin.Interface.UiBuilder.OpenConfigUi += this.Toggle;
     }
 
     public void Dispose() {
-        this.Ui.Plugin.Interface.UiBuilder.OpenConfigUi -= this.Toggle;
+        Plugin.Interface.UiBuilder.OpenConfigUi -= this.Toggle;
         this.Ui.Plugin.Commands.Register("/chat2").Execute -= this.Command;
     }
 
@@ -61,7 +61,7 @@ internal sealed class Settings : IUiComponent {
 
         ImGui.SetNextWindowSize(new Vector2(475, 600) * ImGuiHelpers.GlobalScale, ImGuiCond.FirstUseEver);
 
-        var name = string.Format(Language.Settings_Title, Plugin.Name);
+        var name = string.Format(Language.Settings_Title, Plugin.PluginName);
         if (!ImGui.Begin($"{name}###chat2-settings", ref this.Ui.SettingsVisible, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)) {
             ImGui.End();
             return;
@@ -117,7 +117,7 @@ internal sealed class Settings : IUiComponent {
             this.Ui.SettingsVisible = false;
         }
 
-        var buttonLabel = string.Format(Language.Settings_Kofi, Plugin.Name);
+        var buttonLabel = string.Format(Language.Settings_Kofi, Plugin.PluginName);
 
         ImGui.PushStyleColor(ImGuiCol.Button, ColourUtil.RgbaToAbgr(0xFF5E5BFF));
         ImGui.PushStyleColor(ImGuiCol.ButtonHovered, ColourUtil.RgbaToAbgr(0xFF7775FF));
@@ -161,11 +161,11 @@ internal sealed class Settings : IUiComponent {
             this.Ui.Plugin.Store.FilterAllTabs(false);
 
             if (fontChanged || fontSizeChanged) {
-                this.Ui.Plugin.Interface.UiBuilder.RebuildFonts();
+                this.Ui.BuildFonts();
             }
 
             if (langChanged) {
-                this.Ui.Plugin.LanguageChanged(this.Ui.Plugin.Interface.UiLanguage);
+                this.Ui.Plugin.LanguageChanged(Plugin.Interface.UiLanguage);
             }
 
             if (sharedChanged) {

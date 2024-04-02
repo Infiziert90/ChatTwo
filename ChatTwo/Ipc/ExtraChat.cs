@@ -27,9 +27,9 @@ internal sealed class ExtraChat : IDisposable {
     internal ExtraChat(Plugin plugin) {
         this.Plugin = plugin;
 
-        this.OverrideChannelGate = this.Plugin.Interface.GetIpcSubscriber<OverrideInfo, object>("ExtraChat.OverrideChannelColour");
-        this.ChannelCommandColoursGate = this.Plugin.Interface.GetIpcSubscriber<Dictionary<string, uint>, Dictionary<string, uint>>("ExtraChat.ChannelCommandColours");
-        this.ChannelNamesGate = this.Plugin.Interface.GetIpcSubscriber<Dictionary<Guid, string>, Dictionary<Guid, string>>("ExtraChat.ChannelNames");
+        this.OverrideChannelGate = Plugin.Interface.GetIpcSubscriber<OverrideInfo, object>("ExtraChat.OverrideChannelColour");
+        this.ChannelCommandColoursGate = Plugin.Interface.GetIpcSubscriber<Dictionary<string, uint>, Dictionary<string, uint>>("ExtraChat.ChannelCommandColours");
+        this.ChannelNamesGate = Plugin.Interface.GetIpcSubscriber<Dictionary<Guid, string>, Dictionary<Guid, string>>("ExtraChat.ChannelNames");
 
         this.OverrideChannelGate.Subscribe(this.OnOverrideChannel);
         this.ChannelCommandColoursGate.Subscribe(this.OnChannelCommandColours);

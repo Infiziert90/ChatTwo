@@ -15,55 +15,22 @@ namespace ChatTwo;
 public sealed class Plugin : IDalamudPlugin {
     internal const string PluginName = "Chat 2";
 
-    internal static string Name => PluginName;
-
-    [PluginService]
-    internal static IPluginLog Log { get; private set; }
-
-    [PluginService]
-    internal DalamudPluginInterface Interface { get; init; }
-
-    [PluginService]
-    internal IChatGui ChatGui { get; init; }
-
-    [PluginService]
-    internal IClientState ClientState { get; init; }
-
-    [PluginService]
-    internal ICommandManager CommandManager { get; init; }
-
-    [PluginService]
-    internal ICondition Condition { get; init; }
-
-    [PluginService]
-    internal IDataManager DataManager { get; init; }
-
-    [PluginService]
-    internal IFramework Framework { get; init; }
-
-    [PluginService]
-    internal IGameGui GameGui { get; init; }
-
-    [PluginService]
-    internal IKeyState KeyState { get; init; }
-
-    [PluginService]
-    internal IObjectTable ObjectTable { get; init; }
-
-    [PluginService]
-    internal IPartyList PartyList { get; init; }
-
-    [PluginService]
-    internal ITargetManager TargetManager { get; init; }
-
-    [PluginService]
-    internal ITextureProvider TextureProvider { get; init; }
-
-    [PluginService]
-    internal IGameInteropProvider GameInteropProvider { get; init; }
-
-    [PluginService]
-    internal IGameConfig GameConfig { get; init; }
+    [PluginService] internal static IPluginLog Log { get; private set; } = null!;
+    [PluginService] internal static DalamudPluginInterface Interface { get; private set; } = null!;
+    [PluginService] internal static IChatGui ChatGui { get; private set; } = null!;
+    [PluginService] internal static IClientState ClientState { get; private set; } = null!;
+    [PluginService] internal static ICommandManager CommandManager { get; private set; } = null!;
+    [PluginService] internal static ICondition Condition { get; private set; } = null!;
+    [PluginService] internal static IDataManager DataManager { get; private set; } = null!;
+    [PluginService] internal static IFramework Framework { get; set; } = null!;
+    [PluginService] internal static IGameGui GameGui { get; private set; } = null!;
+    [PluginService] internal static IKeyState KeyState { get; private set; } = null!;
+    [PluginService] internal static IObjectTable ObjectTable { get; private set; } = null!;
+    [PluginService] internal static IPartyList PartyList { get; private set; } = null!;
+    [PluginService] internal static ITargetManager TargetManager { get; private set; } = null!;
+    [PluginService] internal static ITextureProvider TextureProvider { get; private set; } = null!;
+    [PluginService] internal static IGameInteropProvider GameInteropProvider { get; private set; } = null!;
+    [PluginService] internal static IGameConfig GameConfig { get; private set; } = null!;
 
     internal Configuration Config { get; }
     internal Commands Commands { get; }
@@ -83,39 +50,43 @@ public sealed class Plugin : IDalamudPlugin {
     public Plugin() {
         this.GameStarted = Process.GetCurrentProcess().StartTime.ToUniversalTime();
 
-        this.Config = this.Interface!.GetPluginConfig() as Configuration ?? new Configuration();
+        this.Config = Interface.GetPluginConfig() as Configuration ?? new Configuration();
         this.Config.Migrate();
 
         if (this.Config.Tabs.Count == 0) {
             this.Config.Tabs.Add(TabsUtil.VanillaGeneral);
         }
 
-        this.LanguageChanged(this.Interface.UiLanguage);
+        this.LanguageChanged(Interface.UiLanguage);
 
         this.Commands = new Commands(this);
-        this.Common = new XivCommonBase(this.Interface);
-        this.TextureCache = new TextureCache(this.TextureProvider!);
+        this.Common = new XivCommonBase(Interface);
+        this.TextureCache = new TextureCache(TextureProvider);
         this.Functions = new GameFunctions.GameFunctions(this);
-        this.Store = new Store(this);
-        this.Ipc = new IpcManager(this.Interface);
+        this.Ipc = new IpcManager(Interface);
         this.ExtraChat = new ExtraChat(this);
         this.Ui = new PluginUi(this);
+        Ui.BuildFonts();
+
+        this.Store = new Store(this);  // requires Ui
 
         // let all the other components register, then initialise commands
         this.Commands.Initialise();
 
-        if (this.Interface.Reason is not PluginLoadReason.Boot) {
+        if (Interface.Reason is not PluginLoadReason.Boot) {
             this.Store.FilterAllTabs(false);
         }
 
-        this.Framework!.Update += this.FrameworkUpdate;
-        this.Interface.LanguageChanged += this.LanguageChanged;
+        Framework.Update += FrameworkUpdate;
+        Interface.UiBuilder.Draw += Ui.Draw;
+        Interface.LanguageChanged += LanguageChanged;
     }
     #pragma warning restore CS8618
 
     public void Dispose() {
-        this.Interface.LanguageChanged -= this.LanguageChanged;
-        this.Framework.Update -= this.FrameworkUpdate;
+        Interface.LanguageChanged -= LanguageChanged;
+        Interface.UiBuilder.Draw -= Ui.Draw;
+        Framework.Update -= FrameworkUpdate;
         GameFunctions.GameFunctions.SetChatInteractable(true);
 
         this.Ui.Dispose();
@@ -129,7 +100,7 @@ public sealed class Plugin : IDalamudPlugin {
     }
 
     internal void SaveConfig() {
-        this.Interface.SavePluginConfig(this.Config);
+        Interface.SavePluginConfig(this.Config);
     }
 
     internal void LanguageChanged(string langCode) {
@@ -149,11 +120,11 @@ public sealed class Plugin : IDalamudPlugin {
     };
 
     private void FrameworkUpdate(IFramework framework) {
-        if (this.DeferredSaveFrames >= 0 && this.DeferredSaveFrames-- == 0) {
-            this.SaveConfig();
+        if (DeferredSaveFrames >= 0 && DeferredSaveFrames-- == 0) {
+            SaveConfig();
         }
 
-        if (!this.Config.HideChat) {
+        if (!Config.HideChat) {
             return;
         }
 
