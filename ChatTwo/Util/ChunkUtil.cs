@@ -73,7 +73,7 @@ internal static class ChunkUtil {
                         if (foreground.Count > 0) {
                             foreground.Pop();
                         }
-                        else
+                        else if (rawPayload.Data.Length > 6 && rawPayload.Data[2] == 0x05 && rawPayload.Data[3] == 0xF6)
                         {
                             var (r, g, b) = (rawPayload.Data[4], rawPayload.Data[5], rawPayload.Data[6]);
                             foreground.Push(ColourUtil.ComponentsToRgba(r, g, b));
@@ -84,7 +84,7 @@ internal static class ChunkUtil {
                         if (glow.Count > 0) {
                             glow.Pop();
                         }
-                        else
+                        else if (rawPayload.Data.Length > 6 && rawPayload.Data[2] == 0x05 && rawPayload.Data[3] == 0xF6)
                         {
                             var (r, g, b) = (rawPayload.Data[4], rawPayload.Data[5], rawPayload.Data[6]);
                             glow.Push(ColourUtil.ComponentsToRgba(r, g, b));
