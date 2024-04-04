@@ -68,15 +68,29 @@ internal static class ChunkUtil {
                     break;
                 case PayloadType.Unknown:
                     var rawPayload = (RawPayload) payload;
-                    if (rawPayload.Data.Length > 1 && rawPayload.Data[1] == 0x13) {
+                    if (rawPayload.Data.Length > 1 && rawPayload.Data[1] == 0x13)
+                    {
                         if (foreground.Count > 0) {
                             foreground.Pop();
                         }
-
+                        else
+                        {
+                            var (r, g, b) = (rawPayload.Data[4], rawPayload.Data[5], rawPayload.Data[6]);
+                            foreground.Push(ColourUtil.ComponentsToRgba(r, g, b));
+                        }
+                    }
+                    else if (rawPayload.Data.Length > 1 && rawPayload.Data[1] == 0x14)
+                    {
                         if (glow.Count > 0) {
                             glow.Pop();
                         }
-                    } else if (rawPayload.Data.Length > 7 && rawPayload.Data[1] == 0x27 && rawPayload.Data[3] == 0x0A) {
+                        else
+                        {
+                            var (r, g, b) = (rawPayload.Data[4], rawPayload.Data[5], rawPayload.Data[6]);
+                            glow.Push(ColourUtil.ComponentsToRgba(r, g, b));
+                        }
+                    }
+                    else if (rawPayload.Data.Length > 7 && rawPayload.Data[1] == 0x27 && rawPayload.Data[3] == 0x0A) {
                         // pf payload
                         var reader = new BinaryReader(new MemoryStream(rawPayload.Data[4..]));
                         var id = GetInteger(reader);
