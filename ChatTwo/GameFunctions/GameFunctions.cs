@@ -273,6 +273,20 @@ internal unsafe class GameFunctions : IDisposable {
         return this._inInstance() != 0;
     }
 
+    internal bool TryOpenAdventurerPlate(ulong playerId)
+    {
+        try
+        {
+            AgentCharaCard.Instance()->OpenCharaCard(playerId);
+            return true;
+        }
+        catch (Exception e)
+        {
+            Plugin.Log.Warning(e, "Unable to open adventurer plate");
+            return false;
+        }
+    }
+
     internal void ClickNoviceNetworkButton() {
         var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.ChatLog);
         // case 3

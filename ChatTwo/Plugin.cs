@@ -31,6 +31,7 @@ public sealed class Plugin : IDalamudPlugin {
     [PluginService] internal static ITextureProvider TextureProvider { get; private set; } = null!;
     [PluginService] internal static IGameInteropProvider GameInteropProvider { get; private set; } = null!;
     [PluginService] internal static IGameConfig GameConfig { get; private set; } = null!;
+    [PluginService] internal static INotificationManager Notification { get; private set; } = null!;
 
     internal Configuration Config { get; }
     internal Commands Commands { get; }
