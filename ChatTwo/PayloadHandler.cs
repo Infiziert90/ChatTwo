@@ -3,13 +3,17 @@ using ChatTwo.Code;
 using ChatTwo.Resources;
 using ChatTwo.Ui;
 using ChatTwo.Util;
+using Dalamud.Game.Addon.Lifecycle;
+using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using Dalamud.Game.ClientState.Objects.SubKinds;
+using Dalamud.Game.Config;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface.Internal;
 using Dalamud.Interface.Internal.Notifications;
 using Dalamud.Interface.Utility;
 using Dalamud.Utility;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
 using Action = System.Action;
@@ -186,10 +190,13 @@ internal sealed class PayloadHandler {
                     GameFunctions.GameFunctions.OpenItemTooltip(item.RawItemId);
 
                     _handleTooltips = true;
-                    if (_hoveredItem != item.RawItemId) {
+                    if (_hoveredItem != item.RawItemId)
+                    {
                         _hoveredItem = item.RawItemId;
                         _hoverCounter = _lastHoverCounter = 0;
-                    } else {
+                    }
+                    else
+                    {
                         _lastHoverCounter = _hoverCounter;
                     }
 
@@ -219,6 +226,34 @@ internal sealed class PayloadHandler {
             ImGui.PopTextWrapPos();
             ImGui.EndTooltip();
         }
+    }
+
+    public unsafe void MoveTooltip(AddonEvent type, AddonArgs args)
+    {
+        if (!_handleTooltips)
+            return;
+
+        // Only move if user has "Next to Cursor" option selected
+        if (!Plugin.GameConfig.TryGet(UiControlOption.DetailTrackingType, out uint selected) || selected != 0)
+            return;
+
+        if (Log.LastViewport != ImGuiHelpers.MainViewport.NativePtr)
+            return;
+
+        var atk = (AtkUnitBase*) args.Addon;
+        if (atk == null)
+            return;
+
+        var atkSize = (X: atk->GetScaledWidth(true), Y: atk->GetScaledHeight(true));
+        var viewportSize = ImGuiHelpers.MainViewport.Size;
+        var window = Log.LastWindowPos + Log.LastWindowSize;
+        var isLeft = window.X < viewportSize.X / 2;
+        var isTop = window.Y < viewportSize.Y / 2;
+
+        var x = isLeft ? window.X : Log.LastWindowPos.X - atkSize.X;
+        var y = Math.Clamp(window.Y - atkSize.Y, 0, float.MaxValue);
+        y -= isTop ? 0 : 10; // small offset to prevent cut-off on the bottom
+        atk->SetPosition((short) x, (short) y);
     }
 
     private static void InlineIcon(IDalamudTextureWrap icon) {

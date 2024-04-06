@@ -24,7 +24,7 @@ internal sealed class PluginUi : IDisposable {
 
     internal Tab? CurrentTab {
         get {
-            var i = _chatLog.LastTab;
+            var i = ChatLog.LastTab;
             if (i > -1 && i < Plugin.Config.Tabs.Count) {
                 return Plugin.Config.Tabs[i];
             }
@@ -44,16 +44,16 @@ internal sealed class PluginUi : IDisposable {
     private ushort[] _jpRange;
     private ushort[] _symRange = [0xE020, 0xE0DB, 0];
 
-    private readonly ChatLog _chatLog;
+    public readonly ChatLog ChatLog;
 
     internal PluginUi(Plugin plugin) {
         Plugin = plugin;
         Salt = new Random().Next().ToString();
 
-        _chatLog = new ChatLog(this);
+        ChatLog = new ChatLog(this);
         Components = new List<IUiComponent> {
             new Settings(this),
-            _chatLog,
+            ChatLog,
         };
 
         var gameSym = new HttpClient().GetAsync("https://img.finalfantasyxiv.com/lds/pc/global/fonts/FFXIV_Lodestone_SSF.ttf")

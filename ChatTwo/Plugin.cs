@@ -3,6 +3,7 @@ using System.Globalization;
 using ChatTwo.Ipc;
 using ChatTwo.Resources;
 using ChatTwo.Util;
+using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.ClientState.Objects;
 using Dalamud.IoC;
 using Dalamud.Plugin;
@@ -32,6 +33,7 @@ public sealed class Plugin : IDalamudPlugin {
     [PluginService] internal static IGameInteropProvider GameInteropProvider { get; private set; } = null!;
     [PluginService] internal static IGameConfig GameConfig { get; private set; } = null!;
     [PluginService] internal static INotificationManager Notification { get; private set; } = null!;
+    [PluginService] internal static IAddonLifecycle AddonLifecycle { get; private set; } = null!;
 
     internal Configuration Config { get; }
     internal Commands Commands { get; }
@@ -81,10 +83,14 @@ public sealed class Plugin : IDalamudPlugin {
         Framework.Update += FrameworkUpdate;
         Interface.UiBuilder.Draw += Ui.Draw;
         Interface.LanguageChanged += LanguageChanged;
+
+        AddonLifecycle.RegisterListener(AddonEvent.PostRequestedUpdate, "ItemDetail", Ui.ChatLog.PayloadHandler.MoveTooltip);
     }
     #pragma warning restore CS8618
 
     public void Dispose() {
+        AddonLifecycle.UnregisterListener(AddonEvent.PostRequestedUpdate, "ItemDetail", Ui.ChatLog.PayloadHandler.MoveTooltip);
+
         Interface.LanguageChanged -= LanguageChanged;
         Interface.UiBuilder.Draw -= Ui.Draw;
         Framework.Update -= FrameworkUpdate;
