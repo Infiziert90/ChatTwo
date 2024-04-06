@@ -1,5 +1,4 @@
-using System.Numerics;
-using ChatTwo.Ui;
+﻿using ChatTwo.Ui;
 using Dalamud.Interface;
 using Dalamud.Interface.GameFonts;
 using Dalamud.Interface.ManagedFontAtlas;
@@ -8,32 +7,15 @@ using ImGuiNET;
 
 namespace ChatTwo;
 
-internal sealed class PluginUi : IDisposable {
-    internal Plugin Plugin { get; }
-
-    internal bool SettingsVisible;
-    internal bool ScreenshotMode;
-    internal string Salt { get; }
+public class FontManager
+{
+    private readonly Plugin Plugin;
 
     internal IFontHandle Axis { get; private set; }
     internal IFontHandle AxisItalic { get; private set; }
 
     internal IFontHandle RegularFont { get; private set; }
     internal IFontHandle? ItalicFont { get; private set; }
-    internal Vector4 DefaultText { get; private set; }
-
-    internal Tab? CurrentTab {
-        get {
-            var i = ChatLog.LastTab;
-            if (i > -1 && i < Plugin.Config.Tabs.Count) {
-                return Plugin.Config.Tabs[i];
-            }
-
-            return null;
-        }
-    }
-
-    private List<IUiComponent> Components { get; }
 
     private FaceData _regularFont;
     private FaceData? _italicFont;
@@ -44,17 +26,9 @@ internal sealed class PluginUi : IDisposable {
     private ushort[] _jpRange;
     private ushort[] _symRange = [0xE020, 0xE0DB, 0];
 
-    public readonly ChatLog ChatLog;
-
-    internal PluginUi(Plugin plugin) {
+    public FontManager(Plugin plugin)
+    {
         Plugin = plugin;
-        Salt = new Random().Next().ToString();
-
-        ChatLog = new ChatLog(this);
-        Components = new List<IUiComponent> {
-            new Settings(this),
-            ChatLog,
-        };
 
         var gameSym = new HttpClient().GetAsync("https://img.finalfantasyxiv.com/lds/pc/global/fonts/FFXIV_Lodestone_SSF.ttf")
             .Result
@@ -62,38 +36,9 @@ internal sealed class PluginUi : IDisposable {
             .ReadAsByteArrayAsync()
             .Result;
         _gameSymFont = new FaceData(gameSym);
-
-        Plugin.Interface.UiBuilder.DisableCutsceneUiHide = true;
-        Plugin.Interface.UiBuilder.DisableGposeUiHide = true;
     }
 
-    public void Dispose() {
-        foreach (var component in Components) {
-            component.Dispose();
-        }
-    }
-
-    public void Draw() {
-        if (Plugin.Config.DatabaseMigration != Configuration.LatestDbVersion) {
-            return;
-        }
-
-        Plugin.Interface.UiBuilder.DisableUserUiHide = !Plugin.Config.HideWhenUiHidden;
-        DefaultText = ImGui.GetStyle().Colors[(int) ImGuiCol.Text];
-
-        using ((Plugin.Config.FontsEnabled ? RegularFont : Axis).Push())
-        {
-            foreach (var component in Components) {
-                try {
-                    component.Draw();
-                } catch (Exception ex) {
-                    Plugin.Log.Error(ex, "Error drawing component");
-                }
-            }
-        }
-    }
-
-    private byte[] GetResource(string name) {
+        private byte[] GetResource(string name) {
         var stream = GetType().Assembly.GetManifestResourceStream(name)!;
         var memory = new MemoryStream();
         stream.CopyTo(memory);

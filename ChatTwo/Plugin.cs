@@ -2,12 +2,14 @@ using System.Diagnostics;
 using System.Globalization;
 using ChatTwo.Ipc;
 using ChatTwo.Resources;
+using ChatTwo.Ui;
 using ChatTwo.Util;
-using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.ClientState.Objects;
+using Dalamud.Interface.Windowing;
 using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
+using ImGuiNET;
 using XivCommon;
 
 namespace ChatTwo;
@@ -35,6 +37,12 @@ public sealed class Plugin : IDalamudPlugin {
     [PluginService] internal static INotificationManager Notification { get; private set; } = null!;
     [PluginService] internal static IAddonLifecycle AddonLifecycle { get; private set; } = null!;
 
+    public readonly WindowSystem WindowSystem = new(PluginName);
+
+    public SettingsWindow SettingsWindow { get; }
+    public ChatLogWindow ChatLogWindow { get; }
+    public CommandHelpWindow CommandHelpWindow { get; }
+
     internal Configuration Config { get; }
     internal Commands Commands { get; }
     internal XivCommonBase Common { get; }
@@ -43,7 +51,7 @@ public sealed class Plugin : IDalamudPlugin {
     internal Store Store { get; }
     internal IpcManager Ipc { get; }
     internal ExtraChat ExtraChat { get; }
-    internal PluginUi Ui { get; }
+    internal FontManager FontManager { get; }
 
     internal int DeferredSaveFrames = -1;
 
@@ -51,69 +59,90 @@ public sealed class Plugin : IDalamudPlugin {
 
     #pragma warning disable CS8618
     public Plugin() {
-        this.GameStarted = Process.GetCurrentProcess().StartTime.ToUniversalTime();
+        GameStarted = Process.GetCurrentProcess().StartTime.ToUniversalTime();
 
-        this.Config = Interface.GetPluginConfig() as Configuration ?? new Configuration();
-        this.Config.Migrate();
+        Config = Interface.GetPluginConfig() as Configuration ?? new Configuration();
+        Config.Migrate();
 
-        if (this.Config.Tabs.Count == 0) {
-            this.Config.Tabs.Add(TabsUtil.VanillaGeneral);
+        if (Config.Tabs.Count == 0) {
+            Config.Tabs.Add(TabsUtil.VanillaGeneral);
         }
 
-        this.LanguageChanged(Interface.UiLanguage);
+        LanguageChanged(Interface.UiLanguage);
 
-        this.Commands = new Commands(this);
-        this.Common = new XivCommonBase(Interface);
-        this.TextureCache = new TextureCache(TextureProvider);
-        this.Functions = new GameFunctions.GameFunctions(this);
-        this.Ipc = new IpcManager(Interface);
-        this.ExtraChat = new ExtraChat(this);
-        this.Ui = new PluginUi(this);
-        Ui.BuildFonts();
+        Commands = new Commands(this);
+        Common = new XivCommonBase(Interface);
+        TextureCache = new TextureCache(TextureProvider);
+        Functions = new GameFunctions.GameFunctions(this);
+        Ipc = new IpcManager(Interface);
+        ExtraChat = new ExtraChat(this);
+        FontManager = new FontManager(this);
 
-        this.Store = new Store(this);  // requires Ui
+        ChatLogWindow = new ChatLogWindow(this);
+        SettingsWindow = new SettingsWindow(this);
+        CommandHelpWindow = new CommandHelpWindow(ChatLogWindow);
+
+        WindowSystem.AddWindow(ChatLogWindow);
+        WindowSystem.AddWindow(SettingsWindow);
+        WindowSystem.AddWindow(CommandHelpWindow);
+        FontManager.BuildFonts();
+
+        Interface.UiBuilder.DisableCutsceneUiHide = true;
+        Interface.UiBuilder.DisableGposeUiHide = true;
+
+        Store = new Store(this);  // requires Ui
 
         // let all the other components register, then initialise commands
-        this.Commands.Initialise();
+        Commands.Initialise();
 
         if (Interface.Reason is not PluginLoadReason.Boot) {
-            this.Store.FilterAllTabs(false);
+            Store.FilterAllTabs(false);
         }
 
         Framework.Update += FrameworkUpdate;
-        Interface.UiBuilder.Draw += Ui.Draw;
+        Interface.UiBuilder.Draw += Draw;
         Interface.LanguageChanged += LanguageChanged;
-
-        AddonLifecycle.RegisterListener(AddonEvent.PostRequestedUpdate, "ItemDetail", Ui.ChatLog.PayloadHandler.MoveTooltip);
     }
     #pragma warning restore CS8618
 
     public void Dispose() {
-        AddonLifecycle.UnregisterListener(AddonEvent.PostRequestedUpdate, "ItemDetail", Ui.ChatLog.PayloadHandler.MoveTooltip);
-
         Interface.LanguageChanged -= LanguageChanged;
-        Interface.UiBuilder.Draw -= Ui.Draw;
+        Interface.UiBuilder.Draw -= Draw;
         Framework.Update -= FrameworkUpdate;
         GameFunctions.GameFunctions.SetChatInteractable(true);
 
-        this.Ui.Dispose();
-        this.ExtraChat.Dispose();
-        this.Ipc.Dispose();
-        this.Store.Dispose();
-        this.Functions.Dispose();
-        this.TextureCache.Dispose();
-        this.Common.Dispose();
-        this.Commands.Dispose();
+        WindowSystem.RemoveAllWindows();
+        ChatLogWindow.Dispose();
+        SettingsWindow.Dispose();
+
+        ExtraChat.Dispose();
+        Ipc.Dispose();
+        Store.Dispose();
+        Functions.Dispose();
+        TextureCache.Dispose();
+        Common.Dispose();
+        Commands.Dispose();
+    }
+
+    private void Draw()
+    {
+        Interface.UiBuilder.DisableUserUiHide = !Config.HideWhenUiHidden;
+        ChatLogWindow.DefaultText = ImGui.GetStyle().Colors[(int) ImGuiCol.Text];
+
+        using ((Config.FontsEnabled ? FontManager.RegularFont : FontManager.Axis).Push())
+        {
+            WindowSystem.Draw();
+        }
     }
 
     internal void SaveConfig() {
-        Interface.SavePluginConfig(this.Config);
+        Interface.SavePluginConfig(Config);
     }
 
     internal void LanguageChanged(string langCode) {
-        var info = this.Config.LanguageOverride is LanguageOverride.None
+        var info = Config.LanguageOverride is LanguageOverride.None
             ? new CultureInfo(langCode)
-            : new CultureInfo(this.Config.LanguageOverride.Code());
+            : new CultureInfo(Config.LanguageOverride.Code());
 
         Language.Culture = info;
     }

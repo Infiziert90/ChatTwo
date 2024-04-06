@@ -1,75 +1,69 @@
-using System.Diagnostics;
 using System.Numerics;
 using ChatTwo.Resources;
 using ChatTwo.Ui.SettingsTabs;
 using ChatTwo.Util;
-using Dalamud.Interface.Utility;
+using Dalamud.Interface.Windowing;
+using Dalamud.Utility;
 using ImGuiNET;
 
 namespace ChatTwo.Ui;
 
-internal sealed class Settings : IUiComponent {
-    private PluginUi Ui { get; }
+public sealed class SettingsWindow : Window, IUiComponent
+{
+    private readonly Plugin Plugin;
 
     private Configuration Mutable { get; }
     private List<ISettingsTab> Tabs { get; }
-    private int _currentTab;
+    private int CurrentTab;
 
-    internal Settings(PluginUi ui) {
-        this.Ui = ui;
-        this.Mutable = new Configuration();
+    internal SettingsWindow(Plugin plugin) : base($"{Language.Settings_Title.Format(Plugin.PluginName)}###chat2-settings")
+    {
+        Flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse;
 
-        this.Tabs = new List<ISettingsTab> {
-            new Display(this.Mutable),
-            new Ui.SettingsTabs.Fonts(this.Mutable),
-            new ChatColours(this.Mutable, this.Ui.Plugin),
-            new Tabs(this.Ui.Plugin, this.Mutable),
-            new Database(this.Mutable, this.Ui.Plugin.Store),
-            new Miscellaneous(this.Mutable),
+        SizeCondition = ImGuiCond.FirstUseEver;
+        SizeConstraints = new WindowSizeConstraints
+        {
+            MinimumSize = new Vector2(475, 600),
+            MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
+        };
+
+        Plugin = plugin;
+        Mutable = new Configuration();
+
+        Tabs = new List<ISettingsTab> {
+            new Display(Mutable),
+            new Ui.SettingsTabs.Fonts(Mutable),
+            new ChatColours(Mutable, Plugin),
+            new Tabs(Plugin, Mutable),
+            new Database(Mutable, Plugin.Store),
+            new Miscellaneous(Mutable),
             new About(),
         };
 
-        this.Initialise();
+        Initialise();
 
-        this.Ui.Plugin.Commands.Register("/chat2", "Perform various actions with Chat 2.").Execute += this.Command;
-        Plugin.Interface.UiBuilder.OpenConfigUi += this.Toggle;
+        Plugin.Commands.Register("/chat2", "Perform various actions with Chat 2.").Execute += Command;
+        Plugin.Interface.UiBuilder.OpenConfigUi += Toggle;
     }
 
     public void Dispose() {
-        Plugin.Interface.UiBuilder.OpenConfigUi -= this.Toggle;
-        this.Ui.Plugin.Commands.Register("/chat2").Execute -= this.Command;
+        Plugin.Interface.UiBuilder.OpenConfigUi -= Toggle;
+        Plugin.Commands.Register("/chat2").Execute -= Command;
     }
 
     private void Command(string command, string args) {
-        if (string.IsNullOrWhiteSpace(args)) {
-            this.Toggle();
-        }
-    }
-
-    private void Toggle() {
-        this.Ui.SettingsVisible ^= true;
+        if (string.IsNullOrWhiteSpace(args))
+            Toggle();
     }
 
     private void Initialise() {
-        this.Mutable.UpdateFrom(this.Ui.Plugin.Config);
+        Mutable.UpdateFrom(Plugin.Config);
     }
 
-    public void Draw() {
-        if (!this.Ui.SettingsVisible) {
-            return;
-        }
-
-        ImGui.SetNextWindowSize(new Vector2(475, 600) * ImGuiHelpers.GlobalScale, ImGuiCond.FirstUseEver);
-
-        var name = string.Format(Language.Settings_Title, Plugin.PluginName);
-        if (!ImGui.Begin($"{name}###chat2-settings", ref this.Ui.SettingsVisible, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)) {
-            ImGui.End();
-            return;
-        }
-
-        if (ImGui.IsWindowAppearing()) {
-            this.Initialise();
-        }
+    public override void Draw()
+    {
+        if (ImGui.IsWindowAppearing())
+            Initialise();
 
         if (ImGui.BeginTable("##chat2-settings-table", 2)) {
             ImGui.TableSetupColumn("tab", ImGuiTableColumnFlags.WidthFixed);
@@ -78,9 +72,9 @@ internal sealed class Settings : IUiComponent {
             ImGui.TableNextColumn();
 
             var changed = false;
-            for (var i = 0; i < this.Tabs.Count; i++) {
-                if (ImGui.Selectable($"{this.Tabs[i].Name}###tab-{i}", this._currentTab == i)) {
-                    this._currentTab = i;
+            for (var i = 0; i < Tabs.Count; i++) {
+                if (ImGui.Selectable($"{Tabs[i].Name}###tab-{i}", CurrentTab == i)) {
+                    CurrentTab = i;
                     changed = true;
                 }
             }
@@ -93,7 +87,7 @@ internal sealed class Settings : IUiComponent {
                          - ImGui.GetStyle().ItemInnerSpacing.Y * 2
                          - ImGui.CalcTextSize("A").Y;
             if (ImGui.BeginChild("##chat2-settings", new Vector2(-1, height))) {
-                this.Tabs[this._currentTab].Draw(changed);
+                Tabs[CurrentTab].Draw(changed);
                 ImGui.EndChild();
             }
 
@@ -108,13 +102,13 @@ internal sealed class Settings : IUiComponent {
 
         if (ImGui.Button(Language.Settings_SaveAndClose)) {
             save = true;
-            this.Ui.SettingsVisible = false;
+            IsOpen = false;
         }
 
         ImGui.SameLine();
 
         if (ImGui.Button(Language.Settings_Discard)) {
-            this.Ui.SettingsVisible = false;
+            IsOpen = false;
         }
 
         var buttonLabel = "Anna's Ko-fi";
@@ -143,46 +137,44 @@ internal sealed class Settings : IUiComponent {
             ImGui.PopStyleColor(4);
         }
 
-        ImGui.End();
-
         if (save) {
-            var config = this.Ui.Plugin.Config;
+            var config = Plugin.Config;
 
-            var hideChatChanged = this.Mutable.HideChat != this.Ui.Plugin.Config.HideChat;
-            var fontChanged = this.Mutable.GlobalFont != this.Ui.Plugin.Config.GlobalFont
-                              || this.Mutable.JapaneseFont != this.Ui.Plugin.Config.JapaneseFont
-                              || this.Mutable.ExtraGlyphRanges != this.Ui.Plugin.Config.ExtraGlyphRanges;
-            var fontSizeChanged = Math.Abs(this.Mutable.FontSize - this.Ui.Plugin.Config.FontSize) > 0.001
-                                  || Math.Abs(this.Mutable.JapaneseFontSize - this.Ui.Plugin.Config.JapaneseFontSize) > 0.001
-                                  || Math.Abs(this.Mutable.SymbolsFontSize - this.Ui.Plugin.Config.SymbolsFontSize) > 0.001;
-            var langChanged = this.Mutable.LanguageOverride != this.Ui.Plugin.Config.LanguageOverride;
-            var sharedChanged = this.Mutable.SharedMode != this.Ui.Plugin.Config.SharedMode;
+            var hideChatChanged = Mutable.HideChat != Plugin.Config.HideChat;
+            var fontChanged = Mutable.GlobalFont != Plugin.Config.GlobalFont
+                              || Mutable.JapaneseFont != Plugin.Config.JapaneseFont
+                              || Mutable.ExtraGlyphRanges != Plugin.Config.ExtraGlyphRanges;
+            var fontSizeChanged = Math.Abs(Mutable.FontSize - Plugin.Config.FontSize) > 0.001
+                                  || Math.Abs(Mutable.JapaneseFontSize - Plugin.Config.JapaneseFontSize) > 0.001
+                                  || Math.Abs(Mutable.SymbolsFontSize - Plugin.Config.SymbolsFontSize) > 0.001;
+            var langChanged = Mutable.LanguageOverride != Plugin.Config.LanguageOverride;
+            var sharedChanged = Mutable.SharedMode != Plugin.Config.SharedMode;
 
-            config.UpdateFrom(this.Mutable);
+            config.UpdateFrom(Mutable);
 
             // save after 60 frames have passed, which should hopefully not
             // commit any changes that cause a crash
-            this.Ui.Plugin.DeferredSaveFrames = 60;
+            Plugin.DeferredSaveFrames = 60;
 
-            this.Ui.Plugin.Store.FilterAllTabs(false);
+            Plugin.Store.FilterAllTabs(false);
 
             if (fontChanged || fontSizeChanged) {
-                this.Ui.BuildFonts();
+                Plugin.FontManager.BuildFonts();
             }
 
             if (langChanged) {
-                this.Ui.Plugin.LanguageChanged(Plugin.Interface.UiLanguage);
+                Plugin.LanguageChanged(Plugin.Interface.UiLanguage);
             }
 
             if (sharedChanged) {
-                this.Ui.Plugin.Store.Reconnect();
+                Plugin.Store.Reconnect();
             }
 
-            if (!this.Mutable.HideChat && hideChatChanged) {
+            if (!Mutable.HideChat && hideChatChanged) {
                 GameFunctions.GameFunctions.SetChatInteractable(true);
             }
 
-            this.Initialise();
+            Initialise();
         }
     }
 }

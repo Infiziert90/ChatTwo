@@ -6,6 +6,7 @@ using ChatTwo.Code;
 using ChatTwo.GameFunctions.Types;
 using ChatTwo.Resources;
 using ChatTwo.Util;
+using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.Text.SeStringHandling;
@@ -13,17 +14,34 @@ using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface;
 using Dalamud.Interface.Internal;
 using Dalamud.Interface.Utility;
+using Dalamud.Interface.Windowing;
 using Dalamud.Memory;
 using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
 
 namespace ChatTwo.Ui;
 
-internal sealed class ChatLog : IUiComponent {
+public sealed class ChatLogWindow : Window, IUiComponent {
     private const string ChatChannelPicker = "chat-channel-picker";
     private const string AutoCompleteId = "##chat2-autocomplete";
 
-    internal PluginUi Ui { get; }
+    internal Plugin Plugin { get; }
+
+    internal bool ScreenshotMode;
+    internal string Salt { get; }
+
+    internal Vector4 DefaultText { get; set; }
+
+    internal Tab? CurrentTab {
+        get {
+            var i = LastTab;
+            if (i > -1 && i < Plugin.Config.Tabs.Count) {
+                return Plugin.Config.Tabs[i];
+            }
+
+            return null;
+        }
+    }
 
     internal bool Activate;
     private int _activatePos = -1;
@@ -35,7 +53,6 @@ internal sealed class ChatLog : IUiComponent {
     private InputChannel? _tempChannel;
     private TellTarget? _tellTarget;
     private readonly Stopwatch _lastResize = new();
-    private CommandHelp? _commandHelp;
     private AutoCompleteInfo? _autoCompleteInfo;
     private bool _autoCompleteOpen;
     private List<AutoTranslateEntry>? _autoCompleteList;
@@ -49,46 +66,59 @@ internal sealed class ChatLog : IUiComponent {
     public unsafe ImGuiViewport* LastViewport;
     private bool _wasDocked;
 
-    public PayloadHandler PayloadHandler { get; }
-    private Lender<PayloadHandler> HandlerLender { get; }
+    internal PayloadHandler PayloadHandler { get; }
+    internal Lender<PayloadHandler> HandlerLender { get; }
     private Dictionary<string, ChatType> TextCommandChannels { get; } = new();
     private HashSet<string> AllCommands { get; } = new();
 
-    internal ChatLog(PluginUi ui) {
-        Ui = ui;
-        PayloadHandler = new PayloadHandler(Ui, this);
-        HandlerLender = new Lender<PayloadHandler>(() => new PayloadHandler(Ui, this));
+    internal ChatLogWindow(Plugin plugin) : base($"{Plugin.PluginName}###chat2") {
+        Plugin = plugin;
+        Salt = new Random().Next().ToString();
+
+        SizeCondition = ImGuiCond.FirstUseEver;
+        SizeConstraints = new WindowSizeConstraints
+        {
+            MinimumSize = new Vector2(500, 250),
+            MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
+        };
+
+        PayloadHandler = new PayloadHandler(this);
+        HandlerLender = new Lender<PayloadHandler>(() => new PayloadHandler(this));
 
         SetUpTextCommandChannels();
         SetUpAllCommands();
 
-        Ui.Plugin.Commands.Register("/clearlog2", "Clear the Chat 2 chat log").Execute += ClearLog;
-        Ui.Plugin.Commands.Register("/chat2").Execute += ToggleChat;
+        Plugin.Commands.Register("/clearlog2", "Clear the Chat 2 chat log").Execute += ClearLog;
+        Plugin.Commands.Register("/chat2").Execute += ToggleChat;
 
         _fontIcon = Plugin.TextureProvider.GetTextureFromGame("common/font/fonticon_ps5.tex");
 
-        Ui.Plugin.Functions.Chat.Activated += Activated;
+        Plugin.Functions.Chat.Activated += Activated;
         Plugin.ClientState.Login += Login;
         Plugin.ClientState.Logout += Logout;
+
+        Plugin.AddonLifecycle.RegisterListener(AddonEvent.PostRequestedUpdate, "ItemDetail", PayloadHandler.MoveTooltip);
     }
 
     public void Dispose() {
+        Plugin.AddonLifecycle.UnregisterListener(AddonEvent.PostRequestedUpdate, "ItemDetail", PayloadHandler.MoveTooltip);
+
         Plugin.ClientState.Logout -= Logout;
         Plugin.ClientState.Login -= Login;
-        Ui.Plugin.Functions.Chat.Activated -= Activated;
+        Plugin.Functions.Chat.Activated -= Activated;
         _fontIcon?.Dispose();
-        Ui.Plugin.Commands.Register("/chat2").Execute -= ToggleChat;
-        Ui.Plugin.Commands.Register("/clearlog2").Execute -= ClearLog;
+        Plugin.Commands.Register("/chat2").Execute -= ToggleChat;
+        Plugin.Commands.Register("/clearlog2").Execute -= ClearLog;
     }
 
     private void Logout() {
-        foreach (var tab in Ui.Plugin.Config.Tabs) {
+        foreach (var tab in Plugin.Config.Tabs) {
             tab.Clear();
         }
     }
 
     private void Login() {
-        Ui.Plugin.Store.FilterAllTabs(false);
+        Plugin.Store.FilterAllTabs(false);
     }
 
     private void Activated(ChatActivatedArgs args) {
@@ -107,7 +137,7 @@ internal sealed class ChatLog : IUiComponent {
             var prevTemp = _tempChannel;
 
             if (info.Permanent) {
-                Ui.Plugin.Functions.Chat.SetChannel(info.Channel.Value);
+                Plugin.Functions.Chat.SetChannel(info.Channel.Value);
             } else {
                 _tempChannel = info.Channel.Value;
             }
@@ -120,7 +150,7 @@ internal sealed class ChatLog : IUiComponent {
                             ? -1
                             : 1;
 
-                    var tellInfo = Ui.Plugin.Functions.Chat.GetTellHistoryInfo(idx);
+                    var tellInfo = Plugin.Functions.Chat.GetTellHistoryInfo(idx);
                     if (tellInfo != null && reason != null) {
                         _tellTarget = new TellTarget(tellInfo.Name, (ushort) tellInfo.World, tellInfo.ContentId, reason.Value);
                     }
@@ -140,10 +170,10 @@ internal sealed class ChatLog : IUiComponent {
                 : info.Rotate;
 
             if (info.Channel is InputChannel.Linkshell1 && info.Rotate != RotateMode.None) {
-                var idx = Ui.Plugin.Functions.Chat.RotateLinkshellHistory(mode);
+                var idx = Plugin.Functions.Chat.RotateLinkshellHistory(mode);
                 _tempChannel = info.Channel.Value + (uint) idx;
             } else if (info.Channel is InputChannel.CrossLinkshell1 && info.Rotate != RotateMode.None) {
-                var idx = Ui.Plugin.Functions.Chat.RotateCrossLinkshellHistory(mode);
+                var idx = Plugin.Functions.Chat.RotateCrossLinkshellHistory(mode);
                 _tempChannel = info.Channel.Value + (uint) idx;
             }
         }
@@ -161,7 +191,7 @@ internal sealed class ChatLog : IUiComponent {
     private void ClearLog(string command, string arguments) {
         switch (arguments) {
             case "all":
-                foreach (var tab in Ui.Plugin.Config.Tabs) {
+                foreach (var tab in Plugin.Config.Tabs) {
                     tab.Clear();
                 }
 
@@ -173,8 +203,8 @@ internal sealed class ChatLog : IUiComponent {
 
                 break;
             default:
-                if (LastTab > -1 && LastTab < Ui.Plugin.Config.Tabs.Count) {
-                    Ui.Plugin.Config.Tabs[LastTab].Clear();
+                if (LastTab > -1 && LastTab < Plugin.Config.Tabs.Count) {
+                    Plugin.Config.Tabs[LastTab].Clear();
                 }
 
                 break;
@@ -287,7 +317,7 @@ internal sealed class ChatLog : IUiComponent {
         }
 
         var turnedOff = new Dictionary<VirtualKey, (uint, string)>();
-        foreach (var (toIntercept, keybind) in Ui.Plugin.Functions.Chat.Keybinds) {
+        foreach (var (toIntercept, keybind) in Plugin.Functions.Chat.Keybinds) {
             if (toIntercept is "CMD_CHAT" or "CMD_COMMAND") {
                 continue;
             }
@@ -297,7 +327,7 @@ internal sealed class ChatLog : IUiComponent {
                     return;
                 }
 
-                var modifierPressed = Ui.Plugin.Config.KeybindMode switch {
+                var modifierPressed = Plugin.Config.KeybindMode switch {
                     KeybindMode.Strict => modifier == modifierState,
                     KeybindMode.Flexible => modifierState.HasFlag(modifier),
                     _ => false,
@@ -354,90 +384,80 @@ internal sealed class ChatLog : IUiComponent {
 
     private HideState _hideState = HideState.None;
 
-    public void Draw() {
-        if (!DrawChatLog()) {
+    public override unsafe void PreOpenCheck()
+    {
+        // if the chat has no hide state and in a cutscene, set the hide state to cutscene
+        if (Plugin.Config.HideDuringCutscenes && _hideState == HideState.None && (CutsceneActive || GposeActive))
+            _hideState = HideState.Cutscene;
+
+        // if the chat is hidden because of a cutscene and no longer in a cutscene, set the hide state to none
+        if (_hideState is HideState.Cutscene or HideState.CutsceneOverride && !CutsceneActive && !GposeActive)
+            _hideState = HideState.None;
+
+        // if the chat is hidden because of a cutscene and the chat has been activated, show chat
+        if (_hideState == HideState.Cutscene && Activate)
+            _hideState = HideState.CutsceneOverride;
+
+        // if the user hid the chat and is now activating chat, reset the hide state
+        if (_hideState == HideState.User && Activate)
+            _hideState = HideState.None;
+
+        if (_hideState is HideState.Cutscene or HideState.User)
+        {
+            IsOpen = false;
             return;
         }
 
-        _commandHelp?.Draw();
+        if (Plugin.Config.HideWhenNotLoggedIn && !Plugin.ClientState.IsLoggedIn) {
+            IsOpen = false;
+            return;
+        }
+
+        IsOpen = true;
+
+        Flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse;
+        if (Plugin.Config.CanMove)
+            Flags |= ImGuiWindowFlags.NoMove;
+
+        if (Plugin.Config.CanResize)
+            Flags |= ImGuiWindowFlags.NoResize;
+
+        if (!Plugin.Config.ShowTitleBar)
+            Flags |= ImGuiWindowFlags.NoTitleBar;
+
+        if (LastViewport == ImGuiHelpers.MainViewport.NativePtr && !_wasDocked)
+            BgAlpha = Plugin.Config.WindowAlpha / 100f;
+
+        LastViewport = ImGui.GetWindowViewport().NativePtr;
+        _wasDocked = ImGui.IsWindowDocked();
+    }
+
+    public override void Draw()
+    {
+        DrawChatLog();
+
         DrawPopOuts();
         DrawAutoComplete();
     }
 
     /// <returns>true if window was rendered</returns>
-    private unsafe bool DrawChatLog() {
-        // if the chat has no hide state and in a cutscene, set the hide state to cutscene
-        if (Ui.Plugin.Config.HideDuringCutscenes && _hideState == HideState.None && (CutsceneActive || GposeActive)) {
-            _hideState = HideState.Cutscene;
-        }
-
-        // if the chat is hidden because of a cutscene and no longer in a cutscene, set the hide state to none
-        if (_hideState is HideState.Cutscene or HideState.CutsceneOverride && !CutsceneActive && !GposeActive) {
-            _hideState = HideState.None;
-        }
-
-        // if the chat is hidden because of a cutscene and the chat has been activated, show chat
-        if (_hideState == HideState.Cutscene && Activate) {
-            _hideState = HideState.CutsceneOverride;
-        }
-
-        // if the user hid the chat and is now activating chat, reset the hide state
-        if (_hideState == HideState.User && Activate) {
-            _hideState = HideState.None;
-        }
-
-        if (_hideState is HideState.Cutscene or HideState.User) {
-            return false;
-        }
-
-        if (Ui.Plugin.Config.HideWhenNotLoggedIn && !Plugin.ClientState.IsLoggedIn) {
-            return false;
-        }
-
-        var flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse;
-        if (!Ui.Plugin.Config.CanMove) {
-            flags |= ImGuiWindowFlags.NoMove;
-        }
-
-        if (!Ui.Plugin.Config.CanResize) {
-            flags |= ImGuiWindowFlags.NoResize;
-        }
-
-        if (!Ui.Plugin.Config.ShowTitleBar) {
-            flags |= ImGuiWindowFlags.NoTitleBar;
-        }
-
-        if (LastViewport == ImGuiHelpers.MainViewport.NativePtr && !_wasDocked) {
-            ImGui.SetNextWindowBgAlpha(Ui.Plugin.Config.WindowAlpha / 100f);
-        }
-
-        ImGui.SetNextWindowSize(new Vector2(500, 250) * ImGuiHelpers.GlobalScale, ImGuiCond.FirstUseEver);
-
-        if (!ImGui.Begin($"{Plugin.PluginName}###chat2", flags)) {
-            LastViewport = ImGui.GetWindowViewport().NativePtr;
-            _wasDocked = ImGui.IsWindowDocked();
-            ImGui.End();
-            return false;
-        }
-
+    private unsafe void DrawChatLog()
+    {
         var resized = LastWindowSize != ImGui.GetWindowSize();
         LastWindowSize = ImGui.GetWindowSize();
         LastWindowPos = ImGui.GetWindowPos();
 
-        if (resized) {
+        if (resized)
             _lastResize.Restart();
-        }
 
         LastViewport = ImGui.GetWindowViewport().NativePtr;
         _wasDocked = ImGui.IsWindowDocked();
 
-        var currentTab = Ui.Plugin.Config.SidebarTabView
-            ? DrawTabSidebar()
-            : DrawTabBar();
+        var currentTab = Plugin.Config.SidebarTabView ? DrawTabSidebar() : DrawTabBar();
 
         Tab? activeTab = null;
-        if (currentTab > -1 && currentTab < Ui.Plugin.Config.Tabs.Count) {
-            activeTab = Ui.Plugin.Config.Tabs[currentTab];
+        if (currentTab > -1 && currentTab < Plugin.Config.Tabs.Count) {
+            activeTab = Plugin.Config.Tabs[currentTab];
         }
 
         ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, Vector2.Zero);
@@ -457,23 +477,25 @@ internal sealed class ChatLog : IUiComponent {
             } else if (_tempChannel != null) {
                 if (_tempChannel.Value.IsLinkshell()) {
                     var idx = (uint) _tempChannel.Value - (uint) InputChannel.Linkshell1;
-                    var lsName = Ui.Plugin.Functions.Chat.GetLinkshellName(idx);
+                    var lsName = Plugin.Functions.Chat.GetLinkshellName(idx);
                     ImGui.TextUnformatted($"LS #{idx + 1}: {lsName}");
                 } else if (_tempChannel.Value.IsCrossLinkshell()) {
                     var idx = (uint) _tempChannel.Value - (uint) InputChannel.CrossLinkshell1;
-                    var cwlsName = Ui.Plugin.Functions.Chat.GetCrossLinkshellName(idx);
+                    var cwlsName = Plugin.Functions.Chat.GetCrossLinkshellName(idx);
                     ImGui.TextUnformatted($"CWLS [{idx + 1}]: {cwlsName}");
                 } else {
                     ImGui.TextUnformatted(_tempChannel.Value.ToChatType().Name());
                 }
             } else if (activeTab is { Channel: { } channel }) {
                 ImGui.TextUnformatted(channel.ToChatType().Name());
-            } else if (Ui.Plugin.ExtraChat.ChannelOverride is var (overrideName, _)) {
+            } else if (Plugin.ExtraChat.ChannelOverride is var (overrideName, _)) {
                 ImGui.TextUnformatted(overrideName);
             } else {
-                DrawChunks(Ui.Plugin.Functions.Chat.Channel.name);
+                DrawChunks(Plugin.Functions.Chat.Channel.name);
             }
-        } finally {
+        }
+        finally
+        {
             ImGui.PopStyleVar();
         }
 
@@ -497,7 +519,7 @@ internal sealed class ChatLog : IUiComponent {
                     ?.RawString ?? channel.ToString();
 
                 if (channel.IsLinkshell()) {
-                    var lsName = Ui.Plugin.Functions.Chat.GetLinkshellName(channel.LinkshellIndex());
+                    var lsName = Plugin.Functions.Chat.GetLinkshellName(channel.LinkshellIndex());
                     if (string.IsNullOrWhiteSpace(lsName)) {
                         continue;
                     }
@@ -506,7 +528,7 @@ internal sealed class ChatLog : IUiComponent {
                 }
 
                 if (channel.IsCrossLinkshell()) {
-                    var lsName = Ui.Plugin.Functions.Chat.GetCrossLinkshellName(channel.LinkshellIndex());
+                    var lsName = Plugin.Functions.Chat.GetCrossLinkshellName(channel.LinkshellIndex());
                     if (string.IsNullOrWhiteSpace(lsName)) {
                         continue;
                     }
@@ -515,7 +537,7 @@ internal sealed class ChatLog : IUiComponent {
                 }
 
                 if (ImGui.Selectable(name)) {
-                    Ui.Plugin.Functions.Chat.SetChannel(channel);
+                    Plugin.Functions.Chat.SetChannel(channel);
                     _tellTarget = null;
                 }
             }
@@ -527,10 +549,10 @@ internal sealed class ChatLog : IUiComponent {
         var afterIcon = ImGui.GetCursorPos();
 
         var buttonWidth = afterIcon.X - beforeIcon.X;
-        var showNovice = Ui.Plugin.Config.ShowNoviceNetwork && Ui.Plugin.Functions.IsMentor();
+        var showNovice = Plugin.Config.ShowNoviceNetwork && Plugin.Functions.IsMentor();
         var inputWidth = ImGui.GetContentRegionAvail().X - buttonWidth * (showNovice ? 2 : 1);
 
-        var inputType = _tempChannel?.ToChatType() ?? activeTab?.Channel?.ToChatType() ?? Ui.Plugin.Functions.Chat.Channel.channel.ToChatType();
+        var inputType = _tempChannel?.ToChatType() ?? activeTab?.Channel?.ToChatType() ?? Plugin.Functions.Chat.Channel.channel.ToChatType();
         var isCommand = Chat.Trim().StartsWith('/');
         if (isCommand) {
             var command = Chat.Split(' ')[0];
@@ -545,15 +567,15 @@ internal sealed class ChatLog : IUiComponent {
 
         var normalColour = *ImGui.GetStyleColorVec4(ImGuiCol.Text);
 
-        var inputColour = Ui.Plugin.Config.ChatColours.TryGetValue(inputType, out var inputCol)
+        var inputColour = Plugin.Config.ChatColours.TryGetValue(inputType, out var inputCol)
             ? inputCol
             : inputType.DefaultColour();
 
-        if (!isCommand && Ui.Plugin.ExtraChat.ChannelOverride is var (_, overrideColour)) {
+        if (!isCommand && Plugin.ExtraChat.ChannelOverride is var (_, overrideColour)) {
             inputColour = overrideColour;
         }
 
-        if (isCommand && Ui.Plugin.ExtraChat.ChannelCommandColours.TryGetValue(Chat.Split(' ')[0], out var ecColour)) {
+        if (isCommand && Plugin.ExtraChat.ChannelCommandColours.TryGetValue(Chat.Split(' ')[0], out var ecColour)) {
             inputColour = ecColour;
         }
 
@@ -567,10 +589,8 @@ internal sealed class ChatLog : IUiComponent {
 
         var chatCopy = Chat;
         ImGui.SetNextItemWidth(inputWidth);
-        const ImGuiInputTextFlags inputFlags = ImGuiInputTextFlags.CallbackAlways
-                                               | ImGuiInputTextFlags.CallbackCharFilter
-                                               | ImGuiInputTextFlags.CallbackCompletion
-                                               | ImGuiInputTextFlags.CallbackHistory;
+        const ImGuiInputTextFlags inputFlags = ImGuiInputTextFlags.CallbackAlways | ImGuiInputTextFlags.CallbackCharFilter |
+                                               ImGuiInputTextFlags.CallbackCompletion | ImGuiInputTextFlags.CallbackHistory;
         ImGui.InputText("##chat2-input", ref Chat, 500, inputFlags, Callback);
 
         if (ImGui.IsItemDeactivated()) {
@@ -618,20 +638,16 @@ internal sealed class ChatLog : IUiComponent {
         ImGui.SameLine();
 
         if (ImGuiUtil.IconButton(FontAwesomeIcon.Cog)) {
-            Ui.SettingsVisible ^= true;
+            Plugin.SettingsWindow.IsOpen ^= true;
         }
 
         if (showNovice) {
             ImGui.SameLine();
 
             if (ImGuiUtil.IconButton(FontAwesomeIcon.Leaf)) {
-                Ui.Plugin.Functions.ClickNoviceNetworkButton();
+                Plugin.Functions.ClickNoviceNetworkButton();
             }
         }
-
-        ImGui.End();
-
-        return true;
     }
 
     private void SendChatBox(Tab? activeTab) {
@@ -646,11 +662,11 @@ internal sealed class ChatLog : IUiComponent {
                     var reason = target.Reason;
                     var world = Plugin.DataManager.GetExcelSheet<World>()?.GetRow(target.World);
                     if (world is { IsPublic: true }) {
-                        if (reason == TellReason.Reply && Ui.Plugin.Common.Functions.FriendList.List.Any(friend => friend.ContentId == target.ContentId)) {
+                        if (reason == TellReason.Reply && Plugin.Common.Functions.FriendList.List.Any(friend => friend.ContentId == target.ContentId)) {
                             reason = TellReason.Friend;
                         }
 
-                        Ui.Plugin.Functions.Chat.SendTell(reason, target.ContentId, target.Name, (ushort) world.RowId, trimmed);
+                        Plugin.Functions.Chat.SendTell(reason, target.ContentId, target.Name, (ushort) world.RowId, trimmed);
                     }
 
                     if (_tempChannel is InputChannel.Tell) {
@@ -671,7 +687,7 @@ internal sealed class ChatLog : IUiComponent {
             var bytes = Encoding.UTF8.GetBytes(trimmed);
             AutoTranslate.ReplaceWithPayload(Plugin.DataManager, ref bytes);
 
-            Ui.Plugin.Common.Functions.Chat.SendMessageUnsafe(bytes);
+            Plugin.Common.Functions.Chat.SendMessageUnsafe(bytes);
         }
 
         Skip:
@@ -682,13 +698,13 @@ internal sealed class ChatLog : IUiComponent {
         _hideState = HideState.User;
     }
 
-    private void DrawMessageLog(Tab tab, PayloadHandler handler, float childHeight, bool switchedTab) {
+    internal void DrawMessageLog(Tab tab, PayloadHandler handler, float childHeight, bool switchedTab) {
         if (ImGui.BeginChild("##chat2-messages", new Vector2(-1, childHeight))) {
             ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, Vector2.Zero);
-            var table = tab.DisplayTimestamp && Ui.Plugin.Config.PrettierTimestamps;
+            var table = tab.DisplayTimestamp && Plugin.Config.PrettierTimestamps;
 
             var oldCellPaddingY = ImGui.GetStyle().CellPadding.Y;
-            if (Ui.Plugin.Config.PrettierTimestamps && Ui.Plugin.Config.MoreCompactPretty) {
+            if (Plugin.Config.PrettierTimestamps && Plugin.Config.MoreCompactPretty) {
                 var padding = ImGui.GetStyle().CellPadding;
                 padding.Y = 0;
 
@@ -726,7 +742,7 @@ internal sealed class ChatLog : IUiComponent {
                         message.IsVisible = false;
                     }
 
-                    if (Ui.Plugin.Config.CollapseDuplicateMessages) {
+                    if (Plugin.Config.CollapseDuplicateMessages) {
                         var messageHash = message.Hash;
                         var same = lastMessageHash == messageHash;
                         if (same) {
@@ -794,7 +810,7 @@ internal sealed class ChatLog : IUiComponent {
                     if (tab.DisplayTimestamp) {
                         var timestamp = message.Date.ToLocalTime().ToString("t");
                         if (table) {
-                            if (!Ui.Plugin.Config.HideSameTimestamps || timestamp != lastTimestamp) {
+                            if (!Plugin.Config.HideSameTimestamps || timestamp != lastTimestamp) {
                                 ImGui.TextUnformatted(timestamp);
                                 lastTimestamp = timestamp;
                             }
@@ -827,7 +843,7 @@ internal sealed class ChatLog : IUiComponent {
                     var afterDraw = ImGui.GetCursorScreenPos();
 
                     message.Height = ImGui.GetCursorPosY() - lastPos;
-                    if (Ui.Plugin.Config.PrettierTimestamps && !Ui.Plugin.Config.MoreCompactPretty) {
+                    if (Plugin.Config.PrettierTimestamps && !Plugin.Config.MoreCompactPretty) {
                         message.Height -= oldCellPaddingY * 2;
                         beforeDraw.Y += oldCellPaddingY;
                         afterDraw.Y -= oldCellPaddingY;
@@ -840,7 +856,7 @@ internal sealed class ChatLog : IUiComponent {
                 }
             } finally {
                 tab.MessagesMutex.Release();
-                ImGui.PopStyleVar(Ui.Plugin.Config.PrettierTimestamps && Ui.Plugin.Config.MoreCompactPretty ? 2 : 1);
+                ImGui.PopStyleVar(Plugin.Config.PrettierTimestamps && Plugin.Config.MoreCompactPretty ? 2 : 1);
             }
 
             if (switchedTab || ImGui.GetScrollY() >= ImGui.GetScrollMaxY()) {
@@ -865,8 +881,8 @@ internal sealed class ChatLog : IUiComponent {
             return currentTab;
         }
 
-        for (var tabI = 0; tabI < Ui.Plugin.Config.Tabs.Count; tabI++) {
-            var tab = Ui.Plugin.Config.Tabs[tabI];
+        for (var tabI = 0; tabI < Plugin.Config.Tabs.Count; tabI++) {
+            var tab = Plugin.Config.Tabs[tabI];
             if (tab.PopOut) {
                 continue;
             }
@@ -909,8 +925,8 @@ internal sealed class ChatLog : IUiComponent {
         var switchedTab = false;
         var childHeight = GetRemainingHeightForMessageLog();
         if (ImGui.BeginChild("##chat2-tab-sidebar", new Vector2(-1, childHeight))) {
-            for (var tabI = 0; tabI < Ui.Plugin.Config.Tabs.Count; tabI++) {
-                var tab = Ui.Plugin.Config.Tabs[tabI];
+            for (var tabI = 0; tabI < Plugin.Config.Tabs.Count; tabI++) {
+                var tab = Plugin.Config.Tabs[tabI];
                 if (tab.PopOut) {
                     continue;
                 }
@@ -933,13 +949,13 @@ internal sealed class ChatLog : IUiComponent {
 
         ImGui.TableNextColumn();
 
-        if (currentTab == -1 && LastTab < Ui.Plugin.Config.Tabs.Count) {
+        if (currentTab == -1 && LastTab < Plugin.Config.Tabs.Count) {
             currentTab = LastTab;
-            Ui.Plugin.Config.Tabs[currentTab].Unread = 0;
+            Plugin.Config.Tabs[currentTab].Unread = 0;
         }
 
         if (currentTab > -1) {
-            DrawMessageLog(Ui.Plugin.Config.Tabs[currentTab], PayloadHandler, childHeight, switchedTab);
+            DrawMessageLog(Plugin.Config.Tabs[currentTab], PayloadHandler, childHeight, switchedTab);
         }
 
         ImGui.EndTable();
@@ -952,7 +968,7 @@ internal sealed class ChatLog : IUiComponent {
             return;
         }
 
-        var tabs = Ui.Plugin.Config.Tabs;
+        var tabs = Plugin.Config.Tabs;
         var anyChanged = false;
 
         ImGui.PushID($"tab-context-menu-{i}");
@@ -969,7 +985,7 @@ internal sealed class ChatLog : IUiComponent {
 
         ImGui.SameLine();
 
-        var (leftIcon, leftTooltip) = Ui.Plugin.Config.SidebarTabView
+        var (leftIcon, leftTooltip) = Plugin.Config.SidebarTabView
             ? (FontAwesomeIcon.ArrowUp, Language.ChatLog_Tabs_MoveUp)
             : (FontAwesomeIcon.ArrowLeft, Language.ChatLog_Tabs_MoveLeft);
         if (ImGuiUtil.IconButton(leftIcon, tooltip: leftTooltip) && i > 0) {
@@ -980,7 +996,7 @@ internal sealed class ChatLog : IUiComponent {
 
         ImGui.SameLine();
 
-        var (rightIcon, rightTooltip) = Ui.Plugin.Config.SidebarTabView
+        var (rightIcon, rightTooltip) = Plugin.Config.SidebarTabView
             ? (FontAwesomeIcon.ArrowDown, Language.ChatLog_Tabs_MoveDown)
             : (FontAwesomeIcon.ArrowRight, Language.ChatLog_Tabs_MoveRight);
         if (ImGuiUtil.IconButton(rightIcon, tooltip: rightTooltip) && i < tabs.Count - 1) {
@@ -996,67 +1012,35 @@ internal sealed class ChatLog : IUiComponent {
         }
 
         if (anyChanged) {
-            Ui.Plugin.SaveConfig();
+            Plugin.SaveConfig();
         }
 
         ImGui.PopID();
         ImGui.EndPopup();
     }
 
-    private readonly List<bool> _popOutDocked = new();
-
+    internal readonly List<bool> PopOutDocked = new();
+    internal Dictionary<string, Window> PopOutWindows = new();
     private void DrawPopOuts() {
         HandlerLender.ResetCounter();
 
-        if (_popOutDocked.Count != Ui.Plugin.Config.Tabs.Count) {
-            _popOutDocked.Clear();
-            _popOutDocked.AddRange(Enumerable.Repeat(false, Ui.Plugin.Config.Tabs.Count));
+        if (PopOutDocked.Count != Plugin.Config.Tabs.Count) {
+            PopOutDocked.Clear();
+            PopOutDocked.AddRange(Enumerable.Repeat(false, Plugin.Config.Tabs.Count));
         }
 
-        for (var i = 0; i < Ui.Plugin.Config.Tabs.Count; i++) {
-            var tab = Ui.Plugin.Config.Tabs[i];
-            if (!tab.PopOut) {
+        for (var i = 0; i < Plugin.Config.Tabs.Count; i++) {
+            var tab = Plugin.Config.Tabs[i];
+            if (!tab.PopOut)
                 continue;
-            }
 
-            DrawPopOut(tab, i);
-        }
-    }
+            if (PopOutWindows.ContainsKey($"{tab.Name}{i}"))
+                continue;
 
-    private void DrawPopOut(Tab tab, int idx) {
-        var flags = ImGuiWindowFlags.None;
-        if (!Ui.Plugin.Config.ShowPopOutTitleBar) {
-            flags |= ImGuiWindowFlags.NoTitleBar;
-        }
+            var window = new Popout(this, tab, i) { IsOpen = true };
 
-        if (!_popOutDocked[idx]) {
-            var alpha = tab.IndependentOpacity ? tab.Opacity : Ui.Plugin.Config.WindowAlpha;
-            ImGui.SetNextWindowBgAlpha(alpha / 100f);
-        }
-
-        ImGui.SetNextWindowSize(new Vector2(350, 350) * ImGuiHelpers.GlobalScale, ImGuiCond.FirstUseEver);
-        if (!ImGui.Begin($"{tab.Name}##popout", ref tab.PopOut, flags)) {
-            goto End;
-        }
-
-        ImGui.PushID($"popout-{tab.Name}");
-
-        if (!Ui.Plugin.Config.ShowPopOutTitleBar) {
-            ImGui.TextUnformatted(tab.Name);
-            ImGui.Separator();
-        }
-
-        var handler = HandlerLender.Borrow();
-        DrawMessageLog(tab, handler, ImGui.GetContentRegionAvail().Y, false);
-
-        ImGui.PopID();
-
-        End:
-        _popOutDocked[idx] = ImGui.IsWindowDocked();
-        ImGui.End();
-
-        if (!tab.PopOut) {
-            Ui.Plugin.SaveConfig();
+            Plugin.WindowSystem.AddWindow(window);
+            PopOutWindows.Add($"{tab.Name}{i}", window);
         }
     }
 
@@ -1065,7 +1049,7 @@ internal sealed class ChatLog : IUiComponent {
             return;
         }
 
-        _autoCompleteList ??= AutoTranslate.Matching(Plugin.DataManager, _autoCompleteInfo.ToComplete, Ui.Plugin.Config.SortAutoTranslate);
+        _autoCompleteList ??= AutoTranslate.Matching(Plugin.DataManager, _autoCompleteInfo.ToComplete, Plugin.Config.SortAutoTranslate);
 
         if (_autoCompleteOpen) {
             ImGui.OpenPopup(AutoCompleteId);
@@ -1086,7 +1070,7 @@ internal sealed class ChatLog : IUiComponent {
 
         ImGui.SetNextItemWidth(-1);
         if (ImGui.InputTextWithHint("##auto-complete-filter", Language.AutoTranslate_Search_Hint, ref _autoCompleteInfo.ToComplete, 256, ImGuiInputTextFlags.CallbackAlways | ImGuiInputTextFlags.CallbackHistory, AutoCompleteCallback)) {
-            _autoCompleteList = AutoTranslate.Matching(Plugin.DataManager, _autoCompleteInfo.ToComplete, Ui.Plugin.Config.SortAutoTranslate);
+            _autoCompleteList = AutoTranslate.Matching(Plugin.DataManager, _autoCompleteInfo.ToComplete, Plugin.Config.SortAutoTranslate);
             _autoCompleteSelection = 0;
             _autoCompleteShouldScroll = true;
         }
@@ -1242,7 +1226,7 @@ internal sealed class ChatLog : IUiComponent {
         }
 
         if (data->EventFlag == ImGuiInputTextFlags.CallbackCharFilter) {
-            var valid = Ui.Plugin.Functions.Chat.IsCharValid((char) ptr.EventChar);
+            var valid = Plugin.Functions.Chat.IsCharValid((char) ptr.EventChar);
             if (!valid) {
                 return 1;
             }
@@ -1263,12 +1247,12 @@ internal sealed class ChatLog : IUiComponent {
                                                                                                      || cmd.ShortCommand.RawString == command
                                                                                                      || cmd.ShortAlias.RawString == command);
             if (cmd != null) {
-                _commandHelp = new CommandHelp(this, cmd);
+                Plugin.CommandHelpWindow.UpdateContent(cmd);
+                Plugin.CommandHelpWindow.IsOpen = true;
                 goto PostCommandHelp;
             }
         }
-
-        _commandHelp = null;
+        Plugin.CommandHelpWindow.IsOpen = false;
 
         PostCommandHelp:
         if (data->EventFlag != ImGuiInputTextFlags.CallbackHistory) {
@@ -1344,7 +1328,7 @@ internal sealed class ChatLog : IUiComponent {
             if (bounds != null) {
                 var texSize = new Vector2(_fontIcon.Width, _fontIcon.Height);
 
-                var sizeRatio = Ui.Plugin.Config.FontSize / bounds.Value.W;
+                var sizeRatio = Plugin.Config.FontSize / bounds.Value.W;
                 var size = new Vector2(bounds.Value.Z, bounds.Value.W) * sizeRatio * ImGuiHelpers.GlobalScale;
 
                 var uv0 = new Vector2(bounds.Value.X, bounds.Value.Y - 2) / texSize;
@@ -1363,7 +1347,7 @@ internal sealed class ChatLog : IUiComponent {
         var colour = text.Foreground;
         if (colour == null && text.FallbackColour != null) {
             var type = text.FallbackColour.Value;
-            colour = Ui.Plugin.Config.ChatColours.TryGetValue(type, out var col)
+            colour = Plugin.Config.ChatColours.TryGetValue(type, out var col)
                 ? col
                 : type.DefaultColour();
         }
@@ -1376,29 +1360,29 @@ internal sealed class ChatLog : IUiComponent {
         var pushed = false;
         if (text.Italic) {
             pushed = true;
-            (Ui.Plugin.Config.FontsEnabled && Ui.ItalicFont != null ? Ui.ItalicFont : Ui.AxisItalic).Push();
+            (Plugin.Config.FontsEnabled && Plugin.FontManager.ItalicFont != null ? Plugin.FontManager.ItalicFont : Plugin.FontManager.AxisItalic).Push();
         }
 
         var content = text.Content;
-        if (Ui.ScreenshotMode) {
+        if (ScreenshotMode) {
             if (chunk.Link is PlayerPayload playerPayload) {
-                var hashCode = $"{Ui.Salt}{playerPayload.PlayerName}{playerPayload.World.RowId}".GetHashCode();
+                var hashCode = $"{Salt}{playerPayload.PlayerName}{playerPayload.World.RowId}".GetHashCode();
                 content = $"Player {hashCode:X8}";
             } else if (Plugin.ClientState.LocalPlayer is { } player && content.Contains(player.Name.TextValue)) {
-                var hashCode = $"{Ui.Salt}{player.Name.TextValue}{player.HomeWorld.Id}".GetHashCode();
+                var hashCode = $"{Salt}{player.Name.TextValue}{player.HomeWorld.Id}".GetHashCode();
                 content = content.Replace(player.Name.TextValue, $"Player {hashCode:X8}");
             }
         }
 
         if (wrap) {
-            ImGuiUtil.WrapText(content, chunk, handler, Ui.DefaultText, lineWidth);
+            ImGuiUtil.WrapText(content, chunk, handler, DefaultText, lineWidth);
         } else {
             ImGui.TextUnformatted(content);
             ImGuiUtil.PostPayload(chunk, handler);
         }
 
         if (pushed) {
-            (Ui.Plugin.Config.FontsEnabled && Ui.ItalicFont != null ? Ui.ItalicFont : Ui.AxisItalic).Pop();
+            (Plugin.Config.FontsEnabled && Plugin.FontManager.ItalicFont != null ? Plugin.FontManager.ItalicFont : Plugin.FontManager.AxisItalic).Pop();
         }
 
         if (colour != null) {

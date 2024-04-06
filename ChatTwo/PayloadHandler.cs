@@ -22,11 +22,10 @@ using ChatTwoPartyFinderPayload = ChatTwo.Util.PartyFinderPayload;
 
 namespace ChatTwo;
 
-internal sealed class PayloadHandler {
+public sealed class PayloadHandler {
     private const string PopupId = "chat2-context-popup";
 
-    private PluginUi Ui { get; }
-    private ChatLog Log { get; }
+    private ChatLogWindow LogWindow { get; }
 
     private (Chunk, Payload?)? Popup { get; set; }
 
@@ -35,9 +34,8 @@ internal sealed class PayloadHandler {
     private uint _hoverCounter;
     private uint _lastHoverCounter;
 
-    internal PayloadHandler(PluginUi ui, ChatLog log) {
-        Ui = ui;
-        Log = log;
+    internal PayloadHandler(ChatLogWindow logWindow) {
+        LogWindow = logWindow;
     }
 
     internal void Draw() {
@@ -87,7 +85,7 @@ internal sealed class PayloadHandler {
     }
 
     private void Integrations(Chunk chunk, Payload? payload) {
-        var registered = Ui.Plugin.Ipc.Registered;
+        var registered = LogWindow.Plugin.Ipc.Registered;
         if (registered.Count == 0) {
             return;
         }
@@ -102,7 +100,7 @@ internal sealed class PayloadHandler {
 
             foreach (var id in registered) {
                 try {
-                    Ui.Plugin.Ipc.Invoke(id, sender, contentId, payload, chunk.Message?.SenderSource, chunk.Message?.ContentSource);
+                    LogWindow.Plugin.Ipc.Invoke(id, sender, contentId, payload, chunk.Message?.SenderSource, chunk.Message?.ContentSource);
                 } catch (Exception ex) {
                     Plugin.Log.Error(ex, "Error executing integration");
                 }
@@ -127,10 +125,10 @@ internal sealed class PayloadHandler {
             return;
         }
 
-        ImGui.Checkbox(Language.Context_ScreenshotMode, ref Ui.ScreenshotMode);
+        ImGui.Checkbox(Language.Context_ScreenshotMode, ref LogWindow.ScreenshotMode);
 
         if (ImGui.Selectable(Language.Context_HideChat)) {
-            Log.UserHide();
+            LogWindow.UserHide();
         }
 
         if (chunk.Message is { } message) {
@@ -186,7 +184,7 @@ internal sealed class PayloadHandler {
                 break;
             }
             case ItemPayload item: {
-                if (Ui.Plugin.Config.NativeItemTooltips) {
+                if (LogWindow.Plugin.Config.NativeItemTooltips) {
                     GameFunctions.GameFunctions.OpenItemTooltip(item.RawItemId);
 
                     _handleTooltips = true;
@@ -214,7 +212,7 @@ internal sealed class PayloadHandler {
 
         ImGui.BeginTooltip();
         ImGui.PushTextWrapPos();
-        ImGui.PushStyleColor(ImGuiCol.Text, Ui.DefaultText);
+        ImGui.PushStyleColor(ImGuiCol.Text, LogWindow.DefaultText);
 
         try
         {
@@ -237,7 +235,7 @@ internal sealed class PayloadHandler {
         if (!Plugin.GameConfig.TryGet(UiControlOption.DetailTrackingType, out uint selected) || selected != 0)
             return;
 
-        if (Log.LastViewport != ImGuiHelpers.MainViewport.NativePtr)
+        if (LogWindow.LastViewport != ImGuiHelpers.MainViewport.NativePtr)
             return;
 
         var atk = (AtkUnitBase*) args.Addon;
@@ -246,11 +244,11 @@ internal sealed class PayloadHandler {
 
         var atkSize = (X: atk->GetScaledWidth(true), Y: atk->GetScaledHeight(true));
         var viewportSize = ImGuiHelpers.MainViewport.Size;
-        var window = Log.LastWindowPos + Log.LastWindowSize;
+        var window = LogWindow.LastWindowPos + LogWindow.LastWindowSize;
         var isLeft = window.X < viewportSize.X / 2;
         var isTop = window.Y < viewportSize.Y / 2;
 
-        var x = isLeft ? window.X : Log.LastWindowPos.X - atkSize.X;
+        var x = isLeft ? window.X : LogWindow.LastWindowPos.X - atkSize.X;
         var y = Math.Clamp(window.Y - atkSize.Y, 0, float.MaxValue);
         y -= isTop ? 0 : 10; // small offset to prevent cut-off on the bottom
         atk->SetPosition((short) x, (short) y);
@@ -267,16 +265,16 @@ internal sealed class PayloadHandler {
     }
 
     private void HoverStatus(StatusPayload status) {
-        if (Ui.Plugin.TextureCache.GetStatus(status.Status) is { } icon) {
+        if (LogWindow.Plugin.TextureCache.GetStatus(status.Status) is { } icon) {
             InlineIcon(icon);
         }
 
         var name = ChunkUtil.ToChunks(status.Status.Name.ToDalamudString(), ChunkSource.None, null);
-        Log.DrawChunks(name.ToList());
+        LogWindow.DrawChunks(name.ToList());
         ImGui.Separator();
 
         var desc = ChunkUtil.ToChunks(status.Status.Description.ToDalamudString(), ChunkSource.None, null);
-        Log.DrawChunks(desc.ToList());
+        LogWindow.DrawChunks(desc.ToList());
     }
 
     private void HoverItem(ItemPayload item) {
@@ -289,16 +287,16 @@ internal sealed class PayloadHandler {
             return;
         }
 
-        if (Ui.Plugin.TextureCache.GetItem(item.Item, item.IsHQ) is { } icon) {
+        if (LogWindow.Plugin.TextureCache.GetItem(item.Item, item.IsHQ) is { } icon) {
             InlineIcon(icon);
         }
 
         var name = ChunkUtil.ToChunks(item.Item.Name.ToDalamudString(), ChunkSource.None, null);
-        Log.DrawChunks(name.ToList());
+        LogWindow.DrawChunks(name.ToList());
         ImGui.Separator();
 
         var desc = ChunkUtil.ToChunks(item.Item.Description.ToDalamudString(), ChunkSource.None, null);
-        Log.DrawChunks(desc.ToList());
+        LogWindow.DrawChunks(desc.ToList());
     }
 
     private void HoverEventItem(ItemPayload payload) {
@@ -307,18 +305,18 @@ internal sealed class PayloadHandler {
             return;
         }
 
-        if (Ui.Plugin.TextureCache.GetEventItem(item) is { } icon) {
+        if (LogWindow.Plugin.TextureCache.GetEventItem(item) is { } icon) {
             InlineIcon(icon);
         }
 
         var name = ChunkUtil.ToChunks(item.Name.ToDalamudString(), ChunkSource.None, null);
-        Log.DrawChunks(name.ToList());
+        LogWindow.DrawChunks(name.ToList());
         ImGui.Separator();
 
         var help = Plugin.DataManager.GetExcelSheet<EventItemHelp>()?.GetRow(payload.RawItemId);
         if (help != null) {
             var desc = ChunkUtil.ToChunks(help.Description.ToDalamudString(), ChunkSource.None, null);
-            Log.DrawChunks(desc.ToList());
+            LogWindow.DrawChunks(desc.ToList());
         }
     }
 
@@ -329,7 +327,7 @@ internal sealed class PayloadHandler {
                 break;
             }
             case QuestPayload quest: {
-                Ui.Plugin.Common.Functions.Journal.OpenQuest(quest.Quest);
+                LogWindow.Plugin.Common.Functions.Journal.OpenQuest(quest.Quest);
                 break;
             }
             case DalamudLinkPayload link: {
@@ -340,17 +338,17 @@ internal sealed class PayloadHandler {
                 if (pf.LinkType == DalamudPartyFinderPayload.PartyFinderLinkType.PartyFinderNotification) {
                     GameFunctions.GameFunctions.OpenPartyFinder();
                 } else {
-                    Ui.Plugin.Functions.OpenPartyFinder(pf.ListingId);
+                    LogWindow.Plugin.Functions.OpenPartyFinder(pf.ListingId);
                 }
 
                 break;
             }
             case ChatTwoPartyFinderPayload pf: {
-                Ui.Plugin.Functions.OpenPartyFinder(pf.Id);
+                LogWindow.Plugin.Functions.OpenPartyFinder(pf.Id);
                 break;
             }
             case AchievementPayload achievement: {
-                Ui.Plugin.Functions.OpenAchievement(achievement.Id);
+                LogWindow.Plugin.Functions.OpenAchievement(achievement.Id);
                 break;
             }
             case RawPayload raw: {
@@ -408,7 +406,7 @@ internal sealed class PayloadHandler {
 
         var hq = payload.Kind == ItemPayload.ItemKind.Hq;
 
-        if (Ui.Plugin.TextureCache.GetItem(item, hq) is { } icon) {
+        if (LogWindow.Plugin.TextureCache.GetItem(item, hq) is { } icon) {
             InlineIcon(icon);
         }
 
@@ -420,32 +418,32 @@ internal sealed class PayloadHandler {
             name.Payloads.Add(new TextPayload(" "));
         }
 
-        Log.DrawChunks(ChunkUtil.ToChunks(name, ChunkSource.None, null).ToList(), false);
+        LogWindow.DrawChunks(ChunkUtil.ToChunks(name, ChunkSource.None, null).ToList(), false);
         ImGui.Separator();
 
         var realItemId = payload.RawItemId;
         if (item.EquipSlotCategory.Row != 0) {
             if (ImGui.Selectable(Language.Context_TryOn)) {
-                Ui.Plugin.Functions.Context.TryOn(realItemId, 0);
+                LogWindow.Plugin.Functions.Context.TryOn(realItemId, 0);
             }
 
             if (ImGui.Selectable(Language.Context_ItemComparison)) {
-                Ui.Plugin.Functions.Context.OpenItemComparison(realItemId);
+                LogWindow.Plugin.Functions.Context.OpenItemComparison(realItemId);
             }
         }
 
         if (item.ItemSearchCategory.Value?.Category == 3) {
             if (ImGui.Selectable(Language.Context_SearchRecipes)) {
-                Ui.Plugin.Functions.Context.SearchForRecipesUsingItem(payload.ItemId);
+                LogWindow.Plugin.Functions.Context.SearchForRecipesUsingItem(payload.ItemId);
             }
         }
 
         if (ImGui.Selectable(Language.Context_SearchForItem)) {
-            Ui.Plugin.Functions.Context.SearchForItem(realItemId);
+            LogWindow.Plugin.Functions.Context.SearchForItem(realItemId);
         }
 
         if (ImGui.Selectable(Language.Context_Link)) {
-            Ui.Plugin.Functions.Context.LinkItem(realItemId);
+            LogWindow.Plugin.Functions.Context.LinkItem(realItemId);
         }
 
         if (ImGui.Selectable(Language.Context_CopyItemName)) {
@@ -463,17 +461,17 @@ internal sealed class PayloadHandler {
             return;
         }
 
-        if (Ui.Plugin.TextureCache.GetEventItem(item) is { } icon) {
+        if (LogWindow.Plugin.TextureCache.GetEventItem(item) is { } icon) {
             InlineIcon(icon);
         }
 
         var name = item.Name.ToDalamudString();
-        Log.DrawChunks(ChunkUtil.ToChunks(name, ChunkSource.None, null).ToList(), false);
+        LogWindow.DrawChunks(ChunkUtil.ToChunks(name, ChunkSource.None, null).ToList(), false);
         ImGui.Separator();
 
         var realItemId = payload.RawItemId;
         if (ImGui.Selectable(Language.Context_Link)) {
-            Ui.Plugin.Functions.Context.LinkItem(realItemId);
+            LogWindow.Plugin.Functions.Context.LinkItem(realItemId);
         }
 
         if (ImGui.Selectable(Language.Context_CopyItemName)) {
@@ -502,17 +500,17 @@ internal sealed class PayloadHandler {
             });
         }
 
-        Log.DrawChunks(name, false);
+        LogWindow.DrawChunks(name, false);
         ImGui.Separator();
 
         if (ImGui.Selectable(Language.Context_SendTell)) {
-            Log.Chat = $"/tell {player.PlayerName}";
+            LogWindow.Chat = $"/tell {player.PlayerName}";
             if (world.IsPublic) {
-                Log.Chat += $"@{world.Name}";
+                LogWindow.Chat += $"@{world.Name}";
             }
 
-            Log.Chat += " ";
-            Log.Activate = true;
+            LogWindow.Chat += " ";
+            LogWindow.Activate = true;
         }
 
         var validContentId = chunk.Message?.ContentId is not (null or 0);
@@ -522,21 +520,21 @@ internal sealed class PayloadHandler {
             var isLeader = party.Length == 0 || Plugin.ClientState.LocalContentId == leader;
             var member = party.FirstOrDefault(member => member.Name.TextValue == player.PlayerName && member.World.Id == world.RowId);
             var isInParty = member != default;
-            var inInstance = Ui.Plugin.Functions.IsInInstance();
+            var inInstance = LogWindow.Plugin.Functions.IsInInstance();
             var inPartyInstance = Plugin.DataManager.GetExcelSheet<TerritoryType>()!.GetRow(Plugin.ClientState.TerritoryType)?.TerritoryIntendedUse is (41 or 47 or 48 or 52 or 53);
             if (isLeader) {
                 if (!isInParty) {
                     if (inInstance && inPartyInstance) {
                         if (validContentId && ImGui.Selectable(Language.Context_InviteToParty)) {
-                            Ui.Plugin.Functions.Party.InviteInInstance(chunk.Message!.ContentId);
+                            LogWindow.Plugin.Functions.Party.InviteInInstance(chunk.Message!.ContentId);
                         }
                     } else if (!inInstance && ImGui.BeginMenu(Language.Context_InviteToParty)) {
                         if (ImGui.Selectable(Language.Context_InviteToParty_SameWorld)) {
-                            Ui.Plugin.Functions.Party.InviteSameWorld(player.PlayerName, (ushort) world.RowId, chunk.Message?.ContentId ?? 0);
+                            LogWindow.Plugin.Functions.Party.InviteSameWorld(player.PlayerName, (ushort) world.RowId, chunk.Message?.ContentId ?? 0);
                         }
 
                         if (validContentId && ImGui.Selectable(Language.Context_InviteToParty_DifferentWorld)) {
-                            Ui.Plugin.Functions.Party.InviteOtherWorld(chunk.Message!.ContentId);
+                            LogWindow.Plugin.Functions.Party.InviteOtherWorld(chunk.Message!.ContentId);
                         }
 
                         ImGui.EndMenu();
@@ -545,33 +543,33 @@ internal sealed class PayloadHandler {
 
                 if (isInParty && member != null && (!inInstance || (inInstance && inPartyInstance))) {
                     if (ImGui.Selectable(Language.Context_Promote)) {
-                        Ui.Plugin.Functions.Party.Promote(player.PlayerName, (ulong) member.ContentId);
+                        LogWindow.Plugin.Functions.Party.Promote(player.PlayerName, (ulong) member.ContentId);
                     }
 
                     if (ImGui.Selectable(Language.Context_KickFromParty)) {
-                        Ui.Plugin.Functions.Party.Kick(player.PlayerName, (ulong) member.ContentId);
+                        LogWindow.Plugin.Functions.Party.Kick(player.PlayerName, (ulong) member.ContentId);
                     }
                 }
             }
 
-            var isFriend = Ui.Plugin.Common.Functions.FriendList.List.Any(friend => friend.Name.TextValue == player.PlayerName && friend.HomeWorld == world.RowId);
+            var isFriend = LogWindow.Plugin.Common.Functions.FriendList.List.Any(friend => friend.Name.TextValue == player.PlayerName && friend.HomeWorld == world.RowId);
             if (!isFriend && ImGui.Selectable(Language.Context_SendFriendRequest)) {
-                Ui.Plugin.Functions.SendFriendRequest(player.PlayerName, (ushort) world.RowId);
+                LogWindow.Plugin.Functions.SendFriendRequest(player.PlayerName, (ushort) world.RowId);
             }
 
             if (ImGui.Selectable(Language.Context_AddToBlacklist)) {
-                Ui.Plugin.Functions.AddToBlacklist(player.PlayerName, (ushort) world.RowId);
+                LogWindow.Plugin.Functions.AddToBlacklist(player.PlayerName, (ushort) world.RowId);
             }
 
-            if (Ui.Plugin.Functions.IsMentor() && ImGui.Selectable(Language.Context_InviteToNoviceNetwork)) {
-                Ui.Plugin.Functions.Context.InviteToNoviceNetwork(player.PlayerName, (ushort) world.RowId);
+            if (LogWindow.Plugin.Functions.IsMentor() && ImGui.Selectable(Language.Context_InviteToNoviceNetwork)) {
+                LogWindow.Plugin.Functions.Context.InviteToNoviceNetwork(player.PlayerName, (ushort) world.RowId);
             }
         }
 
         var inputChannel = chunk.Message?.Code.Type.ToInputChannel();
         if (inputChannel != null && ImGui.Selectable(Language.Context_ReplyInSelectedChatMode)) {
-            Ui.Plugin.Functions.Chat.SetChannel(inputChannel.Value);
-            Log.Activate = true;
+            LogWindow.Plugin.Functions.Chat.SetChannel(inputChannel.Value);
+            LogWindow.Activate = true;
         }
 
         if (ImGui.Selectable(Language.Context_Target) && FindCharacterForPayload(player) is { } obj) {
@@ -580,7 +578,7 @@ internal sealed class PayloadHandler {
 
         if (validContentId && ImGui.Selectable(Language.Context_AdventurerPlate))
         {
-            if (!Ui.Plugin.Functions.TryOpenAdventurerPlate(chunk.Message!.ContentId))
+            if (!LogWindow.Plugin.Functions.TryOpenAdventurerPlate(chunk.Message!.ContentId))
                 WrapperUtil.AddNotification(Language.Context_AdventurerPlateError, NotificationType.Warning);
         }
 
