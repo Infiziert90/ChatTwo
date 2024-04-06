@@ -235,9 +235,6 @@
     <data name="Tab_DefaultName">
         <value>Nieuw Tabblad</value>
     </data>
-    <data name="Settings_Kofi">
-        <value>Ondersteun {0} op Ko-fi</value>
-    </data>
     <data name="Settings_SaveAndClose">
         <value>Opslaan en afsluiten</value>
     </data>

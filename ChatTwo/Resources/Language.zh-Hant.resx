@@ -235,9 +235,6 @@
     <data name="Tab_DefaultName">
         <value>新建標籤頁</value>
     </data>
-    <data name="Settings_Kofi">
-        <value>在 Ko-Fi 上支持 {0}</value>
-    </data>
     <data name="Settings_SaveAndClose">
         <value>儲存並關閉</value>
     </data>

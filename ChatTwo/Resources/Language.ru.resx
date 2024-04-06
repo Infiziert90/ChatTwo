@@ -235,9 +235,6 @@
     <data name="Tab_DefaultName">
         <value>Новая вкладка</value>
     </data>
-    <data name="Settings_Kofi">
-        <value>Поддержать {0} через Ko-fi</value>
-    </data>
     <data name="Settings_SaveAndClose">
         <value>Сохранить и закрыть</value>
     </data>

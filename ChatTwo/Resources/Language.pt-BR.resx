@@ -235,9 +235,6 @@
     <data name="Tab_DefaultName">
         <value>Nova aba</value>
     </data>
-    <data name="Settings_Kofi">
-        <value>Apoie {0} no Ko-fi</value>
-    </data>
     <data name="Settings_SaveAndClose">
         <value>Salvar e Fechar</value>
     </data>

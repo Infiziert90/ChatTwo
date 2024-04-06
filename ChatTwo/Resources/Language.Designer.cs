@@ -2184,15 +2184,6 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Support {0} on Ko-fi.
-        /// </summary>
-        internal static string Settings_Kofi {
-            get {
-                return ResourceManager.GetString("Settings_Kofi", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Save.
         /// </summary>
         internal static string Settings_Save {

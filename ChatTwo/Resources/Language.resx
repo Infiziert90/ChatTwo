@@ -235,9 +235,6 @@
     <data name="Tab_DefaultName">
         <value>New tab</value>
     </data>
-    <data name="Settings_Kofi">
-        <value>Support {0} on Ko-fi</value>
-    </data>
     <data name="Settings_SaveAndClose">
         <value>Save and close</value>
     </data>

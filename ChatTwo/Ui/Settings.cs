@@ -117,7 +117,8 @@ internal sealed class Settings : IUiComponent {
             this.Ui.SettingsVisible = false;
         }
 
-        var buttonLabel = string.Format(Language.Settings_Kofi, Plugin.PluginName);
+        var buttonLabel = "Anna's Ko-fi";
+        var buttonLabel2 = "Infi's Ko-fi";
 
         ImGui.PushStyleColor(ImGuiCol.Button, ColourUtil.RgbaToAbgr(0xFF5E5BFF));
         ImGui.PushStyleColor(ImGuiCol.ButtonHovered, ColourUtil.RgbaToAbgr(0xFF7775FF));
@@ -126,12 +127,17 @@ internal sealed class Settings : IUiComponent {
 
         try {
             var buttonWidth = ImGui.CalcTextSize(buttonLabel).X + ImGui.GetStyle().FramePadding.X * 2;
-            ImGui.SameLine(ImGui.GetContentRegionAvail().X - buttonWidth);
+            var buttonWidth2 = ImGui.CalcTextSize(buttonLabel2).X + ImGui.GetStyle().FramePadding.X * 2;
+            ImGui.SameLine(ImGui.GetContentRegionAvail().X - buttonWidth - buttonWidth2);
+
+            if (ImGui.Button(buttonLabel2)) {
+                Dalamud.Utility.Util.OpenLink("https://ko-fi.com/infiii");
+            }
+
+            ImGui.SameLine();
 
             if (ImGui.Button(buttonLabel)) {
-                Process.Start(new ProcessStartInfo("https://ko-fi.com/lojewalo") {
-                    UseShellExecute = true,
-                });
+                Dalamud.Utility.Util.OpenLink("https://ko-fi.com/lojewalo");
             }
         } finally {
             ImGui.PopStyleColor(4);

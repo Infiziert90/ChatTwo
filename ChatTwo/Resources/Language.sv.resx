@@ -235,9 +235,6 @@
     <data name="Tab_DefaultName">
         <value>Ny flik</value>
     </data>
-    <data name="Settings_Kofi">
-        <value>Stöd {0} på Ko-fi</value>
-    </data>
     <data name="Settings_SaveAndClose">
         <value>Spara och stäng</value>
     </data>

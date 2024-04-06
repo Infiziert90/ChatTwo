@@ -235,9 +235,6 @@
     <data name="Tab_DefaultName">
         <value>Nouvel onglet</value>
     </data>
-    <data name="Settings_Kofi">
-        <value>Soutenir {0} sur Ko-fi</value>
-    </data>
     <data name="Settings_SaveAndClose">
         <value>Sauvegarder et fermer</value>
     </data>
