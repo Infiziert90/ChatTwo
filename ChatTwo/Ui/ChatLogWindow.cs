@@ -416,10 +416,10 @@ public sealed class ChatLogWindow : Window, IUiComponent {
         IsOpen = true;
 
         Flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse;
-        if (Plugin.Config.CanMove)
+        if (!Plugin.Config.CanMove)
             Flags |= ImGuiWindowFlags.NoMove;
 
-        if (Plugin.Config.CanResize)
+        if (!Plugin.Config.CanResize)
             Flags |= ImGuiWindowFlags.NoResize;
 
         if (!Plugin.Config.ShowTitleBar)
