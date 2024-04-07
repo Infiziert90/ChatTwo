@@ -2166,6 +2166,24 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use this option if you experience cut-off tooltips..
+        /// </summary>
+        internal static string Options_TooltipOffset_Desc {
+            get {
+                return ResourceManager.GetString("Options_TooltipOffset_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tooltip offset .
+        /// </summary>
+        internal static string Options_TooltipOffset_Name {
+            get {
+                return ResourceManager.GetString("Options_TooltipOffset_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Window opacity.
         /// </summary>
         internal static string Options_WindowOpacity_Name {

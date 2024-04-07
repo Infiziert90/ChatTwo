@@ -250,7 +250,7 @@ public sealed class PayloadHandler {
 
         var x = isLeft ? window.X : LogWindow.LastWindowPos.X - atkSize.X;
         var y = Math.Clamp(window.Y - atkSize.Y, 0, float.MaxValue);
-        y -= isTop ? 0 : 10; // small offset to prevent cut-off on the bottom
+        y -= isTop ? 0 : LogWindow.Plugin.Config.TooltipOffset; // offset to prevent cut-off on the bottom
         atk->SetPosition((short) x, (short) y);
     }
 

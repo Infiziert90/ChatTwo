@@ -225,6 +225,15 @@ internal static class ImGuiUtil {
         return ImGui.DragFloat($"##{label}", ref value, vSpeed, vMin, vMax, format, flags);
     }
 
+    internal static bool DragFloatVertical(string label, string description, ref float value, float vSpeed = 1.0f, float vMin = float.MinValue, float vMax = float.MaxValue, string? format = null, ImGuiSliderFlags flags = ImGuiSliderFlags.None) {
+        ImGui.TextUnformatted(label);
+        ImGui.SetNextItemWidth(-1);
+        var r = ImGui.DragFloat($"##{label}", ref value, vSpeed, vMin, vMax, format, flags);
+        HelpText(description);
+
+        return r;
+    }
+
     internal static bool TryToImGui(this VirtualKey key, out ImGuiKey result) {
         result = key switch {
             VirtualKey.NO_KEY => ImGuiKey.None,

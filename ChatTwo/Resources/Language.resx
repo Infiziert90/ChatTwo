@@ -865,4 +865,10 @@
     <data name="Context_AdventurerPlateError" xml:space="preserve">
         <value>Unable to open adventurer plate at this moment</value>
     </data>
+    <data name="Options_TooltipOffset_Name" xml:space="preserve">
+        <value>Tooltip offset </value>
+    </data>
+    <data name="Options_TooltipOffset_Desc" xml:space="preserve">
+        <value>Use this option if you experience cut-off tooltips.</value>
+    </data>
 </root>

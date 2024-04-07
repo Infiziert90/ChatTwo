@@ -45,6 +45,7 @@ internal class Configuration : IPluginConfiguration {
     public string GlobalFont = Fonts.GlobalFonts[0].Name;
     public string JapaneseFont = Fonts.JapaneseFonts[0].Item1;
 
+    public float TooltipOffset = 10f;
     public float WindowAlpha = 100f;
     public Dictionary<ChatType, uint> ChatColours = new();
     public List<Tab> Tabs = new();
@@ -52,50 +53,51 @@ internal class Configuration : IPluginConfiguration {
     public uint DatabaseMigration = LatestDbVersion;
 
     internal void UpdateFrom(Configuration other) {
-        this.HideChat = other.HideChat;
-        this.HideDuringCutscenes = other.HideDuringCutscenes;
-        this.HideWhenNotLoggedIn = other.HideWhenNotLoggedIn;
-        this.HideWhenUiHidden = other.HideWhenUiHidden;
-        this.NativeItemTooltips = other.NativeItemTooltips;
-        this.PrettierTimestamps = other.PrettierTimestamps;
-        this.MoreCompactPretty = other.MoreCompactPretty;
-        this.HideSameTimestamps = other.HideSameTimestamps;
-        this.ShowNoviceNetwork = other.ShowNoviceNetwork;
-        this.SidebarTabView = other.SidebarTabView;
-        this.CommandHelpSide = other.CommandHelpSide;
-        this.KeybindMode = other.KeybindMode;
-        this.LanguageOverride = other.LanguageOverride;
-        this.CanMove = other.CanMove;
-        this.CanResize = other.CanResize;
-        this.ShowTitleBar = other.ShowTitleBar;
-        this.ShowPopOutTitleBar = other.ShowPopOutTitleBar;
-        this.DatabaseBattleMessages = other.DatabaseBattleMessages;
-        this.LoadPreviousSession = other.LoadPreviousSession;
-        this.FilterIncludePreviousSessions = other.FilterIncludePreviousSessions;
-        this.SharedMode = other.SharedMode;
-        this.SortAutoTranslate = other.SortAutoTranslate;
-        this.CollapseDuplicateMessages = other.CollapseDuplicateMessages;
-        this.FontsEnabled = other.FontsEnabled;
-        this.ExtraGlyphRanges = other.ExtraGlyphRanges;
-        this.FontSize = other.FontSize;
-        this.JapaneseFontSize = other.JapaneseFontSize;
-        this.SymbolsFontSize = other.SymbolsFontSize;
-        this.GlobalFont = other.GlobalFont;
-        this.JapaneseFont = other.JapaneseFont;
-        this.WindowAlpha = other.WindowAlpha;
-        this.ChatColours = other.ChatColours.ToDictionary(entry => entry.Key, entry => entry.Value);
-        this.Tabs = other.Tabs.Select(t => t.Clone()).ToList();
-        this.DatabaseMigration = other.DatabaseMigration;
+        HideChat = other.HideChat;
+        HideDuringCutscenes = other.HideDuringCutscenes;
+        HideWhenNotLoggedIn = other.HideWhenNotLoggedIn;
+        HideWhenUiHidden = other.HideWhenUiHidden;
+        NativeItemTooltips = other.NativeItemTooltips;
+        PrettierTimestamps = other.PrettierTimestamps;
+        MoreCompactPretty = other.MoreCompactPretty;
+        HideSameTimestamps = other.HideSameTimestamps;
+        ShowNoviceNetwork = other.ShowNoviceNetwork;
+        SidebarTabView = other.SidebarTabView;
+        CommandHelpSide = other.CommandHelpSide;
+        KeybindMode = other.KeybindMode;
+        LanguageOverride = other.LanguageOverride;
+        CanMove = other.CanMove;
+        CanResize = other.CanResize;
+        ShowTitleBar = other.ShowTitleBar;
+        ShowPopOutTitleBar = other.ShowPopOutTitleBar;
+        DatabaseBattleMessages = other.DatabaseBattleMessages;
+        LoadPreviousSession = other.LoadPreviousSession;
+        FilterIncludePreviousSessions = other.FilterIncludePreviousSessions;
+        SharedMode = other.SharedMode;
+        SortAutoTranslate = other.SortAutoTranslate;
+        CollapseDuplicateMessages = other.CollapseDuplicateMessages;
+        FontsEnabled = other.FontsEnabled;
+        ExtraGlyphRanges = other.ExtraGlyphRanges;
+        FontSize = other.FontSize;
+        JapaneseFontSize = other.JapaneseFontSize;
+        SymbolsFontSize = other.SymbolsFontSize;
+        GlobalFont = other.GlobalFont;
+        JapaneseFont = other.JapaneseFont;
+        TooltipOffset = other.TooltipOffset;
+        WindowAlpha = other.WindowAlpha;
+        ChatColours = other.ChatColours.ToDictionary(entry => entry.Key, entry => entry.Value);
+        Tabs = other.Tabs.Select(t => t.Clone()).ToList();
+        DatabaseMigration = other.DatabaseMigration;
     }
 
     public void Migrate() {
         var loop = true;
-        while (loop && this.Version < LatestVersion) {
-            switch (this.Version) {
+        while (loop && Version < LatestVersion) {
+            switch (Version) {
                 case 1: {
-                    this.Version = 2;
+                    Version = 2;
 
-                    foreach (var tab in this.Tabs) {
+                    foreach (var tab in Tabs) {
                         #pragma warning disable CS0618
                         tab.UnreadMode = tab.DisplayUnread ? UnreadMode.Unseen : UnreadMode.None;
                         #pragma warning restore CS0618
@@ -104,26 +106,26 @@ internal class Configuration : IPluginConfiguration {
                     break;
                 }
                 case 2:
-                    this.Version = 3;
+                    Version = 3;
 
-                    this.JapaneseFontSize = this.FontSize;
-                    this.SymbolsFontSize = this.FontSize;
+                    JapaneseFontSize = FontSize;
+                    SymbolsFontSize = FontSize;
                     break;
                 case 3:
-                    this.Version = 4;
+                    Version = 4;
 
-                    this.WindowAlpha *= 100f;
+                    WindowAlpha *= 100f;
                     break;
                 case 4:
-                    this.Version = 5;
+                    Version = 5;
 
-                    foreach (var tab in this.Tabs) {
+                    foreach (var tab in Tabs) {
                         tab.ExtraChatAll = true;
                     }
 
                     break;
                 default:
-                    Plugin.Log.Warning($"Couldn't migrate config version {this.Version}");
+                    Plugin.Log.Warning($"Couldn't migrate config version {Version}");
                     loop = false;
                     break;
             }
@@ -181,53 +183,53 @@ internal class Tab {
     public List<Message> Messages = new();
 
     ~Tab() {
-        this.MessagesMutex.Dispose();
+        MessagesMutex.Dispose();
     }
 
     internal bool Matches(Message message) {
         if (message.ExtraChatChannel != Guid.Empty) {
-            return this.ExtraChatAll || this.ExtraChatChannels.Contains(message.ExtraChatChannel);
+            return ExtraChatAll || ExtraChatChannels.Contains(message.ExtraChatChannel);
         }
 
         return message.Code.Type.IsGm()
-               || this.ChatCodes.TryGetValue(message.Code.Type, out var sources) && (message.Code.Source is 0 or (ChatSource) 1 || sources.HasFlag(message.Code.Source));
+               || ChatCodes.TryGetValue(message.Code.Type, out var sources) && (message.Code.Source is 0 or (ChatSource) 1 || sources.HasFlag(message.Code.Source));
     }
 
     internal void AddMessage(Message message, bool unread = true) {
-        this.MessagesMutex.Wait();
-        this.Messages.Add(message);
-        while (this.Messages.Count > Store.MessagesLimit) {
-            this.Messages.RemoveAt(0);
+        MessagesMutex.Wait();
+        Messages.Add(message);
+        while (Messages.Count > Store.MessagesLimit) {
+            Messages.RemoveAt(0);
         }
 
-        this.MessagesMutex.Release();
+        MessagesMutex.Release();
 
         if (unread) {
-            this.Unread += 1;
+            Unread += 1;
         }
     }
 
     internal void Clear() {
-        this.MessagesMutex.Wait();
-        this.Messages.Clear();
-        this.MessagesMutex.Release();
+        MessagesMutex.Wait();
+        Messages.Clear();
+        MessagesMutex.Release();
     }
 
     internal Tab Clone() {
         return new Tab {
-            Name = this.Name,
-            ChatCodes = this.ChatCodes.ToDictionary(entry => entry.Key, entry => entry.Value),
-            ExtraChatAll = this.ExtraChatAll,
-            ExtraChatChannels = this.ExtraChatChannels.ToHashSet(),
+            Name = Name,
+            ChatCodes = ChatCodes.ToDictionary(entry => entry.Key, entry => entry.Value),
+            ExtraChatAll = ExtraChatAll,
+            ExtraChatChannels = ExtraChatChannels.ToHashSet(),
             #pragma warning disable CS0618
-            DisplayUnread = this.DisplayUnread,
+            DisplayUnread = DisplayUnread,
             #pragma warning restore CS0618
-            UnreadMode = this.UnreadMode,
-            DisplayTimestamp = this.DisplayTimestamp,
-            Channel = this.Channel,
-            PopOut = this.PopOut,
-            IndependentOpacity = this.IndependentOpacity,
-            Opacity = this.Opacity,
+            UnreadMode = UnreadMode,
+            DisplayTimestamp = DisplayTimestamp,
+            Channel = Channel,
+            PopOut = PopOut,
+            IndependentOpacity = IndependentOpacity,
+            Opacity = Opacity,
         };
     }
 }
