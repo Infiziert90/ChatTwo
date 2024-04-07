@@ -45,7 +45,7 @@ internal class Configuration : IPluginConfiguration {
     public string GlobalFont = Fonts.GlobalFonts[0].Name;
     public string JapaneseFont = Fonts.JapaneseFonts[0].Item1;
 
-    public float TooltipOffset = 10f;
+    public float TooltipOffset;
     public float WindowAlpha = 100f;
     public Dictionary<ChatType, uint> ChatColours = new();
     public List<Tab> Tabs = new();

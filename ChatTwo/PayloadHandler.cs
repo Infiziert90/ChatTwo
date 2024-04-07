@@ -239,10 +239,12 @@ public sealed class PayloadHandler {
             return;
 
         var atk = (AtkUnitBase*) args.Addon;
-        if (atk == null)
+        if (atk->WindowNode == null)
             return;
 
-        var atkSize = (X: atk->GetScaledWidth(true), Y: atk->GetScaledHeight(true));
+        var component = atk->WindowNode->AtkResNode;
+
+        var atkSize = (X: component.GetWidth() * component.ScaleX, Y: component.GetHeight() * component.GetScaleY());
         var viewportSize = ImGuiHelpers.MainViewport.Size;
         var window = LogWindow.LastWindowPos + LogWindow.LastWindowSize;
         var isLeft = window.X < viewportSize.X / 2;
@@ -251,6 +253,7 @@ public sealed class PayloadHandler {
         var x = isLeft ? window.X : LogWindow.LastWindowPos.X - atkSize.X;
         var y = Math.Clamp(window.Y - atkSize.Y, 0, float.MaxValue);
         y -= isTop ? 0 : LogWindow.Plugin.Config.TooltipOffset; // offset to prevent cut-off on the bottom
+
         atk->SetPosition((short) x, (short) y);
     }
 
