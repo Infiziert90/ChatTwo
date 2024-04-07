@@ -17,6 +17,13 @@ It supports:
 
 ### Chat Window
 ![chatWindow.png](ChatTwo%2Fimages%2FchatWindow.png)
+
+---
+
+### IPC Integration
+Other plugins can easily integrate their functionality into the context menu of chat2  
+For more infos read [ipc.md](ipc.md)
+
 ---
 
 ### Thanks to
