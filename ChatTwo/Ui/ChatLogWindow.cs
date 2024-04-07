@@ -102,7 +102,6 @@ public sealed class ChatLogWindow : Window, IUiComponent {
 
     public void Dispose() {
         Plugin.AddonLifecycle.UnregisterListener(AddonEvent.PostRequestedUpdate, "ItemDetail", PayloadHandler.MoveTooltip);
-
         Plugin.ClientState.Logout -= Logout;
         Plugin.ClientState.Login -= Login;
         Plugin.Functions.Chat.Activated -= Activated;
@@ -601,6 +600,7 @@ public sealed class ChatLogWindow : Window, IUiComponent {
             var enter = ImGui.IsKeyDown(ImGuiKey.Enter)
                         || ImGui.IsKeyDown(ImGuiKey.KeypadEnter);
             if (enter) {
+                Plugin.CommandHelpWindow.IsOpen = false;
                 SendChatBox(activeTab);
             }
         }
@@ -1239,6 +1239,7 @@ public sealed class ChatLogWindow : Window, IUiComponent {
             _activatePos = -1;
         }
 
+        Plugin.CommandHelpWindow.IsOpen = false;
         var text = MemoryHelper.ReadString((IntPtr) data->Buf, data->BufTextLen);
         if (text.StartsWith('/')) {
             var command = text.Split(' ')[0];
@@ -1249,12 +1250,9 @@ public sealed class ChatLogWindow : Window, IUiComponent {
             if (cmd != null) {
                 Plugin.CommandHelpWindow.UpdateContent(cmd);
                 Plugin.CommandHelpWindow.IsOpen = true;
-                goto PostCommandHelp;
             }
         }
-        Plugin.CommandHelpWindow.IsOpen = false;
 
-        PostCommandHelp:
         if (data->EventFlag != ImGuiInputTextFlags.CallbackHistory) {
             return 0;
         }
