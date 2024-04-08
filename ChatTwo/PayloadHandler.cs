@@ -15,7 +15,9 @@ using Dalamud.Interface.Utility;
 using Dalamud.Utility;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using ImGuiNET;
+using Lumina.Excel;
 using Lumina.Excel.GeneratedSheets;
+
 using Action = System.Action;
 using DalamudPartyFinderPayload = Dalamud.Game.Text.SeStringHandling.Payloads.PartyFinderPayload;
 using ChatTwoPartyFinderPayload = ChatTwo.Util.PartyFinderPayload;
@@ -26,7 +28,6 @@ public sealed class PayloadHandler {
     private const string PopupId = "chat2-context-popup";
 
     private ChatLogWindow LogWindow { get; }
-
     private (Chunk, Payload?)? Popup { get; set; }
 
     private bool _handleTooltips;
@@ -34,8 +35,18 @@ public sealed class PayloadHandler {
     private uint _hoverCounter;
     private uint _lastHoverCounter;
 
+    private readonly ExcelSheet<Item> ItemSheet;
+    private readonly ExcelSheet<EventItem> EventItemSheet;
+    private readonly ExcelSheet<TerritoryType> TerritorySheet;
+    private readonly ExcelSheet<EventItemHelp> EventItemHelpSheet;
+
     internal PayloadHandler(ChatLogWindow logWindow) {
         LogWindow = logWindow;
+
+        ItemSheet = Plugin.DataManager.GetExcelSheet<Item>()!;
+        EventItemSheet = Plugin.DataManager.GetExcelSheet<EventItem>()!;
+        TerritorySheet = Plugin.DataManager.GetExcelSheet<TerritoryType>()!;
+        EventItemHelpSheet = Plugin.DataManager.GetExcelSheet<EventItemHelp>()!;
     }
 
     internal void Draw() {
@@ -303,7 +314,7 @@ public sealed class PayloadHandler {
     }
 
     private void HoverEventItem(ItemPayload payload) {
-        var item = Plugin.DataManager.GetExcelSheet<EventItem>()?.GetRow(payload.RawItemId);
+        var item = EventItemSheet.GetRow(payload.RawItemId);
         if (item == null) {
             return;
         }
@@ -316,7 +327,7 @@ public sealed class PayloadHandler {
         LogWindow.DrawChunks(name.ToList());
         ImGui.Separator();
 
-        var help = Plugin.DataManager.GetExcelSheet<EventItemHelp>()?.GetRow(payload.RawItemId);
+        var help = EventItemHelpSheet.GetRow(payload.RawItemId);
         if (help != null) {
             var desc = ChunkUtil.ToChunks(help.Description.ToDalamudString(), ChunkSource.None, null);
             LogWindow.DrawChunks(desc.ToList());
@@ -402,7 +413,7 @@ public sealed class PayloadHandler {
             return;
         }
 
-        var item = Plugin.DataManager.GetExcelSheet<Item>()?.GetRow(payload.ItemId);
+        var item = ItemSheet.GetRow(payload.ItemId);
         if (item == null) {
             return;
         }
@@ -459,7 +470,7 @@ public sealed class PayloadHandler {
             return;
         }
 
-        var item = Plugin.DataManager.GetExcelSheet<EventItem>()?.GetRow(payload.ItemId);
+        var item = EventItemSheet.GetRow(payload.ItemId);
         if (item == null) {
             return;
         }
@@ -506,17 +517,27 @@ public sealed class PayloadHandler {
         LogWindow.DrawChunks(name, false);
         ImGui.Separator();
 
-        if (ImGui.Selectable(Language.Context_SendTell)) {
-            LogWindow.Chat = $"/tell {player.PlayerName}";
-            if (world.IsPublic) {
-                LogWindow.Chat += $"@{world.Name}";
+        var validContentId = chunk.Message?.ContentId is not (null or 0);
+        if (ImGui.Selectable(Language.Context_SendTell))
+        {
+            // Eureka and Bozja need special handling as tells work different
+            if (TerritorySheet.GetRow(Plugin.ClientState.TerritoryType)?.TerritoryIntendedUse != 41)
+            {
+                LogWindow.Chat = $"/tell {player.PlayerName}";
+                if (world.IsPublic) {
+                    LogWindow.Chat += $"@{world.Name}";
+                }
+
+                LogWindow.Chat += " ";
+            }
+            else if (validContentId)
+            {
+                LogWindow.Plugin.Functions.Chat.SetEurekaTellChannel(player.PlayerName, world.Name.ToString(), (ushort) world.RowId, chunk.Message!.ContentId, 0, 0);
             }
 
-            LogWindow.Chat += " ";
             LogWindow.Activate = true;
         }
 
-        var validContentId = chunk.Message?.ContentId is not (null or 0);
         if (world.IsPublic) {
             var party = Plugin.PartyList;
             var leader = (ulong?) party[(int) party.PartyLeaderIndex]?.ContentId;
@@ -524,7 +545,7 @@ public sealed class PayloadHandler {
             var member = party.FirstOrDefault(member => member.Name.TextValue == player.PlayerName && member.World.Id == world.RowId);
             var isInParty = member != default;
             var inInstance = LogWindow.Plugin.Functions.IsInInstance();
-            var inPartyInstance = Plugin.DataManager.GetExcelSheet<TerritoryType>()!.GetRow(Plugin.ClientState.TerritoryType)?.TerritoryIntendedUse is (41 or 47 or 48 or 52 or 53);
+            var inPartyInstance = TerritorySheet.GetRow(Plugin.ClientState.TerritoryType)?.TerritoryIntendedUse is (41 or 47 or 48 or 52 or 53);
             if (isLeader) {
                 if (!isInParty) {
                     if (inInstance && inPartyInstance) {

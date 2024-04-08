@@ -144,10 +144,8 @@ public sealed class ChatLogWindow : Window, IUiComponent {
             if (info.Channel is InputChannel.Tell) {
                 if (info.Rotate != RotateMode.None) {
                     var idx = prevTemp != InputChannel.Tell
-                        ? 0
-                        : info.Rotate == RotateMode.Reverse
-                            ? -1
-                            : 1;
+                        ? 0 : info.Rotate == RotateMode.Reverse
+                            ? -1 : 1;
 
                     var tellInfo = Plugin.Functions.Chat.GetTellHistoryInfo(idx);
                     if (tellInfo != null && reason != null) {
@@ -164,9 +162,7 @@ public sealed class ChatLogWindow : Window, IUiComponent {
                 _tellTarget = null;
             }
 
-            var mode = prevTemp == null
-                ? RotateMode.None
-                : info.Rotate;
+            var mode = prevTemp == null ? RotateMode.None : info.Rotate;
 
             if (info.Channel is InputChannel.Linkshell1 && info.Rotate != RotateMode.None) {
                 var idx = Plugin.Functions.Chat.RotateLinkshellHistory(mode);
@@ -439,7 +435,6 @@ public sealed class ChatLogWindow : Window, IUiComponent {
         DrawAutoComplete();
     }
 
-    /// <returns>true if window was rendered</returns>
     private unsafe void DrawChatLog()
     {
         var resized = LastWindowSize != ImGui.GetWindowSize();
@@ -595,13 +590,24 @@ public sealed class ChatLogWindow : Window, IUiComponent {
         if (ImGui.IsItemDeactivated()) {
             if (ImGui.IsKeyDown(ImGuiKey.Escape)) {
                 Chat = chatCopy;
+
+                if (Plugin.Functions.Chat.UsesTellTempChannel)
+                {
+                    Plugin.Functions.Chat.UsesTellTempChannel = false;
+                    Plugin.Functions.Chat.SetChannel(Plugin.Functions.Chat.PreviousChannel ?? InputChannel.Say);
+                }
             }
 
-            var enter = ImGui.IsKeyDown(ImGuiKey.Enter)
-                        || ImGui.IsKeyDown(ImGuiKey.KeypadEnter);
+            var enter = ImGui.IsKeyDown(ImGuiKey.Enter) || ImGui.IsKeyDown(ImGuiKey.KeypadEnter);
             if (enter) {
                 Plugin.CommandHelpWindow.IsOpen = false;
                 SendChatBox(activeTab);
+
+                if (Plugin.Functions.Chat.UsesTellTempChannel)
+                {
+                    Plugin.Functions.Chat.UsesTellTempChannel = false;
+                    Plugin.Functions.Chat.SetChannel(Plugin.Functions.Chat.PreviousChannel ?? InputChannel.Say);
+                }
             }
         }
 
@@ -615,6 +621,11 @@ public sealed class ChatLogWindow : Window, IUiComponent {
             }
 
             _tempChannel = null;
+            if (Plugin.Functions.Chat.UsesTellTempChannel)
+            {
+                Plugin.Functions.Chat.UsesTellTempChannel = false;
+                Plugin.Functions.Chat.SetChannel(Plugin.Functions.Chat.PreviousChannel ?? InputChannel.Say);
+            }
         }
 
         if (ImGui.BeginPopupContextItem()) {
@@ -677,11 +688,10 @@ public sealed class ChatLogWindow : Window, IUiComponent {
                 }
 
 
-                if (_tempChannel != null) {
+                if (_tempChannel != null)
                     trimmed = $"{_tempChannel.Value.Prefix()} {trimmed}";
-                } else if (activeTab is { Channel: { } channel }) {
+                else if (activeTab is { Channel: { } channel })
                     trimmed = $"{channel.Prefix()} {trimmed}";
-                }
             }
 
             var bytes = Encoding.UTF8.GetBytes(trimmed);
