@@ -1032,11 +1032,38 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Copy content.
+        /// </summary>
+        internal static string Context_CopyContent {
+            get {
+                return ResourceManager.GetString("Context_CopyContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copied message content to clipboard.
+        /// </summary>
+        internal static string Context_CopyContentSuccess {
+            get {
+                return ResourceManager.GetString("Context_CopyContentSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Copy Item Name.
         /// </summary>
         internal static string Context_CopyItemName {
             get {
                 return ResourceManager.GetString("Context_CopyItemName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copied message to clipboard.
+        /// </summary>
+        internal static string Context_CopySuccess {
+            get {
+                return ResourceManager.GetString("Context_CopySuccess", resourceCulture);
             }
         }
         
