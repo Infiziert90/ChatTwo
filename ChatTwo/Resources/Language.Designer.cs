@@ -1041,6 +1041,24 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Copy link to clipboard.
+        /// </summary>
+        internal static string Context_CopyLink {
+            get {
+                return ResourceManager.GetString("Context_CopyLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copied link to clipboard.
+        /// </summary>
+        internal static string Context_CopyLinkNotification {
+            get {
+                return ResourceManager.GetString("Context_CopyLinkNotification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hide chat.
         /// </summary>
         internal static string Context_HideChat {
@@ -1122,6 +1140,24 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open link in browser.
+        /// </summary>
+        internal static string Context_OpenInBrowser {
+            get {
+                return ResourceManager.GetString("Context_OpenInBrowser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to open the link in the browser, please report this issue.
+        /// </summary>
+        internal static string Context_OpenInBrowserError {
+            get {
+                return ResourceManager.GetString("Context_OpenInBrowserError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Promote.
         /// </summary>
         internal static string Context_Promote {
@@ -1199,6 +1235,24 @@ namespace ChatTwo.Resources {
         internal static string Context_TryOn {
             get {
                 return ResourceManager.GetString("Context_TryOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to URL at {0}.
+        /// </summary>
+        internal static string Context_URLDomain {
+            get {
+                return ResourceManager.GetString("Context_URLDomain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only open URLs from websites you trust.
+        /// </summary>
+        internal static string Context_URLWarning {
+            get {
+                return ResourceManager.GetString("Context_URLWarning", resourceCulture);
             }
         }
         

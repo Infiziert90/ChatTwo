@@ -1,6 +1,7 @@
 using ChatTwo.Code;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
+using System.Text;
 
 namespace ChatTwo.Util;
 
@@ -100,6 +101,10 @@ internal static class ChunkUtil {
                         var reader = new BinaryReader(new MemoryStream(rawPayload.Data[4..]));
                         var id = GetInteger(reader);
                         link = new AchievementPayload(id);
+                    } else if (rawPayload.Data.Length > 5 && rawPayload.Data[1] == 0x27 && rawPayload.Data[3] == 0x07) {
+                        // uri payload
+                        var uri = new Uri(Encoding.UTF8.GetString(rawPayload.Data[4..]));
+                        link = new URIPayload(uri);
                     } else if (Equals(rawPayload, RawPayload.LinkTerminator)) {
                         link = null;
                     }

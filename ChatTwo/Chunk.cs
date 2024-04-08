@@ -59,6 +59,19 @@ internal class TextChunk : Chunk {
     public TextChunk() : base(ChunkSource.None, null) {
     }
     #pragma warning restore CS8618
+
+    /// <summary>
+    /// Creates a new TextChunk with identical styling to this one.
+    /// </summary>
+    public TextChunk NewWithStyle(ChunkSource source, Payload? link, string content)
+    {
+        return new TextChunk(source, link, content) {
+            FallbackColour = this.FallbackColour,
+            Foreground = this.Foreground,
+            Glow = this.Glow,
+            Italic = this.Italic,
+        };
+    }
 }
 
 internal class IconChunk : Chunk {
