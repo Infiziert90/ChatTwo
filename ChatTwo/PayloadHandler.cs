@@ -106,6 +106,7 @@ public sealed class PayloadHandler {
         if (registered.Count == 0) {
             return;
         }
+        ImGui.Separator();
 
         var contentId = chunk.Message?.ContentId ?? 0;
         var sender = chunk.Message?.Sender.Select(c => c.Link).FirstOrDefault(p => p is PlayerPayload) as PlayerPayload;
@@ -131,13 +132,18 @@ public sealed class PayloadHandler {
         }
     }
 
-    private void ContextFooter(bool separator, Chunk chunk) {
-        if (separator) {
+    private void ContextFooter(bool didCustomContext, Chunk chunk) {
+        if (didCustomContext) {
             ImGui.Separator();
-        }
 
-        if (!ImGui.BeginMenu(Plugin.PluginName)) {
-            return;
+            // Only place these menu items in a submenu if we've already drawn
+            // custom context menu items based on the payload.
+            //
+            // It makes it much more convenient in the majority of cases to
+            // copy the message content without having to open a submenu.
+            if (!ImGui.BeginMenu(Plugin.PluginName)) {
+                return;
+            }
         }
 
         ImGui.Checkbox(Language.Context_ScreenshotMode, ref LogWindow.ScreenshotMode);
@@ -147,21 +153,16 @@ public sealed class PayloadHandler {
         }
 
         if (chunk.Message is { } message) {
-            if (ImGui.BeginMenu(Language.Context_Copy)) {
-                var text = message.Sender
-                    .Concat(message.Content)
-                    .Where(chunk => chunk is TextChunk)
-                    .Cast<TextChunk>()
-                    .Select(text => text.Content)
-                    .Aggregate(string.Concat);
-                ImGui.InputTextMultiline(
-                    "##chat2-copy",
-                    ref text,
-                    (uint) text.Length,
-                    new Vector2(350, 100) * ImGuiHelpers.GlobalScale,
-                    ImGuiInputTextFlags.ReadOnly
-                );
-                ImGui.EndMenu();
+            if (ImGui.Selectable(Language.Context_Copy)) {
+                ImGui.SetClipboardText(StringifyMessage(message, true));
+                WrapperUtil.AddNotification(Language.Context_CopySuccess, NotificationType.Info);
+            }
+
+            // Only show a separate "Copy content" option if the message has
+            // Sender chunks so it doesn't show for system messages.
+            if (message.Sender.Count > 0 && ImGui.Selectable(Language.Context_CopyContent)) {
+                ImGui.SetClipboardText(StringifyMessage(message, false));
+                WrapperUtil.AddNotification(Language.Context_CopyContentSuccess, NotificationType.Info);
             }
 
             var col = ImGui.GetStyle().Colors[(int) ImGuiCol.TextDisabled];
@@ -176,7 +177,20 @@ public sealed class PayloadHandler {
             }
         }
 
-        ImGui.EndMenu();
+        if (didCustomContext) ImGui.EndMenu();
+    }
+
+    internal static string StringifyMessage(Message message, bool withSender = false)
+    {
+        if (message == null)
+            return string.Empty;
+
+        var chunks = withSender ? message.Sender.Concat(message.Content) : message.Content;
+        return chunks
+            .Where(chunk => chunk is TextChunk)
+            .Cast<TextChunk>()
+            .Select(text => text.Content)
+            .Aggregate(string.Concat);
     }
 
     internal void Click(Chunk chunk, Payload? payload, ImGuiMouseButton button) {
