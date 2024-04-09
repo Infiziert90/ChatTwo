@@ -611,7 +611,10 @@ public sealed class ChatLogWindow : Window, IUiComponent {
             HandleKeybinds(true);
         }
 
-        if (!Activate && !ImGui.IsItemActive()) {
+        // If we're currently using a temporary channel, switch back to the
+        // original channel when the input loses focus *unless* the
+        // auto-translate popup is open.
+        if (_tempChannel != null && !Activate && !ImGui.IsItemActive() && _autoCompleteInfo == null) {
             if (_tempChannel is InputChannel.Tell) {
                 _tellTarget = null;
             }
@@ -673,7 +676,9 @@ public sealed class ChatLogWindow : Window, IUiComponent {
                             reason = TellReason.Friend;
                         }
 
-                        Plugin.Functions.Chat.SendTell(reason, target.ContentId, target.Name, (ushort) world.RowId, trimmed);
+                        var tellBytes = Encoding.UTF8.GetBytes(trimmed);
+                        AutoTranslate.ReplaceWithPayload(Plugin.DataManager, ref tellBytes);
+                        Plugin.Functions.Chat.SendTell(reason, target.ContentId, target.Name, (ushort) world.RowId, Encoding.UTF8.GetString(tellBytes));
                     }
 
                     if (_tempChannel is InputChannel.Tell) {
@@ -682,7 +687,6 @@ public sealed class ChatLogWindow : Window, IUiComponent {
 
                     goto Skip;
                 }
-
 
                 if (_tempChannel != null)
                     trimmed = $"{_tempChannel.Value.Prefix()} {trimmed}";
