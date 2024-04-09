@@ -157,7 +157,7 @@ internal class Message {
     /// It matches URLs with www. or https:// prefix, and also matches URLs
     /// without a prefix on specific TLDs.
     /// </summary>
-    private static Regex URLRegex = new Regex(
+    private static Regex URLRegex = new(
         @"((https?:\/\/|www\.)[a-z0-9-]+(\.[a-z0-9-]+)*|([a-z0-9-]+(\.[a-z0-9-]+)*\.(com|net|org|co|io|app)))(:[\d]{1,5})?(\/[^\s]+)?",
         RegexOptions.Compiled | RegexOptions.IgnoreCase
     );
@@ -218,9 +218,7 @@ internal class Message {
 
             // Add the text after the last URL.
             if (remainderIndex < text.Content.Length)
-            {
                 AddChunkWithMessage(text.NewWithStyle(chunk.Source, null, text.Content[remainderIndex..]));
-            }
         }
 
         return newChunks;

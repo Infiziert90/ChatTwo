@@ -21,7 +21,6 @@ using Lumina.Excel.GeneratedSheets;
 using Action = System.Action;
 using DalamudPartyFinderPayload = Dalamud.Game.Text.SeStringHandling.Payloads.PartyFinderPayload;
 using ChatTwoPartyFinderPayload = ChatTwo.Util.PartyFinderPayload;
-using System.Diagnostics;
 
 namespace ChatTwo;
 
@@ -681,8 +680,8 @@ public sealed class PayloadHandler {
         new Thread(() => {
             try
             {
-                Plugin.Log.Info($"Opening URI {uri} in default browser");
-                Process.Start(new ProcessStartInfo(uri.ToString()) { UseShellExecute = true });
+                Plugin.Log.Debug($"Opening URI {uri} in default browser");
+                Dalamud.Utility.Util.OpenLink(uri.ToString());
             }
             catch (Exception ex)
             {

@@ -16,12 +16,8 @@ internal class Popout : Window
         Tab = tab;
         Idx = idx;
 
+        Size = new Vector2(350, 350);
         SizeCondition = ImGuiCond.FirstUseEver;
-        SizeConstraints = new WindowSizeConstraints
-        {
-            MinimumSize = new Vector2(350, 350),
-            MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
-        };
     }
 
     public override void PreDraw()
