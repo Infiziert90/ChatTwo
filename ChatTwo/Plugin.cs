@@ -42,6 +42,7 @@ public sealed class Plugin : IDalamudPlugin {
     public SettingsWindow SettingsWindow { get; }
     public ChatLogWindow ChatLogWindow { get; }
     public CommandHelpWindow CommandHelpWindow { get; }
+    public SeStringDebugger SeStringDebugger { get; }
 
     internal Configuration Config { get; }
     internal Commands Commands { get; }
@@ -81,10 +82,12 @@ public sealed class Plugin : IDalamudPlugin {
         ChatLogWindow = new ChatLogWindow(this);
         SettingsWindow = new SettingsWindow(this);
         CommandHelpWindow = new CommandHelpWindow(ChatLogWindow);
+        SeStringDebugger = new SeStringDebugger(this);
 
         WindowSystem.AddWindow(ChatLogWindow);
         WindowSystem.AddWindow(SettingsWindow);
         WindowSystem.AddWindow(CommandHelpWindow);
+        WindowSystem.AddWindow(SeStringDebugger);
         FontManager.BuildFonts();
 
         Interface.UiBuilder.DisableCutsceneUiHide = true;
@@ -114,6 +117,7 @@ public sealed class Plugin : IDalamudPlugin {
         WindowSystem.RemoveAllWindows();
         ChatLogWindow.Dispose();
         SettingsWindow.Dispose();
+        SeStringDebugger.Dispose();
 
         ExtraChat.Dispose();
         Ipc.Dispose();

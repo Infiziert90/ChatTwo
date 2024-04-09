@@ -102,9 +102,7 @@ public sealed class PayloadHandler {
         }
 
         var contentId = chunk.Message?.ContentId ?? 0;
-        var sender = chunk.Message?.Sender
-            .Select(chunk => chunk.Link)
-            .FirstOrDefault(chunk => chunk is PlayerPayload) as PlayerPayload;
+        var sender = chunk.Message?.Sender.Select(c => c.Link).FirstOrDefault(p => p is PlayerPayload) as PlayerPayload;
 
         if (ImGui.BeginMenu(Language.Context_Integrations)) {
             var cursor = ImGui.GetCursorPos();

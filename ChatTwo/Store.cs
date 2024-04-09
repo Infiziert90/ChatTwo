@@ -257,6 +257,7 @@ internal class Store : IDisposable {
         }
     }
 
+    public (SeString? Sender, SeString? Message) LastMessage = (null, null);
     private void ChatMessage(XivChatType type, uint senderId, SeString sender, SeString message) {
         var chatCode = new ChatCode((ushort) type);
 
@@ -265,6 +266,7 @@ internal class Store : IDisposable {
             formatting = FormatFor(chatCode.Type);
         }
 
+        LastMessage = (sender, message);
         var senderChunks = new List<Chunk>();
         if (formatting is { IsPresent: true }) {
             senderChunks.Add(new TextChunk(ChunkSource.None, null, formatting.Before) {

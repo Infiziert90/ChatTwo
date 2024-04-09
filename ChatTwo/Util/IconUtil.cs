@@ -1,95 +1,148 @@
-using System.Numerics;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 namespace ChatTwo.Util;
 
+// From Kizer: https://github.com/Soreepeong/Dalamud/blob/feature/log-wordwrap/Dalamud/Interface/Spannables/Internal/GfdFileView.cs
+public readonly unsafe ref struct GfdFileView
+{
+    private readonly ReadOnlySpan<byte> Span;
+    private readonly bool DirectLookup;
+
+    /// <summary>Initializes a new instance of the <see cref="GfdFileView"/> struct.</summary>
+    /// <param name="span">The data.</param>
+    public GfdFileView(ReadOnlySpan<byte> span)
+    {
+        Span = span;
+        if (span.Length < sizeof(GfdHeader))
+            throw new InvalidDataException($"Not enough space for a {nameof(GfdHeader)}");
+        if (span.Length < sizeof(GfdHeader) + (Header.Count * sizeof(GfdEntry)))
+            throw new InvalidDataException($"Not enough space for all the {nameof(GfdEntry)}");
+
+        var entries = Entries;
+        DirectLookup = true;
+        for (var i = 0; i < entries.Length && DirectLookup; i++)
+            DirectLookup &= i + 1 == entries[i].Id;
+    }
+
+    /// <summary>Gets the header.</summary>
+    private ref readonly GfdHeader Header => ref MemoryMarshal.AsRef<GfdHeader>(Span);
+
+    /// <summary>Gets the entries.</summary>
+    private ReadOnlySpan<GfdEntry> Entries => MemoryMarshal.Cast<byte, GfdEntry>(Span[sizeof(GfdHeader)..]);
+
+    /// <summary>Attempts to get an entry.</summary>
+    /// <param name="iconId">The icon ID.</param>
+    /// <param name="entry">The entry.</param>
+    /// <param name="followRedirect">Whether to follow redirects.</param>
+    /// <returns><c>true</c> if found.</returns>
+    public bool TryGetEntry(uint iconId, out GfdEntry entry, bool followRedirect = true)
+    {
+        if (iconId == 0)
+        {
+            entry = default;
+            return false;
+        }
+
+        var entries = Entries;
+        if (DirectLookup)
+        {
+            if (iconId <= entries.Length)
+            {
+                entry = entries[(int)(iconId - 1)];
+                return !entry.IsEmpty;
+            }
+
+            entry = default;
+            return false;
+        }
+
+        var lo = 0;
+        var hi = entries.Length;
+        while (lo <= hi)
+        {
+            var i = lo + ((hi - lo) >> 1);
+            if (entries[i].Id == iconId)
+            {
+                if (followRedirect && entries[i].Redirect != 0)
+                {
+                    iconId = entries[i].Redirect;
+                    lo = 0;
+                    hi = entries.Length;
+                    continue;
+                }
+
+                entry = entries[i];
+                return !entry.IsEmpty;
+            }
+
+            if (entries[i].Id < iconId)
+                lo = i + 1;
+            else
+                hi = i - 1;
+        }
+
+        entry = default;
+        return false;
+    }
+
+    /// <summary>Header of a .gfd file.</summary>
+    [StructLayout(LayoutKind.Sequential)]
+    public struct GfdHeader
+    {
+        /// <summary>Signature: "gftd0100".</summary>
+        public fixed byte Signature[8];
+
+        /// <summary>Number of entries.</summary>
+        public int Count;
+
+        /// <summary>Unused/unknown.</summary>
+        public fixed byte Padding[4];
+    }
+
+    /// <summary>An entry of a .gfd file.</summary>
+    [StructLayout(LayoutKind.Sequential, Size = 0x10)]
+    public struct GfdEntry
+    {
+        /// <summary>ID of the entry.</summary>
+        public ushort Id;
+
+        /// <summary>The left offset of the entry.</summary>
+        public ushort Left;
+
+        /// <summary>The top offset of the entry.</summary>
+        public ushort Top;
+
+        /// <summary>The width of the entry.</summary>
+        public ushort Width;
+
+        /// <summary>The height of the entry.</summary>
+        public ushort Height;
+
+        /// <summary>Unknown/unused.</summary>
+        public ushort Unk0A;
+
+        /// <summary>The redirected entry, maybe.</summary>
+        public ushort Redirect;
+
+        /// <summary>Unknown/unused.</summary>
+        public ushort Unk0E;
+
+        /// <summary>Gets a value indicating whether this entry is effectively empty.</summary>
+        public bool IsEmpty => Width == 0 || Height == 0;
+    }
+}
+
+
+
 internal static class IconUtil {
-    internal static Vector4? GetBounds(byte id) => id switch {
-        1 => new Vector4(0, 342, 40, 40),
-        2 => new Vector4(40, 342, 40, 40),
-        3 => new Vector4(80, 342, 40, 40),
-        4 => new Vector4(120, 342, 40, 40),
-        5 => new Vector4(160, 342, 40, 40),
-        6 => new Vector4(0, 382, 40, 40),
-        7 => new Vector4(40, 382, 40, 40),
-        8 => new Vector4(80, 382, 40, 40),
-        9 => new Vector4(120, 382, 40, 40),
-        10 => new Vector4(160, 382, 40, 40),
-        11 => new Vector4(0, 422, 40, 40),
-        12 => new Vector4(40, 422, 40, 40),
-        13 => new Vector4(80, 422, 40, 40),
-        14 => new Vector4(120, 422, 40, 40),
-        15 => new Vector4(160, 422, 40, 40),
-        16 => new Vector4(120, 542, 40, 40),
-        17 => new Vector4(160, 542, 40, 40),
-        18 => new Vector4(0, 462, 108, 40),
-        19 => new Vector4(108, 462, 108, 40),
-        20 => new Vector4(120, 502, 40, 40),
-        21 => new Vector4(0, 502, 56, 40),
-        22 => new Vector4(56, 502, 64, 40),
-        23 => new Vector4(160, 502, 40, 40),
-        24 => new Vector4(0, 542, 56, 40),
-        25 => new Vector4(56, 542, 64, 40),
-        51 => new Vector4(248, 342, 40, 40),
-        52 => new Vector4(288, 342, 40, 40),
-        53 => new Vector4(328, 342, 40, 40),
-        54 => new Vector4(200, 342, 24, 40),
-        55 => new Vector4(224, 342, 24, 40),
-        56 => new Vector4(200, 382, 40, 40),
-        57 => new Vector4(240, 382, 40, 40),
-        58 => new Vector4(280, 382, 40, 40),
-        59 => new Vector4(200, 422, 40, 40),
-        60 => new Vector4(240, 422, 40, 40),
-        61 => new Vector4(280, 422, 40, 40),
-        62 => new Vector4(320, 382, 40, 40),
-        63 => new Vector4(320, 422, 40, 40),
-        64 => new Vector4(368, 342, 40, 40),
-        65 => new Vector4(408, 342, 40, 40),
-        66 => new Vector4(448, 342, 40, 40),
-        67 => new Vector4(360, 382, 40, 40),
-        68 => new Vector4(400, 382, 40, 40),
-        70 => new Vector4(360, 422, 40, 40),
-        71 => new Vector4(400, 422, 40, 40),
-        72 => new Vector4(440, 422, 40, 40),
-        73 => new Vector4(440, 382, 40, 40),
-        74 => new Vector4(216, 462, 40, 40),
-        75 => new Vector4(256, 462, 40, 40),
-        76 => new Vector4(296, 462, 40, 40),
-        77 => new Vector4(336, 462, 40, 40),
-        78 => new Vector4(376, 462, 40, 40),
-        79 => new Vector4(416, 462, 40, 40),
-        80 => new Vector4(456, 462, 40, 40),
-        81 => new Vector4(200, 502, 40, 40),
-        82 => new Vector4(240, 502, 40, 40),
-        83 => new Vector4(280, 502, 40, 40),
-        84 => new Vector4(320, 502, 40, 40),
-        85 => new Vector4(360, 502, 40, 40),
-        86 => new Vector4(400, 502, 40, 40),
-        87 => new Vector4(440, 502, 40, 40),
-        88 => new Vector4(200, 542, 40, 40),
-        89 => new Vector4(240, 542, 40, 40),
-        90 => new Vector4(280, 542, 40, 40),
-        91 => new Vector4(320, 542, 40, 40),
-        92 => new Vector4(360, 542, 40, 40),
-        93 => new Vector4(400, 542, 40, 40),
-        94 => new Vector4(440, 542, 40, 40),
-        95 => new Vector4(0, 582, 40, 40),
-        96 => new Vector4(40, 582, 40, 40),
-        97 => new Vector4(80, 582, 40, 40),
-        98 => new Vector4(120, 582, 40, 40),
-        99 => new Vector4(160, 582, 40, 40),
-        100 => new Vector4(200, 582, 40, 40),
-        101 => new Vector4(240, 582, 40, 40),
-        102 => new Vector4(280, 582, 40, 40),
-        103 => new Vector4(320, 582, 40, 40),
-        104 => new Vector4(360, 582, 40, 40),
-        105 => new Vector4(400, 582, 40, 40),
-        106 => new Vector4(440, 582, 40, 40),
-        107 => new Vector4(0, 622, 40, 40),
-        108 => new Vector4(40, 622, 40, 40),
-        109 => new Vector4(80, 622, 40, 40),
-        110 => new Vector4(120, 622, 40, 40),
-        111 => new Vector4(160, 622, 40, 40),
-        112 => new Vector4(200, 622, 40, 40),
-        _ => null,
-    };
+    private static byte[]? GfdFile;
+    public static unsafe GfdFileView GfdFileView
+    {
+        get
+        {
+            GfdFile ??= Plugin.DataManager.GetFile("common/font/gfdata.gfd")!.Data;
+            return new GfdFileView(new ReadOnlySpan<byte>(Unsafe.AsPointer(ref GfdFile[0]), GfdFile.Length));
+        }
+    }
 }

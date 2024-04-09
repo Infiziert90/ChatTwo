@@ -68,15 +68,19 @@ internal static class ChunkUtil {
                     break;
                 case PayloadType.Unknown:
                     var rawPayload = (RawPayload) payload;
-                    if (rawPayload.Data.Length > 1 && rawPayload.Data[1] == 0x13)
+                    var colorPayload = ColorPayload.From(rawPayload.Data);
+                    if (colorPayload != null)
                     {
-                        if (foreground.Count > 0) {
-                            foreground.Pop();
-                        }
-                        else if (rawPayload.Data.Length > 6 && rawPayload.Data[2] == 0x05 && rawPayload.Data[3] == 0xF6)
+                        if (colorPayload.Enabled)
                         {
-                            var (r, g, b) = (rawPayload.Data[4], rawPayload.Data[5], rawPayload.Data[6]);
-                            foreground.Push(ColourUtil.ComponentsToRgba(r, g, b));
+                            if (colorPayload.Color > 0)
+                                foreground.Push(colorPayload.Color);
+                            else if (foreground.Count > 0) // Push the previous color as we don't want invisible text
+                                foreground.Push(foreground.Peek());
+                        }
+                        else if (foreground.Count > 0)
+                        {
+                            foreground.Pop();
                         }
                     }
                     else if (rawPayload.Data.Length > 1 && rawPayload.Data[1] == 0x14)

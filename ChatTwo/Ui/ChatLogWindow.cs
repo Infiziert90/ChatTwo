@@ -75,12 +75,8 @@ public sealed class ChatLogWindow : Window, IUiComponent {
         Plugin = plugin;
         Salt = new Random().Next().ToString();
 
+        Size = new Vector2(500, 250);
         SizeCondition = ImGuiCond.FirstUseEver;
-        SizeConstraints = new WindowSizeConstraints
-        {
-            MinimumSize = new Vector2(500, 250),
-            MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
-        };
 
         PayloadHandler = new PayloadHandler(this);
         HandlerLender = new Lender<PayloadHandler>(() => new PayloadHandler(this));
@@ -1257,10 +1253,8 @@ public sealed class ChatLogWindow : Window, IUiComponent {
                                                                                                      || cmd.Alias.RawString == command
                                                                                                      || cmd.ShortCommand.RawString == command
                                                                                                      || cmd.ShortAlias.RawString == command);
-            if (cmd != null) {
+            if (cmd != null)
                 Plugin.CommandHelpWindow.UpdateContent(cmd);
-                Plugin.CommandHelpWindow.IsOpen = true;
-            }
         }
 
         if (data->EventFlag != ImGuiInputTextFlags.CallbackHistory) {
@@ -1332,15 +1326,15 @@ public sealed class ChatLogWindow : Window, IUiComponent {
 
     private void DrawChunk(Chunk chunk, bool wrap = true, PayloadHandler? handler = null, float lineWidth = 0f) {
         if (chunk is IconChunk icon && _fontIcon != null) {
-            var bounds = IconUtil.GetBounds((byte) icon.Icon);
-            if (bounds != null) {
+            var bounds = IconUtil.GfdFileView.TryGetEntry((uint) icon.Icon, out var entry);
+            if (bounds) {
                 var texSize = new Vector2(_fontIcon.Width, _fontIcon.Height);
 
-                var sizeRatio = Plugin.Config.FontSize / bounds.Value.W;
-                var size = new Vector2(bounds.Value.Z, bounds.Value.W) * sizeRatio * ImGuiHelpers.GlobalScale;
+                var sizeRatio = Plugin.Config.FontSize / entry.Height;
+                var size = new Vector2(entry.Width, entry.Height) * sizeRatio * ImGuiHelpers.GlobalScale;
 
-                var uv0 = new Vector2(bounds.Value.X, bounds.Value.Y - 2) / texSize;
-                var uv1 = new Vector2(bounds.Value.X + bounds.Value.Z, bounds.Value.Y - 2 + bounds.Value.W) / texSize;
+                var uv0 = new Vector2(entry.Left, entry.Top) / texSize;
+                var uv1 = new Vector2(entry.Left + entry.Width, entry.Top + entry.Height) / texSize;
                 ImGui.Image(_fontIcon.ImGuiHandle, size, uv0, uv1);
                 ImGuiUtil.PostPayload(chunk, handler);
             }
