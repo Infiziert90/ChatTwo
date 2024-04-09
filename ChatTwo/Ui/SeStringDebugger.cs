@@ -37,14 +37,14 @@ public class SeStringDebugger : Window
         ImGui.TextUnformatted("SeString Content");
         ImGui.Spacing();
 
-        if (Plugin.Store.LastMessage.Sender == null)
+        if (Plugin.Store.LastMessage.Message == null)
         {
             ImGui.TextUnformatted("Nothing to show");
             return;
         }
 
         // TODO: Make SeString freely selectable through chat
-        foreach (var payload in Plugin.Store.LastMessage.Sender.Payloads)
+        foreach (var payload in Plugin.Store.LastMessage.Message.Payloads)
         {
             switch (payload)
             {

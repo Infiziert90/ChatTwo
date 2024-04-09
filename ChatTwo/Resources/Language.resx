@@ -377,7 +377,7 @@
         <value>Click the button to the left to see what's being worked on and what's next.</value>
     </data>
     <data name="Options_About_CrowdIn">
-        <value>Click the button to the left to help translate {0}.</value>
+        <value>Help to translate: </value>
     </data>
     <data name="Options_About_Translators">
         <value>Translators</value>
@@ -871,7 +871,7 @@
     <data name="Options_TooltipOffset_Desc">
         <value>Use this option if you experience cut-off tooltips.</value>
     </data>
-  
+
     <data name="Context_CopyContent">
         <value>Copy content</value>
     </data>
@@ -898,5 +898,20 @@
     </data>
     <data name="Context_URLWarning" xml:space="preserve">
         <value>Only open URLs from websites you trust</value>
+    </data>
+    <data name="Options_About_Authors" xml:space="preserve">
+        <value>Authors: </value>
+    </data>
+    <data name="Options_About_Discord" xml:space="preserve">
+        <value>Discord: </value>
+    </data>
+    <data name="Options_About_Version" xml:space="preserve">
+        <value>Version: </value>
+    </data>
+    <data name="Options_About_Github_Issues" xml:space="preserve">
+        <value>Get help through github issues: </value>
+    </data>
+    <data name="Options_About_Discord_Thread" xml:space="preserve">
+        <value>Get help in the discord thread: </value>
     </data>
 </root>

@@ -2,6 +2,8 @@ using System.Numerics;
 using ChatTwo.Resources;
 using ChatTwo.Util;
 using Dalamud.Interface;
+using Dalamud.Interface.Colors;
+using Dalamud.Interface.Utility;
 using ImGuiNET;
 
 namespace ChatTwo.Ui.SettingsTabs;
@@ -31,23 +33,40 @@ internal sealed class About : ISettingsTab {
 
         ImGui.TextUnformatted(string.Format(Language.Options_About_Opening, Plugin.PluginName));
 
+        ImGuiHelpers.ScaledDummy(10.0f);
+
+        ImGui.TextUnformatted(Language.Options_About_Authors);
+        ImGui.SameLine();
+        ImGui.TextColored(ImGuiColors.ParsedGold, Plugin.Authors);
+
+        ImGui.TextUnformatted(Language.Options_About_Discord);
+        ImGui.SameLine();
+        ImGui.TextColored(ImGuiColors.ParsedGold, "@infi");
+
+        ImGui.TextUnformatted(Language.Options_About_Version);
+        ImGui.SameLine();
+        ImGui.TextColored(ImGuiColors.ParsedOrange, Plugin.Version);
+
+        ImGuiHelpers.ScaledDummy(10.0f);
+
+        ImGui.TextUnformatted(Language.Options_About_Discord_Thread);
+        ImGui.SameLine();
+        if (ImGuiUtil.IconButton(FontAwesomeIcon.ExternalLinkAlt, "discordThread"))
+            Dalamud.Utility.Util.OpenLink("https://canary.discord.com/channels/581875019861328007/1224865018789761126");
+
         ImGui.Spacing();
 
-        if (ImGuiUtil.IconButton(FontAwesomeIcon.ExternalLinkAlt, "clickup"))
-        {
-            Dalamud.Utility.Util.OpenLink("https://sharing.clickup.com/b/h/6-122378074-2/1047d21a39a4140");
-        }
-
+        ImGui.TextUnformatted(Language.Options_About_Github_Issues);
         ImGui.SameLine();
-        ImGui.TextUnformatted(Language.Options_About_ClickUp);
+        if (ImGuiUtil.IconButton(FontAwesomeIcon.ExternalLinkAlt, "githubIssues"))
+            Dalamud.Utility.Util.OpenLink("https://github.com/Infiziert90/ChatTwo/issues");
 
+        ImGuiHelpers.ScaledDummy(10.0f);
+
+        ImGui.TextUnformatted(Language.Options_About_CrowdIn);
+        ImGui.SameLine();
         if (ImGuiUtil.IconButton(FontAwesomeIcon.ExternalLinkAlt, "crowdin"))
-        {
             Dalamud.Utility.Util.OpenLink("https://crowdin.com/project/chattwo");
-        }
-
-        ImGui.SameLine();
-        ImGui.TextUnformatted(string.Format(Language.Options_About_CrowdIn, Plugin.PluginName));
 
         ImGui.Spacing();
 
@@ -68,7 +87,6 @@ internal sealed class About : ISettingsTab {
             ImGui.EndChild();
         }
 
-        ImGuiUtil.HelpText($"{Plugin.PluginName} v{GetType().Assembly.GetName().Version?.ToString(3)}");
         ImGui.PopTextWrapPos();
     }
 }

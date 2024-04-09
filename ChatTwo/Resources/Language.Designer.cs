@@ -1059,14 +1059,6 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Copied message to clipboard.
-        /// </summary>
-        internal static string Context_CopySuccess {
-            get {
-                return ResourceManager.GetString("Context_CopySuccess", resourceCulture);
-            }
-        }
-        
         ///   Looks up a localized string similar to Copy link to clipboard.
         /// </summary>
         internal static string Context_CopyLink {
@@ -1081,6 +1073,15 @@ namespace ChatTwo.Resources {
         internal static string Context_CopyLinkNotification {
             get {
                 return ResourceManager.GetString("Context_CopyLinkNotification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copied message to clipboard.
+        /// </summary>
+        internal static string Context_CopySuccess {
+            get {
+                return ResourceManager.GetString("Context_CopySuccess", resourceCulture);
             }
         }
         
@@ -1427,6 +1428,15 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Authors: .
+        /// </summary>
+        internal static string Options_About_Authors {
+            get {
+                return ResourceManager.GetString("Options_About_Authors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Click the button to the left to see what&apos;s being worked on and what&apos;s next..
         /// </summary>
         internal static string Options_About_ClickUp {
@@ -1436,11 +1446,38 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Click the button to the left to help translate {0}..
+        ///   Looks up a localized string similar to Help to translate: .
         /// </summary>
         internal static string Options_About_CrowdIn {
             get {
                 return ResourceManager.GetString("Options_About_CrowdIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Discord: .
+        /// </summary>
+        internal static string Options_About_Discord {
+            get {
+                return ResourceManager.GetString("Options_About_Discord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get help in the discord thread: .
+        /// </summary>
+        internal static string Options_About_Discord_Thread {
+            get {
+                return ResourceManager.GetString("Options_About_Discord_Thread", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get help through github issues: .
+        /// </summary>
+        internal static string Options_About_Github_Issues {
+            get {
+                return ResourceManager.GetString("Options_About_Github_Issues", resourceCulture);
             }
         }
         
@@ -1468,6 +1505,15 @@ namespace ChatTwo.Resources {
         internal static string Options_About_Translators {
             get {
                 return ResourceManager.GetString("Options_About_Translators", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version: .
+        /// </summary>
+        internal static string Options_About_Version {
+            get {
+                return ResourceManager.GetString("Options_About_Version", resourceCulture);
             }
         }
         
