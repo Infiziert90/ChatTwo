@@ -134,11 +134,6 @@ public sealed class Plugin : IDalamudPlugin {
 
     private void Draw()
     {
-        if (Config.OverrideStyle)
-        {
-            var styles = StyleModel.GetConfiguredStyles();
-            styles?.First(style => style.Name.Equals(Config.ChosenStyle)).Push();
-        }
 
         Interface.UiBuilder.DisableUserUiHide = !Config.HideWhenUiHidden;
         ChatLogWindow.DefaultText = ImGui.GetStyle().Colors[(int) ImGuiCol.Text];
@@ -146,12 +141,6 @@ public sealed class Plugin : IDalamudPlugin {
         using ((Config.FontsEnabled ? FontManager.RegularFont : FontManager.Axis).Push())
         {
             WindowSystem.Draw();
-        }
-
-        if (Config.OverrideStyle)
-        {
-            var styles = StyleModel.GetConfiguredStyles();
-            styles?.First(style => style.Name.Equals(Config.ChosenStyle)).Pop();
         }
     }
 
