@@ -86,6 +86,11 @@ internal class Store : IDisposable {
                             ["Type"] = new("PartyFinder"),
                             ["Id"] = new(partyFinder.Id),
                         });
+                    case URIPayload uri:
+                        return new BsonDocument(new Dictionary<string, BsonValue> {
+                            ["Type"] = new("URI"),
+                            ["Uri"] = new(uri.Uri.ToString()),
+                        });
                 }
 
                 return payload?.Encode();
@@ -99,6 +104,7 @@ internal class Store : IDisposable {
                     return bson["Type"].AsString switch {
                         "Achievement" => new AchievementPayload((uint) bson["Id"].AsInt64),
                         "PartyFinder" => new PartyFinderPayload((uint) bson["Id"].AsInt64),
+                        "URI" => new URIPayload(new Uri(bson["Uri"].AsString)),
                         _ => null,
                     };
                 }
