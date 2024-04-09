@@ -20,9 +20,19 @@ public class CommandHelpWindow : Window {
                 ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoFocusOnAppearing | ImGuiWindowFlags.AlwaysAutoResize;
     }
 
-    public void UpdateContent(TextCommand command)
+    /// <summary>
+    /// Sets the TextCommand to show and opens the window in the configured
+    /// location. If the provided command is null, the window is closed. If the
+    /// window is already open, it will display the new command. If the user
+    /// has configured the window to be hidden, it will not be shown.
+    /// </summary>
+    public void UpdateContentAndShow(TextCommand? command)
     {
         Command = command;
+        if (command == null) {
+            IsOpen = false;
+            return;
+        }
 
         var width = 350;
         var scaledWidth = width * ImGuiHelpers.GlobalScale;
@@ -36,6 +46,8 @@ public class CommandHelpWindow : Window {
                 break;
             case CommandHelpSide.None:
             default:
+                Command = null;
+                IsOpen = false;
                 return;
         }
 
@@ -45,6 +57,7 @@ public class CommandHelpWindow : Window {
             MinimumSize = new Vector2(width, 0),
             MaximumSize = LogWindow.LastWindowSize with { X = width }
         };
+        IsOpen = true;
     }
 
     public override void Draw()

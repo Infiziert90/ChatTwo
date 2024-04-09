@@ -78,7 +78,7 @@ public sealed class ChatLogWindow : Window, IUiComponent {
         SizeCondition = ImGuiCond.FirstUseEver;
         SizeConstraints = new WindowSizeConstraints
         {
-            MinimumSize = new Vector2(500, 250),
+            MinimumSize = new Vector2(100, 100),
             MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
         };
 
@@ -600,7 +600,7 @@ public sealed class ChatLogWindow : Window, IUiComponent {
 
             var enter = ImGui.IsKeyDown(ImGuiKey.Enter) || ImGui.IsKeyDown(ImGuiKey.KeypadEnter);
             if (enter) {
-                Plugin.CommandHelpWindow.IsOpen = false;
+                Plugin.CommandHelpWindow.UpdateContentAndShow(null);
                 SendChatBox(activeTab);
 
                 if (Plugin.Functions.Chat.UsesTellTempChannel)
@@ -1249,7 +1249,7 @@ public sealed class ChatLogWindow : Window, IUiComponent {
             _activatePos = -1;
         }
 
-        Plugin.CommandHelpWindow.IsOpen = false;
+        Plugin.CommandHelpWindow.UpdateContentAndShow(null);
         var text = MemoryHelper.ReadString((IntPtr) data->Buf, data->BufTextLen);
         if (text.StartsWith('/')) {
             var command = text.Split(' ')[0];
@@ -1258,8 +1258,7 @@ public sealed class ChatLogWindow : Window, IUiComponent {
                                                                                                      || cmd.ShortCommand.RawString == command
                                                                                                      || cmd.ShortAlias.RawString == command);
             if (cmd != null) {
-                Plugin.CommandHelpWindow.UpdateContent(cmd);
-                Plugin.CommandHelpWindow.IsOpen = true;
+                Plugin.CommandHelpWindow.UpdateContentAndShow(cmd);
             }
         }
 
