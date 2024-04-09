@@ -12,8 +12,8 @@ internal static class ColourUtil {
     }
 
     internal static uint RgbaToAbgr(uint rgba) {
-        var (r, g, b, a) = RgbaToComponents(rgba);
-        return (uint) ((a << 24) | (b << 16) | (g << 8) | r);
+        var tmp = ((rgba << 8) & 0xFF00FF00) | ((rgba >> 8) & 0xFF00FF);
+        return (tmp << 16) | (tmp >> 16);
     }
 
     internal static Vector3 RgbaToVector3(uint rgba) {
@@ -36,6 +36,13 @@ internal static class ColourUtil {
             (byte) Math.Round(col.Z * 255),
             (byte) Math.Round(col.W * 255)
         ));
+    }
+
+    public static unsafe uint ArgbToRgba(uint x)
+    {
+        var buf = (byte*)&x;
+        (buf[1], buf[2], buf[3], buf[0]) = (buf[0], buf[1], buf[2], buf[3]);
+        return x;
     }
 
     internal static uint ComponentsToRgba(byte red, byte green, byte blue, byte alpha = 0xFF) => alpha

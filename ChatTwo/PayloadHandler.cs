@@ -21,6 +21,7 @@ using Lumina.Excel.GeneratedSheets;
 using Action = System.Action;
 using DalamudPartyFinderPayload = Dalamud.Game.Text.SeStringHandling.Payloads.PartyFinderPayload;
 using ChatTwoPartyFinderPayload = ChatTwo.Util.PartyFinderPayload;
+using System.Diagnostics;
 
 namespace ChatTwo;
 
@@ -86,6 +87,11 @@ public sealed class PayloadHandler {
                 drawn = true;
                 break;
             }
+            case URIPayload uri: {
+                DrawUriPopup(uri);
+                drawn = true;
+                break;
+            }
         }
 
         ContextFooter(drawn, chunk);
@@ -103,9 +109,7 @@ public sealed class PayloadHandler {
         ImGui.Separator();
 
         var contentId = chunk.Message?.ContentId ?? 0;
-        var sender = chunk.Message?.Sender
-            .Select(chunk => chunk.Link)
-            .FirstOrDefault(chunk => chunk is PlayerPayload) as PlayerPayload;
+        var sender = chunk.Message?.Sender.Select(c => c.Link).FirstOrDefault(p => p is PlayerPayload) as PlayerPayload;
 
         if (ImGui.BeginMenu(Language.Context_Integrations)) {
             var cursor = ImGui.GetCursorPos();
@@ -229,6 +233,11 @@ public sealed class PayloadHandler {
                 DoHover(() => HoverItem(item), hoverSize);
                 break;
             }
+            case URIPayload uri:
+            {
+                DoHover(() => HoverURI(uri), hoverSize);
+                break;
+            }
         }
     }
 
@@ -348,6 +357,11 @@ public sealed class PayloadHandler {
         }
     }
 
+    private void HoverURI(URIPayload uri) {
+        ImGui.TextUnformatted(string.Format(Language.Context_URLDomain, uri.Uri.Authority));
+        ImGuiUtil.WarningText(Language.Context_URLWarning);
+    }
+
     private void LeftClickPayload(Chunk chunk, Payload? payload) {
         switch (payload) {
             case MapLinkPayload map: {
@@ -384,6 +398,10 @@ public sealed class PayloadHandler {
                     GameFunctions.GameFunctions.OpenPartyFinder();
                 }
 
+                break;
+            }
+            case URIPayload uri: {
+                TryOpenURI(uri.Uri);
                 break;
             }
         }
@@ -638,5 +656,39 @@ public sealed class PayloadHandler {
         }
 
         return null;
+    }
+
+    private void DrawUriPopup(URIPayload uri)
+    {
+        ImGui.TextUnformatted(string.Format(Language.Context_URLDomain, uri.Uri.Authority));
+        ImGuiUtil.WarningText(Language.Context_URLWarning, false);
+        ImGui.Separator();
+
+        if (ImGui.Selectable(Language.Context_OpenInBrowser))
+        {
+            TryOpenURI(uri.Uri);
+        }
+
+        if (ImGui.Selectable(Language.Context_CopyLink))
+        {
+            ImGui.SetClipboardText(uri.Uri.ToString());
+            WrapperUtil.AddNotification(Language.Context_CopyLinkNotification, NotificationType.Info);
+        }
+    }
+
+    private void TryOpenURI(Uri uri)
+    {
+        new Thread(() => {
+            try
+            {
+                Plugin.Log.Info($"Opening URI {uri} in default browser");
+                Process.Start(new ProcessStartInfo(uri.ToString()) { UseShellExecute = true });
+            }
+            catch (Exception ex)
+            {
+                Plugin.Log.Error($"Error opening URI: {ex}");
+                WrapperUtil.AddNotification(Language.Context_OpenInBrowserError, NotificationType.Error);
+            }
+        }).Start();
     }
 }

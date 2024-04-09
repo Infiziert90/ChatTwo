@@ -871,6 +871,7 @@
     <data name="Options_TooltipOffset_Desc">
         <value>Use this option if you experience cut-off tooltips.</value>
     </data>
+  
     <data name="Context_CopyContent">
         <value>Copy content</value>
     </data>
@@ -879,5 +880,23 @@
     </data>
     <data name="Context_CopySuccess">
         <value>Copied message to clipboard</value>
+    </data>
+    <data name="Context_CopyLink" xml:space="preserve">
+        <value>Copy link to clipboard</value>
+    </data>
+    <data name="Context_CopyLinkNotification" xml:space="preserve">
+        <value>Copied link to clipboard</value>
+    </data>
+    <data name="Context_OpenInBrowser" xml:space="preserve">
+        <value>Open link in browser</value>
+    </data>
+    <data name="Context_OpenInBrowserError" xml:space="preserve">
+        <value>Failed to open the link in the browser, please report this issue</value>
+    </data>
+    <data name="Context_URLDomain" xml:space="preserve">
+        <value>URL at {0}</value>
+    </data>
+    <data name="Context_URLWarning" xml:space="preserve">
+        <value>Only open URLs from websites you trust</value>
     </data>
 </root>

@@ -20,6 +20,7 @@ public class CommandHelpWindow : Window {
                 ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoFocusOnAppearing | ImGuiWindowFlags.AlwaysAutoResize;
     }
 
+    // Sets IsOpen to true if it should be drawn
     public void UpdateContent(TextCommand command)
     {
         Command = command;
@@ -36,6 +37,7 @@ public class CommandHelpWindow : Window {
                 break;
             case CommandHelpSide.None:
             default:
+                IsOpen = false;
                 return;
         }
 
@@ -45,6 +47,8 @@ public class CommandHelpWindow : Window {
             MinimumSize = new Vector2(width, 0),
             MaximumSize = LogWindow.LastWindowSize with { X = width }
         };
+
+        IsOpen = true;
     }
 
     public override void Draw()
