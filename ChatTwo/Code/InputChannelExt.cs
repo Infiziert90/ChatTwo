@@ -30,6 +30,14 @@ internal static class InputChannelExt {
         InputChannel.Linkshell6 => ChatType.Linkshell6,
         InputChannel.Linkshell7 => ChatType.Linkshell7,
         InputChannel.Linkshell8 => ChatType.Linkshell8,
+        InputChannel.ExtraChatLinkshell1 => ChatType.ExtraChatLinkshell1,
+        InputChannel.ExtraChatLinkshell2 => ChatType.ExtraChatLinkshell2,
+        InputChannel.ExtraChatLinkshell3 => ChatType.ExtraChatLinkshell3,
+        InputChannel.ExtraChatLinkshell4 => ChatType.ExtraChatLinkshell4,
+        InputChannel.ExtraChatLinkshell5 => ChatType.ExtraChatLinkshell5,
+        InputChannel.ExtraChatLinkshell6 => ChatType.ExtraChatLinkshell6,
+        InputChannel.ExtraChatLinkshell7 => ChatType.ExtraChatLinkshell7,
+        InputChannel.ExtraChatLinkshell8 => ChatType.ExtraChatLinkshell8,
         _ => throw new ArgumentOutOfRangeException(nameof(input), input, null),
     };
 
@@ -50,6 +58,14 @@ internal static class InputChannelExt {
         InputChannel.CrossLinkshell6 => 5,
         InputChannel.CrossLinkshell7 => 6,
         InputChannel.CrossLinkshell8 => 7,
+        InputChannel.ExtraChatLinkshell1 => 0,
+        InputChannel.ExtraChatLinkshell2 => 1,
+        InputChannel.ExtraChatLinkshell3 => 2,
+        InputChannel.ExtraChatLinkshell4 => 3,
+        InputChannel.ExtraChatLinkshell5 => 4,
+        InputChannel.ExtraChatLinkshell6 => 5,
+        InputChannel.ExtraChatLinkshell7 => 6,
+        InputChannel.ExtraChatLinkshell8 => 7,
         _ => uint.MaxValue,
     };
 
@@ -79,6 +95,14 @@ internal static class InputChannelExt {
         InputChannel.Linkshell6 => "/linkshell6",
         InputChannel.Linkshell7 => "/linkshell7",
         InputChannel.Linkshell8 => "/linkshell8",
+        InputChannel.ExtraChatLinkshell1 => "/ecl1",
+        InputChannel.ExtraChatLinkshell2 => "/ecl2",
+        InputChannel.ExtraChatLinkshell3 => "/ecl3",
+        InputChannel.ExtraChatLinkshell4 => "/ecl4",
+        InputChannel.ExtraChatLinkshell5 => "/ecl5",
+        InputChannel.ExtraChatLinkshell6 => "/ecl6",
+        InputChannel.ExtraChatLinkshell7 => "/ecl7",
+        InputChannel.ExtraChatLinkshell8 => "/ecl8",
         _ => "",
     };
 
@@ -148,6 +172,18 @@ internal static class InputChannelExt {
         InputChannel.CrossLinkshell6 => true,
         InputChannel.CrossLinkshell7 => true,
         InputChannel.CrossLinkshell8 => true,
+        _ => false,
+    };
+    
+    internal static bool IsExtraChatLinkshell(this InputChannel channel) => channel switch {
+        InputChannel.ExtraChatLinkshell1 => true,
+        InputChannel.ExtraChatLinkshell2 => true,
+        InputChannel.ExtraChatLinkshell3 => true,
+        InputChannel.ExtraChatLinkshell4 => true,
+        InputChannel.ExtraChatLinkshell5 => true,
+        InputChannel.ExtraChatLinkshell6 => true,
+        InputChannel.ExtraChatLinkshell7 => true,
+        InputChannel.ExtraChatLinkshell8 => true,
         _ => false,
     };
 }

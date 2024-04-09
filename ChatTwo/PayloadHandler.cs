@@ -592,7 +592,7 @@ public sealed class PayloadHandler {
 
         var inputChannel = chunk.Message?.Code.Type.ToInputChannel();
         if (inputChannel != null && ImGui.Selectable(Language.Context_ReplyInSelectedChatMode)) {
-            LogWindow.Plugin.Functions.Chat.SetChannel(inputChannel.Value);
+            LogWindow.SetChannel(inputChannel.Value);
             LogWindow.Activate = true;
         }
 

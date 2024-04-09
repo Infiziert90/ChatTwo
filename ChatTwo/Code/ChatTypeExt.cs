@@ -162,6 +162,14 @@ internal static class ChatTypeExt {
             ChatType.CrossLinkshell6 => Language.ChatType_CrossLinkshell6,
             ChatType.CrossLinkshell7 => Language.ChatType_CrossLinkshell7,
             ChatType.CrossLinkshell8 => Language.ChatType_CrossLinkshell8,
+            ChatType.ExtraChatLinkshell1 => Language.ChatType_ExtraChatLinkshell1,
+            ChatType.ExtraChatLinkshell2 => Language.ChatType_ExtraChatLinkshell2,
+            ChatType.ExtraChatLinkshell3 => Language.ChatType_ExtraChatLinkshell3,
+            ChatType.ExtraChatLinkshell4 => Language.ChatType_ExtraChatLinkshell4,
+            ChatType.ExtraChatLinkshell5 => Language.ChatType_ExtraChatLinkshell5,
+            ChatType.ExtraChatLinkshell6 => Language.ChatType_ExtraChatLinkshell6,
+            ChatType.ExtraChatLinkshell7 => Language.ChatType_ExtraChatLinkshell7,
+            ChatType.ExtraChatLinkshell8 => Language.ChatType_ExtraChatLinkshell8,
             _ => type.ToString(),
         };
     }

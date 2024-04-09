@@ -29,4 +29,14 @@ internal enum InputChannel : uint {
     Linkshell6 = 24,
     Linkshell7 = 25,
     Linkshell8 = 26,
+    
+    // Custom channels:
+    ExtraChatLinkshell1 = 1001,
+    ExtraChatLinkshell2 = 1002,
+    ExtraChatLinkshell3 = 1003,
+    ExtraChatLinkshell4 = 1004,
+    ExtraChatLinkshell5 = 1005,
+    ExtraChatLinkshell6 = 1006,
+    ExtraChatLinkshell7 = 1007,
+    ExtraChatLinkshell8 = 1008,
 }

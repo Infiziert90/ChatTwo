@@ -611,7 +611,12 @@ internal sealed unsafe class Chat : IDisposable {
     }
 
     internal void SetChannel(InputChannel channel, string? tellTarget = null) {
-        if (ChangeChatChannel == null)
+        // ExtraChat linkshells aren't supported in game so we never want to
+        // call the ChangeChatChannel function with them.
+        //
+        // Callers should call ChatLogWindow.SetChannel() which handles
+        // ExtraChat channels
+        if (ChangeChatChannel == null || channel.IsExtraChatLinkshell())
             return;
 
         var target = Utf8String.FromString(tellTarget ?? "");
