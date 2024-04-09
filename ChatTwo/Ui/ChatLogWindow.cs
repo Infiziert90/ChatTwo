@@ -453,6 +453,10 @@ public sealed class ChatLogWindow : Window, IUiComponent {
         ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, Vector2.Zero);
         try {
             if (_tellTarget != null) {
+                var playerName = _tellTarget.Name;
+                if (ScreenshotMode)
+                    playerName = HashPlayer(_tellTarget.Name, _tellTarget.World);
+
                 var world = Plugin.DataManager.GetExcelSheet<World>()
                     ?.GetRow(_tellTarget.World)
                     ?.Name
@@ -460,7 +464,7 @@ public sealed class ChatLogWindow : Window, IUiComponent {
 
                 DrawChunks(new Chunk[] {
                     new TextChunk(ChunkSource.None, null, "Tell "),
-                    new TextChunk(ChunkSource.None, null, _tellTarget.Name),
+                    new TextChunk(ChunkSource.None, null, playerName),
                     new IconChunk(ChunkSource.None, null, BitmapFontIcon.CrossWorld),
                     new TextChunk(ChunkSource.None, null, world),
                 });
@@ -1367,12 +1371,13 @@ public sealed class ChatLogWindow : Window, IUiComponent {
 
         var content = text.Content;
         if (ScreenshotMode) {
-            if (chunk.Link is PlayerPayload playerPayload) {
-                var hashCode = $"{Salt}{playerPayload.PlayerName}{playerPayload.World.RowId}".GetHashCode();
-                content = $"Player {hashCode:X8}";
+            // Check for contains here as sometimes there are multiple
+            // TextChunks with the same PlayerPayload but only one has the name.
+            // E.g. party chat with cross world players adds extra chunks.
+            if (chunk.Link is PlayerPayload playerPayload && content.Contains(playerPayload.PlayerName)) {
+                content = content.Replace(playerPayload.PlayerName, HashPlayer(playerPayload.PlayerName, playerPayload.World.RowId));
             } else if (Plugin.ClientState.LocalPlayer is { } player && content.Contains(player.Name.TextValue)) {
-                var hashCode = $"{Salt}{player.Name.TextValue}{player.HomeWorld.Id}".GetHashCode();
-                content = content.Replace(player.Name.TextValue, $"Player {hashCode:X8}");
+                content = content.Replace(player.Name.TextValue, HashPlayer(player.Name.TextValue, player.HomeWorld.Id));
             }
         }
 
@@ -1390,5 +1395,10 @@ public sealed class ChatLogWindow : Window, IUiComponent {
         if (colour != null) {
             ImGui.PopStyleColor();
         }
+    }
+
+    private string HashPlayer(string playerName, uint worldId) {
+        var hashCode = $"{Salt}{playerName}{worldId}".GetHashCode();
+        return $"Player {hashCode:X8}";
     }
 }
