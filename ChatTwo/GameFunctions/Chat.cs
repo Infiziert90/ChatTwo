@@ -710,9 +710,9 @@ internal sealed unsafe class Chat : IDisposable {
         return new TellHistoryInfo(name, world, contentId);
     }
 
-    internal void SendTell(TellReason reason, ulong contentId, string name, ushort homeWorld, string message) {
+    internal void SendTell(TellReason reason, ulong contentId, string name, ushort homeWorld, byte[] message) {
         var uName = Utf8String.FromString(name);
-        var uMessage = Utf8String.FromString(message);
+        var uMessage = Utf8String.FromSequence(message);
 
         var networkModule = GetNetworkModule(Framework.Instance());
         var a1 = *(IntPtr*) (networkModule + 8);

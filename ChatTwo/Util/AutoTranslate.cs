@@ -14,11 +14,13 @@ using TextPayload = Lumina.Text.Payloads.TextPayload;
 
 namespace ChatTwo.Util;
 
-internal static class AutoTranslate {
+internal static class AutoTranslate
+{
     private static readonly Dictionary<ClientLanguage, List<AutoTranslateEntry>> Entries = new();
     private static readonly HashSet<(uint, uint)> ValidEntries = new();
 
-    private static Parser<char, (string name, Maybe<IEnumerable<ISelectorPart>> selector)> Parser() {
+    private static Parser<char, (string name, Maybe<IEnumerable<ISelectorPart>> selector)> Parser()
+    {
         var sheetName = Any
             .AtLeastOnceUntil(Lookahead(Char('[').IgnoreResult().Or(End)))
             .Select(string.Concat)
@@ -60,7 +62,8 @@ internal static class AutoTranslate {
         );
     }
 
-    private static string TextValue(this Lumina.Text.SeString str) {
+    private static string TextValue(this Lumina.Text.SeString str)
+    {
         var payloads = str.Payloads
             .Select(p => {
                 if (p is TextPayload text) {
@@ -89,18 +92,20 @@ internal static class AutoTranslate {
         return string.Join("", payloads);
     }
 
-    private static List<AutoTranslateEntry> AllEntries(IDataManager data) {
-        if (Entries.TryGetValue(data.Language, out var entries)) {
+    private static List<AutoTranslateEntry> AllEntries(IDataManager data)
+    {
+        if (Entries.TryGetValue(data.Language, out var entries))
             return entries;
-        }
 
         var shouldAdd = ValidEntries.Count == 0;
 
         var parser = Parser();
         var list = new List<AutoTranslateEntry>();
-        foreach (var row in data.GetExcelSheet<Completion>()!) {
+        foreach (var row in data.GetExcelSheet<Completion>()!)
+        {
             var lookup = row.LookupTable.TextValue();
-            if (lookup is not ("" or "@")) {
+            if (lookup is not ("" or "@"))
+            {
                 var (sheetName, selector) = parser.ParseOrThrow(lookup);
                 var sheetType = typeof(Completion)
                     .Assembly
@@ -114,18 +119,23 @@ internal static class AutoTranslate {
 
                 var columns = new List<int>();
                 var rows = new List<Range>();
-                if (selector.HasValue) {
+                if (selector.HasValue)
+                {
                     columns.Clear();
                     rows.Clear();
-                    foreach (var part in selector.Value) {
-                        switch (part) {
-                            case IndexRange range: {
+                    foreach (var part in selector.Value)
+                    {
+                        switch (part)
+                        {
+                            case IndexRange range:
+                            {
                                 var start = (int) range.Start;
                                 var end = (int) (range.End + 1);
                                 rows.Add(start..end);
                                 break;
                             }
-                            case SingleRow single: {
+                            case SingleRow single:
+                            {
                                 var idx = (int) single.Row;
                                 rows.Add(idx..(idx + 1));
                                 break;
@@ -137,33 +147,31 @@ internal static class AutoTranslate {
                     }
                 }
 
-                if (columns.Count == 0) {
+                if (columns.Count == 0)
                     columns.Add(0);
-                }
 
-                if (rows.Count == 0) {
+                if (rows.Count == 0)
                     rows.Add(..);
-                }
 
-                var validRows = rowParsers
-                    .Select(parser => parser.RowId)
-                    .ToArray();
-                foreach (var range in rows) {
-                    for (var i = range.Start.Value; i < range.End.Value; i++) {
-                        if (!validRows.Contains((uint) i)) {
+                var validRows = rowParsers.Select(p => p.RowId).ToArray();
+                foreach (var range in rows)
+                {
+                    for (var i = range.Start.Value; i < range.End.Value; i++)
+                    {
+                        if (!validRows.Contains((uint) i))
                             continue;
-                        }
 
-                        foreach (var col in columns) {
-                            var rowParser = rowParsers.FirstOrDefault(parser => parser.RowId == i);
-                            if (rowParser == null) {
+                        foreach (var col in columns)
+                        {
+                            var rowParser = rowParsers.FirstOrDefault(p => p.RowId == i);
+                            if (rowParser == null)
                                 continue;
-                            }
 
                             var rawName = rowParser.ReadColumn<Lumina.Text.SeString>(col)!;
                             var name = rawName.ToDalamudString();
                             var text = name.TextValue;
-                            if (text.Length > 0) {
+                            if (text.Length > 0)
+                            {
                                 list.Add(new AutoTranslateEntry(
                                     row.Group,
                                     (uint) i,
@@ -171,14 +179,15 @@ internal static class AutoTranslate {
                                     name
                                 ));
 
-                                if (shouldAdd) {
+                                if (shouldAdd)
                                     ValidEntries.Add((row.Group, (uint) i));
-                                }
                             }
                         }
                     }
                 }
-            } else if (lookup is not "@") {
+            }
+            else if (lookup is not "@")
+            {
                 var text = row.Text.ToDalamudString();
                 list.Add(new AutoTranslateEntry(
                     row.Group,
@@ -187,9 +196,8 @@ internal static class AutoTranslate {
                     text
                 ));
 
-                if (shouldAdd) {
+                if (shouldAdd)
                     ValidEntries.Add((row.Group, row.RowId));
-                }
             }
         }
 
@@ -197,21 +205,23 @@ internal static class AutoTranslate {
         return list;
     }
 
-    internal static List<AutoTranslateEntry> Matching(IDataManager data, string prefix, bool sort) {
+    internal static List<AutoTranslateEntry> Matching(IDataManager data, string prefix, bool sort)
+    {
         var wholeMatches = new List<AutoTranslateEntry>();
         var prefixMatches = new List<AutoTranslateEntry>();
         var otherMatches = new List<AutoTranslateEntry>();
-        foreach (var entry in AllEntries(data)) {
-            if (entry.String.Equals(prefix, StringComparison.OrdinalIgnoreCase)) {
+        foreach (var entry in AllEntries(data))
+        {
+            if (entry.String.Equals(prefix, StringComparison.OrdinalIgnoreCase))
                 wholeMatches.Add(entry);
-            } else if (entry.String.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)) {
+            else if (entry.String.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
                 prefixMatches.Add(entry);
-            } else if (entry.String.Contains(prefix, StringComparison.OrdinalIgnoreCase)) {
+            else if (entry.String.Contains(prefix, StringComparison.OrdinalIgnoreCase))
                 otherMatches.Add(entry);
-            }
         }
 
-        if (sort) {
+        if (sort)
+        {
             return wholeMatches.OrderBy(entry => entry.String, StringComparer.OrdinalIgnoreCase)
                 .Concat(prefixMatches.OrderBy(entry => entry.String, StringComparer.OrdinalIgnoreCase))
                 .Concat(otherMatches.OrderBy(entry => entry.String, StringComparer.OrdinalIgnoreCase))
@@ -227,27 +237,30 @@ internal static class AutoTranslate {
     [DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
     private static extern int memcmp(byte[] b1, byte[] b2, UIntPtr count);
 
-    internal static void ReplaceWithPayload(IDataManager data, ref byte[] bytes) {
-        var search = Encoding.UTF8.GetBytes("<at:");
-        if (bytes.Length <= search.Length) {
+    internal static void ReplaceWithPayload(IDataManager data, ref byte[] bytes)
+    {
+        var search = "<at:"u8.ToArray();
+        if (bytes.Length <= search.Length)
             return;
-        }
 
-        if (ValidEntries.Count == 0) {
-            // populate the list of valid entries
+        // populate the list of valid entries
+        if (ValidEntries.Count == 0)
             AllEntries(data);
-        }
 
         var start = -1;
-        for (var i = 0; i < bytes.Length; i++) {
+        for (var i = 0; i < bytes.Length; i++)
+        {
             if (start != -1) {
-                if (bytes[i] == '>') {
+                if (bytes[i] == '>')
+                {
                     var tag = Encoding.UTF8.GetString(bytes[start..(i + 1)]);
                     var parts = tag[4..^1].Split(',', 2);
-                    if (parts.Length == 2 && uint.TryParse(parts[0], out var group) && uint.TryParse(parts[1], out var key)) {
+                    if (parts.Length == 2 && uint.TryParse(parts[0], out var group) && uint.TryParse(parts[1], out var key))
+                    {
                         var payload = ValidEntries.Contains((group, key))
                             ? new AutoTranslatePayload(group, key).Encode()
                             : Array.Empty<byte>();
+
                         var oldBytes = bytes.ToArray();
                         var lengthDiff = payload.Length - (i - start);
                         bytes = new byte[oldBytes.Length + lengthDiff];
@@ -259,57 +272,64 @@ internal static class AutoTranslate {
                     }
 
                     start = -1;
-                } else {
+                }
+                else
+                {
                     continue;
                 }
             }
 
-            if (i + search.Length < bytes.Length && memcmp(bytes[i..], search, (UIntPtr) search.Length) == 0) {
+            if (i + search.Length < bytes.Length && memcmp(bytes[i..], search, (UIntPtr) search.Length) == 0)
                 start = i;
-            }
         }
     }
 }
 
-internal interface ISelectorPart {
-}
+internal interface ISelectorPart { }
 
-internal class SingleRow : ISelectorPart {
+internal class SingleRow : ISelectorPart
+{
     public uint Row { get; }
 
-    public SingleRow(uint row) {
+    public SingleRow(uint row)
+    {
         Row = row;
     }
 }
 
-internal class IndexRange : ISelectorPart {
+internal class IndexRange : ISelectorPart
+{
     public uint Start { get; }
     public uint End { get; }
 
-    public IndexRange(uint start, uint end) {
+    public IndexRange(uint start, uint end)
+    {
         Start = start;
         End = end;
     }
 }
 
-internal class NounMarker : ISelectorPart {
-}
+internal class NounMarker : ISelectorPart { }
 
-internal class ColumnSpecifier : ISelectorPart {
+internal class ColumnSpecifier : ISelectorPart
+{
     public uint Column { get; }
 
-    public ColumnSpecifier(uint column) {
+    public ColumnSpecifier(uint column)
+    {
         Column = column;
     }
 }
 
-internal class AutoTranslateEntry {
+internal class AutoTranslateEntry
+{
     internal uint Group { get; }
     internal uint Row { get; }
     internal string String { get; }
     internal SeString SeString { get; }
 
-    public AutoTranslateEntry(uint group, uint row, string str, SeString seStr) {
+    public AutoTranslateEntry(uint group, uint row, string str, SeString seStr)
+    {
         Group = group;
         Row = row;
         String = str;
