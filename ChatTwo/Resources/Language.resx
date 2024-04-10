@@ -877,7 +877,30 @@
     <data name="Options_TooltipOffset_Desc">
         <value>Use this option if you experience cut-off tooltips.</value>
     </data>
-
+    <data name="ChatType_ExtraChatLinkshell1" xml:space="preserve">
+        <value>ExtraChat Linkshell [1]</value>
+    </data>
+    <data name="ChatType_ExtraChatLinkshell2" xml:space="preserve">
+        <value>ExtraChat Linkshell [2]</value>
+    </data>
+    <data name="ChatType_ExtraChatLinkshell3" xml:space="preserve">
+        <value>ExtraChat Linkshell [3]</value>
+    </data>
+    <data name="ChatType_ExtraChatLinkshell4" xml:space="preserve">
+        <value>ExtraChat Linkshell [4]</value>
+    </data>
+    <data name="ChatType_ExtraChatLinkshell5" xml:space="preserve">
+        <value>ExtraChat Linkshell [5]</value>
+    </data>
+    <data name="ChatType_ExtraChatLinkshell6" xml:space="preserve">
+        <value>ExtraChat Linkshell [6]</value>
+    </data>
+    <data name="ChatType_ExtraChatLinkshell7" xml:space="preserve">
+        <value>ExtraChat Linkshell [7]</value>
+    </data>
+    <data name="ChatType_ExtraChatLinkshell8" xml:space="preserve">
+        <value>ExtraChat Linkshell [8]</value>
+    </data>
     <data name="Context_CopyContent">
         <value>Copy content</value>
     </data>

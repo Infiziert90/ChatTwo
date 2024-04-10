@@ -151,7 +151,7 @@ public sealed class ChatLogWindow : Window, IUiComponent {
             var prevTemp = _tempChannel;
 
             if (info.Permanent) {
-                Plugin.Functions.Chat.SetChannel(info.Channel.Value);
+                SetChannel(info.Channel.Value);
             } else {
                 _tempChannel = info.Channel.Value;
             }
@@ -496,7 +496,17 @@ public sealed class ChatLogWindow : Window, IUiComponent {
                     ImGui.TextUnformatted(_tempChannel.Value.ToChatType().Name());
                 }
             } else if (activeTab is { Channel: { } channel }) {
-                ImGui.TextUnformatted(channel.ToChatType().Name());
+                if (channel.IsExtraChatLinkshell()) {
+                    // We cannot lookup ExtraChat channel names from index over
+                    // IPC so we just don't show the name if it's the tabs
+                    // channel.
+                    //
+                    // We don't call channel.ToChatType().Name() as it has the
+                    // long name as used in the settings window.
+                    ImGui.TextUnformatted($"ECLS [{channel.LinkshellIndex() + 1}]");
+                } else {
+                    ImGui.TextUnformatted(channel.ToChatType().Name());
+                }
             } else if (Plugin.ExtraChat.ChannelOverride is var (overrideName, _)) {
                 ImGui.TextUnformatted(overrideName);
             } else {
@@ -525,7 +535,7 @@ public sealed class ChatLogWindow : Window, IUiComponent {
                 var name = Plugin.DataManager.GetExcelSheet<LogFilter>()!
                     .FirstOrDefault(row => row.LogKind == (byte) channel.ToChatType())
                     ?.Name
-                    ?.RawString ?? channel.ToString();
+                    ?.RawString ?? channel.ToChatType().Name();
 
                 if (channel.IsLinkshell()) {
                     var lsName = Plugin.Functions.Chat.GetLinkshellName(channel.LinkshellIndex());
@@ -545,9 +555,18 @@ public sealed class ChatLogWindow : Window, IUiComponent {
                     name += $": {lsName}";
                 }
 
+                if (channel.IsExtraChatLinkshell() && Plugin.ExtraChat.ChannelNames.Count == 0) {
+                    // Sadly the ExtraChat IPC doesn't provide a method to
+                    // lookup what channel numbers are assigned, or what the
+                    // channel names are.
+                    //
+                    // Show all ExtraChat options if the user is in at least
+                    // one channel.
+                    continue;
+                }
+
                 if (ImGui.Selectable(name)) {
-                    Plugin.Functions.Chat.SetChannel(channel);
-                    _tellTarget = null;
+                    SetChannel(channel);
                 }
             }
 
@@ -609,7 +628,7 @@ public sealed class ChatLogWindow : Window, IUiComponent {
                 if (Plugin.Functions.Chat.UsesTellTempChannel)
                 {
                     Plugin.Functions.Chat.UsesTellTempChannel = false;
-                    Plugin.Functions.Chat.SetChannel(Plugin.Functions.Chat.PreviousChannel ?? InputChannel.Say);
+                    SetChannel(Plugin.Functions.Chat.PreviousChannel);
                 }
             }
 
@@ -621,7 +640,7 @@ public sealed class ChatLogWindow : Window, IUiComponent {
                 if (Plugin.Functions.Chat.UsesTellTempChannel)
                 {
                     Plugin.Functions.Chat.UsesTellTempChannel = false;
-                    Plugin.Functions.Chat.SetChannel(Plugin.Functions.Chat.PreviousChannel ?? InputChannel.Say);
+                    SetChannel(Plugin.Functions.Chat.PreviousChannel);
                 }
             }
         }
@@ -639,7 +658,7 @@ public sealed class ChatLogWindow : Window, IUiComponent {
             if (Plugin.Functions.Chat.UsesTellTempChannel)
             {
                 Plugin.Functions.Chat.UsesTellTempChannel = false;
-                Plugin.Functions.Chat.SetChannel(Plugin.Functions.Chat.PreviousChannel ?? InputChannel.Say);
+                SetChannel(Plugin.Functions.Chat.PreviousChannel);
             }
         }
 
@@ -674,6 +693,22 @@ public sealed class ChatLogWindow : Window, IUiComponent {
                 Plugin.Functions.ClickNoviceNetworkButton();
             }
         }
+    }
+
+    internal void SetChannel(InputChannel? channel)
+    {
+        channel ??= InputChannel.Say;
+
+        _tellTarget = null;
+        if (channel.Value.IsExtraChatLinkshell()) {
+            // Instead of calling SetChannel(), we ask the ExtraChat plugin to
+            // set a channel override by just calling the command directly.
+            var bytes = Encoding.UTF8.GetBytes(channel.Value.Prefix());
+            Plugin.Common.Functions.Chat.SendMessageUnsafe(bytes);
+            return;
+        }
+
+        Plugin.Functions.Chat.SetChannel(channel.Value);
     }
 
     private void SendChatBox(Tab? activeTab) {
