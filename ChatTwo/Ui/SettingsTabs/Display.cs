@@ -42,6 +42,12 @@ internal sealed class Display : ISettingsTab {
         ImGui.Spacing();
 
         ImGuiUtil.OptionCheckbox(
+            ref Mutable.HideInLoadingScreens,
+            Language.Options_HideInLoadingScreens_Name,
+            string.Format(Language.Options_HideInLoadingScreens_Description, Plugin.PluginName));
+        ImGui.Spacing();
+
+        ImGuiUtil.OptionCheckbox(
             ref Mutable.NativeItemTooltips,
             Language.Options_NativeItemTooltips_Name,
             string.Format(Language.Options_NativeItemTooltips_Description, Plugin.PluginName)

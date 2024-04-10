@@ -128,7 +128,7 @@
         <value>Hide the in-game chat window when the plugin is active.</value>
     </data>
     <data name="Options_HideDuringCutscenes_Name">
-        <value>Hide chat during cutscenes</value>
+        <value>Hide during cutscenes</value>
     </data>
     <data name="Options_HideDuringCutscenes_Description">
         <value>Hide {0} during cutscenes.</value>
@@ -922,5 +922,11 @@
     </data>
     <data name="Options_OverrideStyle_Name_Desc" xml:space="preserve">
         <value>Override your selected dalamud style with a different one</value>
+    </data>
+    <data name="Options_HideInLoadingScreens_Name" xml:space="preserve">
+        <value>Hide during loading screens</value>
+    </data>
+    <data name="Options_HideInLoadingScreens_Description" xml:space="preserve">
+        <value>Hide {0} during loading screens.</value>
     </data>
 </root>

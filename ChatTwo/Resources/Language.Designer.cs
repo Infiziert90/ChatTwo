@@ -1770,11 +1770,29 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hide chat during cutscenes.
+        ///   Looks up a localized string similar to Hide during cutscenes.
         /// </summary>
         internal static string Options_HideDuringCutscenes_Name {
             get {
                 return ResourceManager.GetString("Options_HideDuringCutscenes_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hide {0} during loading screens..
+        /// </summary>
+        internal static string Options_HideInLoadingScreens_Description {
+            get {
+                return ResourceManager.GetString("Options_HideInLoadingScreens_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hide during loading screens.
+        /// </summary>
+        internal static string Options_HideInLoadingScreens_Name {
+            get {
+                return ResourceManager.GetString("Options_HideInLoadingScreens_Name", resourceCulture);
             }
         }
         
