@@ -22,12 +22,16 @@ public class SeStringDebugger : Window
             MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
         };
 
+        #if DEBUG
         Plugin.Commands.Register("/chat2Debugger").Execute += Toggle;
+        #endif
     }
 
     public void Dispose()
     {
+        #if DEBUG
         Plugin.Commands.Register("/chat2Debugger").Execute -= Toggle;
+        #endif
     }
 
     private void Toggle(string _, string __) => Toggle();
