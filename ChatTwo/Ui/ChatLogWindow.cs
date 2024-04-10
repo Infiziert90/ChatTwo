@@ -1290,10 +1290,14 @@ public sealed class ChatLogWindow : Window, IUiComponent {
                 }
             }
 
+            var start = ptr.Buf + white + 1;
+            var end = ptr.CursorPos - white - 1;
+            var utf8Message = Marshal.PtrToStringUTF8(start, end);
+            var correctedCursor = ptr.CursorPos - (end - utf8Message.Length);
             _autoCompleteInfo = new AutoCompleteInfo(
-                Marshal.PtrToStringUTF8(ptr.Buf + white + 1, ptr.CursorPos - white - 1),
+                utf8Message,
                 white + 1,
-                ptr.CursorPos
+                correctedCursor
             );
             _autoCompleteOpen = true;
             _autoCompleteSelection = 0;
