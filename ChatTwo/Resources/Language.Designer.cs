@@ -1104,11 +1104,56 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Copy content.
+        /// </summary>
+        internal static string Context_CopyContent {
+            get {
+                return ResourceManager.GetString("Context_CopyContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copied message content to clipboard.
+        /// </summary>
+        internal static string Context_CopyContentSuccess {
+            get {
+                return ResourceManager.GetString("Context_CopyContentSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Copy Item Name.
         /// </summary>
         internal static string Context_CopyItemName {
             get {
                 return ResourceManager.GetString("Context_CopyItemName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy link to clipboard.
+        /// </summary>
+        internal static string Context_CopyLink {
+            get {
+                return ResourceManager.GetString("Context_CopyLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copied link to clipboard.
+        /// </summary>
+        internal static string Context_CopyLinkNotification {
+            get {
+                return ResourceManager.GetString("Context_CopyLinkNotification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copied message to clipboard.
+        /// </summary>
+        internal static string Context_CopySuccess {
+            get {
+                return ResourceManager.GetString("Context_CopySuccess", resourceCulture);
             }
         }
         
@@ -1194,6 +1239,24 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open link in browser.
+        /// </summary>
+        internal static string Context_OpenInBrowser {
+            get {
+                return ResourceManager.GetString("Context_OpenInBrowser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to open the link in the browser, please report this issue.
+        /// </summary>
+        internal static string Context_OpenInBrowserError {
+            get {
+                return ResourceManager.GetString("Context_OpenInBrowserError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Promote.
         /// </summary>
         internal static string Context_Promote {
@@ -1271,6 +1334,24 @@ namespace ChatTwo.Resources {
         internal static string Context_TryOn {
             get {
                 return ResourceManager.GetString("Context_TryOn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to URL at {0}.
+        /// </summary>
+        internal static string Context_URLDomain {
+            get {
+                return ResourceManager.GetString("Context_URLDomain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only open URLs from websites you trust.
+        /// </summary>
+        internal static string Context_URLWarning {
+            get {
+                return ResourceManager.GetString("Context_URLWarning", resourceCulture);
             }
         }
         
@@ -1419,6 +1500,15 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Authors: .
+        /// </summary>
+        internal static string Options_About_Authors {
+            get {
+                return ResourceManager.GetString("Options_About_Authors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Click the button to the left to see what&apos;s being worked on and what&apos;s next..
         /// </summary>
         internal static string Options_About_ClickUp {
@@ -1428,11 +1518,38 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Click the button to the left to help translate {0}..
+        ///   Looks up a localized string similar to Help to translate: .
         /// </summary>
         internal static string Options_About_CrowdIn {
             get {
                 return ResourceManager.GetString("Options_About_CrowdIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Discord: .
+        /// </summary>
+        internal static string Options_About_Discord {
+            get {
+                return ResourceManager.GetString("Options_About_Discord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get help in the discord thread: .
+        /// </summary>
+        internal static string Options_About_Discord_Thread {
+            get {
+                return ResourceManager.GetString("Options_About_Discord_Thread", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Get help through github issues: .
+        /// </summary>
+        internal static string Options_About_Github_Issues {
+            get {
+                return ResourceManager.GetString("Options_About_Github_Issues", resourceCulture);
             }
         }
         
@@ -1460,6 +1577,15 @@ namespace ChatTwo.Resources {
         internal static string Options_About_Translators {
             get {
                 return ResourceManager.GetString("Options_About_Translators", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version: .
+        /// </summary>
+        internal static string Options_About_Version {
+            get {
+                return ResourceManager.GetString("Options_About_Version", resourceCulture);
             }
         }
         
@@ -1716,11 +1842,29 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hide chat during cutscenes.
+        ///   Looks up a localized string similar to Hide during cutscenes.
         /// </summary>
         internal static string Options_HideDuringCutscenes_Name {
             get {
                 return ResourceManager.GetString("Options_HideDuringCutscenes_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hide {0} during loading screens..
+        /// </summary>
+        internal static string Options_HideInLoadingScreens_Description {
+            get {
+                return ResourceManager.GetString("Options_HideInLoadingScreens_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hide during loading screens.
+        /// </summary>
+        internal static string Options_HideInLoadingScreens_Name {
+            get {
+                return ResourceManager.GetString("Options_HideInLoadingScreens_Name", resourceCulture);
             }
         }
         
@@ -1901,6 +2045,33 @@ namespace ChatTwo.Resources {
         internal static string Options_NativeItemTooltips_Name {
             get {
                 return ResourceManager.GetString("Options_NativeItemTooltips_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Override Style.
+        /// </summary>
+        internal static string Options_OverrideStyle_Name {
+            get {
+                return ResourceManager.GetString("Options_OverrideStyle_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Override your selected dalamud style with a different one.
+        /// </summary>
+        internal static string Options_OverrideStyle_Name_Desc {
+            get {
+                return ResourceManager.GetString("Options_OverrideStyle_Name_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Styles.
+        /// </summary>
+        internal static string Options_OverrideStyleDropdown_Name {
+            get {
+                return ResourceManager.GetString("Options_OverrideStyleDropdown_Name", resourceCulture);
             }
         }
         

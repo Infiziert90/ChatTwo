@@ -39,21 +39,21 @@ internal sealed unsafe class Context {
     private Plugin Plugin { get; }
 
     internal Context(Plugin plugin) {
-        this.Plugin = plugin;
+        Plugin = plugin;
         Plugin.GameInteropProvider.InitializeFromAttributes(this);
     }
 
     internal void InviteToNoviceNetwork(string name, ushort world) {
-        if (this._inviteToNoviceNetwork == null) {
+        if (_inviteToNoviceNetwork == null) {
             return;
         }
 
         // 6.3: 221EFD
-        var a1 = this.Plugin.Functions.GetInfoProxyByIndex(0x14);
+        var a1 = Plugin.Functions.GetInfoProxyByIndex(0x14);
 
         fixed (byte* namePtr = name.ToTerminatedBytes()) {
             // can specify content id if we have it, but there's no need
-            this._inviteToNoviceNetwork(a1, 0, world, namePtr);
+            _inviteToNoviceNetwork(a1, 0, world, namePtr);
         }
     }
 
@@ -66,48 +66,48 @@ internal sealed unsafe class Context {
     // 0x10006: search recipes using this material
 
     internal void TryOn(uint itemId, byte stainId) {
-        if (this._tryOn == null) {
+        if (_tryOn == null) {
             return;
         }
 
-        this._tryOn(0xFF, itemId, stainId, 0, 0);
+        _tryOn(0xFF, itemId, stainId, 0, 0);
     }
 
     internal void LinkItem(uint itemId) {
-        if (this._linkItem == null) {
+        if (_linkItem == null) {
             return;
         }
 
         var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.ChatLog);
-        this._linkItem(agent, itemId);
+        _linkItem(agent, itemId);
     }
 
     internal void OpenItemComparison(uint itemId) {
-        if (this._itemComparison == null) {
+        if (_itemComparison == null) {
             return;
         }
 
         var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.ItemCompare);
-        this._itemComparison(agent, 0x4D, itemId, 0);
+        _itemComparison(agent, 0x4D, itemId, 0);
     }
 
     internal void SearchForRecipesUsingItem(uint itemId) {
-        if (this._searchForRecipesUsingItem == null || this._searchForRecipesUsingItemVfunc is not { } offset) {
+        if (_searchForRecipesUsingItem == null || _searchForRecipesUsingItemVfunc is not { } offset) {
             return;
         }
 
         var uiModule = Framework.Instance()->GetUiModule();
         var vf = (delegate* unmanaged<UIModule*, IntPtr>) uiModule->vfunc[offset / 8];
         var a1 = vf(uiModule);
-        this._searchForRecipesUsingItem(a1, itemId);
+        _searchForRecipesUsingItem(a1, itemId);
     }
 
     internal void SearchForItem(uint itemId) {
-        if (this._searchForItem == null) {
+        if (_searchForItem == null) {
             return;
         }
 
         var itemFinder = Framework.Instance()->GetUiModule()->GetItemFinderModule();
-        this._searchForItem(itemFinder, itemId, 1);
+        _searchForItem(itemFinder, itemId, 1);
     }
 }

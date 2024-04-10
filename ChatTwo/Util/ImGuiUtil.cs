@@ -197,16 +197,16 @@ internal static class ImGuiUtil {
         }
     }
 
-    internal static void WarningText(string text) {
+    internal static void WarningText(string text, bool wrap = true) {
         var style = StyleModel.GetConfiguredStyle() ?? StyleModel.GetFromCurrent();
         var dalamudOrange = style.BuiltInColors?.DalamudOrange;
         if (dalamudOrange != null) {
             ImGui.PushStyleColor(ImGuiCol.Text, dalamudOrange.Value);
         }
 
-        ImGui.PushTextWrapPos();
+        if (wrap) ImGui.PushTextWrapPos();
         ImGui.TextUnformatted(text);
-        ImGui.PopTextWrapPos();
+        if (wrap) ImGui.PopTextWrapPos();
 
         if (dalamudOrange != null) {
             ImGui.PopStyleColor();

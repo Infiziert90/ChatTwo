@@ -17,6 +17,7 @@ internal class Configuration : IPluginConfiguration {
     public bool HideDuringCutscenes = true;
     public bool HideWhenNotLoggedIn = true;
     public bool HideWhenUiHidden = true;
+    public bool HideInLoadingScreens;
     public bool NativeItemTooltips = true;
     public bool PrettierTimestamps = true;
     public bool MoreCompactPretty;
@@ -50,6 +51,9 @@ internal class Configuration : IPluginConfiguration {
     public Dictionary<ChatType, uint> ChatColours = new();
     public List<Tab> Tabs = new();
 
+    public bool OverrideStyle = false;
+    public string ChosenStyle = "";
+
     public uint DatabaseMigration = LatestDbVersion;
 
     internal void UpdateFrom(Configuration other) {
@@ -57,6 +61,7 @@ internal class Configuration : IPluginConfiguration {
         HideDuringCutscenes = other.HideDuringCutscenes;
         HideWhenNotLoggedIn = other.HideWhenNotLoggedIn;
         HideWhenUiHidden = other.HideWhenUiHidden;
+        HideInLoadingScreens = other.HideInLoadingScreens;
         NativeItemTooltips = other.NativeItemTooltips;
         PrettierTimestamps = other.PrettierTimestamps;
         MoreCompactPretty = other.MoreCompactPretty;
@@ -88,6 +93,8 @@ internal class Configuration : IPluginConfiguration {
         ChatColours = other.ChatColours.ToDictionary(entry => entry.Key, entry => entry.Value);
         Tabs = other.Tabs.Select(t => t.Clone()).ToList();
         DatabaseMigration = other.DatabaseMigration;
+        OverrideStyle = other.OverrideStyle;
+        ChosenStyle = other.ChosenStyle;
     }
 
     public void Migrate() {

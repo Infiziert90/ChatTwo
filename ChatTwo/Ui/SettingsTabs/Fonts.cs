@@ -12,45 +12,45 @@ public class Fonts : ISettingsTab {
     private List<string> JpFonts { get; set; } = new();
 
     internal Fonts(Configuration mutable) {
-        this.Mutable = mutable;
-        this.UpdateFonts();
+        Mutable = mutable;
+        UpdateFonts();
     }
 
     private void UpdateFonts() {
-        this.GlobalFonts = Ui.Fonts.GetFonts();
-        this.JpFonts = Ui.Fonts.GetJpFonts();
+        GlobalFonts = Ui.Fonts.GetFonts();
+        JpFonts = Ui.Fonts.GetJpFonts();
     }
 
     public void Draw(bool changed) {
         if (changed) {
-            this.UpdateFonts();
+            UpdateFonts();
         }
 
         ImGui.PushTextWrapPos();
 
-        ImGui.Checkbox(Language.Options_FontsEnabled, ref this.Mutable.FontsEnabled);
+        ImGui.Checkbox(Language.Options_FontsEnabled, ref Mutable.FontsEnabled);
         ImGui.Spacing();
 
-        if (this.Mutable.FontsEnabled) {
-            if (ImGuiUtil.BeginComboVertical(Language.Options_Font_Name, this.Mutable.GlobalFont)) {
+        if (Mutable.FontsEnabled) {
+            if (ImGuiUtil.BeginComboVertical(Language.Options_Font_Name, Mutable.GlobalFont)) {
                 foreach (var font in Ui.Fonts.GlobalFonts) {
-                    if (ImGui.Selectable(font.Name, this.Mutable.GlobalFont == font.Name)) {
-                        this.Mutable.GlobalFont = font.Name;
+                    if (ImGui.Selectable(font.Name, Mutable.GlobalFont == font.Name)) {
+                        Mutable.GlobalFont = font.Name;
                     }
 
-                    if (ImGui.IsWindowAppearing() && this.Mutable.GlobalFont == font.Name) {
+                    if (ImGui.IsWindowAppearing() && Mutable.GlobalFont == font.Name) {
                         ImGui.SetScrollHereY(0.5f);
                     }
                 }
 
                 ImGui.Separator();
 
-                foreach (var name in this.GlobalFonts) {
-                    if (ImGui.Selectable(name, this.Mutable.GlobalFont == name)) {
-                        this.Mutable.GlobalFont = name;
+                foreach (var name in GlobalFonts) {
+                    if (ImGui.Selectable(name, Mutable.GlobalFont == name)) {
+                        Mutable.GlobalFont = name;
                     }
 
-                    if (ImGui.IsWindowAppearing() && this.Mutable.GlobalFont == name) {
+                    if (ImGui.IsWindowAppearing() && Mutable.GlobalFont == name) {
                         ImGui.SetScrollHereY(0.5f);
                     }
                 }
@@ -62,25 +62,25 @@ public class Fonts : ISettingsTab {
             ImGuiUtil.WarningText(Language.Options_Font_Warning);
             ImGui.Spacing();
 
-            if (ImGuiUtil.BeginComboVertical(Language.Options_JapaneseFont_Name, this.Mutable.JapaneseFont)) {
+            if (ImGuiUtil.BeginComboVertical(Language.Options_JapaneseFont_Name, Mutable.JapaneseFont)) {
                 foreach (var (name, _) in Ui.Fonts.JapaneseFonts) {
-                    if (ImGui.Selectable(name, this.Mutable.JapaneseFont == name)) {
-                        this.Mutable.JapaneseFont = name;
+                    if (ImGui.Selectable(name, Mutable.JapaneseFont == name)) {
+                        Mutable.JapaneseFont = name;
                     }
 
-                    if (ImGui.IsWindowAppearing() && this.Mutable.JapaneseFont == name) {
+                    if (ImGui.IsWindowAppearing() && Mutable.JapaneseFont == name) {
                         ImGui.SetScrollHereY(0.5f);
                     }
                 }
 
                 ImGui.Separator();
 
-                foreach (var family in this.JpFonts) {
-                    if (ImGui.Selectable(family, this.Mutable.JapaneseFont == family)) {
-                        this.Mutable.JapaneseFont = family;
+                foreach (var family in JpFonts) {
+                    if (ImGui.Selectable(family, Mutable.JapaneseFont == family)) {
+                        Mutable.JapaneseFont = family;
                     }
 
-                    if (ImGui.IsWindowAppearing() && this.Mutable.JapaneseFont == family) {
+                    if (ImGui.IsWindowAppearing() && Mutable.JapaneseFont == family) {
                         ImGui.SetScrollHereY(0.5f);
                     }
                 }
@@ -94,12 +94,12 @@ public class Fonts : ISettingsTab {
             if (ImGui.CollapsingHeader(Language.Options_ExtraGlyphs_Name)) {
                 ImGuiUtil.HelpText(string.Format(Language.Options_ExtraGlyphs_Description, Plugin.PluginName));
 
-                var range = (int) this.Mutable.ExtraGlyphRanges;
+                var range = (int) Mutable.ExtraGlyphRanges;
                 foreach (var extra in Enum.GetValues<ExtraGlyphRanges>()) {
                     ImGui.CheckboxFlags(extra.Name(), ref range, (int) extra);
                 }
 
-                this.Mutable.ExtraGlyphRanges = (ExtraGlyphRanges) range;
+                Mutable.ExtraGlyphRanges = (ExtraGlyphRanges) range;
             }
 
             ImGui.Spacing();
@@ -108,9 +108,9 @@ public class Fonts : ISettingsTab {
         const float speed = .0125f;
         const float min = 8f;
         const float max = 36f;
-        ImGuiUtil.DragFloatVertical(Language.Options_FontSize_Name, ref this.Mutable.FontSize, speed, min, max, $"{this.Mutable.FontSize:N1}");
-        ImGuiUtil.DragFloatVertical(Language.Options_JapaneseFontSize_Name, ref this.Mutable.JapaneseFontSize, speed, min, max, $"{this.Mutable.JapaneseFontSize:N1}");
-        ImGuiUtil.DragFloatVertical(Language.Options_SymbolsFontSize_Name, ref this.Mutable.SymbolsFontSize, speed, min, max, $"{this.Mutable.SymbolsFontSize:N1}");
+        ImGuiUtil.DragFloatVertical(Language.Options_FontSize_Name, ref Mutable.FontSize, speed, min, max, $"{Mutable.FontSize:N1}");
+        ImGuiUtil.DragFloatVertical(Language.Options_JapaneseFontSize_Name, ref Mutable.JapaneseFontSize, speed, min, max, $"{Mutable.JapaneseFontSize:N1}");
+        ImGuiUtil.DragFloatVertical(Language.Options_SymbolsFontSize_Name, ref Mutable.SymbolsFontSize, speed, min, max, $"{Mutable.SymbolsFontSize:N1}");
         ImGuiUtil.HelpText(Language.Options_SymbolsFontSize_Description);
 
         ImGui.PopTextWrapPos();

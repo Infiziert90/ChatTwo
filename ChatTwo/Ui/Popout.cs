@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using Dalamud.Interface.Style;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
 
@@ -16,16 +17,17 @@ internal class Popout : Window
         Tab = tab;
         Idx = idx;
 
+        Size = new Vector2(350, 350);
         SizeCondition = ImGuiCond.FirstUseEver;
-        SizeConstraints = new WindowSizeConstraints
-        {
-            MinimumSize = new Vector2(350, 350),
-            MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
-        };
     }
 
     public override void PreDraw()
     {
+        if (ChatLogWindow.Plugin.Config.OverrideStyle)
+        {
+            var styles = StyleModel.GetConfiguredStyles();
+            styles?.First(style => style.Name.Equals(ChatLogWindow.Plugin.Config.ChosenStyle)).Push();
+        }
         Flags = ImGuiWindowFlags.None;
         if (!ChatLogWindow.Plugin.Config.ShowPopOutTitleBar)
             Flags |= ImGuiWindowFlags.NoTitleBar;
@@ -53,7 +55,13 @@ internal class Popout : Window
 
     public override void PostDraw()
     {
+
         ChatLogWindow.PopOutDocked[Idx] = ImGui.IsWindowDocked();
+        if (ChatLogWindow.Plugin.Config.OverrideStyle)
+        {
+            var styles = StyleModel.GetConfiguredStyles();
+            styles?.First(style => style.Name.Equals(ChatLogWindow.Plugin.Config.ChosenStyle)).Pop();
+        }
     }
 
     public override void OnClose()

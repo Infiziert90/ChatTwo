@@ -1,9 +1,11 @@
 using System.Diagnostics;
 using System.Globalization;
+using System.Reflection;
 using ChatTwo.Ipc;
 using ChatTwo.Resources;
 using ChatTwo.Ui;
 using ChatTwo.Util;
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects;
 using Dalamud.Interface.Windowing;
 using Dalamud.IoC;
@@ -15,7 +17,8 @@ using XivCommon;
 namespace ChatTwo;
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public sealed class Plugin : IDalamudPlugin {
+public sealed class Plugin : IDalamudPlugin
+{
     internal const string PluginName = "Chat 2";
 
     [PluginService] internal static IPluginLog Log { get; private set; } = null!;
@@ -37,11 +40,14 @@ public sealed class Plugin : IDalamudPlugin {
     [PluginService] internal static INotificationManager Notification { get; private set; } = null!;
     [PluginService] internal static IAddonLifecycle AddonLifecycle { get; private set; } = null!;
 
-    public readonly WindowSystem WindowSystem = new(PluginName);
+    public const string Authors = "Infi, Anna";
+    public static readonly string Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "Unknown";
 
+    public readonly WindowSystem WindowSystem = new(PluginName);
     public SettingsWindow SettingsWindow { get; }
     public ChatLogWindow ChatLogWindow { get; }
     public CommandHelpWindow CommandHelpWindow { get; }
+    public SeStringDebugger SeStringDebugger { get; }
 
     internal Configuration Config { get; }
     internal Commands Commands { get; }
@@ -58,7 +64,8 @@ public sealed class Plugin : IDalamudPlugin {
     internal DateTime GameStarted { get; }
 
     #pragma warning disable CS8618
-    public Plugin() {
+    public Plugin()
+    {
         GameStarted = Process.GetCurrentProcess().StartTime.ToUniversalTime();
 
         Config = Interface.GetPluginConfig() as Configuration ?? new Configuration();
@@ -81,10 +88,12 @@ public sealed class Plugin : IDalamudPlugin {
         ChatLogWindow = new ChatLogWindow(this);
         SettingsWindow = new SettingsWindow(this);
         CommandHelpWindow = new CommandHelpWindow(ChatLogWindow);
+        SeStringDebugger = new SeStringDebugger(this);
 
         WindowSystem.AddWindow(ChatLogWindow);
         WindowSystem.AddWindow(SettingsWindow);
         WindowSystem.AddWindow(CommandHelpWindow);
+        WindowSystem.AddWindow(SeStringDebugger);
         FontManager.BuildFonts();
 
         Interface.UiBuilder.DisableCutsceneUiHide = true;
@@ -105,7 +114,8 @@ public sealed class Plugin : IDalamudPlugin {
     }
     #pragma warning restore CS8618
 
-    public void Dispose() {
+    public void Dispose()
+    {
         Interface.LanguageChanged -= LanguageChanged;
         Interface.UiBuilder.Draw -= Draw;
         Framework.Update -= FrameworkUpdate;
@@ -114,6 +124,7 @@ public sealed class Plugin : IDalamudPlugin {
         WindowSystem.RemoveAllWindows();
         ChatLogWindow.Dispose();
         SettingsWindow.Dispose();
+        SeStringDebugger.Dispose();
 
         ExtraChat.Dispose();
         Ipc.Dispose();
@@ -126,6 +137,10 @@ public sealed class Plugin : IDalamudPlugin {
 
     private void Draw()
     {
+
+        if (Config.HideInLoadingScreens && Condition[ConditionFlag.BetweenAreas])
+            return;
+
         Interface.UiBuilder.DisableUserUiHide = !Config.HideWhenUiHidden;
         ChatLogWindow.DefaultText = ImGui.GetStyle().Colors[(int) ImGuiCol.Text];
 
@@ -135,11 +150,13 @@ public sealed class Plugin : IDalamudPlugin {
         }
     }
 
-    internal void SaveConfig() {
+    internal void SaveConfig()
+    {
         Interface.SavePluginConfig(Config);
     }
 
-    internal void LanguageChanged(string langCode) {
+    internal void LanguageChanged(string langCode)
+    {
         var info = Config.LanguageOverride is LanguageOverride.None
             ? new CultureInfo(langCode)
             : new CultureInfo(Config.LanguageOverride.Code());
@@ -147,15 +164,17 @@ public sealed class Plugin : IDalamudPlugin {
         Language.Culture = info;
     }
 
-    private static readonly string[] ChatAddonNames = {
+    private static readonly string[] ChatAddonNames =
+    [
         "ChatLog",
         "ChatLogPanel_0",
         "ChatLogPanel_1",
         "ChatLogPanel_2",
-        "ChatLogPanel_3",
-    };
+        "ChatLogPanel_3"
+    ];
 
-    private void FrameworkUpdate(IFramework framework) {
+    private void FrameworkUpdate(IFramework framework)
+    {
         if (DeferredSaveFrames >= 0 && DeferredSaveFrames-- == 0) {
             SaveConfig();
         }

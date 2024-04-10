@@ -13,8 +13,8 @@ internal sealed class ChatColours : ISettingsTab {
     public string Name => Language.Options_ChatColours_Tab + "###tabs-chat-colours";
 
     internal ChatColours(Configuration mutable, Plugin plugin) {
-        this.Mutable = mutable;
-        this.Plugin = plugin;
+        Mutable = mutable;
+        Plugin = plugin;
 
         #if DEBUG
         var sortable = ChatTypeExt.SortOrder
@@ -36,23 +36,23 @@ internal sealed class ChatColours : ISettingsTab {
         foreach (var (_, types) in ChatTypeExt.SortOrder) {
             foreach (var type in types) {
                 if (ImGuiUtil.IconButton(FontAwesomeIcon.UndoAlt, $"{type}", Language.Options_ChatColours_Reset)) {
-                    this.Mutable.ChatColours.Remove(type);
+                    Mutable.ChatColours.Remove(type);
                 }
 
                 ImGui.SameLine();
 
                 if (ImGuiUtil.IconButton(FontAwesomeIcon.LongArrowAltDown, $"{type}", Language.Options_ChatColours_Import)) {
-                    var gameColour = this.Plugin.Functions.Chat.GetChannelColour(type);
-                    this.Mutable.ChatColours[type] = gameColour ?? type.DefaultColour() ?? 0;
+                    var gameColour = Plugin.Functions.Chat.GetChannelColour(type);
+                    Mutable.ChatColours[type] = gameColour ?? type.DefaultColour() ?? 0;
                 }
 
                 ImGui.SameLine();
 
-                var vec = this.Mutable.ChatColours.TryGetValue(type, out var colour)
+                var vec = Mutable.ChatColours.TryGetValue(type, out var colour)
                     ? ColourUtil.RgbaToVector3(colour)
                     : ColourUtil.RgbaToVector3(type.DefaultColour() ?? 0);
                 if (ImGui.ColorEdit3(type.Name(), ref vec, ImGuiColorEditFlags.NoInputs)) {
-                    this.Mutable.ChatColours[type] = ColourUtil.Vector3ToRgba(vec);
+                    Mutable.ChatColours[type] = ColourUtil.Vector3ToRgba(vec);
                 }
             }
         }

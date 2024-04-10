@@ -6,8 +6,8 @@ internal class AutoCompleteInfo {
     internal int EndPos { get; }
 
     internal AutoCompleteInfo(string toComplete, int startPos, int endPos) {
-        this.ToComplete = toComplete;
-        this.StartPos = startPos;
-        this.EndPos = endPos;
+        ToComplete = toComplete;
+        StartPos = startPos;
+        EndPos = endPos;
     }
 }

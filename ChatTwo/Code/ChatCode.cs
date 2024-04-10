@@ -10,24 +10,24 @@ internal class ChatCode {
     internal ChatType Type { get; }
     internal ChatSource Source { get; }
     internal ChatSource Target { get; }
-    private ChatSource SourceFrom(ushort shift) => (ChatSource) (1 << ((this.Raw >> shift) & 0xF));
+    private ChatSource SourceFrom(ushort shift) => (ChatSource) (1 << ((Raw >> shift) & 0xF));
 
     internal ChatCode(ushort raw) {
-        this.Raw = raw;
-        this.Type = (ChatType) (this.Raw & Clear7);
-        this.Source = this.SourceFrom(11);
-        this.Target = this.SourceFrom(7);
+        Raw = raw;
+        Type = (ChatType) (Raw & Clear7);
+        Source = SourceFrom(11);
+        Target = SourceFrom(7);
     }
 
     [BsonCtor]
     public ChatCode(ushort raw, ChatType type, ChatSource source, ChatSource target) {
-        this.Raw = raw;
-        this.Type = type;
-        this.Source = source;
-        this.Target = target;
+        Raw = raw;
+        Type = type;
+        Source = source;
+        Target = target;
     }
 
-    internal ChatType Parent() => this.Type switch {
+    internal ChatType Parent() => Type switch {
         ChatType.Say => ChatType.Say,
         ChatType.GmSay => ChatType.Say,
         ChatType.Shout => ChatType.Shout,
@@ -81,11 +81,11 @@ internal class ChatCode {
         ChatType.FreeCompanyLoginLogout => ChatType.FreeCompanyAnnouncement,
         ChatType.PvpTeamAnnouncement => ChatType.PvpTeamAnnouncement,
         ChatType.PvpTeamLoginLogout => ChatType.PvpTeamAnnouncement,
-        _ => this.Type,
+        _ => Type,
     };
 
     internal bool IsBattle() {
-        switch (this.Type) {
+        switch (Type) {
             case ChatType.Damage:
             case ChatType.Miss:
             case ChatType.Action:

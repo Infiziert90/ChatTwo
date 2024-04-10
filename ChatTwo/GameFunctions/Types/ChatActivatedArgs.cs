@@ -8,6 +8,6 @@ internal sealed class ChatActivatedArgs {
     internal TellTarget? TellTarget { get; init; }
 
     internal ChatActivatedArgs(ChannelSwitchInfo channelSwitchInfo) {
-        this.ChannelSwitchInfo = channelSwitchInfo;
+        ChannelSwitchInfo = channelSwitchInfo;
     }
 }

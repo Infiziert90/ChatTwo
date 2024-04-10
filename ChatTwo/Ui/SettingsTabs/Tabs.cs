@@ -15,8 +15,8 @@ internal sealed class Tabs : ISettingsTab {
     private int _toOpen = -2;
 
     internal Tabs(Plugin plugin, Configuration mutable) {
-        this.Plugin = plugin;
-        this.Mutable = mutable;
+        Plugin = plugin;
+        Mutable = mutable;
     }
 
     public void Draw(bool changed) {
@@ -28,29 +28,29 @@ internal sealed class Tabs : ISettingsTab {
 
         if (ImGui.BeginPopup(addTabPopup)) {
             if (ImGui.Selectable(Language.Options_Tabs_NewTab)) {
-                this.Mutable.Tabs.Add(new Tab());
+                Mutable.Tabs.Add(new Tab());
             }
 
             ImGui.Separator();
 
             if (ImGui.Selectable(string.Format(Language.Options_Tabs_Preset, Language.Tabs_Presets_General))) {
-                this.Mutable.Tabs.Add(TabsUtil.VanillaGeneral);
+                Mutable.Tabs.Add(TabsUtil.VanillaGeneral);
             }
 
             if (ImGui.Selectable(string.Format(Language.Options_Tabs_Preset, Language.Tabs_Presets_Event))) {
-                this.Mutable.Tabs.Add(TabsUtil.VanillaEvent);
+                Mutable.Tabs.Add(TabsUtil.VanillaEvent);
             }
 
             ImGui.EndPopup();
         }
 
         var toRemove = -1;
-        var doOpens = this._toOpen > -2;
-        for (var i = 0; i < this.Mutable.Tabs.Count; i++) {
-            var tab = this.Mutable.Tabs[i];
+        var doOpens = _toOpen > -2;
+        for (var i = 0; i < Mutable.Tabs.Count; i++) {
+            var tab = Mutable.Tabs[i];
 
             if (doOpens) {
-                ImGui.SetNextItemOpen(i == this._toOpen);
+                ImGui.SetNextItemOpen(i == _toOpen);
             }
 
             if (ImGui.TreeNodeEx($"{tab.Name}###tab-{i}")) {
@@ -58,21 +58,21 @@ internal sealed class Tabs : ISettingsTab {
 
                 if (ImGuiUtil.IconButton(FontAwesomeIcon.TrashAlt, tooltip: Language.Options_Tabs_Delete)) {
                     toRemove = i;
-                    this._toOpen = -1;
+                    _toOpen = -1;
                 }
 
                 ImGui.SameLine();
 
                 if (ImGuiUtil.IconButton(FontAwesomeIcon.ArrowUp, tooltip: Language.Options_Tabs_MoveUp) && i > 0) {
-                    (this.Mutable.Tabs[i - 1], this.Mutable.Tabs[i]) = (this.Mutable.Tabs[i], this.Mutable.Tabs[i - 1]);
-                    this._toOpen = i - 1;
+                    (Mutable.Tabs[i - 1], Mutable.Tabs[i]) = (Mutable.Tabs[i], Mutable.Tabs[i - 1]);
+                    _toOpen = i - 1;
                 }
 
                 ImGui.SameLine();
 
-                if (ImGuiUtil.IconButton(FontAwesomeIcon.ArrowDown, tooltip: Language.Options_Tabs_MoveDown) && i < this.Mutable.Tabs.Count - 1) {
-                    (this.Mutable.Tabs[i + 1], this.Mutable.Tabs[i]) = (this.Mutable.Tabs[i], this.Mutable.Tabs[i + 1]);
-                    this._toOpen = i + 1;
+                if (ImGuiUtil.IconButton(FontAwesomeIcon.ArrowDown, tooltip: Language.Options_Tabs_MoveDown) && i < Mutable.Tabs.Count - 1) {
+                    (Mutable.Tabs[i + 1], Mutable.Tabs[i]) = (Mutable.Tabs[i], Mutable.Tabs[i + 1]);
+                    _toOpen = i + 1;
                 }
 
                 ImGui.InputText(Language.Options_Tabs_Name, ref tab.Name, 512, ImGuiInputTextFlags.EnterReturnsTrue);
@@ -160,7 +160,7 @@ internal sealed class Tabs : ISettingsTab {
                     ImGui.TreePop();
                 }
 
-                if (this.Plugin.ExtraChat.ChannelNames.Count > 0 && ImGui.TreeNodeEx(Language.Options_Tabs_ExtraChatChannels)) {
+                if (Plugin.ExtraChat.ChannelNames.Count > 0 && ImGui.TreeNodeEx(Language.Options_Tabs_ExtraChatChannels)) {
                     ImGui.Checkbox(Language.Options_Tabs_ExtraChatAll, ref tab.ExtraChatAll);
 
                     ImGui.Separator();
@@ -169,7 +169,7 @@ internal sealed class Tabs : ISettingsTab {
                         ImGui.BeginDisabled();
                     }
 
-                    foreach (var (id, name) in this.Plugin.ExtraChat.ChannelNames) {
+                    foreach (var (id, name) in Plugin.ExtraChat.ChannelNames) {
                         var enabled = tab.ExtraChatChannels.Contains(id);
                         if (!ImGui.Checkbox($"{name}##ec-{id}", ref enabled)) {
                             continue;
@@ -196,11 +196,11 @@ internal sealed class Tabs : ISettingsTab {
         }
 
         if (toRemove > -1) {
-            this.Mutable.Tabs.RemoveAt(toRemove);
+            Mutable.Tabs.RemoveAt(toRemove);
         }
 
         if (doOpens) {
-            this._toOpen = -2;
+            _toOpen = -2;
         }
     }
 }

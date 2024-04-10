@@ -1,5 +1,6 @@
 using ChatTwo.Resources;
 using ChatTwo.Util;
+using Dalamud.Interface.Style;
 using ImGuiNET;
 
 namespace ChatTwo.Ui.SettingsTabs;
@@ -38,6 +39,12 @@ internal sealed class Display : ISettingsTab {
             Language.Options_HideWhenUiHidden_Name,
             string.Format(Language.Options_HideWhenUiHidden_Description, Plugin.PluginName)
         );
+        ImGui.Spacing();
+
+        ImGuiUtil.OptionCheckbox(
+            ref Mutable.HideInLoadingScreens,
+            Language.Options_HideInLoadingScreens_Name,
+            string.Format(Language.Options_HideInLoadingScreens_Description, Plugin.PluginName));
         ImGui.Spacing();
 
         ImGuiUtil.OptionCheckbox(
@@ -87,6 +94,24 @@ internal sealed class Display : ISettingsTab {
         ImGui.Spacing();
 
         ImGuiUtil.OptionCheckbox(ref Mutable.ShowPopOutTitleBar, Language.Options_ShowPopOutTitleBar_Name);
+        ImGui.Spacing();
+
+        ImGuiUtil.OptionCheckbox(ref Mutable.OverrideStyle, Language.Options_OverrideStyle_Name, Language.Options_OverrideStyle_Name_Desc);
+        ImGui.Spacing();
+
+        if (Mutable.OverrideStyle)
+        {
+            var currentStyle = Mutable.ChosenStyle.Equals("") ? StyleModel.GetConfiguredStyle().Name : Mutable.ChosenStyle;
+            if (ImGui.BeginCombo(Language.Options_OverrideStyleDropdown_Name, currentStyle)) {
+                foreach (var style in StyleModel.GetConfiguredStyles()) {
+                    if (ImGui.Selectable(style.Name, Mutable.ChosenStyle == style.Name)) {
+                        Mutable.ChosenStyle = style.Name;
+                    }
+                }
+
+                ImGui.EndCombo();
+            }
+        }
         ImGui.Spacing();
 
         ImGui.PopTextWrapPos();

@@ -25,57 +25,57 @@ internal sealed unsafe class Party {
     private Plugin Plugin { get; }
 
     internal Party(Plugin plugin) {
-        this.Plugin = plugin;
+        Plugin = plugin;
         Plugin.GameInteropProvider.InitializeFromAttributes(this);
     }
 
     internal void InviteSameWorld(string name, ushort world, ulong contentId) {
-        if (this._inviteToParty == null) {
+        if (_inviteToParty == null) {
             return;
         }
 
         // 6.11: 214A55
-        var a1 = this.Plugin.Functions.GetInfoProxyByIndex(2);
+        var a1 = Plugin.Functions.GetInfoProxyByIndex(2);
         fixed (byte* namePtr = name.ToTerminatedBytes()) {
             // this only works if target is on the same world
-            this._inviteToParty(a1, contentId, namePtr, world);
+            _inviteToParty(a1, contentId, namePtr, world);
         }
     }
 
     internal void InviteOtherWorld(ulong contentId) {
-        if (this._inviteToPartyContentId == null) {
+        if (_inviteToPartyContentId == null) {
             return;
         }
 
         // 6.11: 214A55
-        var a1 = this.Plugin.Functions.GetInfoProxyByIndex(2);
+        var a1 = Plugin.Functions.GetInfoProxyByIndex(2);
         if (contentId != 0) {
             // third param is world, but it requires a specific world
             // if they're not on that world, it will fail
             // pass 0 and it will work on any world EXCEPT for the world the
             // current player is on
-            this._inviteToPartyContentId(a1, contentId, 0);
+            _inviteToPartyContentId(a1, contentId, 0);
         }
     }
 
     internal void InviteInInstance(ulong contentId) {
-        if (this._inviteToPartyInInstance == null) {
+        if (_inviteToPartyInInstance == null) {
             return;
         }
 
         // 6.11: 214A55
-        var a1 = this.Plugin.Functions.GetInfoProxyByIndex(2);
+        var a1 = Plugin.Functions.GetInfoProxyByIndex(2);
         if (contentId != 0) {
             // third param is world, but it requires a specific world
             // if they're not on that world, it will fail
             // pass 0 and it will work on any world EXCEPT for the world the
             // current player is on
-            this._inviteToPartyInInstance(a1, contentId);
+            _inviteToPartyInInstance(a1, contentId);
         }
     }
 
     internal void Kick(string name, ulong contentId) {
-        if (this._kick == null) {
+        if (_kick == null) {
             return;
         }
 
@@ -85,12 +85,12 @@ internal sealed unsafe class Party {
         }
 
         fixed (byte* namePtr = name.ToTerminatedBytes()) {
-            this._kick(agent, namePtr, 0, contentId);
+            _kick(agent, namePtr, 0, contentId);
         }
     }
 
     internal void Promote(string name, ulong contentId) {
-        if (this._promote == null) {
+        if (_promote == null) {
             return;
         }
 
@@ -100,7 +100,7 @@ internal sealed unsafe class Party {
         }
 
         fixed (byte* namePtr = name.ToTerminatedBytes()) {
-            this._promote(agent, namePtr, 0, contentId);
+            _promote(agent, namePtr, 0, contentId);
         }
     }
 }
