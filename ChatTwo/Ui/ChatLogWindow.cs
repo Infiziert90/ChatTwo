@@ -559,14 +559,15 @@ public sealed class ChatLogWindow : Window, IUiComponent {
                     name += $": {lsName}";
                 }
 
-                if (channel.IsExtraChatLinkshell() && Plugin.ExtraChat.ChannelNames.Count == 0) {
-                    // Sadly the ExtraChat IPC doesn't provide a method to
-                    // lookup what channel numbers are assigned, or what the
-                    // channel names are.
-                    //
-                    // Show all ExtraChat options if the user is in at least
-                    // one channel.
-                    continue;
+                if (channel.IsExtraChatLinkshell()) {
+                    // Check if the linkshell with this index is registered in
+                    // the ExtraChat plugin by seeing if the command is
+                    // registered. The command gets registered only if a
+                    // linkshell is assigned (and even gets unassigned if the
+                    // index changes!).
+                    if (!Plugin.CommandManager.Commands.ContainsKey(channel.Prefix())) {
+                        continue;
+                    }
                 }
 
                 if (ImGui.Selectable(name)) {
@@ -702,11 +703,21 @@ public sealed class ChatLogWindow : Window, IUiComponent {
     internal void SetChannel(InputChannel? channel)
     {
         channel ??= InputChannel.Say;
-
         _tellTarget = null;
+
+        // Instead of calling SetChannel(), we ask the ExtraChat plugin to set a
+        // channel override by just calling the command directly.
         if (channel.Value.IsExtraChatLinkshell()) {
-            // Instead of calling SetChannel(), we ask the ExtraChat plugin to
-            // set a channel override by just calling the command directly.
+            // Check that the command is registered in Dalamud so the game code
+            // never sees the command itself.
+            if (!Plugin.CommandManager.Commands.ContainsKey(channel.Value.Prefix())) {
+                return;
+            }
+
+            // Send the command through the game chat. We can't call
+            // ICommandManager.ProcessCommand() here because ExtraChat only
+            // registers stub handlers and actually processes its commands in a
+            // SendMessage detour.
             var bytes = Encoding.UTF8.GetBytes(channel.Value.Prefix());
             Plugin.Common.Functions.Chat.SendMessageUnsafe(bytes);
             return;
