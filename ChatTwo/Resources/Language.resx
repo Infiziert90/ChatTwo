@@ -920,4 +920,7 @@
     <data name="Options_About_Discord_Thread" xml:space="preserve">
         <value>Get help in the discord thread: </value>
     </data>
+    <data name="Options_OverrideStyle_Name_Desc" xml:space="preserve">
+        <value>Override your selected dalamud style with a different one</value>
+    </data>
 </root>

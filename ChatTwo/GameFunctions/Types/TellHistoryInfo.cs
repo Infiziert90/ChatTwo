@@ -6,8 +6,8 @@ internal sealed class TellHistoryInfo {
     internal ulong ContentId { get; }
 
     internal TellHistoryInfo(string name, uint world, ulong contentId) {
-        this.Name = name;
-        this.World = world;
-        this.ContentId = contentId;
+        Name = name;
+        World = world;
+        ContentId = contentId;
     }
 }

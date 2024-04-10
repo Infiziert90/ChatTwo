@@ -66,26 +66,26 @@ internal unsafe class GameFunctions : IDisposable {
     internal Context Context { get; }
 
     internal GameFunctions(Plugin plugin) {
-        this.Plugin = plugin;
-        this.Party = new Party(this.Plugin);
-        this.Chat = new Chat(this.Plugin);
-        this.Context = new Context(this.Plugin);
+        Plugin = plugin;
+        Party = new Party(Plugin);
+        Chat = new Chat(Plugin);
+        Context = new Context(Plugin);
 
         Plugin.GameInteropProvider.InitializeFromAttributes(this);
 
-        this.ResolveTextCommandPlaceholderHook?.Enable();
+        ResolveTextCommandPlaceholderHook?.Enable();
     }
 
     public void Dispose() {
-        this.Chat.Dispose();
+        Chat.Dispose();
 
-        this.ResolveTextCommandPlaceholderHook?.Dispose();
+        ResolveTextCommandPlaceholderHook?.Dispose();
 
-        Marshal.FreeHGlobal(this._placeholderNamePtr);
+        Marshal.FreeHGlobal(_placeholderNamePtr);
     }
 
     private IntPtr GetInfoModule() {
-        if (this._infoModuleVfunc is not { } vfunc) {
+        if (_infoModuleVfunc is not { } vfunc) {
             return IntPtr.Zero;
         }
 
@@ -95,25 +95,25 @@ internal unsafe class GameFunctions : IDisposable {
     }
 
     internal IntPtr GetInfoProxyByIndex(uint idx) {
-        var infoModule = this.GetInfoModule();
-        return infoModule == IntPtr.Zero ? IntPtr.Zero : this._getInfoProxyByIndex(infoModule, idx);
+        var infoModule = GetInfoModule();
+        return infoModule == IntPtr.Zero ? IntPtr.Zero : _getInfoProxyByIndex(infoModule, idx);
     }
 
     internal uint? GetCurrentChatLogEntryIndex() {
-        if (this._currentChatEntryOffset == null) {
+        if (_currentChatEntryOffset == null) {
             return null;
         }
 
         var log = (IntPtr) Framework.Instance()->GetUiModule()->GetRaptureLogModule();
-        return *(uint*) (log + this._currentChatEntryOffset.Value);
+        return *(uint*) (log + _currentChatEntryOffset.Value);
     }
 
     internal void SendFriendRequest(string name, ushort world) {
-        this.ListCommand(name, world, "friendlist");
+        ListCommand(name, world, "friendlist");
     }
 
     internal void AddToBlacklist(string name, ushort world) {
-        this.ListCommand(name, world, "blist");
+        ListCommand(name, world, "blist");
     }
 
     private void ListCommand(string name, ushort world, string commandName) {
@@ -123,8 +123,8 @@ internal unsafe class GameFunctions : IDisposable {
         }
 
         var worldName = row.Name.RawString;
-        this._replacementName = $"{name}@{worldName}";
-        this.Plugin.Common.Functions.Chat.SendMessage($"/{commandName} add {this._placeholder}");
+        _replacementName = $"{name}@{worldName}";
+        Plugin.Common.Functions.Chat.SendMessage($"/{commandName} add {_placeholder}");
     }
 
     internal static void SetAddonInteractable(string name, bool interactable) {
@@ -236,41 +236,41 @@ internal unsafe class GameFunctions : IDisposable {
     }
 
     internal bool IsMentor() {
-        if (this._isMentor == null || this._isMentorA1 == null || this._isMentorA1.Value == IntPtr.Zero) {
+        if (_isMentor == null || _isMentorA1 == null || _isMentorA1.Value == IntPtr.Zero) {
             return false;
         }
 
-        return this._isMentor(this._isMentorA1.Value) > 0;
+        return _isMentor(_isMentorA1.Value) > 0;
     }
 
     internal void OpenPartyFinder(uint id) {
-        if (this._openPartyFinder == null) {
+        if (_openPartyFinder == null) {
             return;
         }
 
         var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.LookingForGroup);
         if (agent != null) {
-            this._openPartyFinder(agent, id);
+            _openPartyFinder(agent, id);
         }
     }
 
     internal void OpenAchievement(uint id) {
-        if (this._openAchievement == null) {
+        if (_openAchievement == null) {
             return;
         }
 
         var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.Achievement);
         if (agent != null) {
-            this._openAchievement(agent, id);
+            _openAchievement(agent, id);
         }
     }
 
     internal bool IsInInstance() {
-        if (this._inInstance == null) {
+        if (_inInstance == null) {
             return false;
         }
 
-        return this._inInstance() != 0;
+        return _inInstance() != 0;
     }
 
     internal bool TryOpenAdventurerPlate(ulong playerId)
@@ -304,21 +304,21 @@ internal unsafe class GameFunctions : IDisposable {
     private string? _replacementName;
 
     private IntPtr ResolveTextCommandPlaceholderDetour(IntPtr a1, byte* placeholderText, byte a3, byte a4) {
-        if (this._replacementName == null) {
+        if (_replacementName == null) {
             goto Original;
         }
 
         var placeholder = MemoryHelper.ReadStringNullTerminated((IntPtr) placeholderText);
-        if (placeholder != this._placeholder) {
+        if (placeholder != _placeholder) {
             goto Original;
         }
 
-        MemoryHelper.WriteString(this._placeholderNamePtr, this._replacementName);
-        this._replacementName = null;
+        MemoryHelper.WriteString(_placeholderNamePtr, _replacementName);
+        _replacementName = null;
 
-        return this._placeholderNamePtr;
+        return _placeholderNamePtr;
 
         Original:
-        return this.ResolveTextCommandPlaceholderHook!.Original(a1, placeholderText, a3, a4);
+        return ResolveTextCommandPlaceholderHook!.Original(a1, placeholderText, a3, a4);
     }
 }

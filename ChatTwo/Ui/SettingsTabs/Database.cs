@@ -11,36 +11,36 @@ internal sealed class Database : ISettingsTab {
     public string Name => Language.Options_Database_Tab + "###tabs-database";
 
     internal Database(Configuration mutable, Store store) {
-        this.Store = store;
-        this.Mutable = mutable;
+        Store = store;
+        Mutable = mutable;
     }
 
     private bool _showAdvanced;
 
     public void Draw(bool changed) {
         if (changed) {
-            this._showAdvanced = ImGui.GetIO().KeyShift;
+            _showAdvanced = ImGui.GetIO().KeyShift;
         }
 
-        ImGuiUtil.OptionCheckbox(ref this.Mutable.DatabaseBattleMessages, Language.Options_DatabaseBattleMessages_Name, Language.Options_DatabaseBattleMessages_Description);
+        ImGuiUtil.OptionCheckbox(ref Mutable.DatabaseBattleMessages, Language.Options_DatabaseBattleMessages_Name, Language.Options_DatabaseBattleMessages_Description);
         ImGui.Spacing();
 
-        if (ImGuiUtil.OptionCheckbox(ref this.Mutable.LoadPreviousSession, Language.Options_LoadPreviousSession_Name, Language.Options_LoadPreviousSession_Description)) {
-            if (this.Mutable.LoadPreviousSession) {
-                this.Mutable.FilterIncludePreviousSessions = true;
+        if (ImGuiUtil.OptionCheckbox(ref Mutable.LoadPreviousSession, Language.Options_LoadPreviousSession_Name, Language.Options_LoadPreviousSession_Description)) {
+            if (Mutable.LoadPreviousSession) {
+                Mutable.FilterIncludePreviousSessions = true;
             }
         }
 
         ImGui.Spacing();
 
-        if (ImGuiUtil.OptionCheckbox(ref this.Mutable.FilterIncludePreviousSessions, Language.Options_FilterIncludePreviousSessions_Name, Language.Options_FilterIncludePreviousSessions_Description)) {
-            if (!this.Mutable.FilterIncludePreviousSessions) {
-                this.Mutable.LoadPreviousSession = false;
+        if (ImGuiUtil.OptionCheckbox(ref Mutable.FilterIncludePreviousSessions, Language.Options_FilterIncludePreviousSessions_Name, Language.Options_FilterIncludePreviousSessions_Description)) {
+            if (!Mutable.FilterIncludePreviousSessions) {
+                Mutable.LoadPreviousSession = false;
             }
         }
 
         ImGuiUtil.OptionCheckbox(
-            ref this.Mutable.SharedMode,
+            ref Mutable.SharedMode,
             Language.Options_SharedMode_Name,
             string.Format(Language.Options_SharedMode_Description, Plugin.PluginName)
         );
@@ -48,16 +48,16 @@ internal sealed class Database : ISettingsTab {
 
         ImGui.Spacing();
 
-        if (this._showAdvanced && ImGui.TreeNodeEx(Language.Options_Database_Advanced)) {
+        if (_showAdvanced && ImGui.TreeNodeEx(Language.Options_Database_Advanced)) {
             ImGui.PushTextWrapPos();
             ImGuiUtil.WarningText(Language.Options_Database_Advanced_Warning);
 
             if (ImGui.Button("Checkpoint")) {
-                this.Store.Database.Checkpoint();
+                Store.Database.Checkpoint();
             }
 
             if (ImGui.Button("Rebuild")) {
-                this.Store.Database.Rebuild();
+                Store.Database.Rebuild();
             }
 
             ImGui.PopTextWrapPos();

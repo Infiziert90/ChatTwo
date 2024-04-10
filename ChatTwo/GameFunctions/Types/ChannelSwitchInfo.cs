@@ -9,9 +9,9 @@ internal class ChannelSwitchInfo {
     internal string? Text { get; }
 
     internal ChannelSwitchInfo(InputChannel? channel, bool permanent = false, RotateMode rotate = RotateMode.None, string? text = null) {
-        this.Channel = channel;
-        this.Permanent = permanent;
-        this.Rotate = rotate;
-        this.Text = text;
+        Channel = channel;
+        Permanent = permanent;
+        Rotate = rotate;
+        Text = text;
     }
 }

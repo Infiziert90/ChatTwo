@@ -1968,6 +1968,15 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Override your selected dalamud style with a different one.
+        /// </summary>
+        internal static string Options_OverrideStyle_Name_Desc {
+            get {
+                return ResourceManager.GetString("Options_OverrideStyle_Name_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Styles.
         /// </summary>
         internal static string Options_OverrideStyleDropdown_Name {

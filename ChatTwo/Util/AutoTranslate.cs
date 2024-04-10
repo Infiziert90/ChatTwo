@@ -278,7 +278,7 @@ internal class SingleRow : ISelectorPart {
     public uint Row { get; }
 
     public SingleRow(uint row) {
-        this.Row = row;
+        Row = row;
     }
 }
 
@@ -287,8 +287,8 @@ internal class IndexRange : ISelectorPart {
     public uint End { get; }
 
     public IndexRange(uint start, uint end) {
-        this.Start = start;
-        this.End = end;
+        Start = start;
+        End = end;
     }
 }
 
@@ -299,7 +299,7 @@ internal class ColumnSpecifier : ISelectorPart {
     public uint Column { get; }
 
     public ColumnSpecifier(uint column) {
-        this.Column = column;
+        Column = column;
     }
 }
 
@@ -310,9 +310,9 @@ internal class AutoTranslateEntry {
     internal SeString SeString { get; }
 
     public AutoTranslateEntry(uint group, uint row, string str, SeString seStr) {
-        this.Group = group;
-        this.Row = row;
-        this.String = str;
-        this.SeString = seStr;
+        Group = group;
+        Row = row;
+        String = str;
+        SeString = seStr;
     }
 }

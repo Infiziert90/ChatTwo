@@ -19,47 +19,47 @@ internal sealed class ExtraChat : IDisposable {
     internal (string, uint)? ChannelOverride { get; set; }
 
     private Dictionary<string, uint> ChannelCommandColoursInternal { get; set; } = new();
-    internal IReadOnlyDictionary<string, uint> ChannelCommandColours => this.ChannelCommandColoursInternal;
+    internal IReadOnlyDictionary<string, uint> ChannelCommandColours => ChannelCommandColoursInternal;
 
     private Dictionary<Guid, string> ChannelNamesInternal { get; set; } = new();
-    internal IReadOnlyDictionary<Guid, string> ChannelNames => this.ChannelNamesInternal;
+    internal IReadOnlyDictionary<Guid, string> ChannelNames => ChannelNamesInternal;
 
     internal ExtraChat(Plugin plugin) {
-        this.Plugin = plugin;
+        Plugin = plugin;
 
-        this.OverrideChannelGate = Plugin.Interface.GetIpcSubscriber<OverrideInfo, object>("ExtraChat.OverrideChannelColour");
-        this.ChannelCommandColoursGate = Plugin.Interface.GetIpcSubscriber<Dictionary<string, uint>, Dictionary<string, uint>>("ExtraChat.ChannelCommandColours");
-        this.ChannelNamesGate = Plugin.Interface.GetIpcSubscriber<Dictionary<Guid, string>, Dictionary<Guid, string>>("ExtraChat.ChannelNames");
+        OverrideChannelGate = Plugin.Interface.GetIpcSubscriber<OverrideInfo, object>("ExtraChat.OverrideChannelColour");
+        ChannelCommandColoursGate = Plugin.Interface.GetIpcSubscriber<Dictionary<string, uint>, Dictionary<string, uint>>("ExtraChat.ChannelCommandColours");
+        ChannelNamesGate = Plugin.Interface.GetIpcSubscriber<Dictionary<Guid, string>, Dictionary<Guid, string>>("ExtraChat.ChannelNames");
 
-        this.OverrideChannelGate.Subscribe(this.OnOverrideChannel);
-        this.ChannelCommandColoursGate.Subscribe(this.OnChannelCommandColours);
-        this.ChannelNamesGate.Subscribe(this.OnChannelNames);
+        OverrideChannelGate.Subscribe(OnOverrideChannel);
+        ChannelCommandColoursGate.Subscribe(OnChannelCommandColours);
+        ChannelNamesGate.Subscribe(OnChannelNames);
         try {
-            this.ChannelCommandColoursInternal = this.ChannelCommandColoursGate.InvokeFunc(null!);
-            this.ChannelNamesInternal = this.ChannelNamesGate.InvokeFunc(null!);
+            ChannelCommandColoursInternal = ChannelCommandColoursGate.InvokeFunc(null!);
+            ChannelNamesInternal = ChannelNamesGate.InvokeFunc(null!);
         } catch (Exception) {
             // no-op
         }
     }
 
     public void Dispose() {
-        this.OverrideChannelGate.Unsubscribe(this.OnOverrideChannel);
+        OverrideChannelGate.Unsubscribe(OnOverrideChannel);
     }
 
     private void OnOverrideChannel(OverrideInfo info) {
         if (info.Channel == null) {
-            this.ChannelOverride = null;
+            ChannelOverride = null;
             return;
         }
 
-        this.ChannelOverride = (info.Channel, info.Rgba);
+        ChannelOverride = (info.Channel, info.Rgba);
     }
 
     private void OnChannelCommandColours(Dictionary<string, uint> obj) {
-        this.ChannelCommandColoursInternal = obj;
+        ChannelCommandColoursInternal = obj;
     }
 
     private void OnChannelNames(Dictionary<Guid, string> obj) {
-        this.ChannelNamesInternal = obj;
+        ChannelNamesInternal = obj;
     }
 }

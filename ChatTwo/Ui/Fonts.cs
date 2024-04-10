@@ -169,7 +169,7 @@ internal sealed class FaceData {
     internal byte[] Data { get; }
 
     internal FaceData(byte[] data) {
-        this.Data = data;
+        Data = data;
     }
 }
 
@@ -178,8 +178,8 @@ internal sealed class FontData {
     internal FaceData? Italic { get; }
 
     internal FontData(FaceData regular, FaceData? italic) {
-        this.Regular = regular;
-        this.Italic = italic;
+        Regular = regular;
+        Italic = italic;
     }
 }
 
@@ -189,8 +189,8 @@ internal sealed class Font {
     internal string ResourcePathItalic { get; }
 
     internal Font(string name, string resourcePath, string resourcePathItalic) {
-        this.Name = name;
-        this.ResourcePath = resourcePath;
-        this.ResourcePathItalic = resourcePathItalic;
+        Name = name;
+        ResourcePath = resourcePath;
+        ResourcePathItalic = resourcePathItalic;
     }
 }

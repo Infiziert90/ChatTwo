@@ -15,38 +15,38 @@ internal sealed class IpcManager : IDisposable {
     internal List<string> Registered { get; } = new();
 
     public IpcManager(DalamudPluginInterface pluginInterface) {
-        this.Interface = pluginInterface;
+        Interface = pluginInterface;
 
-        this.RegisterGate = this.Interface.GetIpcProvider<string>("ChatTwo.Register");
-        this.RegisterGate.RegisterFunc(this.Register);
+        RegisterGate = Interface.GetIpcProvider<string>("ChatTwo.Register");
+        RegisterGate.RegisterFunc(Register);
 
-        this.AvailableGate = this.Interface.GetIpcProvider<object?>("ChatTwo.Available");
+        AvailableGate = Interface.GetIpcProvider<object?>("ChatTwo.Available");
 
-        this.UnregisterGate = this.Interface.GetIpcProvider<string, object?>("ChatTwo.Unregister");
-        this.UnregisterGate.RegisterAction(this.Unregister);
+        UnregisterGate = Interface.GetIpcProvider<string, object?>("ChatTwo.Unregister");
+        UnregisterGate.RegisterAction(Unregister);
 
-        this.InvokeGate = this.Interface.GetIpcProvider<string, PlayerPayload?, ulong, Payload?, SeString?, SeString?, object?>("ChatTwo.Invoke");
+        InvokeGate = Interface.GetIpcProvider<string, PlayerPayload?, ulong, Payload?, SeString?, SeString?, object?>("ChatTwo.Invoke");
 
-        this.AvailableGate.SendMessage();
+        AvailableGate.SendMessage();
     }
 
     internal void Invoke(string id, PlayerPayload? sender, ulong contentId, Payload? payload, SeString? senderString, SeString? content) {
-        this.InvokeGate.SendMessage(id, sender, contentId, payload, senderString, content);
+        InvokeGate.SendMessage(id, sender, contentId, payload, senderString, content);
     }
 
     private string Register() {
         var id = Guid.NewGuid().ToString();
-        this.Registered.Add(id);
+        Registered.Add(id);
         return id;
     }
 
     private void Unregister(string id) {
-        this.Registered.Remove(id);
+        Registered.Remove(id);
     }
 
     public void Dispose() {
-        this.UnregisterGate.UnregisterFunc();
-        this.RegisterGate.UnregisterFunc();
-        this.Registered.Clear();
+        UnregisterGate.UnregisterFunc();
+        RegisterGate.UnregisterFunc();
+        Registered.Clear();
     }
 }

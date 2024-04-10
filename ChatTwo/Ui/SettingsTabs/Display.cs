@@ -90,7 +90,7 @@ internal sealed class Display : ISettingsTab {
         ImGuiUtil.OptionCheckbox(ref Mutable.ShowPopOutTitleBar, Language.Options_ShowPopOutTitleBar_Name);
         ImGui.Spacing();
 
-        ImGui.Checkbox(Language.Options_OverrideStyle_Name, ref Mutable.OverrideStyle);
+        ImGuiUtil.OptionCheckbox(ref Mutable.OverrideStyle, Language.Options_OverrideStyle_Name, Language.Options_OverrideStyle_Name_Desc);
         ImGui.Spacing();
 
         if (Mutable.OverrideStyle)
@@ -98,7 +98,7 @@ internal sealed class Display : ISettingsTab {
             var currentStyle = Mutable.ChosenStyle.Equals("") ? StyleModel.GetConfiguredStyle().Name : Mutable.ChosenStyle;
             if (ImGui.BeginCombo(Language.Options_OverrideStyleDropdown_Name, currentStyle)) {
                 foreach (var style in StyleModel.GetConfiguredStyles()) {
-                    if (ImGui.Selectable(style.Name, this.Mutable.ChosenStyle == style.Name)) {
+                    if (ImGui.Selectable(style.Name, Mutable.ChosenStyle == style.Name)) {
                         Mutable.ChosenStyle = style.Name;
                     }
                 }

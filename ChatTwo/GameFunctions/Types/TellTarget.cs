@@ -7,9 +7,9 @@ internal sealed class TellTarget {
     internal TellReason Reason { get; }
 
     internal TellTarget(string name, ushort world, ulong contentId, TellReason reason) {
-        this.Name = name;
-        this.World = world;
-        this.ContentId = contentId;
-        this.Reason = reason;
+        Name = name;
+        World = world;
+        ContentId = contentId;
+        Reason = reason;
     }
 }

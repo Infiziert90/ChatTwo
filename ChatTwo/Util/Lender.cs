@@ -6,18 +6,18 @@ internal class Lender<T> {
     private int _counter;
 
     internal Lender(Func<T> ctor) {
-        this._ctor = ctor;
+        _ctor = ctor;
     }
 
     internal void ResetCounter() {
-        this._counter = 0;
+        _counter = 0;
     }
 
     internal T Borrow() {
-        if (this._items.Count <= this._counter) {
-            this._items.Add(this._ctor());
+        if (_items.Count <= _counter) {
+            _items.Add(_ctor());
         }
 
-        return this._items[this._counter++];
+        return _items[_counter++];
     }
 }

@@ -8,7 +8,7 @@ internal class PartyFinderPayload : Payload {
     internal uint Id { get; }
 
     internal PartyFinderPayload(uint id) {
-        this.Id = id;
+        Id = id;
     }
 
     protected override byte[] EncodeImpl() {
@@ -26,7 +26,7 @@ internal class AchievementPayload : Payload {
     internal uint Id { get; }
 
     internal AchievementPayload(uint id) {
-        this.Id = id;
+        Id = id;
     }
 
     protected override byte[] EncodeImpl() {
