@@ -1959,6 +1959,24 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Override Style.
+        /// </summary>
+        internal static string Options_OverrideStyle_Name {
+            get {
+                return ResourceManager.GetString("Options_OverrideStyle_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Styles.
+        /// </summary>
+        internal static string Options_OverrideStyleDropdown_Name {
+            get {
+                return ResourceManager.GetString("Options_OverrideStyleDropdown_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Display messages in a more modern style..
         /// </summary>
         internal static string Options_PrettierTimestamps_Description {

@@ -50,6 +50,9 @@ internal class Configuration : IPluginConfiguration {
     public Dictionary<ChatType, uint> ChatColours = new();
     public List<Tab> Tabs = new();
 
+    public bool OverrideStyle = false;
+    public string ChosenStyle = "";
+
     public uint DatabaseMigration = LatestDbVersion;
 
     internal void UpdateFrom(Configuration other) {
@@ -88,6 +91,8 @@ internal class Configuration : IPluginConfiguration {
         ChatColours = other.ChatColours.ToDictionary(entry => entry.Key, entry => entry.Value);
         Tabs = other.Tabs.Select(t => t.Clone()).ToList();
         DatabaseMigration = other.DatabaseMigration;
+        OverrideStyle = other.OverrideStyle;
+        ChosenStyle = other.ChosenStyle;
     }
 
     public void Migrate() {

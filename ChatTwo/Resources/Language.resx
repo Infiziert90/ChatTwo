@@ -502,6 +502,12 @@
     <data name="Options_SortAutoTranslate_Description">
         <value>If this is enabled, the Auto Translate list will be sorted alphabetically.</value>
     </data>
+    <data name="Options_OverrideStyle_Name">
+        <value>Override Style</value>
+    </data>
+    <data name="Options_OverrideStyleDropdown_Name">
+        <value>Styles</value>
+    </data>
     <data name="AutoTranslate_Completion_Key">
         <value>Ctrl + {0}</value>
     </data>

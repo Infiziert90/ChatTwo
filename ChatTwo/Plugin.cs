@@ -6,6 +6,7 @@ using ChatTwo.Resources;
 using ChatTwo.Ui;
 using ChatTwo.Util;
 using Dalamud.Game.ClientState.Objects;
+using Dalamud.Interface.Style;
 using Dalamud.Interface.Windowing;
 using Dalamud.IoC;
 using Dalamud.Plugin;
@@ -133,6 +134,7 @@ public sealed class Plugin : IDalamudPlugin {
 
     private void Draw()
     {
+
         Interface.UiBuilder.DisableUserUiHide = !Config.HideWhenUiHidden;
         ChatLogWindow.DefaultText = ImGui.GetStyle().Colors[(int) ImGuiCol.Text];
 

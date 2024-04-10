@@ -13,6 +13,7 @@ using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface;
 using Dalamud.Interface.Internal;
+using Dalamud.Interface.Style;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
 using Dalamud.Memory;
@@ -94,6 +95,24 @@ public sealed class ChatLogWindow : Window, IUiComponent {
         Plugin.ClientState.Logout += Logout;
 
         Plugin.AddonLifecycle.RegisterListener(AddonEvent.PostRequestedUpdate, "ItemDetail", PayloadHandler.MoveTooltip);
+    }
+
+    public override void PreDraw()
+    {
+        if (Plugin.Config.OverrideStyle)
+        {
+            var styles = StyleModel.GetConfiguredStyles();
+            styles?.First(style => style.Name.Equals(Plugin.Config.ChosenStyle)).Push();
+        }
+    }
+
+    public override void PostDraw()
+    {
+        if (Plugin.Config.OverrideStyle)
+        {
+            var styles = StyleModel.GetConfiguredStyles();
+            styles?.First(style => style.Name.Equals(Plugin.Config.ChosenStyle)).Pop();
+        }
     }
 
     public void Dispose() {
