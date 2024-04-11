@@ -32,6 +32,8 @@ internal class Popout : Window
         if (!ChatLogWindow.Plugin.Config.ShowPopOutTitleBar)
             Flags |= ImGuiWindowFlags.NoTitleBar;
 
+        RespectCloseHotkey = false;
+
         if (!ChatLogWindow.PopOutDocked[Idx]) {
             var alpha = Tab.IndependentOpacity ? Tab.Opacity : ChatLogWindow.Plugin.Config.WindowAlpha;
             BgAlpha = alpha / 100f;

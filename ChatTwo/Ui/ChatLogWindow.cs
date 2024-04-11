@@ -424,6 +424,7 @@ public sealed class ChatLogWindow : Window, IUiComponent {
         }
 
         IsOpen = true;
+        RespectCloseHotkey = true;
 
         Flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse;
         if (!Plugin.Config.CanMove)
