@@ -5,44 +5,45 @@ using ImGuiNET;
 
 namespace ChatTwo.Ui.SettingsTabs;
 
-internal sealed class Database : ISettingsTab {
+internal sealed class Database : ISettingsTab
+{
     private Configuration Mutable { get; }
     private Plugin Plugin { get; }
 
     public string Name => Language.Options_Database_Tab + "###tabs-database";
 
-    internal Database(Configuration mutable, Plugin plugin) {
+    internal Database(Configuration mutable, Plugin plugin)
+    {
         Plugin = plugin;
         Mutable = mutable;
     }
 
-    private bool _showAdvanced;
+    private bool ShowAdvanced;
 
-    private long _databaseLastRefreshTicks;
-    private long _databaseSize;
-    private long _databaseLogSize;
-    private int _databaseMessageCount;
+    private long DatabaseLastRefreshTicks;
+    private long DatabaseSize;
+    private long DatabaseLogSize;
+    private int DatabaseMessageCount;
 
     public void Draw(bool changed) {
-        if (changed) {
-            _showAdvanced = ImGui.GetIO().KeyShift;
-        }
+        if (changed)
+            ShowAdvanced = ImGui.GetIO().KeyShift;
 
         ImGuiUtil.OptionCheckbox(ref Mutable.DatabaseBattleMessages, Language.Options_DatabaseBattleMessages_Name, Language.Options_DatabaseBattleMessages_Description);
         ImGui.Spacing();
 
-        if (ImGuiUtil.OptionCheckbox(ref Mutable.LoadPreviousSession, Language.Options_LoadPreviousSession_Name, Language.Options_LoadPreviousSession_Description)) {
-            if (Mutable.LoadPreviousSession) {
+        if (ImGuiUtil.OptionCheckbox(ref Mutable.LoadPreviousSession, Language.Options_LoadPreviousSession_Name, Language.Options_LoadPreviousSession_Description))
+        {
+            if (Mutable.LoadPreviousSession)
                 Mutable.FilterIncludePreviousSessions = true;
-            }
         }
 
         ImGui.Spacing();
 
-        if (ImGuiUtil.OptionCheckbox(ref Mutable.FilterIncludePreviousSessions, Language.Options_FilterIncludePreviousSessions_Name, Language.Options_FilterIncludePreviousSessions_Description)) {
-            if (!Mutable.FilterIncludePreviousSessions) {
+        if (ImGuiUtil.OptionCheckbox(ref Mutable.FilterIncludePreviousSessions, Language.Options_FilterIncludePreviousSessions_Name, Language.Options_FilterIncludePreviousSessions_Description))
+        {
+            if (!Mutable.FilterIncludePreviousSessions)
                 Mutable.LoadPreviousSession = false;
-            }
         }
 
         ImGuiUtil.OptionCheckbox(
@@ -62,12 +63,12 @@ internal sealed class Database : ISettingsTab {
 
         // Refresh the database size and message count every 5 seconds to avoid
         // constant stat calls and spamming the database.
-        if (_databaseLastRefreshTicks + 5 * 1000 < Environment.TickCount64)
+        if (DatabaseLastRefreshTicks + 5 * 1000 < Environment.TickCount64)
         {
-            _databaseSize = Store.DatabaseSize();
-            _databaseLogSize = Store.DatabaseLogSize();
-            _databaseMessageCount = Plugin.Store.MessageCount();
-            _databaseLastRefreshTicks = Environment.TickCount64;
+            DatabaseSize = Store.DatabaseSize();
+            DatabaseLogSize = Store.DatabaseLogSize();
+            DatabaseMessageCount = Plugin.Store.MessageCount();
+            DatabaseLastRefreshTicks = Environment.TickCount64;
         }
 
         ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_Path, Store.DatabasePath()));
@@ -79,62 +80,48 @@ internal sealed class Database : ISettingsTab {
             ImGui.SetClipboardText(path);
             WrapperUtil.AddNotification(Language.Options_Database_Metadata_CopyConfigPathNotification, NotificationType.Info);
         }
+
         if (ImGui.IsItemHovered())
         {
             ImGui.SetMouseCursor(ImGuiMouseCursor.Hand);
-            ImGui.BeginTooltip();
-            ImGui.Text(Language.Options_Database_Metadata_CopyConfigPath);
-            ImGui.EndTooltip();
+            ImGui.SetTooltip(Language.Options_Database_Metadata_CopyConfigPath);
         }
 
-        ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_Size, StringUtil.BytesToString(_databaseSize)));
+        ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_Size, StringUtil.BytesToString(DatabaseSize)));
         if (ImGui.IsItemHovered())
-        {
-            ImGui.BeginTooltip();
-            ImGui.Text(_databaseSize.ToString("N0") + "B");
-            ImGui.EndTooltip();
-        }
+            ImGui.SetTooltip(DatabaseSize.ToString("N0") + "B");
 
-        ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_LogSize, StringUtil.BytesToString(_databaseLogSize)));
+        ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_LogSize, StringUtil.BytesToString(DatabaseLogSize)));
         if (ImGui.IsItemHovered())
-        {
-            ImGui.BeginTooltip();
-            ImGui.Text(_databaseLogSize.ToString("N0") + "B");
-            ImGui.EndTooltip();
-        }
+            ImGui.SetTooltip(DatabaseLogSize.ToString("N0") + "B");
 
-        ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_MessageCount, _databaseMessageCount, Store.MessagesLimit));
+        ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_MessageCount, DatabaseMessageCount, Store.MessagesLimit));
 
         if (ImGuiUtil.CtrlShiftButton(Language.Options_ClearDatabase_Button, Language.Options_ClearDatabase_Tooltip))
         {
             Plugin.Log.Warning("Clearing database");
             Plugin.Store.ClearDatabase();
             foreach (var tab in Plugin.Config.Tabs)
-            {
                 tab.Clear();
-            }
+
             // Refresh on next draw
-            _databaseLastRefreshTicks = 0;
+            DatabaseLastRefreshTicks = 0;
             WrapperUtil.AddNotification(Language.Options_ClearDatabase_Success, NotificationType.Info);
         }
 
         ImGui.Unindent(style.IndentSpacing);
         ImGui.Spacing();
 
-        if (_showAdvanced && ImGui.TreeNodeEx(Language.Options_Database_Advanced))
+        if (ShowAdvanced && ImGui.TreeNodeEx(Language.Options_Database_Advanced))
         {
             ImGui.PushTextWrapPos();
             ImGuiUtil.WarningText(Language.Options_Database_Advanced_Warning);
 
             if (ImGuiUtil.CtrlShiftButton("Checkpoint", "Ctrl+Shift: Database.Checkpoint()"))
-            {
                 Plugin.Store.Database.Checkpoint();
-            }
 
             if (ImGuiUtil.CtrlShiftButton("Rebuild", "Ctrl+Shift: Database.Rebuild()"))
-            {
                 Plugin.Store.Database.Rebuild();
-            }
 
             ImGui.PopTextWrapPos();
             ImGui.TreePop();
