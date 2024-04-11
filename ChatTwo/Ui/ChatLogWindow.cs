@@ -513,6 +513,28 @@ public sealed class ChatLogWindow : Window, IUiComponent {
                 }
             } else if (Plugin.ExtraChat.ChannelOverride is var (overrideName, _)) {
                 ImGui.TextUnformatted(overrideName);
+            } else if (ScreenshotMode && Plugin.Functions.Chat.Channel is (InputChannel.Tell, _, var tellPlayerName, var tellWorldId)) {
+                if (!string.IsNullOrWhiteSpace(tellPlayerName) && tellWorldId != 0)
+                {
+                    var playerName = HashPlayer(tellPlayerName, tellWorldId);
+                    var world = Plugin.DataManager.GetExcelSheet<World>()
+                        ?.GetRow(tellWorldId)
+                        ?.Name
+                        ?.RawString ?? "???";
+
+                    DrawChunks(new Chunk[] {
+                        new TextChunk(ChunkSource.None, null, "Tell "),
+                        new TextChunk(ChunkSource.None, null, playerName),
+                        new IconChunk(ChunkSource.None, null, BitmapFontIcon.CrossWorld),
+                        new TextChunk(ChunkSource.None, null, world),
+                    });
+                }
+                else
+                {
+                    // We still need to censor the name if we couldn't read
+                    // valid data.
+                    ImGui.TextUnformatted("Tell");
+                }
             } else {
                 DrawChunks(Plugin.Functions.Chat.Channel.name);
             }

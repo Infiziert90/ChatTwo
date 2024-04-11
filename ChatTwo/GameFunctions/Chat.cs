@@ -151,7 +151,11 @@ internal sealed unsafe class Chat : IDisposable {
     internal event ChatActivatedEventDelegate? Activated;
 
     private Plugin Plugin { get; }
-    internal (InputChannel channel, List<Chunk> name) Channel { get; private set; }
+    /// <summary>
+    /// Holds the current game channel details. `tellplayerName` and
+    /// `tellWorldId` are only set when the channel is `InputChannel.Tell`.
+    /// </summary>
+    internal (InputChannel channel, List<Chunk> name, string? tellPlayerName, ushort tellWorldId) Channel { get; private set; }
 
     internal bool UsesTellTempChannel { get; set; }
     internal InputChannel? PreviousChannel { get; private set; }
@@ -515,9 +519,11 @@ internal sealed unsafe class Chat : IDisposable {
     private IntPtr ChangeChannelNameDetour(IntPtr agent)
     {
         // Last ShB patch
-        // +0x40 = chat channel (byte or uint?)
-        //         channel is 17 (maybe 18?) for tells
-        // +0x48 = pointer to channel name string
+        // +0x40  = chat channel (byte or uint?)
+        //          channel is 17 (maybe 18?) for tells
+        // +0x48  = pointer to channel name string
+        // +0xDA  = player name string for tells
+        // +0x120 = player world id for tells
         var ret = ChangeChannelNameHook!.Original(agent);
         if (agent == IntPtr.Zero)
             return ret;
@@ -528,13 +534,13 @@ internal sealed unsafe class Chat : IDisposable {
         if (shellModule == IntPtr.Zero)
             return ret;
 
-        var channel = 0u;
+        var channel = (uint) InputChannel.Say;
         if (ShellChannelOffset != null)
             channel = *(uint*) (shellModule + ShellChannelOffset.Value);
 
         // var channel = *(uint*) (agent + 0x40);
         if (channel is 17 or 18)
-            channel = 0;
+            channel = (uint) InputChannel.Tell;
 
         SeString? name = null;
         var namePtrPtr = (byte**) (agent + 0x48);
@@ -553,7 +559,16 @@ internal sealed unsafe class Chat : IDisposable {
         if (nameChunks.Count > 0 && nameChunks[0] is TextChunk text)
             text.Content = text.Content.TrimStart('\uE01E').TrimStart();
 
-        Channel = ((InputChannel) channel, nameChunks);
+        string? playerName = null;
+        ushort worldId = 0;
+        if (channel == (uint) InputChannel.Tell)
+        {
+            playerName = MemoryHelper.ReadStringNullTerminated(agent + 0xDA);
+            worldId = *(ushort*) (agent + 0x120);
+            Plugin.Log.Debug($"Detected tell target '{playerName}'@{worldId:X}");
+        }
+
+        Channel = ((InputChannel) channel, nameChunks, playerName, worldId);
 
         return ret;
     }
