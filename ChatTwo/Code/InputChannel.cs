@@ -1,6 +1,7 @@
 namespace ChatTwo.Code;
 
-internal enum InputChannel : uint {
+internal enum InputChannel : uint
+{
     Tell = 0,
     Say = 1,
     Party = 2,
@@ -29,7 +30,7 @@ internal enum InputChannel : uint {
     Linkshell6 = 24,
     Linkshell7 = 25,
     Linkshell8 = 26,
-    
+
     // Custom channels:
     ExtraChatLinkshell1 = 1001,
     ExtraChatLinkshell2 = 1002,

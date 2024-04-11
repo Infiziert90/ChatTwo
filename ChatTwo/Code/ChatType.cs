@@ -1,7 +1,8 @@
 namespace ChatTwo.Code;
 
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1028:Enum Storage should be Int32")]
-internal enum ChatType : ushort {
+internal enum ChatType : ushort
+{
     Debug = 1,
     Urgent = 2,
     Notice = 3,
@@ -84,7 +85,7 @@ internal enum ChatType : ushort {
     CrossLinkshell6 = 105,
     CrossLinkshell7 = 106,
     CrossLinkshell8 = 107,
-    
+
     // Custom types:
     ExtraChatLinkshell1 = 1001,
     ExtraChatLinkshell2 = 1002,

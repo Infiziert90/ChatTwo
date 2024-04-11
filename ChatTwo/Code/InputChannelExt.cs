@@ -3,8 +3,10 @@ using Lumina.Excel.GeneratedSheets;
 
 namespace ChatTwo.Code;
 
-internal static class InputChannelExt {
-    internal static ChatType ToChatType(this InputChannel input) => input switch {
+internal static class InputChannelExt
+{
+    internal static ChatType ToChatType(this InputChannel input) => input switch
+    {
         InputChannel.Tell => ChatType.TellOutgoing,
         InputChannel.Say => ChatType.Say,
         InputChannel.Party => ChatType.Party,
@@ -41,7 +43,8 @@ internal static class InputChannelExt {
         _ => throw new ArgumentOutOfRangeException(nameof(input), input, null),
     };
 
-    public static uint LinkshellIndex(this InputChannel channel) => channel switch {
+    public static uint LinkshellIndex(this InputChannel channel) => channel switch
+    {
         InputChannel.Linkshell1 => 0,
         InputChannel.Linkshell2 => 1,
         InputChannel.Linkshell3 => 2,
@@ -69,7 +72,8 @@ internal static class InputChannelExt {
         _ => uint.MaxValue,
     };
 
-    public static string Prefix(this InputChannel channel) => channel switch {
+    public static string Prefix(this InputChannel channel) => channel switch
+    {
         InputChannel.Tell => "/tell",
         InputChannel.Say => "/say",
         InputChannel.Party => "/party",
@@ -106,52 +110,47 @@ internal static class InputChannelExt {
         _ => "",
     };
 
-    public static IEnumerable<TextCommand>? TextCommands(this InputChannel channel, IDataManager data) {
-        var ids = channel switch {
-            InputChannel.Tell => new uint[] { 104, 118 },
-            InputChannel.Say => new uint[] { 102 },
-            InputChannel.Party => new uint[] { 105 },
-            InputChannel.Alliance => new uint[] { 119 },
-            InputChannel.Yell => new uint[] { 117 },
-            InputChannel.Shout => new uint[] { 103 },
-            InputChannel.FreeCompany => new uint[] { 115 },
-            InputChannel.PvpTeam => new uint[] { 91 },
-            InputChannel.NoviceNetwork => new uint[] { 101 },
-            InputChannel.CrossLinkshell1 => new uint[] { 13 },
-            InputChannel.CrossLinkshell2 => new uint[] { 14 },
-            InputChannel.CrossLinkshell3 => new uint[] { 15 },
-            InputChannel.CrossLinkshell4 => new uint[] { 16 },
-            InputChannel.CrossLinkshell5 => new uint[] { 17 },
-            InputChannel.CrossLinkshell6 => new uint[] { 18 },
-            InputChannel.CrossLinkshell7 => new uint[] { 19 },
-            InputChannel.CrossLinkshell8 => new uint[] { 20 },
-            InputChannel.Linkshell1 => new uint[] { 107 },
-            InputChannel.Linkshell2 => new uint[] { 108 },
-            InputChannel.Linkshell3 => new uint[] { 109 },
-            InputChannel.Linkshell4 => new uint[] { 110 },
-            InputChannel.Linkshell5 => new uint[] { 111 },
-            InputChannel.Linkshell6 => new uint[] { 112 },
-            InputChannel.Linkshell7 => new uint[] { 113 },
-            InputChannel.Linkshell8 => new uint[] { 114 },
+    public static IEnumerable<TextCommand>? TextCommands(this InputChannel channel, IDataManager data)
+    {
+        var ids = channel switch
+        {
+            InputChannel.Tell => [104, 118],
+            InputChannel.Say => [102],
+            InputChannel.Party => [105],
+            InputChannel.Alliance => [119],
+            InputChannel.Yell => [117],
+            InputChannel.Shout => [103],
+            InputChannel.FreeCompany => [115],
+            InputChannel.PvpTeam => [91],
+            InputChannel.NoviceNetwork => [101],
+            InputChannel.CrossLinkshell1 => [13],
+            InputChannel.CrossLinkshell2 => [14],
+            InputChannel.CrossLinkshell3 => [15],
+            InputChannel.CrossLinkshell4 => [16],
+            InputChannel.CrossLinkshell5 => [17],
+            InputChannel.CrossLinkshell6 => [18],
+            InputChannel.CrossLinkshell7 => [19],
+            InputChannel.CrossLinkshell8 => [20],
+            InputChannel.Linkshell1 => [107],
+            InputChannel.Linkshell2 => [108],
+            InputChannel.Linkshell3 => [109],
+            InputChannel.Linkshell4 => [110],
+            InputChannel.Linkshell5 => [111],
+            InputChannel.Linkshell6 => [112],
+            InputChannel.Linkshell7 => [113],
+            InputChannel.Linkshell8 => [114],
             _ => Array.Empty<uint>(),
         };
 
-        if (ids.Length == 0) {
+        if (ids.Length == 0)
             return null;
-        }
 
         var cmds = data.GetExcelSheet<TextCommand>();
-        if (cmds == null) {
-            return null;
-        }
-
-        return ids
-            .Select(id => cmds.GetRow(id))
-            .Where(id => id != null)
-            .Cast<TextCommand>();
+        return cmds == null ? null : ids.Select(id => cmds.GetRow(id)).Where(id => id != null).Cast<TextCommand>();
     }
 
-    internal static bool IsLinkshell(this InputChannel channel) => channel switch {
+    internal static bool IsLinkshell(this InputChannel channel) => channel switch
+    {
         InputChannel.Linkshell1 => true,
         InputChannel.Linkshell2 => true,
         InputChannel.Linkshell3 => true,
@@ -163,7 +162,8 @@ internal static class InputChannelExt {
         _ => false,
     };
 
-    internal static bool IsCrossLinkshell(this InputChannel channel) => channel switch {
+    internal static bool IsCrossLinkshell(this InputChannel channel) => channel switch
+    {
         InputChannel.CrossLinkshell1 => true,
         InputChannel.CrossLinkshell2 => true,
         InputChannel.CrossLinkshell3 => true,
@@ -174,8 +174,9 @@ internal static class InputChannelExt {
         InputChannel.CrossLinkshell8 => true,
         _ => false,
     };
-    
-    internal static bool IsExtraChatLinkshell(this InputChannel channel) => channel switch {
+
+    internal static bool IsExtraChatLinkshell(this InputChannel channel) => channel switch
+    {
         InputChannel.ExtraChatLinkshell1 => true,
         InputChannel.ExtraChatLinkshell2 => true,
         InputChannel.ExtraChatLinkshell3 => true,

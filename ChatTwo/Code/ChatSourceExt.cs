@@ -2,7 +2,8 @@ using ChatTwo.Resources;
 
 namespace ChatTwo.Code;
 
-internal static class ChatSourceExt {
+internal static class ChatSourceExt
+{
     internal const ChatSource All =
         ChatSource.Self
         | ChatSource.PartyMember
@@ -16,7 +17,8 @@ internal static class ChatSourceExt {
         | ChatSource.AlliancePet
         | ChatSource.OtherPet;
 
-    internal static string Name(this ChatSource source) => source switch {
+    internal static string Name(this ChatSource source) => source switch
+    {
         ChatSource.Self => Language.ChatSource_Self,
         ChatSource.PartyMember => Language.ChatSource_PartyMember,
         ChatSource.AllianceMember => Language.ChatSource_AllianceMember,

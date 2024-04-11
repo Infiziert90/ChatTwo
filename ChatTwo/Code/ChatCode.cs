@@ -2,7 +2,8 @@ using LiteDB;
 
 namespace ChatTwo.Code;
 
-internal class ChatCode {
+internal class ChatCode
+{
     private const ushort Clear7 = ~(~0 << 7);
 
     internal ushort Raw { get; }
@@ -12,7 +13,8 @@ internal class ChatCode {
     internal ChatSource Target { get; }
     private ChatSource SourceFrom(ushort shift) => (ChatSource) (1 << ((Raw >> shift) & 0xF));
 
-    internal ChatCode(ushort raw) {
+    internal ChatCode(ushort raw)
+    {
         Raw = raw;
         Type = (ChatType) (Raw & Clear7);
         Source = SourceFrom(11);
@@ -20,14 +22,16 @@ internal class ChatCode {
     }
 
     [BsonCtor]
-    public ChatCode(ushort raw, ChatType type, ChatSource source, ChatSource target) {
+    public ChatCode(ushort raw, ChatType type, ChatSource source, ChatSource target)
+    {
         Raw = raw;
         Type = type;
         Source = source;
         Target = target;
     }
 
-    internal ChatType Parent() => Type switch {
+    internal ChatType Parent() => Type switch
+    {
         ChatType.Say => ChatType.Say,
         ChatType.GmSay => ChatType.Say,
         ChatType.Shout => ChatType.Shout,
@@ -84,8 +88,10 @@ internal class ChatCode {
         _ => Type,
     };
 
-    internal bool IsBattle() {
-        switch (Type) {
+    internal bool IsBattle()
+    {
+        switch (Type)
+        {
             case ChatType.Damage:
             case ChatType.Miss:
             case ChatType.Action:

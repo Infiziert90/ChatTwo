@@ -3,14 +3,19 @@ using ChatTwo.Util;
 
 namespace ChatTwo.Code;
 
-internal static class ChatTypeExt {
-    internal static IEnumerable<(string, ChatType[])> SortOrder => new[] {
-        (Language.Options_Tabs_ChannelTypes_Special, new[] {
+internal static class ChatTypeExt
+{
+    internal static IEnumerable<(string, ChatType[])> SortOrder => new[]
+    {
+        (Language.Options_Tabs_ChannelTypes_Special,
+        [
             ChatType.Debug,
             ChatType.Urgent,
-            ChatType.Notice,
-        }),
-        (Language.Options_Tabs_ChannelTypes_Chat, new[] {
+            ChatType.Notice
+        ]),
+
+        (Language.Options_Tabs_ChannelTypes_Chat,
+        [
             ChatType.Say,
             ChatType.Yell,
             ChatType.Shout,
@@ -39,9 +44,11 @@ internal static class ChatTypeExt {
             ChatType.Linkshell8,
             ChatType.NoviceNetwork,
             ChatType.StandardEmote,
-            ChatType.CustomEmote,
-        }),
-        (Language.Options_Tabs_ChannelTypes_Battle, new[] {
+            ChatType.CustomEmote
+        ]),
+
+        (Language.Options_Tabs_ChannelTypes_Battle, new[]
+        {
             ChatType.Damage,
             ChatType.Miss,
             ChatType.Action,
@@ -52,7 +59,9 @@ internal static class ChatTypeExt {
             ChatType.GainDebuff,
             ChatType.LoseDebuff,
         }),
-        (Language.Options_Tabs_ChannelTypes_Announcements, new[] {
+
+        (Language.Options_Tabs_ChannelTypes_Announcements, new[]
+        {
             ChatType.System,
             ChatType.BattleSystem,
             ChatType.GatheringSystem,
@@ -80,8 +89,10 @@ internal static class ChatTypeExt {
         }),
     };
 
-    internal static string Name(this ChatType type) {
-        return type switch {
+    internal static string Name(this ChatType type)
+    {
+        return type switch
+        {
             ChatType.Debug => Language.ChatType_Debug,
             ChatType.Urgent => Language.ChatType_Urgent,
             ChatType.Notice => Language.ChatType_Notice,
@@ -174,8 +185,10 @@ internal static class ChatTypeExt {
         };
     }
 
-    internal static uint? DefaultColour(this ChatType type) {
-        switch (type) {
+    internal static uint? DefaultColour(this ChatType type)
+    {
+        switch (type)
+        {
             case ChatType.Debug:
                 return ColourUtil.ComponentsToRgba(204, 204, 204);
             case ChatType.Urgent:
@@ -292,7 +305,8 @@ internal static class ChatTypeExt {
         }
     }
 
-    internal static InputChannel? ToInputChannel(this ChatType type) => type switch {
+    internal static InputChannel? ToInputChannel(this ChatType type) => type switch
+    {
         ChatType.TellOutgoing => InputChannel.Tell,
         ChatType.Say => InputChannel.Say,
         ChatType.Party => InputChannel.Party,
@@ -321,7 +335,8 @@ internal static class ChatTypeExt {
         _ => null,
     };
 
-    internal static bool IsGm(this ChatType type) => type switch {
+    internal static bool IsGm(this ChatType type) => type switch
+    {
         ChatType.GmTell => true,
         ChatType.GmSay => true,
         ChatType.GmShout => true,
@@ -340,7 +355,8 @@ internal static class ChatTypeExt {
         _ => false,
     };
 
-    internal static bool HasSource(this ChatType type) => type switch {
+    internal static bool HasSource(this ChatType type) => type switch
+    {
         // Battle
         ChatType.Damage => true,
         ChatType.Miss => true,

@@ -36,9 +36,6 @@ internal sealed unsafe class Chat : IDisposable {
     [Signature("E8 ?? ?? ?? ?? 48 8D 4D A0 8B F8")]
     private readonly delegate* unmanaged<IntPtr, Utf8String*, IntPtr, uint> GetKeybindNative = null!;
 
-    [Signature("E8 ?? ?? ?? ?? 48 3B F0 74 35")]
-    private readonly delegate* unmanaged<AtkStage*, IntPtr> GetFocus = null!;
-
     [Signature("44 8B 89 ?? ?? ?? ?? 4C 8B C1 45 85 C9")]
     private readonly delegate* unmanaged<void*, int, IntPtr> GetTellHistory = null!;
 
@@ -71,6 +68,10 @@ internal sealed unsafe class Chat : IDisposable {
 
     [Signature("E8 ?? ?? ?? ?? EB 0A 48 8D 4C 24 ?? E8 ?? ?? ?? ?? 48 8D 8D")]
     private readonly delegate* unmanaged<Utf8String*, int, IntPtr, void> SanitiseString = null!;
+
+    // Currently Unused
+    [Signature("E8 ?? ?? ?? ?? 48 3B F0 74 35")]
+    private readonly delegate* unmanaged<AtkStage*, IntPtr> GetFocus = null!;
 
     // Hooks
 
@@ -155,7 +156,8 @@ internal sealed unsafe class Chat : IDisposable {
     internal bool UsesTellTempChannel { get; set; }
     internal InputChannel? PreviousChannel { get; private set; }
 
-    internal Chat(Plugin plugin) {
+    internal Chat(Plugin plugin)
+    {
         Plugin = plugin;
         Plugin.GameInteropProvider.InitializeFromAttributes(this);
 
@@ -203,21 +205,21 @@ internal sealed unsafe class Chat : IDisposable {
     }
 
     internal string? GetCrossLinkshellName(uint idx) {
-        if (CrossLinkshellInfoProxyIdx is not { } proxyIdx) {
+        if (CrossLinkshellInfoProxyIdx is not { } proxyIdx)
             return null;
-        }
 
         var infoProxy = Plugin.Functions.GetInfoProxyByIndex(proxyIdx);
-        if (infoProxy == IntPtr.Zero) {
+        if (infoProxy == IntPtr.Zero)
             return null;
-        }
 
         var utf = GetCrossLinkshellNameNative(infoProxy, idx);
         return utf == null ? null : utf->ToString();
     }
 
-    internal ulong RotateLinkshellHistory(RotateMode mode) {
-        if (mode == RotateMode.None && LinkshellCycleOffset != null) {
+    internal ulong RotateLinkshellHistory(RotateMode mode)
+    {
+        if (mode == RotateMode.None && LinkshellCycleOffset != null)
+        {
             // for the branch at 6.08: 5E1680
             var uiModule = (IntPtr) Framework.Instance()->GetUiModule();
             *(int*) (uiModule + LinkshellCycleOffset.Value) = -1;
@@ -230,11 +232,11 @@ internal sealed unsafe class Chat : IDisposable {
 
     private static ulong RotateLinkshellHistoryInternal(delegate* unmanaged<UIModule*, int, ulong> func, RotateMode mode) {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-        if (func == null) {
+        if (func == null)
             return 0;
-        }
 
-        var idx = mode switch {
+        var idx = mode switch
+        {
             RotateMode.Forward => 1,
             RotateMode.Reverse => -1,
             _ => 0,
@@ -248,9 +250,8 @@ internal sealed unsafe class Chat : IDisposable {
     //
     // If this function would ever return 0, it returns null instead.
     internal uint? GetChannelColour(ChatType type) {
-        if (GetColourInfo == null || ColourLookup == IntPtr.Zero) {
+        if (GetColourInfo == null || ColourLookup == IntPtr.Zero)
             return null;
-        }
 
         // Colours are retrieved by looking up their code in a lookup table. Some codes share a colour, so they're lumped into a parent code here.
         // Only codes >= 10 (say) have configurable colours.
@@ -272,9 +273,8 @@ internal sealed unsafe class Chat : IDisposable {
         var info = GetColourInfo(framework + 16, lookupResult);
         var rgb = *(uint*) (info + 32) & 0xFFFFFF;
 
-        if (rgb == 0) {
+        if (rgb == 0)
             return null;
-        }
 
         return 0xFF | (rgb << 8);
     }
@@ -350,154 +350,161 @@ internal sealed unsafe class Chat : IDisposable {
     private int _graceFrames;
 
 
-    private void CheckFocus() {
-        void Decrement() {
-            if (_graceFrames > 0) {
+    private void CheckFocus()
+    {
+        void Decrement()
+        {
+            if (_graceFrames > 0)
                 _graceFrames -= 1;
-            } else {
+            else
                 _inputFocused = false;
-            }
         }
 
         // 6.08: CB8F27
         var isTextInputActivePtr = *(bool**) ((IntPtr) AtkStage.GetSingleton() + 0x28) + 0x188E;
-        if (isTextInputActivePtr == null) {
+        if (isTextInputActivePtr == null)
+        {
             Decrement();
             return;
         }
 
-        if (*isTextInputActivePtr) {
+        if (*isTextInputActivePtr)
+        {
             _inputFocused = true;
             _graceFrames = 60;
-        } else {
+        }
+        else
+        {
             Decrement();
         }
     }
 
-    private void UpdateKeybinds() {
-        foreach (var name in KeybindsToIntercept.Keys) {
+    private void UpdateKeybinds()
+    {
+        foreach (var name in KeybindsToIntercept.Keys)
+        {
             var keybind = GetKeybind(name);
-            if (keybind is null) {
+            if (keybind is null)
                 continue;
-            }
 
             _keybinds[name] = keybind;
         }
     }
 
-    private void InterceptKeybinds(IFramework framework1) {
+    private void InterceptKeybinds(IFramework framework1)
+    {
         CheckFocus();
         UpdateKeybinds();
 
-        if (_inputFocused) {
+        if (_inputFocused)
             return;
-        }
 
         var modifierState = (ModifierFlag) 0;
-        foreach (var modifier in Enum.GetValues<ModifierFlag>()) {
+        foreach (var modifier in Enum.GetValues<ModifierFlag>())
+        {
             var modifierKey = GetKeyForModifier(modifier);
-            if (modifierKey != VirtualKey.NO_KEY && Plugin.KeyState[modifierKey]) {
+            if (modifierKey != VirtualKey.NO_KEY && Plugin.KeyState[modifierKey])
                 modifierState |= modifier;
-            }
         }
 
         var turnedOff = new Dictionary<VirtualKey, (uint, string)>();
-        foreach (var toIntercept in KeybindsToIntercept.Keys) {
-            if (!Keybinds.TryGetValue(toIntercept, out var keybind)) {
+        foreach (var toIntercept in KeybindsToIntercept.Keys)
+        {
+            if (!Keybinds.TryGetValue(toIntercept, out var keybind))
                 continue;
-            }
 
-            void Intercept(VirtualKey key, ModifierFlag modifier) {
-                if (!Plugin.KeyState.IsVirtualKeyValid(key)) {
+            void Intercept(VirtualKey key, ModifierFlag modifier)
+            {
+                if (!Plugin.KeyState.IsVirtualKeyValid(key))
                     return;
-                }
 
-                var modifierPressed = Plugin.Config.KeybindMode switch {
+                var modifierPressed = Plugin.Config.KeybindMode switch
+                {
                     KeybindMode.Strict => modifier == modifierState,
                     KeybindMode.Flexible => modifierState.HasFlag(modifier),
                     _ => false,
                 };
-                if (!modifierPressed) {
-                    return;
-                }
 
-                if (!Plugin.KeyState[key]) {
+                if (!modifierPressed)
                     return;
-                }
+
+                if (!Plugin.KeyState[key])
+                    return;
 
                 var bits = BitOperations.PopCount((uint) modifier);
-                if (!turnedOff.TryGetValue(key, out var previousBits) || previousBits.Item1 < bits) {
+                if (!turnedOff.TryGetValue(key, out var previousBits) || previousBits.Item1 < bits)
                     turnedOff[key] = ((uint) bits, toIntercept);
-                }
             }
 
             Intercept(keybind.Key1, keybind.Modifier1);
             Intercept(keybind.Key2, keybind.Modifier2);
         }
 
-        foreach (var (key, (_, keybind)) in turnedOff) {
+        foreach (var (key, (_, keybind)) in turnedOff)
+        {
             Plugin.KeyState[key] = false;
-
-            if (!KeybindsToIntercept.TryGetValue(keybind, out var info)) {
+            if (!KeybindsToIntercept.TryGetValue(keybind, out var info))
                 continue;
-            }
 
-            try {
-                Activated?.Invoke(new ChatActivatedArgs(info) {
-                    TellReason = TellReason.Reply,
-                });
-            } catch (Exception ex) {
+            try
+            {
+                Activated?.Invoke(new ChatActivatedArgs(info) { TellReason = TellReason.Reply, });
+            }
+            catch (Exception ex)
+            {
                 Plugin.Log.Error(ex, "Error in chat Activated event");
             }
         }
     }
 
     private void Login() {
-        if (ChangeChannelNameHook == null) {
+        if (ChangeChannelNameHook == null)
             return;
-        }
 
         var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.ChatLog);
-        if (agent == null) {
+        if (agent == null)
             return;
-        }
 
         ChangeChannelNameDetour((IntPtr) agent);
     }
 
-    private byte ChatLogRefreshDetour(IntPtr log, ushort eventId, AtkValue* value) {
-        if (eventId != 0x31 || value == null || value->UInt is not (0x05 or 0x0C)) {
+    private byte ChatLogRefreshDetour(IntPtr log, ushort eventId, AtkValue* value)
+    {
+        if (eventId != 0x31 || value == null || value->UInt is not (0x05 or 0x0C))
             return ChatLogRefreshHook!.Original(log, eventId, value);
-        }
 
         string? input = null;
-        if (Plugin.GameConfig.TryGet(UiControlOption.DirectChat, out bool option) && option) {
-            if (CurrentCharacter != null) {
+        if (Plugin.GameConfig.TryGet(UiControlOption.DirectChat, out bool option) && option)
+        {
+            if (CurrentCharacter != null)
+            {
                 // FIXME: this whole system sucks
                 var c = *CurrentCharacter;
-                if (c != '\0' && !char.IsControl(c)) {
+                if (c != '\0' && !char.IsControl(c))
                     input = c.ToString();
-                }
             }
         }
 
         string? addIfNotPresent = null;
 
         var str = value + 2;
-        if (str != null && ((int) str->Type & 0xF) == (int) ValueType.String && str->String != null) {
+        if (str != null && ((int) str->Type & 0xF) == (int) ValueType.String && str->String != null)
+        {
             var add = MemoryHelper.ReadStringNullTerminated((IntPtr) str->String);
-            if (add.Length > 0) {
+            if (add.Length > 0)
                 addIfNotPresent = add;
-            }
         }
 
-        try {
+        try
+        {
             var args = new ChatActivatedArgs(new ChannelSwitchInfo(null)) {
                 AddIfNotPresent = addIfNotPresent,
                 Input = input,
             };
             Activated?.Invoke(args);
-        } catch (Exception ex) {
+        }
+        catch (Exception ex)
+        {
             Plugin.Log.Error(ex, "Error in chat Activated event");
         }
 
@@ -505,66 +512,60 @@ internal sealed unsafe class Chat : IDisposable {
         return 1;
     }
 
-    private IntPtr ChangeChannelNameDetour(IntPtr agent) {
+    private IntPtr ChangeChannelNameDetour(IntPtr agent)
+    {
         // Last ShB patch
         // +0x40 = chat channel (byte or uint?)
         //         channel is 17 (maybe 18?) for tells
         // +0x48 = pointer to channel name string
         var ret = ChangeChannelNameHook!.Original(agent);
-        if (agent == IntPtr.Zero) {
+        if (agent == IntPtr.Zero)
             return ret;
-        }
 
         // E8 ?? ?? ?? ?? 8D 48 F7
         // RaptureShellModule + 0xFD0
         var shellModule = (IntPtr) Framework.Instance()->GetUiModule()->GetRaptureShellModule();
-        if (shellModule == IntPtr.Zero) {
+        if (shellModule == IntPtr.Zero)
             return ret;
-        }
 
         var channel = 0u;
-        if (ShellChannelOffset != null) {
+        if (ShellChannelOffset != null)
             channel = *(uint*) (shellModule + ShellChannelOffset.Value);
-        }
 
         // var channel = *(uint*) (agent + 0x40);
-        if (channel is 17 or 18) {
+        if (channel is 17 or 18)
             channel = 0;
-        }
 
         SeString? name = null;
         var namePtrPtr = (byte**) (agent + 0x48);
-        if (namePtrPtr != null) {
+        if (namePtrPtr != null)
+        {
             var namePtr = *namePtrPtr;
             name = MemoryHelper.ReadSeStringNullTerminated((IntPtr) namePtr);
-            if (name.Payloads.Count == 0) {
+            if (name.Payloads.Count == 0)
                 name = null;
-            }
         }
 
-        if (name == null) {
+        if (name == null)
             return ret;
-        }
 
         var nameChunks = ChunkUtil.ToChunks(name, ChunkSource.None, null).ToList();
-        if (nameChunks.Count > 0 && nameChunks[0] is TextChunk text) {
+        if (nameChunks.Count > 0 && nameChunks[0] is TextChunk text)
             text.Content = text.Content.TrimStart('\uE01E').TrimStart();
-        }
 
         Channel = ((InputChannel) channel, nameChunks);
 
         return ret;
     }
 
-    private void ReplyInSelectedChatModeDetour(AgentInterface* agent) {
-        if (ReplyChannelOffset == null) {
+    private void ReplyInSelectedChatModeDetour(AgentInterface* agent)
+    {
+        if (ReplyChannelOffset == null)
             goto Original;
-        }
 
         var replyMode = *(int*) ((IntPtr) agent + ReplyChannelOffset.Value);
-        if (replyMode == -2) {
+        if (replyMode == -2)
             goto Original;
-        }
 
         SetChannel((InputChannel) replyMode);
 
@@ -572,15 +573,21 @@ internal sealed unsafe class Chat : IDisposable {
         ReplyInSelectedChatModeHook!.Original(agent);
     }
 
-    private byte SetChatLogTellTargetDetour(IntPtr a1, Utf8String* name, Utf8String* a3, ushort world, ulong contentId, ushort reason, byte a7) {
-        if (name != null) {
-            try {
+    private byte SetChatLogTellTargetDetour(IntPtr a1, Utf8String* name, Utf8String* a3, ushort world, ulong contentId, ushort reason, byte a7)
+    {
+        if (name != null)
+        {
+            try
+            {
                 var target = new TellTarget(name->ToString(), world, contentId, (TellReason) reason);
-                Activated?.Invoke(new ChatActivatedArgs(new ChannelSwitchInfo(InputChannel.Tell)) {
+                Activated?.Invoke(new ChatActivatedArgs(new ChannelSwitchInfo(InputChannel.Tell))
+                {
                     TellReason = (TellReason) reason,
                     TellTarget = target,
                 });
-            } catch (Exception ex) {
+            }
+            catch (Exception ex)
+            {
                 Plugin.Log.Error(ex, "Error in chat Activated event");
             }
         }
@@ -602,15 +609,16 @@ internal sealed unsafe class Chat : IDisposable {
         EurekaContextMenuTellHook!.Original(param1, playerName, worldName, world, id, param6);
     }
 
-    internal ulong? GetContentIdForEntry(uint index) {
-        if (GetContentIdForChatEntry == null) {
+    internal ulong? GetContentIdForEntry(uint index)
+    {
+        if (GetContentIdForChatEntry == null)
             return null;
-        }
 
         return GetContentIdForChatEntry(Framework.Instance()->GetUiModule()->GetRaptureLogModule(), index);
     }
 
-    internal void SetChannel(InputChannel channel, string? tellTarget = null) {
+    internal void SetChannel(InputChannel channel, string? tellTarget = null)
+    {
         // ExtraChat linkshells aren't supported in game so we never want to
         // call the ChangeChatChannel function with them.
         //
@@ -651,23 +659,23 @@ internal sealed unsafe class Chat : IDisposable {
         utfWorld->Dtor(true);
     }
 
-    private static VirtualKey GetKeyForModifier(ModifierFlag modifierFlag) => modifierFlag switch {
+    private static VirtualKey GetKeyForModifier(ModifierFlag modifierFlag) => modifierFlag switch
+    {
         ModifierFlag.Shift => VirtualKey.SHIFT,
         ModifierFlag.Ctrl => VirtualKey.CONTROL,
         ModifierFlag.Alt => VirtualKey.MENU,
         _ => VirtualKey.NO_KEY,
     };
 
-    private Keybind? GetKeybind(string id) {
+    private Keybind? GetKeybind(string id)
+    {
         var agent = (IntPtr) Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.Configkey);
-        if (agent == IntPtr.Zero) {
+        if (agent == IntPtr.Zero)
             return null;
-        }
 
         var a1 = *(void**) (agent + 0x78);
-        if (a1 == null) {
+        if (a1 == null)
             return null;
-        }
 
         var outData = stackalloc byte[32];
         var idString = Utf8String.FromString(id);
@@ -675,16 +683,15 @@ internal sealed unsafe class Chat : IDisposable {
         idString->Dtor(true);
 
         var key1 = (VirtualKey) outData[0];
-        if (key1 is VirtualKey.F23) {
+        if (key1 is VirtualKey.F23)
             key1 = VirtualKey.OEM_2;
-        }
 
         var key2 = (VirtualKey) outData[2];
-        if (key2 is VirtualKey.F23) {
+        if (key2 is VirtualKey.F23)
             key2 = VirtualKey.OEM_2;
-        }
 
-        return new Keybind {
+        return new Keybind
+        {
             Key1 = key1,
             Modifier1 = (ModifierFlag) outData[1],
             Key2 = key2,
@@ -692,16 +699,15 @@ internal sealed unsafe class Chat : IDisposable {
         };
     }
 
-    internal TellHistoryInfo? GetTellHistoryInfo(int index) {
+    internal TellHistoryInfo? GetTellHistoryInfo(int index)
+    {
         var acquaintanceModule = Framework.Instance()->GetUiModule()->GetAcquaintanceModule();
-        if (acquaintanceModule == null) {
+        if (acquaintanceModule == null)
             return null;
-        }
 
         var ptr = GetTellHistory(acquaintanceModule, index);
-        if (ptr == IntPtr.Zero) {
+        if (ptr == IntPtr.Zero)
             return null;
-        }
 
         var name = MemoryHelper.ReadStringNullTerminated(*(IntPtr*) ptr);
         var world = *(ushort*) (ptr + 0xD0);
@@ -710,7 +716,8 @@ internal sealed unsafe class Chat : IDisposable {
         return new TellHistoryInfo(name, world, contentId);
     }
 
-    internal void SendTell(TellReason reason, ulong contentId, string name, ushort homeWorld, byte[] message) {
+    internal void SendTell(TellReason reason, ulong contentId, string name, ushort homeWorld, byte[] message)
+    {
         var uName = Utf8String.FromString(name);
         var uMessage = Utf8String.FromSequence(message);
 
@@ -725,7 +732,8 @@ internal sealed unsafe class Chat : IDisposable {
         uMessage->Dtor(true);
     }
 
-    internal bool IsCharValid(char c) {
+    internal bool IsCharValid(char c)
+    {
         var uC = Utf8String.FromString(c.ToString());
 
         SanitiseString(uC, 0x27F, IntPtr.Zero);
