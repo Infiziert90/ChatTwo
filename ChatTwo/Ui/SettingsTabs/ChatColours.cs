@@ -19,9 +19,13 @@ internal sealed class ChatColours : ISettingsTab {
         #if DEBUG
         var sortable = ChatTypeExt.SortOrder
             .SelectMany(entry => entry.Item2)
-            .Where(type => !type.IsGm())
+            // Users can set colours for ExtraChat linkshells in the ExtraChat
+            // plugin directly.
+            .Where(type => !type.IsGm() && !type.IsExtraChatLinkshell())
             .ToHashSet();
-        var total = Enum.GetValues<ChatType>().Where(type => !type.IsGm()).ToHashSet();
+        var total = Enum.GetValues<ChatType>()
+            .Where(type => !type.IsGm() && !type.IsExtraChatLinkshell())
+            .ToHashSet();
         if (sortable.Count != total.Count) {
             Plugin.Log.Warning($"There are {sortable.Count} sortable channels, but there are {total.Count} total channels.");
             total.ExceptWith(sortable);

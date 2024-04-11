@@ -87,6 +87,8 @@ internal static class ChatTypeExt
             ChatType.MessageBook,
             ChatType.Alarm,
         }),
+        // Note: ExtraChat linkshells are handled separately in the tab settings
+        // UI.
     };
 
     internal static string Name(this ChatType type)
@@ -352,6 +354,19 @@ internal static class ChatTypeExt
         ChatType.GmLinkshell7 => true,
         ChatType.GmLinkshell8 => true,
         ChatType.GmNoviceNetwork => true,
+        _ => false,
+    };
+
+    internal static bool IsExtraChatLinkshell(this ChatType type) => type switch
+    {
+        ChatType.ExtraChatLinkshell1 => true,
+        ChatType.ExtraChatLinkshell2 => true,
+        ChatType.ExtraChatLinkshell3 => true,
+        ChatType.ExtraChatLinkshell4 => true,
+        ChatType.ExtraChatLinkshell5 => true,
+        ChatType.ExtraChatLinkshell6 => true,
+        ChatType.ExtraChatLinkshell7 => true,
+        ChatType.ExtraChatLinkshell8 => true,
         _ => false,
     };
 
