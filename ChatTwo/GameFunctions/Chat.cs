@@ -159,6 +159,8 @@ internal sealed unsafe class Chat : IDisposable {
     internal bool UsesTellTempChannel { get; set; }
     internal InputChannel? PreviousChannel { get; private set; }
 
+    private long LastRefresh;
+
     internal Chat(Plugin plugin)
     {
         Plugin = plugin;
@@ -396,11 +398,17 @@ internal sealed unsafe class Chat : IDisposable {
 
     private void InterceptKeybinds(IFramework framework1)
     {
-        CheckFocus();
-        UpdateKeybinds();
+        // CheckFocus();
 
-        if (_inputFocused)
-            return;
+        // Refresh current keybinds every 5s
+        if (LastRefresh + 5 * 1000 < Environment.TickCount64)
+        {
+            UpdateKeybinds();
+            LastRefresh = Environment.TickCount64;
+        }
+
+        // if (_inputFocused)
+        //     return;
 
         var modifierState = (ModifierFlag) 0;
         foreach (var modifier in Enum.GetValues<ModifierFlag>())
