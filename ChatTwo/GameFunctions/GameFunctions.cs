@@ -11,8 +11,10 @@ using ValueType = FFXIVClientStructs.FFXIV.Component.GUI.ValueType;
 
 namespace ChatTwo.GameFunctions;
 
-internal unsafe class GameFunctions : IDisposable {
-    private static class Signatures {
+internal unsafe class GameFunctions : IDisposable
+{
+    private static class Signatures
+    {
         internal const string IsMentorA1 = "48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 84 C0 74 71 0F B6 86";
         internal const string ResolveTextCommandPlaceholder = "E8 ?? ?? ?? ?? 49 8D 4F 18 4C 8B E0";
 
@@ -20,52 +22,47 @@ internal unsafe class GameFunctions : IDisposable {
     }
 
     #region Functions
-
     [Signature("E8 ?? ?? ?? ?? 8B FD 8B CD", Fallibility = Fallibility.Fallible)]
-    private readonly delegate* unmanaged<IntPtr, uint, IntPtr> _getInfoProxyByIndex = null!;
+    private readonly delegate* unmanaged<IntPtr, uint, IntPtr> GetInfoProxyByIndexNative = null!;
 
     [Signature("E8 ?? ?? ?? ?? 84 C0 74 0D B0 02", Fallibility = Fallibility.Fallible)]
-    private readonly delegate* unmanaged<IntPtr, byte> _isMentor = null!;
+    private readonly delegate* unmanaged<IntPtr, byte> IsMentorNative = null!;
 
     [Signature("48 89 5C 24 ?? 57 48 83 EC 20 48 8B FA 48 8B D9 E8 ?? ?? ?? ?? 48 8B 8B ?? ?? ?? ?? 48 85 C9", Fallibility = Fallibility.Fallible)]
-    private readonly delegate* unmanaged<AgentInterface*, ulong, byte> _openPartyFinder = null!;
+    private readonly delegate* unmanaged<AgentInterface*, ulong, byte> OpenPartyFinderNative = null!;
 
     [Signature("E8 ?? ?? ?? ?? EB 20 48 8B 46 28", Fallibility = Fallibility.Fallible)]
-    private readonly delegate* unmanaged<AgentInterface*, uint, void> _openAchievement = null!;
+    private readonly delegate* unmanaged<AgentInterface*, uint, void> OpenAchievementNative = null!;
 
     [Signature("E8 ?? ?? ?? ?? 41 8D 4F 08 84 C0", Fallibility = Fallibility.Fallible)]
-    private readonly delegate* unmanaged<byte> _inInstance = null!;
-
+    private readonly delegate* unmanaged<byte> InInstanceNative = null!;
     #endregion
 
     #region Hooks
-
     private delegate IntPtr ResolveTextCommandPlaceholderDelegate(IntPtr a1, byte* placeholderText, byte a3, byte a4);
 
     [Signature(Signatures.ResolveTextCommandPlaceholder, DetourName = nameof(ResolveTextCommandPlaceholderDetour))]
     private Hook<ResolveTextCommandPlaceholderDelegate>? ResolveTextCommandPlaceholderHook { get; init; }
-
     #endregion
 
     #pragma warning disable 0649
-
     [Signature(Signatures.CurrentChatEntryOffset, Offset = 2)]
-    private readonly byte? _currentChatEntryOffset;
+    private readonly byte? CurrentChatEntryOffset;
 
     [Signature(Signatures.IsMentorA1, ScanType = ScanType.StaticAddress)]
-    private readonly IntPtr? _isMentorA1;
-
+    private readonly IntPtr? IsMentorA1;
     #pragma warning restore 0649
 
     [Signature("FF 90 ?? ?? ?? ?? 48 8B C8 BA ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8B F0 48 85 C0 0F 84 ?? ?? ?? ?? 48 8B 10 33 ED", Offset = 2)]
-    private readonly int? _infoModuleVfunc;
+    private readonly int? InfoModuleVfunc;
 
     private Plugin Plugin { get; }
     internal Party Party { get; }
     internal Chat Chat { get; }
     internal Context Context { get; }
 
-    internal GameFunctions(Plugin plugin) {
+    internal GameFunctions(Plugin plugin)
+    {
         Plugin = plugin;
         Party = new Party(Plugin);
         Chat = new Chat(Plugin);
@@ -76,101 +73,105 @@ internal unsafe class GameFunctions : IDisposable {
         ResolveTextCommandPlaceholderHook?.Enable();
     }
 
-    public void Dispose() {
+    public void Dispose()
+    {
         Chat.Dispose();
 
         ResolveTextCommandPlaceholderHook?.Dispose();
 
-        Marshal.FreeHGlobal(_placeholderNamePtr);
+        Marshal.FreeHGlobal(PlaceholderNamePtr);
     }
 
-    private IntPtr GetInfoModule() {
-        if (_infoModuleVfunc is not { } vfunc) {
+    private IntPtr GetInfoModule()
+    {
+        if (InfoModuleVfunc is not { } vfunc)
             return IntPtr.Zero;
-        }
 
         var uiModule = Framework.Instance()->GetUiModule();
         var getInfoModule = (delegate* unmanaged<UIModule*, IntPtr>) uiModule->vfunc[vfunc / 8];
         return getInfoModule(uiModule);
     }
 
-    internal IntPtr GetInfoProxyByIndex(uint idx) {
+    internal IntPtr GetInfoProxyByIndex(uint idx)
+    {
         var infoModule = GetInfoModule();
-        return infoModule == IntPtr.Zero ? IntPtr.Zero : _getInfoProxyByIndex(infoModule, idx);
+        return infoModule == IntPtr.Zero ? IntPtr.Zero : GetInfoProxyByIndexNative(infoModule, idx);
     }
 
-    internal uint? GetCurrentChatLogEntryIndex() {
-        if (_currentChatEntryOffset == null) {
+    internal uint? GetCurrentChatLogEntryIndex()
+    {
+        if (CurrentChatEntryOffset == null)
             return null;
-        }
 
         var log = (IntPtr) Framework.Instance()->GetUiModule()->GetRaptureLogModule();
-        return *(uint*) (log + _currentChatEntryOffset.Value);
+        return *(uint*) (log + CurrentChatEntryOffset.Value);
     }
 
-    internal void SendFriendRequest(string name, ushort world) {
+    internal void SendFriendRequest(string name, ushort world)
+    {
         ListCommand(name, world, "friendlist");
     }
 
-    internal void AddToBlacklist(string name, ushort world) {
+    internal void AddToBlacklist(string name, ushort world)
+    {
         ListCommand(name, world, "blist");
     }
 
-    private void ListCommand(string name, ushort world, string commandName) {
+    private void ListCommand(string name, ushort world, string commandName)
+    {
         var row = Plugin.DataManager.GetExcelSheet<World>()!.GetRow(world);
-        if (row == null) {
+        if (row == null)
             return;
-        }
 
         var worldName = row.Name.RawString;
-        _replacementName = $"{name}@{worldName}";
-        Plugin.Common.Functions.Chat.SendMessage($"/{commandName} add {_placeholder}");
+        ReplacementName = $"{name}@{worldName}";
+        Plugin.Common.Functions.Chat.SendMessage($"/{commandName} add {Placeholder}");
     }
 
-    internal static void SetAddonInteractable(string name, bool interactable) {
+    internal static void SetAddonInteractable(string name, bool interactable)
+    {
         var unitManager = AtkStage.GetSingleton()->RaptureAtkUnitManager;
 
         var addon = (IntPtr) unitManager->GetAddonByName(name);
-        if (addon == IntPtr.Zero) {
+        if (addon == IntPtr.Zero)
             return;
-        }
 
         var flags = (uint*) (addon + 0x180);
-        if (interactable) {
+        if (interactable)
             *flags &= ~(1u << 22);
-        } else {
+        else
             *flags |= 1 << 22;
-        }
     }
 
-    internal static void SetChatInteractable(bool interactable) {
-        for (var i = 0; i < 4; i++) {
+    internal static void SetChatInteractable(bool interactable)
+    {
+        for (var i = 0; i < 4; i++)
             SetAddonInteractable($"ChatLogPanel_{i}", interactable);
-        }
 
         SetAddonInteractable("ChatLog", interactable);
     }
 
-    internal static bool IsAddonInteractable(string name) {
+    internal static bool IsAddonInteractable(string name)
+    {
         var unitManager = AtkStage.GetSingleton()->RaptureAtkUnitManager;
 
         var addon = (IntPtr) unitManager->GetAddonByName(name);
-        if (addon == IntPtr.Zero) {
+        if (addon == IntPtr.Zero)
             return false;
-        }
 
         var flags = (uint*) (addon + 0x180);
         return (*flags & (1 << 22)) == 0;
     }
 
-    internal static void OpenItemTooltip(uint id) {
+    internal static void OpenItemTooltip(uint id)
+    {
         var atkStage = AtkStage.GetSingleton();
         var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.ItemDetail);
         var addon = atkStage->RaptureAtkUnitManager->GetAddonByName("ItemDetail");
-        if (agent == null || addon == null) {
-            // atkStage ain't gonna be null or we have bigger problems
+
+        // atkStage ain't gonna be null or we have bigger problems
+        if (agent == null || addon == null)
             return;
-        }
 
         var agentPtr = (IntPtr) agent;
 
@@ -203,74 +204,74 @@ internal unsafe class GameFunctions : IDisposable {
         (*vf5)(addon, 0, 15);
     }
 
-    internal static void CloseItemTooltip() {
+    internal static void CloseItemTooltip()
+    {
         // hide addon first to prevent the "addon close" sound
         var addon = AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName("ItemDetail");
-        if (addon != null) {
+        if (addon != null)
             addon->Hide(true, false, 0);
-        }
 
         var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.ItemDetail);
-        if (agent != null) {
+        if (agent != null)
             agent->Hide();
-        }
     }
 
-    internal static void OpenPartyFinder() {
+    internal static void OpenPartyFinder()
+    {
         // this whole method: 6.05: 84433A (FF 97 ?? ?? ?? ?? 41 B4 01)
         var lfg = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.LookingForGroup);
-        if (lfg->IsAgentActive()) {
+        if (lfg->IsAgentActive())
+        {
             var addonId = lfg->GetAddonID();
             var atkModule = Framework.Instance()->GetUiModule()->GetRaptureAtkModule();
             var atkModuleVtbl = (void**) atkModule->AtkModule.vtbl;
             var vf27 = (delegate* unmanaged<RaptureAtkModule*, ulong, ulong, byte>) atkModuleVtbl[27];
             vf27(atkModule, addonId, 1);
-        } else {
+        }
+        else
+        {
             // 6.05: 8443DD
-            if (*(uint*) ((IntPtr) lfg + 0x2C20) > 0) {
+            if (*(uint*) ((IntPtr) lfg + 0x2C20) > 0)
                 lfg->Hide();
-            } else {
+            else
                 lfg->Show();
-            }
         }
     }
 
-    internal bool IsMentor() {
-        if (_isMentor == null || _isMentorA1 == null || _isMentorA1.Value == IntPtr.Zero) {
+    internal bool IsMentor()
+    {
+        if (IsMentorNative == null || IsMentorA1 == null || IsMentorA1.Value == IntPtr.Zero)
             return false;
-        }
 
-        return _isMentor(_isMentorA1.Value) > 0;
+        return IsMentorNative(IsMentorA1.Value) > 0;
     }
 
-    internal void OpenPartyFinder(uint id) {
-        if (_openPartyFinder == null) {
+    internal void OpenPartyFinder(uint id)
+    {
+        if (OpenPartyFinderNative == null)
             return;
-        }
 
         var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.LookingForGroup);
-        if (agent != null) {
-            _openPartyFinder(agent, id);
-        }
+        if (agent != null)
+            OpenPartyFinderNative(agent, id);
     }
 
-    internal void OpenAchievement(uint id) {
-        if (_openAchievement == null) {
+    internal void OpenAchievement(uint id)
+    {
+        if (OpenAchievementNative == null)
             return;
-        }
 
         var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.Achievement);
-        if (agent != null) {
-            _openAchievement(agent, id);
-        }
+        if (agent != null)
+            OpenAchievementNative(agent, id);
     }
 
-    internal bool IsInInstance() {
-        if (_inInstance == null) {
+    internal bool IsInInstance()
+    {
+        if (InInstanceNative == null)
             return false;
-        }
 
-        return _inInstance() != 0;
+        return InInstanceNative() != 0;
     }
 
     internal bool TryOpenAdventurerPlate(ulong playerId)
@@ -287,36 +288,33 @@ internal unsafe class GameFunctions : IDisposable {
         }
     }
 
-    internal void ClickNoviceNetworkButton() {
+    internal void ClickNoviceNetworkButton()
+    {
         var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.ChatLog);
         // case 3
-        var value = new AtkValue {
-            Type = ValueType.Int,
-            Int = 3,
-        };
+        var value = new AtkValue { Type = ValueType.Int, Int = 3, };
         var result = 0;
         var vf0 = *(delegate* unmanaged<AgentInterface*, int*, AtkValue*, ulong, ulong, int*>*) agent->VTable;
         vf0(agent, &result, &value, 0, 0);
     }
 
-    private readonly IntPtr _placeholderNamePtr = Marshal.AllocHGlobal(128);
-    private readonly string _placeholder = $"<{Guid.NewGuid():N}>";
-    private string? _replacementName;
+    private readonly IntPtr PlaceholderNamePtr = Marshal.AllocHGlobal(128);
+    private readonly string Placeholder = $"<{Guid.NewGuid():N}>";
+    private string? ReplacementName;
 
-    private IntPtr ResolveTextCommandPlaceholderDetour(IntPtr a1, byte* placeholderText, byte a3, byte a4) {
-        if (_replacementName == null) {
+    private IntPtr ResolveTextCommandPlaceholderDetour(IntPtr a1, byte* placeholderText, byte a3, byte a4)
+    {
+        if (ReplacementName == null)
             goto Original;
-        }
 
         var placeholder = MemoryHelper.ReadStringNullTerminated((IntPtr) placeholderText);
-        if (placeholder != _placeholder) {
+        if (placeholder != Placeholder)
             goto Original;
-        }
 
-        MemoryHelper.WriteString(_placeholderNamePtr, _replacementName);
-        _replacementName = null;
+        MemoryHelper.WriteString(PlaceholderNamePtr, ReplacementName);
+        ReplacementName = null;
 
-        return _placeholderNamePtr;
+        return PlaceholderNamePtr;
 
         Original:
         return ResolveTextCommandPlaceholderHook!.Original(a1, placeholderText, a3, a4);

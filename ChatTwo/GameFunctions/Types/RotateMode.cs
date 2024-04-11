@@ -1,6 +1,7 @@
 namespace ChatTwo.GameFunctions.Types;
 
-internal enum RotateMode {
+internal enum RotateMode
+{
     None,
     Forward,
     Reverse,

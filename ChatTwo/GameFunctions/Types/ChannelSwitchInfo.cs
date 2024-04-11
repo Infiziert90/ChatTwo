@@ -8,7 +8,8 @@ internal class ChannelSwitchInfo {
     internal RotateMode Rotate { get; }
     internal string? Text { get; }
 
-    internal ChannelSwitchInfo(InputChannel? channel, bool permanent = false, RotateMode rotate = RotateMode.None, string? text = null) {
+    internal ChannelSwitchInfo(InputChannel? channel, bool permanent = false, RotateMode rotate = RotateMode.None, string? text = null)
+    {
         Channel = channel;
         Permanent = permanent;
         Rotate = rotate;
