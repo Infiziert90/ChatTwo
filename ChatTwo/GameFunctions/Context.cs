@@ -1,7 +1,6 @@
 using ChatTwo.Util;
 using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
-using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
@@ -21,19 +20,11 @@ internal sealed unsafe class Context
     [Signature("E8 ?? ?? ?? ?? EB 3F 83 F8 FE", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<AgentInterface*, ushort, uint, byte, void> ItemComparisonNative = null!;
 
-    [Signature("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 83 F8 0F", Fallibility = Fallibility.Fallible)]
+    [Signature("48 89 5C 24 ?? 57 48 83 EC ?? 8B FA B8", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<IntPtr, uint, void> SearchForRecipesUsingItemNative = null!;
 
     [Signature("E8 ?? ?? ?? ?? EB 45 45 33 C9", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<void*, uint, byte, void> SearchForItemNative = null!;
-
-    #region Offsets
-    [Signature(
-        "FF 90 ?? ?? ?? ?? 8B 93 ?? ?? ?? ?? 48 8B C8 E8 ?? ?? ?? ?? 41 0F B6 D4 48 8B CB E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 81 FF ?? ?? ?? ?? 0F 85",
-        Offset = 2
-    )]
-    private readonly int? SearchForRecipesUsingItemVfunc;
-    #endregion
 
     private Plugin Plugin { get; }
 
@@ -93,12 +84,10 @@ internal sealed unsafe class Context
 
     internal void SearchForRecipesUsingItem(uint itemId)
     {
-        if (SearchForRecipesUsingItemNative == null || SearchForRecipesUsingItemVfunc is not { } offset)
+        if (SearchForRecipesUsingItemNative == null)
             return;
 
-        var uiModule = Framework.Instance()->GetUiModule();
-        var vf = (delegate* unmanaged<UIModule*, IntPtr>) uiModule->vfunc[offset / 8];
-        var a1 = vf(uiModule);
+        var a1 = (nint) AgentModule.Instance()->GetAgentByInternalId(AgentId.RecipeProductList);
         SearchForRecipesUsingItemNative(a1, itemId);
     }
 

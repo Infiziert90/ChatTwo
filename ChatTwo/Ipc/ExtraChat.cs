@@ -2,9 +2,11 @@ using Dalamud.Plugin.Ipc;
 
 namespace ChatTwo.Ipc;
 
-internal sealed class ExtraChat : IDisposable {
+internal sealed class ExtraChat : IDisposable
+{
     [Serializable]
-    private struct OverrideInfo {
+    private struct OverrideInfo
+    {
         public string? Channel;
         public ushort UiColour;
         public uint Rgba;
@@ -24,7 +26,8 @@ internal sealed class ExtraChat : IDisposable {
     private Dictionary<Guid, string> ChannelNamesInternal { get; set; } = new();
     internal IReadOnlyDictionary<Guid, string> ChannelNames => ChannelNamesInternal;
 
-    internal ExtraChat(Plugin plugin) {
+    internal ExtraChat(Plugin plugin)
+    {
         Plugin = plugin;
 
         OverrideChannelGate = Plugin.Interface.GetIpcSubscriber<OverrideInfo, object>("ExtraChat.OverrideChannelColour");
@@ -34,20 +37,26 @@ internal sealed class ExtraChat : IDisposable {
         OverrideChannelGate.Subscribe(OnOverrideChannel);
         ChannelCommandColoursGate.Subscribe(OnChannelCommandColours);
         ChannelNamesGate.Subscribe(OnChannelNames);
-        try {
+        try
+        {
             ChannelCommandColoursInternal = ChannelCommandColoursGate.InvokeFunc(null!);
             ChannelNamesInternal = ChannelNamesGate.InvokeFunc(null!);
-        } catch (Exception) {
+        }
+        catch (Exception)
+        {
             // no-op
         }
     }
 
-    public void Dispose() {
+    public void Dispose()
+    {
         OverrideChannelGate.Unsubscribe(OnOverrideChannel);
     }
 
-    private void OnOverrideChannel(OverrideInfo info) {
-        if (info.Channel == null) {
+    private void OnOverrideChannel(OverrideInfo info)
+    {
+        if (info.Channel == null)
+        {
             ChannelOverride = null;
             return;
         }
@@ -55,11 +64,13 @@ internal sealed class ExtraChat : IDisposable {
         ChannelOverride = (info.Channel, info.Rgba);
     }
 
-    private void OnChannelCommandColours(Dictionary<string, uint> obj) {
+    private void OnChannelCommandColours(Dictionary<string, uint> obj)
+    {
         ChannelCommandColoursInternal = obj;
     }
 
-    private void OnChannelNames(Dictionary<Guid, string> obj) {
+    private void OnChannelNames(Dictionary<Guid, string> obj)
+    {
         ChannelNamesInternal = obj;
     }
 }

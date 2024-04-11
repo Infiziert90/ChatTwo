@@ -5,6 +5,7 @@ using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
+using FFXIVClientStructs.FFXIV.Client.UI.Info;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using Lumina.Excel.GeneratedSheets;
 using ValueType = FFXIVClientStructs.FFXIV.Component.GUI.ValueType;
@@ -22,9 +23,6 @@ internal unsafe class GameFunctions : IDisposable
     }
 
     #region Functions
-    [Signature("E8 ?? ?? ?? ?? 8B FD 8B CD", Fallibility = Fallibility.Fallible)]
-    private readonly delegate* unmanaged<IntPtr, uint, IntPtr> GetInfoProxyByIndexNative = null!;
-
     [Signature("E8 ?? ?? ?? ?? 84 C0 74 0D B0 02", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<IntPtr, byte> IsMentorNative = null!;
 
@@ -53,9 +51,6 @@ internal unsafe class GameFunctions : IDisposable
     private readonly IntPtr? IsMentorA1;
     #pragma warning restore 0649
 
-    [Signature("FF 90 ?? ?? ?? ?? 48 8B C8 BA ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8B F0 48 85 C0 0F 84 ?? ?? ?? ?? 48 8B 10 33 ED", Offset = 2)]
-    private readonly int? InfoModuleVfunc;
-
     private Plugin Plugin { get; }
     internal Party Party { get; }
     internal Chat Chat { get; }
@@ -82,20 +77,13 @@ internal unsafe class GameFunctions : IDisposable
         Marshal.FreeHGlobal(PlaceholderNamePtr);
     }
 
-    private IntPtr GetInfoModule()
-    {
-        if (InfoModuleVfunc is not { } vfunc)
-            return IntPtr.Zero;
-
-        var uiModule = Framework.Instance()->GetUiModule();
-        var getInfoModule = (delegate* unmanaged<UIModule*, IntPtr>) uiModule->vfunc[vfunc / 8];
-        return getInfoModule(uiModule);
-    }
-
     internal IntPtr GetInfoProxyByIndex(uint idx)
     {
-        var infoModule = GetInfoModule();
-        return infoModule == IntPtr.Zero ? IntPtr.Zero : GetInfoProxyByIndexNative(infoModule, idx);
+        var infoModule = InfoModule.Instance();
+        if (infoModule == null)
+            return nint.Zero;
+
+        return (nint) infoModule->GetInfoProxyById(idx);
     }
 
     internal uint? GetCurrentChatLogEntryIndex()
