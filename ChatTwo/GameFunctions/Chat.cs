@@ -10,7 +10,6 @@ using Dalamud.Memory;
 using Dalamud.Plugin.Services;
 using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
-using FFXIVClientStructs.FFXIV.Client.System.Memory;
 using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
@@ -565,7 +564,7 @@ internal sealed unsafe class Chat : IDisposable {
         {
             playerName = MemoryHelper.ReadStringNullTerminated(agent + 0xDA);
             worldId = *(ushort*) (agent + 0x120);
-            Plugin.Log.Debug($"Detected tell target '{playerName}'@{worldId:X}");
+            Plugin.Log.Debug($"Detected tell target '{playerName}'@{worldId}");
         }
 
         Channel = ((InputChannel) channel, nameChunks, playerName, worldId);

@@ -676,13 +676,11 @@ public sealed class ChatLogWindow : Window, IUiComponent {
             HandleKeybinds(true);
         }
 
-        // If we're currently using a temporary channel, switch back to the
-        // original channel when the input loses focus *unless* the
-        // auto-translate popup is open.
-        if (_tempChannel != null && !Activate && !ImGui.IsItemActive() && _autoCompleteInfo == null) {
-            if (_tempChannel is InputChannel.Tell) {
+        // Only trigger unfocused if we are currently not calling the auto complete
+        if (!Activate && !ImGui.IsItemActive() && _autoCompleteInfo == null)
+        {
+            if (_tempChannel is InputChannel.Tell)
                 _tellTarget = null;
-            }
 
             _tempChannel = null;
             if (Plugin.Functions.Chat.UsesTellTempChannel)
@@ -692,36 +690,37 @@ public sealed class ChatLogWindow : Window, IUiComponent {
             }
         }
 
-        if (ImGui.BeginPopupContextItem()) {
+        if (ImGui.BeginPopupContextItem())
+        {
             ImGui.PushStyleColor(ImGuiCol.Text, normalColour);
 
-            try {
-                if (ImGui.Selectable(Language.ChatLog_HideChat)) {
+            try
+            {
+                if (ImGui.Selectable(Language.ChatLog_HideChat))
                     UserHide();
-                }
-            } finally {
+            }
+            finally
+            {
                 ImGui.PopStyleColor();
             }
 
             ImGui.EndPopup();
         }
 
-        if (inputColour != null) {
+        if (inputColour != null)
             ImGui.PopStyleColor();
-        }
 
         ImGui.SameLine();
 
-        if (ImGuiUtil.IconButton(FontAwesomeIcon.Cog)) {
-            Plugin.SettingsWindow.IsOpen ^= true;
-        }
+        if (ImGuiUtil.IconButton(FontAwesomeIcon.Cog))
+            Plugin.SettingsWindow.Toggle();
 
-        if (showNovice) {
+        if (showNovice)
+        {
             ImGui.SameLine();
 
-            if (ImGuiUtil.IconButton(FontAwesomeIcon.Leaf)) {
+            if (ImGuiUtil.IconButton(FontAwesomeIcon.Leaf))
                 Plugin.Functions.ClickNoviceNetworkButton();
-            }
         }
     }
 
