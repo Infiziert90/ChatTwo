@@ -952,4 +952,34 @@
     <data name="Options_HideInLoadingScreens_Description" xml:space="preserve">
         <value>Hide {0} during loading screens.</value>
     </data>
+    <data name="Options_ClearDatabase_Button">
+        <value>Clear the message history database</value>
+    </data>
+    <data name="Options_ClearDatabase_Success">
+        <value>Successfully cleared the chat database</value>
+    </data>
+    <data name="Options_ClearDatabase_Tooltip">
+        <value>Removes all message history. Cannot be restored. Hold Ctrl+Shift to click.</value>
+    </data>
+    <data name="Options_Database_Metadata_CopyConfigPath">
+        <value>Click to copy database directory path</value>
+    </data>
+    <data name="Options_Database_Metadata_CopyConfigPathNotification">
+        <value>Copied database directory path to clipboard</value>
+    </data>
+    <data name="Options_Database_Metadata_Heading">
+        <value>Database details:</value>
+    </data>
+    <data name="Options_Database_Metadata_LogSize">
+        <value>Log size: {0}</value>
+    </data>
+    <data name="Options_Database_Metadata_MessageCount">
+        <value>Stored messages: {0:N0}/{1:N0}</value>
+    </data>
+    <data name="Options_Database_Metadata_Path">
+        <value>Path: {0}</value>
+    </data>
+    <data name="Options_Database_Metadata_Size">
+        <value>Size: {0}</value>
+    </data>
 </root>

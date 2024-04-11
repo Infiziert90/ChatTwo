@@ -234,6 +234,22 @@ internal static class ImGuiUtil {
         return r;
     }
 
+    internal static bool CtrlShiftButton(string label, string tooltip = "")
+    {
+        var io = ImGui.GetIO();
+        var ctrlShiftHeld = io.KeyCtrl && io.KeyShift;
+        if (!ctrlShiftHeld) ImGui.BeginDisabled();
+        var ret = ImGui.Button(label) && ctrlShiftHeld;
+        if (!ctrlShiftHeld) ImGui.EndDisabled();
+        if (!string.IsNullOrEmpty(tooltip) && ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled)) {
+            ImGui.BeginTooltip();
+            ImGui.TextUnformatted(tooltip);
+            ImGui.EndTooltip();
+        }
+
+        return ret;
+    }
+
     internal static bool TryToImGui(this VirtualKey key, out ImGuiKey result) {
         result = key switch {
             VirtualKey.NO_KEY => ImGuiKey.None,

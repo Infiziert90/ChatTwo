@@ -140,9 +140,6 @@ internal class Store : IDisposable {
             bson => DateTime.UnixEpoch.AddMilliseconds(bson.AsInt64)
         );
         Database = Connect();
-        Messages.EnsureIndex(msg => msg.Date);
-        Messages.EnsureIndex(msg => msg.SortCode);
-        Messages.EnsureIndex(msg => msg.ExtraChatChannel);
 
         Plugin.ChatGui.ChatMessageUnhandled += ChatMessage;
         Plugin.Framework.Update += GetMessageInfo;
@@ -159,23 +156,52 @@ internal class Store : IDisposable {
         Database.Dispose();
     }
 
-    private ILiteDatabase Connect() {
+    internal static string DatabasePath()
+    {
         var dir = Plugin.Interface.ConfigDirectory;
         dir.Create();
+        return Path.Join(dir.FullName, "chat.db");
+    }
 
-        var dbPath = Path.Join(dir.FullName, "chat.db");
+    private LiteDatabase Connect() {
+        var dbPath = DatabasePath();
         var connection = Plugin.Config.SharedMode ? "shared" : "direct";
         var connString = $"Filename='{dbPath}';Connection={connection}";
-        return new LiteDatabase(connString, BsonMapper.Global) {
+        var conn = new LiteDatabase(connString, BsonMapper.Global) {
             CheckpointSize = 1_000,
             Timeout = TimeSpan.FromSeconds(1),
         };
+        var messages = conn.GetCollection<Message>("messages");
+        messages.EnsureIndex(msg => msg.Date);
+        messages.EnsureIndex(msg => msg.SortCode);
+        messages.EnsureIndex(msg => msg.ExtraChatChannel);
+        return conn;
     }
 
     internal void Reconnect() {
         Database.Dispose();
         Database = Connect();
     }
+
+    internal void ClearDatabase()
+    {
+        Messages.DeleteAll();
+        Database.Rebuild();
+    }
+
+    internal static long DatabaseSize()
+    {
+        var dbPath = DatabasePath();
+        return !File.Exists(dbPath) ? 0 : new FileInfo(dbPath).Length;
+    }
+
+    internal static long DatabaseLogSize()
+    {
+        var dbLogPath = Path.Join(Plugin.Interface.ConfigDirectory.FullName, "chat-log.db");
+        return !File.Exists(dbLogPath) ? 0 : new FileInfo(dbLogPath).Length;
+    }
+
+    internal int MessageCount() => Messages.Count();
 
     private void Logout() {
         LastContentId = 0;

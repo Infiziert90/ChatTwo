@@ -1,21 +1,27 @@
 using ChatTwo.Resources;
 using ChatTwo.Util;
+using Dalamud.Interface.Internal.Notifications;
 using ImGuiNET;
 
 namespace ChatTwo.Ui.SettingsTabs;
 
 internal sealed class Database : ISettingsTab {
     private Configuration Mutable { get; }
-    private Store Store { get; }
+    private Plugin Plugin { get; }
 
     public string Name => Language.Options_Database_Tab + "###tabs-database";
 
-    internal Database(Configuration mutable, Store store) {
-        Store = store;
+    internal Database(Configuration mutable, Plugin plugin) {
+        Plugin = plugin;
         Mutable = mutable;
     }
 
     private bool _showAdvanced;
+
+    private long _databaseLastRefreshTicks;
+    private long _databaseSize;
+    private long _databaseLogSize;
+    private int _databaseMessageCount;
 
     public void Draw(bool changed) {
         if (changed) {
@@ -47,17 +53,87 @@ internal sealed class Database : ISettingsTab {
         ImGuiUtil.WarningText(string.Format(Language.Options_SharedMode_Warning, Plugin.PluginName));
 
         ImGui.Spacing();
+        ImGui.Separator();
+        ImGui.Spacing();
 
-        if (_showAdvanced && ImGui.TreeNodeEx(Language.Options_Database_Advanced)) {
+        ImGui.Text(Language.Options_Database_Metadata_Heading);
+        var style = ImGui.GetStyle();
+        ImGui.Indent(style.IndentSpacing);
+
+        // Refresh the database size and message count every 5 seconds to avoid
+        // constant stat calls and spamming the database.
+        if (_databaseLastRefreshTicks + 5 * 1000 < Environment.TickCount64)
+        {
+            _databaseSize = Store.DatabaseSize();
+            _databaseLogSize = Store.DatabaseLogSize();
+            _databaseMessageCount = Plugin.Store.MessageCount();
+            _databaseLastRefreshTicks = Environment.TickCount64;
+        }
+
+        ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_Path, Store.DatabasePath()));
+        if (ImGui.IsItemClicked(ImGuiMouseButton.Left))
+        {
+            // Copy the directory path instead of the file path so people can
+            // paste it into their file explorer.
+            var path = Path.GetDirectoryName(Store.DatabasePath());
+            ImGui.SetClipboardText(path);
+            WrapperUtil.AddNotification(Language.Options_Database_Metadata_CopyConfigPathNotification, NotificationType.Info);
+        }
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.SetMouseCursor(ImGuiMouseCursor.Hand);
+            ImGui.BeginTooltip();
+            ImGui.Text(Language.Options_Database_Metadata_CopyConfigPath);
+            ImGui.EndTooltip();
+        }
+
+        ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_Size, StringUtil.BytesToString(_databaseSize)));
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.BeginTooltip();
+            ImGui.Text(_databaseSize.ToString("N0") + "B");
+            ImGui.EndTooltip();
+        }
+
+        ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_LogSize, StringUtil.BytesToString(_databaseLogSize)));
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.BeginTooltip();
+            ImGui.Text(_databaseLogSize.ToString("N0") + "B");
+            ImGui.EndTooltip();
+        }
+
+        ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_MessageCount, _databaseMessageCount, Store.MessagesLimit));
+
+        if (ImGuiUtil.CtrlShiftButton(Language.Options_ClearDatabase_Button, Language.Options_ClearDatabase_Tooltip))
+        {
+            Plugin.Log.Warning("Clearing database");
+            Plugin.Store.ClearDatabase();
+            foreach (var tab in Plugin.Config.Tabs)
+            {
+                tab.Clear();
+            }
+            // Refresh on next draw
+            _databaseLastRefreshTicks = 0;
+            WrapperUtil.AddNotification(Language.Options_ClearDatabase_Success, NotificationType.Info);
+        }
+
+        ImGui.Unindent(style.IndentSpacing);
+        ImGui.Spacing();
+
+        if (_showAdvanced && ImGui.TreeNodeEx(Language.Options_Database_Advanced))
+        {
             ImGui.PushTextWrapPos();
             ImGuiUtil.WarningText(Language.Options_Database_Advanced_Warning);
 
-            if (ImGui.Button("Checkpoint")) {
-                Store.Database.Checkpoint();
+            if (ImGuiUtil.CtrlShiftButton("Checkpoint", "Ctrl+Shift: Database.Checkpoint()"))
+            {
+                Plugin.Store.Database.Checkpoint();
             }
 
-            if (ImGui.Button("Rebuild")) {
-                Store.Database.Rebuild();
+            if (ImGuiUtil.CtrlShiftButton("Rebuild", "Ctrl+Shift: Database.Rebuild()"))
+            {
+                Plugin.Store.Database.Rebuild();
             }
 
             ImGui.PopTextWrapPos();
