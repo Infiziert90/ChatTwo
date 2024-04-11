@@ -40,6 +40,8 @@ public sealed class SettingsWindow : Window, IUiComponent
             new About(),
         };
 
+        RespectCloseHotkey = false;
+
         Initialise();
 
         Plugin.Commands.Register("/chat2", "Perform various actions with Chat 2.").Execute += Command;

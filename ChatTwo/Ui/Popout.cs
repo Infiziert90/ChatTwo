@@ -19,6 +19,8 @@ internal class Popout : Window
 
         Size = new Vector2(350, 350);
         SizeCondition = ImGuiCond.FirstUseEver;
+
+        RespectCloseHotkey = false;
     }
 
     public override void PreDraw()

@@ -22,6 +22,8 @@ public class SeStringDebugger : Window
             MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
         };
 
+        RespectCloseHotkey = false;
+
         #if DEBUG
         Plugin.Commands.Register("/chat2Debugger").Execute += Toggle;
         #endif

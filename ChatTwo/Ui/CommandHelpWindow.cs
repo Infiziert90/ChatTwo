@@ -18,6 +18,8 @@ public class CommandHelpWindow : Window {
 
         Flags = ImGuiWindowFlags.NoSavedSettings | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoMove |
                 ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoFocusOnAppearing | ImGuiWindowFlags.AlwaysAutoResize;
+
+        RespectCloseHotkey = false;
     }
 
     // Sets IsOpen to true if it should be drawn

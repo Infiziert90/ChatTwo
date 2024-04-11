@@ -79,6 +79,8 @@ public sealed class ChatLogWindow : Window, IUiComponent {
         Size = new Vector2(500, 250);
         SizeCondition = ImGuiCond.FirstUseEver;
 
+        RespectCloseHotkey = false;
+
         PayloadHandler = new PayloadHandler(this);
         HandlerLender = new Lender<PayloadHandler>(() => new PayloadHandler(this));
 
