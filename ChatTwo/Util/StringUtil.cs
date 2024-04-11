@@ -10,4 +10,16 @@ internal static class StringUtil {
         bytes[^1] = 0;
         return bytes;
     }
+
+    // Taken from https://stackoverflow.com/a/4975942
+    internal static String BytesToString(long byteCount) {
+        string[] suf = ["B", "KB", "MB", "GB", "TB", "PB", "EB"]; // Longs run out around EB
+        if (byteCount == 0)
+            return "0" + suf[0];
+
+        var bytes = Math.Abs(byteCount);
+        var place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
+        var num = Math.Round(bytes / Math.Pow(1024, place), 1);
+        return (Math.Sign(byteCount) * num).ToString("N0") + suf[place];
+    }
 }

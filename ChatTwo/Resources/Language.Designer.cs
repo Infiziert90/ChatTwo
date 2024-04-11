@@ -1635,6 +1635,33 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Clear the message history database.
+        /// </summary>
+        internal static string Options_ClearDatabase_Button {
+            get {
+                return ResourceManager.GetString("Options_ClearDatabase_Button", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Successfully cleared the chat database.
+        /// </summary>
+        internal static string Options_ClearDatabase_Success {
+            get {
+                return ResourceManager.GetString("Options_ClearDatabase_Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Removes all message history. Cannot be restored. Hold Ctrl+Shift to click..
+        /// </summary>
+        internal static string Options_ClearDatabase_Tooltip {
+            get {
+                return ResourceManager.GetString("Options_ClearDatabase_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Replace consecutive duplicate messages with a counter appended to the first instance of the message..
         /// </summary>
         internal static string Options_CollapseDuplicateMessages_Description {
@@ -1685,6 +1712,69 @@ namespace ChatTwo.Resources {
         internal static string Options_Database_Advanced_Warning {
             get {
                 return ResourceManager.GetString("Options_Database_Advanced_Warning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Click to copy database directory path.
+        /// </summary>
+        internal static string Options_Database_Metadata_CopyConfigPath {
+            get {
+                return ResourceManager.GetString("Options_Database_Metadata_CopyConfigPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copied database directory path to clipboard.
+        /// </summary>
+        internal static string Options_Database_Metadata_CopyConfigPathNotification {
+            get {
+                return ResourceManager.GetString("Options_Database_Metadata_CopyConfigPathNotification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Database details:.
+        /// </summary>
+        internal static string Options_Database_Metadata_Heading {
+            get {
+                return ResourceManager.GetString("Options_Database_Metadata_Heading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log size: {0}.
+        /// </summary>
+        internal static string Options_Database_Metadata_LogSize {
+            get {
+                return ResourceManager.GetString("Options_Database_Metadata_LogSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stored messages: {0:N0}/{1:N0}.
+        /// </summary>
+        internal static string Options_Database_Metadata_MessageCount {
+            get {
+                return ResourceManager.GetString("Options_Database_Metadata_MessageCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Path: {0}.
+        /// </summary>
+        internal static string Options_Database_Metadata_Path {
+            get {
+                return ResourceManager.GetString("Options_Database_Metadata_Path", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Size: {0}.
+        /// </summary>
+        internal static string Options_Database_Metadata_Size {
+            get {
+                return ResourceManager.GetString("Options_Database_Metadata_Size", resourceCulture);
             }
         }
         

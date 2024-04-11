@@ -35,7 +35,7 @@ public sealed class SettingsWindow : Window, IUiComponent
             new Ui.SettingsTabs.Fonts(Mutable),
             new ChatColours(Mutable, Plugin),
             new Tabs(Plugin, Mutable),
-            new Database(Mutable, Plugin.Store),
+            new Database(Mutable, Plugin),
             new Miscellaneous(Mutable),
             new About(),
         };
