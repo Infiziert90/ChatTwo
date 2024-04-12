@@ -101,19 +101,33 @@ public sealed class ChatLogWindow : Window, IUiComponent {
 
     public override void PreDraw()
     {
-        if (Plugin.Config.OverrideStyle)
+        if (Plugin.Config.OverrideStyle && Plugin.Config.ChosenStyle != "")
         {
             var styles = StyleModel.GetConfiguredStyles();
-            styles?.First(style => style.Name.Equals(Plugin.Config.ChosenStyle)).Push();
+            try
+            {
+                styles?.First(style => style.Name.Equals(Plugin.Config.ChosenStyle)).Push();
+            }
+            catch (InvalidOperationException e)
+            {
+                // Swallow the error - User does not have a valid style set
+            }
         }
     }
 
     public override void PostDraw()
     {
-        if (Plugin.Config.OverrideStyle)
+        if (Plugin.Config.OverrideStyle && Plugin.Config.ChosenStyle != "")
         {
             var styles = StyleModel.GetConfiguredStyles();
-            styles?.First(style => style.Name.Equals(Plugin.Config.ChosenStyle)).Pop();
+            try
+            {
+                styles?.First(style => style.Name.Equals(Plugin.Config.ChosenStyle)).Pop();
+            }
+            catch (InvalidOperationException e)
+            {
+                // Swallow the error - User does not have a valid style set
+            }
         }
     }
 
