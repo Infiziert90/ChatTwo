@@ -61,6 +61,7 @@ internal sealed class Miscellaneous : ISettingsTab {
 
         ImGui.Checkbox(Language.Options_SortAutoTranslate_Name, ref Mutable.SortAutoTranslate);
         ImGuiUtil.HelpText(Language.Options_SortAutoTranslate_Description);
+
         ImGui.Spacing();
     }
 }

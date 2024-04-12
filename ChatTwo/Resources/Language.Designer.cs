@@ -2157,6 +2157,24 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No dalamud styles available.
+        /// </summary>
+        internal static string Options_OverrideStyle_NotAvailable {
+            get {
+                return ResourceManager.GetString("Options_OverrideStyle_NotAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not selected.
+        /// </summary>
+        internal static string Options_OverrideStyle_NotSelected {
+            get {
+                return ResourceManager.GetString("Options_OverrideStyle_NotSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Styles.
         /// </summary>
         internal static string Options_OverrideStyleDropdown_Name {

@@ -101,19 +101,26 @@ internal sealed class Display : ISettingsTab {
 
         if (Mutable.OverrideStyle)
         {
-            var currentStyle = Mutable.ChosenStyle.Equals("") ? StyleModel.GetConfiguredStyle().Name : Mutable.ChosenStyle;
-            if (ImGui.BeginCombo(Language.Options_OverrideStyleDropdown_Name, currentStyle)) {
-                foreach (var style in StyleModel.GetConfiguredStyles()) {
-                    if (ImGui.Selectable(style.Name, Mutable.ChosenStyle == style.Name)) {
-                        Mutable.ChosenStyle = style.Name;
-                    }
-                }
+            var styles = StyleModel.GetConfiguredStyles();
+            if (styles != null)
+            {
+                var currentStyle = Mutable.ChosenStyle ?? Language.Options_OverrideStyle_NotSelected;
+                if (ImGui.BeginCombo(Language.Options_OverrideStyleDropdown_Name, currentStyle))
+                {
+                    foreach (var style in styles)
+                        if (ImGui.Selectable(style.Name, Mutable.ChosenStyle == style.Name))
+                            Mutable.ChosenStyle = style.Name;
 
-                ImGui.EndCombo();
+                    ImGui.EndCombo();
+                }
+            }
+            else
+            {
+                ImGui.TextUnformatted(Language.Options_OverrideStyle_NotAvailable);
             }
         }
-        ImGui.Spacing();
 
+        ImGui.Spacing();
         ImGui.PopTextWrapPos();
     }
 }

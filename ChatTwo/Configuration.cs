@@ -51,8 +51,8 @@ internal class Configuration : IPluginConfiguration {
     public Dictionary<ChatType, uint> ChatColours = new();
     public List<Tab> Tabs = new();
 
-    public bool OverrideStyle = false;
-    public string ChosenStyle = "";
+    public bool OverrideStyle;
+    public string? ChosenStyle;
 
     public uint DatabaseMigration = LatestDbVersion;
 

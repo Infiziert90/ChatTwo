@@ -113,6 +113,7 @@ public class Fonts : ISettingsTab {
         ImGuiUtil.DragFloatVertical(Language.Options_SymbolsFontSize_Name, ref Mutable.SymbolsFontSize, speed, min, max, $"{Mutable.SymbolsFontSize:N1}");
         ImGuiUtil.HelpText(Language.Options_SymbolsFontSize_Description);
 
+        ImGui.Spacing();
         ImGui.PopTextWrapPos();
     }
 }

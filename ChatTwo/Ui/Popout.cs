@@ -25,18 +25,9 @@ internal class Popout : Window
 
     public override void PreDraw()
     {
-        if (ChatLogWindow.Plugin.Config.OverrideStyle && ChatLogWindow.Plugin.Config.ChosenStyle != "")
-        {
-            var styles = StyleModel.GetConfiguredStyles();
-            try
-            {
-                styles?.First(style => style.Name.Equals(ChatLogWindow.Plugin.Config.ChosenStyle)).Push();
-            }
-            catch (InvalidOperationException e)
-            {
-                // Swallow the error - User does not have a valid style set
-            }
-        }
+        if (ChatLogWindow.Plugin.Config is { OverrideStyle: true, ChosenStyle: not null })
+            StyleModel.GetConfiguredStyles()?.FirstOrDefault(style => style.Name == ChatLogWindow.Plugin.Config.ChosenStyle)?.Push();
+
         Flags = ImGuiWindowFlags.None;
         if (!ChatLogWindow.Plugin.Config.ShowPopOutTitleBar)
             Flags |= ImGuiWindowFlags.NoTitleBar;
@@ -66,18 +57,9 @@ internal class Popout : Window
     {
 
         ChatLogWindow.PopOutDocked[Idx] = ImGui.IsWindowDocked();
-        if (ChatLogWindow.Plugin.Config.OverrideStyle && ChatLogWindow.Plugin.Config.ChosenStyle != "")
-        {
-            var styles = StyleModel.GetConfiguredStyles();
-            try
-            {
-                styles?.First(style => style.Name.Equals(ChatLogWindow.Plugin.Config.ChosenStyle)).Pop();
-            }
-            catch (InvalidOperationException e)
-            {
-                // Swallow the error - User does not have a valid style set
-            }
-        }
+
+        if (ChatLogWindow.Plugin.Config is { OverrideStyle: true, ChosenStyle: not null })
+            StyleModel.GetConfiguredStyles()?.FirstOrDefault(style => style.Name == ChatLogWindow.Plugin.Config.ChosenStyle)?.Pop();
     }
 
     public override void OnClose()

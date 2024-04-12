@@ -60,5 +60,7 @@ internal sealed class ChatColours : ISettingsTab {
                 }
             }
         }
+
+        ImGui.Spacing();
     }
 }

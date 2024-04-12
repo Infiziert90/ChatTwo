@@ -87,6 +87,7 @@ internal sealed class About : ISettingsTab {
             ImGui.EndChild();
         }
 
+        ImGui.Spacing();
         ImGui.PopTextWrapPos();
     }
 }

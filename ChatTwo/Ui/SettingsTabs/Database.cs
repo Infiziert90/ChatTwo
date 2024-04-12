@@ -126,5 +126,7 @@ internal sealed class Database : ISettingsTab
             ImGui.PopTextWrapPos();
             ImGui.TreePop();
         }
+
+        ImGui.Spacing();
     }
 }
