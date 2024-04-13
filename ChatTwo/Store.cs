@@ -333,7 +333,6 @@ internal class Store : IDisposable
 
         var messageChunks = ChunkUtil.ToChunks(message, ChunkSource.Content, chatCode.Type).ToList();
 
-        Plugin.Log.Information($"Adding Message with code {chatCode} timestamp {senderId} content {message.TextValue}");
         var msg = new Message(CurrentContentId, chatCode, senderChunks, messageChunks, sender, message);
         AddMessage(msg, Plugin.ChatLogWindow.CurrentTab ?? null);
 
