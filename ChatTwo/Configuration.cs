@@ -7,7 +7,8 @@ using ImGuiNET;
 namespace ChatTwo;
 
 [Serializable]
-internal class Configuration : IPluginConfiguration {
+internal class Configuration : IPluginConfiguration
+{
     private const int LatestVersion = 5;
     internal const int LatestDbVersion = 1;
 
@@ -56,7 +57,8 @@ internal class Configuration : IPluginConfiguration {
 
     public uint DatabaseMigration = LatestDbVersion;
 
-    internal void UpdateFrom(Configuration other) {
+    internal void UpdateFrom(Configuration other)
+    {
         HideChat = other.HideChat;
         HideDuringCutscenes = other.HideDuringCutscenes;
         HideWhenNotLoggedIn = other.HideWhenNotLoggedIn;
@@ -97,14 +99,17 @@ internal class Configuration : IPluginConfiguration {
         ChosenStyle = other.ChosenStyle;
     }
 
-    public void Migrate() {
+    public void Migrate()
+    {
         var loop = true;
-        while (loop && Version < LatestVersion) {
+        while (loop && Version < LatestVersion)
+        {
             switch (Version) {
                 case 1: {
                     Version = 2;
 
-                    foreach (var tab in Tabs) {
+                    foreach (var tab in Tabs)
+                    {
                         #pragma warning disable CS0618
                         tab.UnreadMode = tab.DisplayUnread ? UnreadMode.Unseen : UnreadMode.None;
                         #pragma warning restore CS0618
@@ -126,10 +131,8 @@ internal class Configuration : IPluginConfiguration {
                 case 4:
                     Version = 5;
 
-                    foreach (var tab in Tabs) {
+                    foreach (var tab in Tabs)
                         tab.ExtraChatAll = true;
-                    }
-
                     break;
                 default:
                     Plugin.Log.Warning($"Couldn't migrate config version {Version}");
@@ -141,21 +144,25 @@ internal class Configuration : IPluginConfiguration {
 }
 
 [Serializable]
-internal enum UnreadMode {
+internal enum UnreadMode
+{
     All,
     Unseen,
     None,
 }
 
-internal static class UnreadModeExt {
-    internal static string Name(this UnreadMode mode) => mode switch {
+internal static class UnreadModeExt
+{
+    internal static string Name(this UnreadMode mode) => mode switch
+    {
         UnreadMode.All => Language.UnreadMode_All,
         UnreadMode.Unseen => Language.UnreadMode_Unseen,
         UnreadMode.None => Language.UnreadMode_None,
         _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null),
     };
 
-    internal static string? Tooltip(this UnreadMode mode) => mode switch {
+    internal static string? Tooltip(this UnreadMode mode) => mode switch
+    {
         UnreadMode.All => Language.UnreadMode_All_Tooltip,
         UnreadMode.Unseen => Language.UnreadMode_Unseen_Tooltip,
         UnreadMode.None => Language.UnreadMode_None_Tooltip,
@@ -164,7 +171,8 @@ internal static class UnreadModeExt {
 }
 
 [Serializable]
-internal class Tab {
+internal class Tab
+{
     public string Name = Language.Tab_DefaultName;
     public Dictionary<ChatType, ChatSource> ChatCodes = new();
     public bool ExtraChatAll;
@@ -189,41 +197,48 @@ internal class Tab {
     [NonSerialized]
     public List<Message> Messages = new();
 
-    ~Tab() {
-        MessagesMutex.Dispose();
+    ~Tab() { MessagesMutex.Dispose(); }
+
+    internal bool Contains(Message message)
+    {
+        return Messages.Any(m => m.Hash == message.Hash);
     }
 
-    internal bool Matches(Message message) {
-        if (message.ExtraChatChannel != Guid.Empty) {
+    internal bool Matches(Message message)
+    {
+        if (message.ExtraChatChannel != Guid.Empty)
             return ExtraChatAll || ExtraChatChannels.Contains(message.ExtraChatChannel);
-        }
 
         return message.Code.Type.IsGm()
-               || ChatCodes.TryGetValue(message.Code.Type, out var sources) && (message.Code.Source is 0 or (ChatSource) 1 || sources.HasFlag(message.Code.Source));
+               || ChatCodes.TryGetValue(message.Code.Type, out var sources)
+               && (message.Code.Source is 0 or (ChatSource) 1
+                   || sources.HasFlag(message.Code.Source));
     }
 
-    internal void AddMessage(Message message, bool unread = true) {
+    internal void AddMessage(Message message, bool unread = true)
+    {
         MessagesMutex.Wait();
         Messages.Add(message);
-        while (Messages.Count > Store.MessagesLimit) {
+        while (Messages.Count > Store.MessagesLimit)
             Messages.RemoveAt(0);
-        }
 
         MessagesMutex.Release();
 
-        if (unread) {
+        if (unread)
             Unread += 1;
-        }
     }
 
-    internal void Clear() {
+    internal void Clear()
+    {
         MessagesMutex.Wait();
         Messages.Clear();
         MessagesMutex.Release();
     }
 
-    internal Tab Clone() {
-        return new Tab {
+    internal Tab Clone()
+    {
+        return new Tab
+        {
             Name = Name,
             ChatCodes = ChatCodes.ToDictionary(entry => entry.Key, entry => entry.Value),
             ExtraChatAll = ExtraChatAll,
@@ -242,14 +257,17 @@ internal class Tab {
 }
 
 [Serializable]
-internal enum CommandHelpSide {
+internal enum CommandHelpSide
+{
     None,
     Left,
     Right,
 }
 
-internal static class CommandHelpSideExt {
-    internal static string Name(this CommandHelpSide side) => side switch {
+internal static class CommandHelpSideExt
+{
+    internal static string Name(this CommandHelpSide side) => side switch
+    {
         CommandHelpSide.None => Language.CommandHelpSide_None,
         CommandHelpSide.Left => Language.CommandHelpSide_Left,
         CommandHelpSide.Right => Language.CommandHelpSide_Right,
@@ -258,19 +276,23 @@ internal static class CommandHelpSideExt {
 }
 
 [Serializable]
-internal enum KeybindMode {
+internal enum KeybindMode
+{
     Flexible,
     Strict,
 }
 
-internal static class KeybindModeExt {
-    internal static string Name(this KeybindMode mode) => mode switch {
+internal static class KeybindModeExt
+{
+    internal static string Name(this KeybindMode mode) => mode switch
+    {
         KeybindMode.Flexible => Language.KeybindMode_Flexible_Name,
         KeybindMode.Strict => Language.KeybindMode_Strict_Name,
         _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null),
     };
 
-    internal static string? Tooltip(this KeybindMode mode) => mode switch {
+    internal static string? Tooltip(this KeybindMode mode) => mode switch
+    {
         KeybindMode.Flexible => Language.KeybindMode_Flexible_Tooltip,
         KeybindMode.Strict => Language.KeybindMode_Strict_Tooltip,
         _ => null,
@@ -278,7 +300,8 @@ internal static class KeybindModeExt {
 }
 
 [Serializable]
-internal enum LanguageOverride {
+internal enum LanguageOverride
+{
     None,
     ChineseSimplified,
     ChineseTraditional,
@@ -300,8 +323,10 @@ internal enum LanguageOverride {
     Swedish,
 }
 
-internal static class LanguageOverrideExt {
-    internal static string Name(this LanguageOverride mode) => mode switch {
+internal static class LanguageOverrideExt
+{
+    internal static string Name(this LanguageOverride mode) => mode switch
+    {
         LanguageOverride.None => Language.LanguageOverride_None,
         LanguageOverride.ChineseSimplified => "简体中文",
         LanguageOverride.ChineseTraditional => "繁體中文",
@@ -322,7 +347,8 @@ internal static class LanguageOverrideExt {
         _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null),
     };
 
-    internal static string Code(this LanguageOverride mode) => mode switch {
+    internal static string Code(this LanguageOverride mode) => mode switch
+    {
         LanguageOverride.None => "",
         LanguageOverride.ChineseSimplified => "zh-hans",
         LanguageOverride.ChineseTraditional => "zh-hant",
@@ -346,7 +372,8 @@ internal static class LanguageOverrideExt {
 
 [Serializable]
 [Flags]
-internal enum ExtraGlyphRanges {
+internal enum ExtraGlyphRanges
+{
     ChineseFull = 1 << 0,
     ChineseSimplifiedCommon = 1 << 1,
     Cyrillic = 1 << 2,
@@ -356,8 +383,10 @@ internal enum ExtraGlyphRanges {
     Vietnamese = 1 << 6,
 }
 
-internal static class ExtraGlyphRangesExt {
-    internal static string Name(this ExtraGlyphRanges ranges) => ranges switch {
+internal static class ExtraGlyphRangesExt
+{
+    internal static string Name(this ExtraGlyphRanges ranges) => ranges switch
+    {
         ExtraGlyphRanges.ChineseFull => Language.ExtraGlyphRanges_ChineseFull_Name,
         ExtraGlyphRanges.ChineseSimplifiedCommon => Language.ExtraGlyphRanges_ChineseSimplifiedCommon_Name,
         ExtraGlyphRanges.Cyrillic => Language.ExtraGlyphRanges_Cyrillic_Name,
@@ -368,7 +397,8 @@ internal static class ExtraGlyphRangesExt {
         _ => throw new ArgumentOutOfRangeException(nameof(ranges), ranges, null),
     };
 
-    internal static IntPtr Range(this ExtraGlyphRanges ranges) => ranges switch {
+    internal static IntPtr Range(this ExtraGlyphRanges ranges) => ranges switch
+    {
         ExtraGlyphRanges.ChineseFull => ImGui.GetIO().Fonts.GetGlyphRangesChineseFull(),
         ExtraGlyphRanges.ChineseSimplifiedCommon => ImGui.GetIO().Fonts.GetGlyphRangesChineseSimplifiedCommon(),
         ExtraGlyphRanges.Cyrillic => ImGui.GetIO().Fonts.GetGlyphRangesCyrillic(),

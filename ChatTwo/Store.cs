@@ -10,7 +10,8 @@ using Lumina.Excel.GeneratedSheets;
 
 namespace ChatTwo;
 
-internal class Store : IDisposable {
+internal class Store : IDisposable
+{
     internal const int MessagesLimit = 10_000;
 
     private Plugin Plugin { get; }
@@ -23,24 +24,29 @@ internal class Store : IDisposable {
     private Dictionary<ChatType, NameFormatting> Formats { get; } = new();
     private ulong LastContentId { get; set; }
 
-    private ulong CurrentContentId {
-        get {
+    private ulong CurrentContentId
+    {
+        get
+        {
             var contentId = Plugin.ClientState.LocalContentId;
             return contentId == 0 ? LastContentId : contentId;
         }
     }
 
-    internal Store(Plugin plugin) {
+    internal Store(Plugin plugin)
+    {
         Plugin = plugin;
         CheckpointTimer.Start();
 
-        BsonMapper.Global = new BsonMapper {
+        BsonMapper.Global = new BsonMapper
+        {
             IncludeNonPublic = true,
             TrimWhitespace = false,
             // EnumAsInteger = true,
         };
 
-        if (Plugin.Config.DatabaseMigration == 0) {
+        if (Plugin.Config.DatabaseMigration == 0)
+        {
             BsonMapper.Global.Entity<Message>()
                 .Id(msg => msg.Id)
                 .Ctor(doc => new Message(
@@ -55,7 +61,9 @@ internal class Store : IDisposable {
                     doc["ContentSource"],
                     doc["SortCode"].AsDocument
                 ));
-        } else {
+        }
+        else
+        {
             BsonMapper.Global.Entity<Message>()
                 .Id(msg => msg.Id)
                 .Ctor(doc => new Message(
@@ -74,8 +82,10 @@ internal class Store : IDisposable {
         }
 
         BsonMapper.Global.RegisterType<Payload?>(
-            payload => {
-                switch (payload) {
+            payload =>
+            {
+                switch (payload)
+                {
                     case AchievementPayload achievement:
                         return new BsonDocument(new Dictionary<string, BsonValue> {
                             ["Type"] = new("Achievement"),
@@ -95,13 +105,15 @@ internal class Store : IDisposable {
 
                 return payload?.Encode();
             },
-            bson => {
-                if (bson.IsNull) {
+            bson =>
+            {
+                if (bson.IsNull)
                     return null;
-                }
 
-                if (bson.IsDocument) {
-                    return bson["Type"].AsString switch {
+                if (bson.IsDocument)
+                {
+                    return bson["Type"].AsString switch
+                    {
                         "Achievement" => new AchievementPayload((uint) bson["Id"].AsInt64),
                         "PartyFinder" => new PartyFinderPayload((uint) bson["Id"].AsInt64),
                         "URI" => new URIPayload(new Uri(bson["Uri"].AsString)),
@@ -115,10 +127,10 @@ internal class Store : IDisposable {
             seString => seString == null
                 ? null
                 : new BsonArray(seString.Payloads.Select(payload => new BsonValue(payload.Encode()))),
-            bson => {
-                if (bson.IsNull) {
+            bson =>
+            {
+                if (bson.IsNull)
                     return null;
-                }
 
                 var array = bson.IsArray ? bson.AsArray : bson["Payloads"].AsArray;
                 var payloads = array
@@ -167,7 +179,8 @@ internal class Store : IDisposable {
         var dbPath = DatabasePath();
         var connection = Plugin.Config.SharedMode ? "shared" : "direct";
         var connString = $"Filename='{dbPath}';Connection={connection}";
-        var conn = new LiteDatabase(connString, BsonMapper.Global) {
+        var conn = new LiteDatabase(connString, BsonMapper.Global)
+        {
             CheckpointSize = 1_000,
             Timeout = TimeSpan.FromSeconds(1),
         };
@@ -178,7 +191,8 @@ internal class Store : IDisposable {
         return conn;
     }
 
-    internal void Reconnect() {
+    internal void Reconnect()
+    {
         Database.Dispose();
         Database = Connect();
     }
@@ -203,69 +217,71 @@ internal class Store : IDisposable {
 
     internal int MessageCount() => Messages.Count();
 
-    private void Logout() {
+    private void Logout()
+    {
         LastContentId = 0;
     }
 
-    private void UpdateReceiver(IFramework framework) {
+    private void UpdateReceiver(IFramework framework)
+    {
         var contentId = Plugin.ClientState.LocalContentId;
-        if (contentId != 0) {
+        if (contentId != 0)
             LastContentId = contentId;
-        }
     }
 
-    private void GetMessageInfo(IFramework framework) {
-        if (CheckpointTimer.Elapsed > TimeSpan.FromMinutes(5)) {
+    private void GetMessageInfo(IFramework framework)
+    {
+        if (CheckpointTimer.Elapsed > TimeSpan.FromMinutes(5))
+        {
             CheckpointTimer.Restart();
             new Thread(() => Database.Checkpoint()).Start();
         }
 
-        if (!Pending.TryDequeue(out var entry)) {
+        if (!Pending.TryDequeue(out var entry))
             return;
-        }
 
         var contentId = Plugin.Functions.Chat.GetContentIdForEntry(entry.Item1);
         entry.Item2.ContentId = contentId ?? 0;
-        if (Plugin.Config.DatabaseBattleMessages || !entry.Item2.Code.IsBattle()) {
+        if (Plugin.Config.DatabaseBattleMessages || !entry.Item2.Code.IsBattle())
             Messages.Update(entry.Item2);
-        }
     }
 
-    internal void AddMessage(Message message, Tab? currentTab) {
-        if (Plugin.Config.DatabaseBattleMessages || !message.Code.IsBattle()) {
+    internal void AddMessage(Message message, Tab? currentTab)
+    {
+        if (Plugin.Config.DatabaseBattleMessages || !message.Code.IsBattle())
             Messages.Insert(message);
-        }
 
         var currentMatches = currentTab?.Matches(message) ?? false;
 
-        foreach (var tab in Plugin.Config.Tabs) {
+        foreach (var tab in Plugin.Config.Tabs)
+        {
             var unread = !(tab.UnreadMode == UnreadMode.Unseen && currentTab != tab && currentMatches);
 
-            if (tab.Matches(message)) {
+            if (tab.Matches(message))
                 tab.AddMessage(message, unread);
-            }
         }
     }
 
-    internal void FilterAllTabs(bool unread = true) {
-        foreach (var tab in Plugin.Config.Tabs) {
+    internal void FilterAllTabs(bool unread = true)
+    {
+        foreach (var tab in Plugin.Config.Tabs)
             FilterTab(tab, unread);
-        }
     }
 
-    internal void FilterTab(Tab tab, bool unread) {
+    internal void FilterTab(Tab tab, bool unread)
+    {
         var sortCodes = new List<SortCode>();
-        foreach (var (type, sources) in tab.ChatCodes) {
+        foreach (var (type, sources) in tab.ChatCodes)
+        {
             sortCodes.Add(new SortCode(type, 0));
             sortCodes.Add(new SortCode(type, (ChatSource) 1));
 
-            if (type.HasSource()) {
-                foreach (var source in Enum.GetValues<ChatSource>()) {
-                    if (sources.HasFlag(source)) {
-                        sortCodes.Add(new SortCode(type, source));
-                    }
-                }
-            }
+            if (!type.HasSource())
+                continue;
+
+            foreach (var source in Enum.GetValues<ChatSource>())
+                if (sources.HasFlag(source))
+                    sortCodes.Add(new SortCode(type, source));
         }
 
         var query = Messages
@@ -273,98 +289,101 @@ internal class Store : IDisposable {
             .OrderByDescending(msg => msg.Date)
             .Where(msg => sortCodes.Contains(msg.SortCode) || msg.ExtraChatChannel != Guid.Empty)
             .Where(msg => msg.Receiver == CurrentContentId);
-        if (!Plugin.Config.FilterIncludePreviousSessions) {
-            query = query.Where(msg => msg.Date >= Plugin.GameStarted);
-        }
 
-        var messages = query
-            .Limit(MessagesLimit)
-            .ToEnumerable()
-            .Reverse();
-        foreach (var message in messages) {
+        if (!Plugin.Config.FilterIncludePreviousSessions)
+            query = query.Where(msg => msg.Date >= Plugin.GameStarted);
+
+        var messages = query.Limit(MessagesLimit).ToEnumerable().Reverse();
+
+        foreach (var message in messages)
+        {
+            // check primarily for startup double posting messages
+            if (tab.Contains(message))
+                continue;
+
             // redundant matches check for extrachat
-            if (tab.Matches(message)) {
+            if (tab.Matches(message))
                 tab.AddMessage(message, unread);
-            }
         }
     }
 
     public (SeString? Sender, SeString? Message) LastMessage = (null, null);
-    private void ChatMessage(XivChatType type, uint senderId, SeString sender, SeString message) {
+    private void ChatMessage(XivChatType type, uint senderId, SeString sender, SeString message)
+    {
         var chatCode = new ChatCode((ushort) type);
 
         NameFormatting? formatting = null;
-        if (sender.Payloads.Count > 0) {
+        if (sender.Payloads.Count > 0)
             formatting = FormatFor(chatCode.Type);
-        }
 
         LastMessage = (sender, message);
         var senderChunks = new List<Chunk>();
-        if (formatting is { IsPresent: true }) {
-            senderChunks.Add(new TextChunk(ChunkSource.None, null, formatting.Before) {
+        if (formatting is { IsPresent: true })
+        {
+            senderChunks.Add(new TextChunk(ChunkSource.None, null, formatting.Before)
+            {
                 FallbackColour = chatCode.Type,
             });
             senderChunks.AddRange(ChunkUtil.ToChunks(sender, ChunkSource.Sender, chatCode.Type));
-            senderChunks.Add(new TextChunk(ChunkSource.None, null, formatting.After) {
+            senderChunks.Add(new TextChunk(ChunkSource.None, null, formatting.After)
+            {
                 FallbackColour = chatCode.Type,
             });
         }
 
         var messageChunks = ChunkUtil.ToChunks(message, ChunkSource.Content, chatCode.Type).ToList();
 
+        Plugin.Log.Information($"Adding Message with code {chatCode} timestamp {senderId} content {message.TextValue}");
         var msg = new Message(CurrentContentId, chatCode, senderChunks, messageChunks, sender, message);
         AddMessage(msg, Plugin.ChatLogWindow.CurrentTab ?? null);
 
         var idx = Plugin.Functions.GetCurrentChatLogEntryIndex();
-        if (idx != null) {
+        if (idx != null)
             Pending.Enqueue((idx.Value - 1, msg));
-        }
     }
 
-    internal class NameFormatting {
+    internal class NameFormatting
+    {
         internal string Before { get; private set; } = string.Empty;
         internal string After { get; private set; } = string.Empty;
         internal bool IsPresent { get; private set; } = true;
 
-        internal static NameFormatting Empty() {
-            return new() {
-                IsPresent = false,
-            };
+        internal static NameFormatting Empty()
+        {
+            return new NameFormatting { IsPresent = false, };
         }
 
-        internal static NameFormatting Of(string before, string after) {
-            return new() {
+        internal static NameFormatting Of(string before, string after)
+        {
+            return new NameFormatting
+            {
                 Before = before,
                 After = after,
             };
         }
     }
 
-    private NameFormatting? FormatFor(ChatType type) {
-        if (Formats.TryGetValue(type, out var cached)) {
+    private NameFormatting? FormatFor(ChatType type)
+    {
+        if (Formats.TryGetValue(type, out var cached))
             return cached;
-        }
 
         var logKind = Plugin.DataManager.GetExcelSheet<LogKind>()!.GetRow((ushort) type);
-
-        if (logKind == null) {
+        if (logKind == null)
             return null;
-        }
 
         var format = (SeString) logKind.Format;
-
-        static bool IsStringParam(Payload payload, byte num) {
+        static bool IsStringParam(Payload payload, byte num)
+        {
             var data = payload.Encode();
-
             return data.Length >= 5 && data[1] == 0x29 && data[4] == num + 1;
         }
 
         var firstStringParam = format.Payloads.FindIndex(payload => IsStringParam(payload, 1));
         var secondStringParam = format.Payloads.FindIndex(payload => IsStringParam(payload, 2));
 
-        if (firstStringParam == -1 || secondStringParam == -1) {
+        if (firstStringParam == -1 || secondStringParam == -1)
             return NameFormatting.Empty();
-        }
 
         var before = format.Payloads
             .GetRange(0, firstStringParam)
