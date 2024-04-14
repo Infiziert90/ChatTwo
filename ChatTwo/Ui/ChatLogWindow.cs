@@ -764,6 +764,7 @@ public sealed class ChatLogWindow : Window, IUiComponent {
 
                         var tellBytes = Encoding.UTF8.GetBytes(trimmed);
                         AutoTranslate.ReplaceWithPayload(Plugin.DataManager, ref tellBytes);
+
                         Plugin.Functions.Chat.SendTell(reason, target.ContentId, target.Name, (ushort) world.RowId, tellBytes);
                     }
 

@@ -39,7 +39,7 @@ internal sealed unsafe class Chat : IDisposable {
     private readonly delegate* unmanaged<void*, int, IntPtr> GetTellHistory = null!;
 
     [Signature("E8 ?? ?? ?? ?? 48 8D 4D 50 E8 ?? ?? ?? ?? 48 8B 17")]
-    private readonly delegate* unmanaged<RaptureLogModule*, ushort, Utf8String*, Utf8String*, ulong, ushort, byte, int, byte, void> PrintTell = null!;
+    private readonly delegate* unmanaged<RaptureLogModule*, ushort, Utf8String*, Utf8String*, ulong, ushort, byte, int, byte, void> PrintTellNative = null!;
 
     [Signature("E8 ?? ?? ?? ?? 48 8D 4C 24 ?? E8 ?? ?? ?? ?? 48 8D 8C 24 ?? ?? ?? ?? E8 ?? ?? ?? ?? B0 01")]
     private readonly delegate* unmanaged<IntPtr, ulong, ushort, Utf8String*, Utf8String*, byte, ulong, byte> SendTellNative = null!;
@@ -747,8 +747,8 @@ internal sealed unsafe class Chat : IDisposable {
         var a1 = *(IntPtr*) (networkModule + 8);
         var logModule = Framework.Instance()->GetUiModule()->GetRaptureLogModule();
 
-        PrintTell(logModule, 33, uName, uMessage, contentId, homeWorld, 255, 0, 0);
         SendTellNative(a1, contentId, homeWorld, uName, uMessage, (byte) reason, homeWorld);
+        PrintTellNative(logModule, 33, uName, uMessage, contentId, homeWorld, 255, 0, 0);
 
         uName->Dtor(true);
         uMessage->Dtor(true);

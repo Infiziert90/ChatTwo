@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using System.Text;
 using ChatTwo.Util;
+using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
@@ -40,9 +41,6 @@ public class SeStringDebugger : Window
 
     public override void Draw()
     {
-        ImGui.TextUnformatted("SeString Content");
-        ImGui.Spacing();
-
         if (Plugin.Store.LastMessage.Sender == null)
         {
             ImGui.TextUnformatted("Nothing to show");
@@ -50,7 +48,24 @@ public class SeStringDebugger : Window
         }
 
         // TODO: Make SeString freely selectable through chat
-        foreach (var payload in Plugin.Store.LastMessage.Sender.Payloads)
+        ImGui.TextUnformatted("Sender Content");
+        ImGui.Spacing();
+        if (Plugin.Store.LastMessage.Sender != null)
+            ProcessPayloads(Plugin.Store.LastMessage.Sender.Payloads);
+        else
+            ImGui.TextUnformatted("Nothing to show");
+
+        ImGui.TextUnformatted("Message Content");
+        ImGui.Spacing();
+        if (Plugin.Store.LastMessage.Message != null)
+            ProcessPayloads(Plugin.Store.LastMessage.Message.Payloads);
+        else
+            ImGui.TextUnformatted("Nothing to show");
+    }
+
+    private static void ProcessPayloads(List<Payload> payloads)
+    {
+        foreach (var payload in payloads)
         {
             switch (payload)
             {
@@ -112,9 +127,10 @@ public class SeStringDebugger : Window
                 {
                     RenderMetadataDictionary("Link PlayerPayload", new Dictionary<string, string?>
                     {
-                        { "Real", player.DisplayedName },
-                        { "PlayerName", player.PlayerName },
-                        { "World.Name", player.World.Name },
+                        { "Displayed", player.DisplayedName },
+                        { "Player Name", player.PlayerName },
+                        { "World Name", player.World.Name },
+                        { "Data", string.Join(" ", player.Encode().Select(b => b.ToString("X2"))) },
                     });
                     break;
                 }
