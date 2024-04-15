@@ -1,4 +1,5 @@
 using System.Numerics;
+using System.Text;
 using ChatTwo.Code;
 using ChatTwo.GameFunctions.Types;
 using ChatTwo.Util;
@@ -16,11 +17,13 @@ using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Client.UI.Shell;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+
 using ValueType = FFXIVClientStructs.FFXIV.Component.GUI.ValueType;
 
 namespace ChatTwo.GameFunctions;
 
-internal sealed unsafe class Chat : IDisposable {
+internal sealed unsafe class Chat : IDisposable
+{
     // Functions
 
     [Signature("E8 ?? ?? ?? ?? 0F B7 44 37 ??", Fallibility = Fallibility.Fallible)]
@@ -351,39 +354,6 @@ internal sealed unsafe class Chat : IDisposable {
         ["CMD_BEGINNER_ALWAYS"] = new(InputChannel.NoviceNetwork, true),
     };
 
-    private bool _inputFocused;
-    private int _graceFrames;
-
-
-    private void CheckFocus()
-    {
-        void Decrement()
-        {
-            if (_graceFrames > 0)
-                _graceFrames -= 1;
-            else
-                _inputFocused = false;
-        }
-
-        // 6.08: CB8F27
-        var isTextInputActivePtr = *(bool**) ((IntPtr) AtkStage.GetSingleton() + 0x28) + 0x188E;
-        if (isTextInputActivePtr == null)
-        {
-            Decrement();
-            return;
-        }
-
-        if (*isTextInputActivePtr)
-        {
-            _inputFocused = true;
-            _graceFrames = 60;
-        }
-        else
-        {
-            Decrement();
-        }
-    }
-
     private void UpdateKeybinds()
     {
         foreach (var name in KeybindsToIntercept.Keys)
@@ -398,8 +368,6 @@ internal sealed unsafe class Chat : IDisposable {
 
     private void InterceptKeybinds(IFramework framework1)
     {
-        // CheckFocus();
-
         // Refresh current keybinds every 5s
         if (LastRefresh + 5 * 1000 < Environment.TickCount64)
         {
@@ -407,8 +375,6 @@ internal sealed unsafe class Chat : IDisposable {
             LastRefresh = Environment.TickCount64;
         }
 
-        // if (_inputFocused)
-        //     return;
 
         var modifierState = (ModifierFlag) 0;
         foreach (var modifier in Enum.GetValues<ModifierFlag>())
@@ -484,15 +450,37 @@ internal sealed unsafe class Chat : IDisposable {
         if (eventId != 0x31 || value == null || value->UInt is not (0x05 or 0x0C))
             return ChatLogRefreshHook!.Original(log, eventId, value);
 
-        string? input = null;
         if (Plugin.GameConfig.TryGet(UiControlOption.DirectChat, out bool option) && option)
         {
             if (CurrentCharacter != null)
             {
                 // FIXME: this whole system sucks
-                var c = *CurrentCharacter;
-                if (c != '\0' && !char.IsControl(c))
-                    input = c.ToString();
+                // FIXME v2: I hate everything about this, but it works
+                Plugin.Framework.RunOnTick(() =>
+                {
+                    string? input = null;
+
+                    var utf8Bytes = MemoryHelper.ReadRaw((nint) CurrentCharacter, 2);
+                    var chars = Encoding.UTF8.GetString(utf8Bytes).ToCharArray();
+                    if (chars.Length == 0)
+                        return;
+
+                    var c = chars[0];
+                    if (c != '\0' && !char.IsControl(c))
+                        input = c.ToString();
+
+                    try
+                    {
+                        var args = new ChatActivatedArgs(new ChannelSwitchInfo(null)) {
+                            Input = input,
+                        };
+                        Activated?.Invoke(args);
+                    }
+                    catch (Exception ex)
+                    {
+                        Plugin.Log.Error(ex, "Error in chat Activated event");
+                    }
+                });
             }
         }
 
@@ -510,7 +498,6 @@ internal sealed unsafe class Chat : IDisposable {
         {
             var args = new ChatActivatedArgs(new ChannelSwitchInfo(null)) {
                 AddIfNotPresent = addIfNotPresent,
-                Input = input,
             };
             Activated?.Invoke(args);
         }
