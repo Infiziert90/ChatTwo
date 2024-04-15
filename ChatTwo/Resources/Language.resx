@@ -988,4 +988,10 @@
     <data name="Options_OverrideStyle_NotAvailable" xml:space="preserve">
         <value>No dalamud styles available</value>
     </data>
+    <data name="Options_PlaySounds_Name" xml:space="preserve">
+        <value>Play sounds</value>
+    </data>
+    <data name="Options_PlaySounds_Description" xml:space="preserve">
+        <value>Play sounds on interaction.</value>
+    </data>
 </root>

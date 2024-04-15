@@ -17,6 +17,7 @@ using Dalamud.Interface.Style;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
 using Dalamud.Memory;
+using FFXIVClientStructs.FFXIV.Client.UI;
 using ImGuiNET;
 using Lumina.Excel.GeneratedSheets;
 
@@ -72,6 +73,10 @@ public sealed class ChatLogWindow : Window, IUiComponent
     internal Lender<PayloadHandler> HandlerLender { get; }
     private Dictionary<string, ChatType> TextCommandChannels { get; } = new();
     private HashSet<string> AllCommands { get; } = new();
+
+    private uint ChatOpenSfx = 35u;
+    private uint ChatCloseSfx = 3u;
+    private bool PlayedClosingSound = true;
 
     internal ChatLogWindow(Plugin plugin) : base($"{Plugin.PluginName}###chat2")
     {
@@ -195,6 +200,10 @@ public sealed class ChatLogWindow : Window, IUiComponent
 
         if (info.Text != null && Chat.Length == 0)
             Chat = info.Text;
+
+        PlayedClosingSound = false;
+        if (Plugin.Config.PlaySounds)
+            UIModule.PlaySound(ChatOpenSfx);
     }
 
     private bool IsValidCommand(string command)
@@ -562,11 +571,7 @@ public sealed class ChatLogWindow : Window, IUiComponent
             ImGui.OpenPopup(ChatChannelPicker);
 
         if (activeTab is { Channel: { } } && ImGui.IsItemHovered())
-        {
-            ImGui.BeginTooltip();
-            ImGui.TextUnformatted(Language.ChatLog_SwitcherDisabled);
-            ImGui.EndTooltip();
-        }
+            ImGui.SetTooltip(Language.ChatLog_SwitcherDisabled);
 
         if (ImGui.BeginPopup(ChatChannelPicker))
         {
@@ -687,6 +692,12 @@ public sealed class ChatLogWindow : Window, IUiComponent
         // Only trigger unfocused if we are currently not calling the auto complete
         if (!Activate && !ImGui.IsItemActive() && _autoCompleteInfo == null)
         {
+            if (Plugin.Config.PlaySounds && !PlayedClosingSound)
+            {
+                PlayedClosingSound = true;
+                UIModule.PlaySound(ChatCloseSfx);
+            }
+
             if (_tempChannel is InputChannel.Tell)
                 _tellTarget = null;
 
@@ -1332,6 +1343,13 @@ public sealed class ChatLogWindow : Window, IUiComponent
 
     private unsafe int Callback(ImGuiInputTextCallbackData* data)
     {
+        // We play the opening sound here only if closing sound has been played before
+        if (Plugin.Config.PlaySounds && PlayedClosingSound)
+        {
+            PlayedClosingSound = false;
+            UIModule.PlaySound(ChatOpenSfx);
+        }
+
         var ptr = new ImGuiInputTextCallbackDataPtr(data);
 
         if (data->EventFlag == ImGuiInputTextFlags.CallbackCompletion)

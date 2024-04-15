@@ -38,6 +38,7 @@ internal class Configuration : IPluginConfiguration
     public bool SharedMode;
     public bool SortAutoTranslate;
     public bool CollapseDuplicateMessages;
+    public bool PlaySounds = true;
 
     public bool FontsEnabled = true;
     public ExtraGlyphRanges ExtraGlyphRanges = 0;
@@ -83,6 +84,7 @@ internal class Configuration : IPluginConfiguration
         SharedMode = other.SharedMode;
         SortAutoTranslate = other.SortAutoTranslate;
         CollapseDuplicateMessages = other.CollapseDuplicateMessages;
+        PlaySounds = other.PlaySounds;
         FontsEnabled = other.FontsEnabled;
         ExtraGlyphRanges = other.ExtraGlyphRanges;
         FontSize = other.FontSize;

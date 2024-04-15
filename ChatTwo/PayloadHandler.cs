@@ -13,6 +13,7 @@ using Dalamud.Interface.Internal;
 using Dalamud.Interface.Internal.Notifications;
 using Dalamud.Interface.Utility;
 using Dalamud.Utility;
+using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using ImGuiNET;
 using Lumina.Excel;
@@ -39,6 +40,8 @@ public sealed class PayloadHandler {
     private readonly ExcelSheet<EventItem> EventItemSheet;
     private readonly ExcelSheet<TerritoryType> TerritorySheet;
     private readonly ExcelSheet<EventItemHelp> EventItemHelpSheet;
+
+    private uint PopupSfx = 1u;
 
     internal PayloadHandler(ChatLogWindow logWindow)
     {
@@ -206,6 +209,9 @@ public sealed class PayloadHandler {
 
     internal void Click(Chunk chunk, Payload? payload, ImGuiMouseButton button)
     {
+        if (LogWindow.Plugin.Config.PlaySounds)
+            UIModule.PlaySound(PopupSfx);
+
         switch (button)
         {
             case ImGuiMouseButton.Left:
@@ -407,6 +413,9 @@ public sealed class PayloadHandler {
                 break;
             case URIPayload uri:
                 TryOpenURI(uri.Uri);
+                break;
+            default:
+                RightClickPayload(chunk, payload);
                 break;
         }
     }

@@ -17,6 +17,9 @@ internal sealed class Display : ISettingsTab {
     public void Draw(bool changed) {
         ImGui.PushTextWrapPos();
 
+        ImGuiUtil.OptionCheckbox(ref Mutable.PlaySounds, Language.Options_PlaySounds_Name, Language.Options_PlaySounds_Description);
+        ImGui.Spacing();
+
         ImGuiUtil.OptionCheckbox(ref Mutable.HideChat, Language.Options_HideChat_Name, Language.Options_HideChat_Description);
         ImGui.Spacing();
 

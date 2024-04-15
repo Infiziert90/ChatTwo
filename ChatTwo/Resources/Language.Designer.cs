@@ -2184,6 +2184,24 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Play sounds on interaction..
+        /// </summary>
+        internal static string Options_PlaySounds_Description {
+            get {
+                return ResourceManager.GetString("Options_PlaySounds_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Play sounds.
+        /// </summary>
+        internal static string Options_PlaySounds_Name {
+            get {
+                return ResourceManager.GetString("Options_PlaySounds_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Display messages in a more modern style..
         /// </summary>
         internal static string Options_PrettierTimestamps_Description {
