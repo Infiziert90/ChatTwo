@@ -87,6 +87,7 @@ public sealed class ChatLogWindow : Window, IUiComponent
         SizeCondition = ImGuiCond.FirstUseEver;
 
         RespectCloseHotkey = false;
+        DisableWindowSounds = true;
 
         PayloadHandler = new PayloadHandler(this);
         HandlerLender = new Lender<PayloadHandler>(() => new PayloadHandler(this));
@@ -831,7 +832,7 @@ public sealed class ChatLogWindow : Window, IUiComponent
             var table = tab.DisplayTimestamp && Plugin.Config.PrettierTimestamps;
 
             var oldCellPaddingY = ImGui.GetStyle().CellPadding.Y;
-            if (Plugin.Config.PrettierTimestamps && Plugin.Config.MoreCompactPretty)
+            if (Plugin.Config is { PrettierTimestamps: true, MoreCompactPretty: true })
             {
                 var padding = ImGui.GetStyle().CellPadding;
                 padding.Y = 0;
@@ -842,7 +843,10 @@ public sealed class ChatLogWindow : Window, IUiComponent
             if (table)
             {
                 if (!ImGui.BeginTable("timestamp-table", 2, ImGuiTableFlags.PreciseWidths))
-                    goto EndChild;
+                {
+                    ImGui.EndChild();
+                    return;
+                }
 
                 ImGui.TableSetupColumn("timestamps", ImGuiTableColumnFlags.WidthFixed);
                 ImGui.TableSetupColumn("messages", ImGuiTableColumnFlags.WidthStretch);
@@ -878,7 +882,8 @@ public sealed class ChatLogWindow : Window, IUiComponent
                     {
                         var messageHash = message.Hash;
                         var same = lastMessageHash == messageHash;
-                        if (same) {
+                        if (same)
+                        {
                             sameCount += 1;
 
                             if (i != tab.Messages.Count - 1)
@@ -888,14 +893,8 @@ public sealed class ChatLogWindow : Window, IUiComponent
                         if (sameCount > 0)
                         {
                             ImGui.SameLine();
-                            DrawChunks(new[]
-                                {
-                                    new TextChunk(ChunkSource.None, null, $" ({sameCount + 1}x)")
-                                    {
-                                        FallbackColour = ChatType.System,
-                                        Italic = true,
-                                    },
-                                },
+                            DrawChunks(
+                                new[] { new TextChunk(ChunkSource.None, null, $" ({sameCount + 1}x)") { FallbackColour = ChatType.System, Italic = true, } },
                                 true,
                                 handler,
                                 ImGui.GetContentRegionAvail().X
@@ -914,31 +913,29 @@ public sealed class ChatLogWindow : Window, IUiComponent
                         ImGui.TableNextColumn();
 
                     // message has rendered once
-                    if (message.Height.HasValue)
+                    // message isn't visible, so render dummy
+                    if (message is { Height: not null, IsVisible: false })
                     {
-                        // message isn't visible, so render dummy
-                        if (!message.IsVisible)
+                        var beforeDummy = ImGui.GetCursorPos();
+
+                        // skip to the message column for vis test
+                        if (table)
+                            ImGui.TableNextColumn();
+
+                        ImGui.Dummy(new Vector2(10f, message.Height.Value));
+                        message.IsVisible = ImGui.IsItemVisible();
+
+                        if (message.IsVisible)
                         {
-                            var beforeDummy = ImGui.GetCursorPos();
-
-                            // skip to the message column for vis test
                             if (table)
-                                ImGui.TableNextColumn();
+                                ImGui.TableSetColumnIndex(0);
 
-                            ImGui.Dummy(new Vector2(10f, message.Height.Value));
-                            message.IsVisible = ImGui.IsItemVisible();
-
-                            if (message.IsVisible)
-                            {
-                                if (table)
-                                    ImGui.TableSetColumnIndex(0);
-
-                                ImGui.SetCursorPos(beforeDummy);
-                            }
-                            else
-                            {
-                                goto UpdateMessage;
-                            }
+                            ImGui.SetCursorPos(beforeDummy);
+                        }
+                        else
+                        {
+                            lastPos = ImGui.GetCursorPosY();
+                            continue;
                         }
                     }
 
@@ -954,10 +951,7 @@ public sealed class ChatLogWindow : Window, IUiComponent
                         }
                         else
                         {
-                            DrawChunk(new TextChunk(ChunkSource.None, null, $"[{timestamp}]")
-                            {
-                                Foreground = 0xFFFFFFFF,
-                            });
+                            DrawChunk(new TextChunk(ChunkSource.None, null, $"[{timestamp}]") { Foreground = 0xFFFFFFFF, });
                             ImGui.SameLine();
                         }
                     }
@@ -990,15 +984,13 @@ public sealed class ChatLogWindow : Window, IUiComponent
                     }
 
                     message.IsVisible = ImGui.IsRectVisible(beforeDraw, afterDraw);
-
-                    UpdateMessage:
                     lastPos = ImGui.GetCursorPosY();
                 }
             }
             finally
             {
                 tab.MessagesMutex.Release();
-                ImGui.PopStyleVar(Plugin.Config.PrettierTimestamps && Plugin.Config.MoreCompactPretty ? 2 : 1);
+                ImGui.PopStyleVar(Plugin.Config is { PrettierTimestamps: true, MoreCompactPretty: true } ? 2 : 1);
             }
 
             if (switchedTab || ImGui.GetScrollY() >= ImGui.GetScrollMaxY())
@@ -1009,7 +1001,6 @@ public sealed class ChatLogWindow : Window, IUiComponent
                 ImGui.EndTable();
         }
 
-        EndChild:
         ImGui.EndChild();
     }
 

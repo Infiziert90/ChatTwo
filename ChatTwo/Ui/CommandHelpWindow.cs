@@ -20,6 +20,7 @@ public class CommandHelpWindow : Window {
                 ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoFocusOnAppearing | ImGuiWindowFlags.AlwaysAutoResize;
 
         RespectCloseHotkey = false;
+        DisableWindowSounds = true;
     }
 
     // Sets IsOpen to true if it should be drawn

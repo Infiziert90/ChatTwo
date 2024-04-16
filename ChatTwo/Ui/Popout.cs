@@ -21,6 +21,7 @@ internal class Popout : Window
         SizeCondition = ImGuiCond.FirstUseEver;
 
         RespectCloseHotkey = false;
+        DisableWindowSounds = true;
     }
 
     public override void PreDraw()

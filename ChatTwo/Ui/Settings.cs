@@ -41,6 +41,7 @@ public sealed class SettingsWindow : Window, IUiComponent
         };
 
         RespectCloseHotkey = false;
+        DisableWindowSounds = true;
 
         Initialise();
 

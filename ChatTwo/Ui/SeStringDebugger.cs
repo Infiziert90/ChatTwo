@@ -24,6 +24,7 @@ public class SeStringDebugger : Window
         };
 
         RespectCloseHotkey = false;
+        DisableWindowSounds = true;
 
         #if DEBUG
         Plugin.Commands.Register("/chat2Debugger").Execute += Toggle;
