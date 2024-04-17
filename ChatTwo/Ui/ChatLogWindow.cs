@@ -857,7 +857,7 @@ public sealed class ChatLogWindow : Window, IUiComponent
                 tab.MessagesMutex.Wait();
 
                 var reset = false;
-                if (_lastResize.IsRunning && _lastResize.Elapsed.TotalSeconds > 0.25)
+                if (_lastResize is { IsRunning: true, Elapsed.TotalSeconds: > 0.25 })
                 {
                     _lastResize.Stop();
                     _lastResize.Reset();
@@ -944,7 +944,8 @@ public sealed class ChatLogWindow : Window, IUiComponent
                         var timestamp = message.Date.ToLocalTime().ToString("t");
                         if (table)
                         {
-                            if (!Plugin.Config.HideSameTimestamps || timestamp != lastTimestamp) {
+                            if (!Plugin.Config.HideSameTimestamps || timestamp != lastTimestamp)
+                            {
                                 ImGui.TextUnformatted(timestamp);
                                 lastTimestamp = timestamp;
                             }
@@ -976,7 +977,7 @@ public sealed class ChatLogWindow : Window, IUiComponent
                     var afterDraw = ImGui.GetCursorScreenPos();
 
                     message.Height = ImGui.GetCursorPosY() - lastPos;
-                    if (Plugin.Config.PrettierTimestamps && !Plugin.Config.MoreCompactPretty)
+                    if (Plugin.Config is { PrettierTimestamps: true, MoreCompactPretty: false })
                     {
                         message.Height -= oldCellPaddingY * 2;
                         beforeDraw.Y += oldCellPaddingY;
