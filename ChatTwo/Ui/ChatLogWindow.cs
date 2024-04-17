@@ -400,7 +400,8 @@ public sealed class ChatLogWindow : Window, IUiComponent
 
     private HideState _hideState = HideState.None;
 
-    public override unsafe void PreOpenCheck()
+    public bool IsHidden;
+    public void HideStateCheck()
     {
         // if the chat has no hide state and in a cutscene, set the hide state to cutscene
         if (Plugin.Config.HideDuringCutscenes && _hideState == HideState.None && (CutsceneActive || GposeActive))
@@ -418,17 +419,22 @@ public sealed class ChatLogWindow : Window, IUiComponent
         if (_hideState == HideState.User && Activate)
             _hideState = HideState.None;
 
-        if (_hideState is HideState.Cutscene or HideState.User)
+        if (_hideState is HideState.Cutscene or HideState.User || (Plugin.Config.HideWhenNotLoggedIn && !Plugin.ClientState.IsLoggedIn))
+        {
+            IsHidden = true;
+            return;
+        }
+
+        IsHidden = false;
+    }
+
+    public override unsafe void PreOpenCheck()
+    {
+        if (IsHidden)
         {
             IsOpen = false;
             return;
         }
-
-        if (Plugin.Config.HideWhenNotLoggedIn && !Plugin.ClientState.IsLoggedIn) {
-            IsOpen = false;
-            return;
-        }
-
         IsOpen = true;
 
         Flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse;

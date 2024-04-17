@@ -141,6 +141,8 @@ public sealed class Plugin : IDalamudPlugin
         if (Config.HideInLoadingScreens && Condition[ConditionFlag.BetweenAreas])
             return;
 
+        ChatLogWindow.HideStateCheck();
+
         Interface.UiBuilder.DisableUserUiHide = !Config.HideWhenUiHidden;
         ChatLogWindow.DefaultText = ImGui.GetStyle().Colors[(int) ImGuiCol.Text];
 

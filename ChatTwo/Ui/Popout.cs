@@ -24,6 +24,16 @@ internal class Popout : Window
         DisableWindowSounds = true;
     }
 
+    public override void PreOpenCheck()
+    {
+        if (ChatLogWindow.IsHidden)
+        {
+            IsOpen = false;
+            return;
+        }
+        IsOpen = true;
+    }
+
     public override void PreDraw()
     {
         if (ChatLogWindow.Plugin.Config is { OverrideStyle: true, ChosenStyle: not null })
