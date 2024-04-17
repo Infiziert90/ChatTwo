@@ -1036,6 +1036,9 @@ public sealed class ChatLogWindow : Window, IUiComponent
             LastTab = tabI;
             tab.Unread = 0;
 
+            if (switchedTab && tab.Channel.HasValue)
+                SetChannel(tab.Channel.Value);
+
             DrawMessageLog(tab, PayloadHandler, GetRemainingHeightForMessageLog(), switchedTab);
 
             ImGui.EndTabItem();
@@ -1078,6 +1081,9 @@ public sealed class ChatLogWindow : Window, IUiComponent
                 currentTab = tabI;
                 switchedTab = LastTab != tabI;
                 LastTab = tabI;
+
+                if (switchedTab && tab.Channel.HasValue)
+                    SetChannel(tab.Channel.Value);
             }
         }
 
