@@ -2094,6 +2094,24 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Limits the amount of log lines to show in the chat window. This may slightly improve performance..
+        /// </summary>
+        internal static string Options_MaxLinesToShow_Description {
+            get {
+                return ResourceManager.GetString("Options_MaxLinesToShow_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Maximum amount of log lines to display in the chat window.
+        /// </summary>
+        internal static string Options_MaxLinesToShow_Name {
+            get {
+                return ResourceManager.GetString("Options_MaxLinesToShow_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Miscellaneous.
         /// </summary>
         internal static string Options_Miscellaneous_Tab {

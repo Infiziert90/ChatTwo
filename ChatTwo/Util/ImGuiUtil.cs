@@ -234,6 +234,15 @@ internal static class ImGuiUtil {
         return r;
     }
 
+    internal static bool InputIntVertical(string label, string description, ref int value, int step = 1, int stepFast = 100, ImGuiInputTextFlags flags = ImGuiInputTextFlags.None) {
+        ImGui.TextUnformatted(label);
+        ImGui.SetNextItemWidth(-1);
+        var r = ImGui.InputInt($"##{label}", ref value, step, stepFast, flags);
+        HelpText(description);
+
+        return r;
+    }
+
     internal static bool CtrlShiftButton(string label, string tooltip = "")
     {
         var io = ImGui.GetIO();

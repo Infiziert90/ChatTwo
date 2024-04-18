@@ -994,4 +994,10 @@
     <data name="Options_PlaySounds_Description" xml:space="preserve">
         <value>Play sounds on interaction.</value>
     </data>
+    <data name="Options_MaxLinesToShow_Name" xml:space="preserve">
+        <value>Maximum amount of log lines to display in the chat window</value>
+    </data>
+    <data name="Options_MaxLinesToShow_Description" xml:space="preserve">
+        <value>Limits the amount of log lines to show in the chat window. This may slightly improve performance.</value>
+    </data>
 </root>
