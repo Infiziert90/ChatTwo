@@ -874,7 +874,11 @@ public sealed class ChatLogWindow : Window, IUiComponent
                 var lastTimestamp = string.Empty;
                 int? lastMessageHash = null;
                 var sameCount = 0;
-                for (var i = 0; i < tab.Messages.Count; i++)
+
+                int maxLines = Plugin.Config.MaxLinesToRender;
+                int startLine = tab.Messages.Count > maxLines ? tab.Messages.Count - maxLines : 0;
+
+                for (int i = startLine; i < tab.Messages.Count; i++)
                 {
                     var message = tab.Messages[i];
 

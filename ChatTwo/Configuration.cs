@@ -39,6 +39,7 @@ internal class Configuration : IPluginConfiguration
     public bool SortAutoTranslate;
     public bool CollapseDuplicateMessages;
     public bool PlaySounds = true;
+    public int MaxLinesToRender = 10_000;
 
     public bool FontsEnabled = true;
     public ExtraGlyphRanges ExtraGlyphRanges = 0;
@@ -83,6 +84,7 @@ internal class Configuration : IPluginConfiguration
         SortAutoTranslate = other.SortAutoTranslate;
         CollapseDuplicateMessages = other.CollapseDuplicateMessages;
         PlaySounds = other.PlaySounds;
+        MaxLinesToRender = other.MaxLinesToRender;
         FontsEnabled = other.FontsEnabled;
         ExtraGlyphRanges = other.ExtraGlyphRanges;
         FontSize = other.FontSize;
