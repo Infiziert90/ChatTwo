@@ -45,41 +45,21 @@ internal class Store : IDisposable
             // EnumAsInteger = true,
         };
 
-        if (Plugin.Config.DatabaseMigration == 0)
-        {
-            BsonMapper.Global.Entity<Message>()
-                .Id(msg => msg.Id)
-                .Ctor(doc => new Message(
-                    doc["_id"].AsObjectId,
-                    (ulong) doc["Receiver"].AsInt64,
-                    (ulong) doc["ContentId"].AsInt64,
-                    DateTime.UnixEpoch.AddMilliseconds(doc["Date"].AsInt64),
-                    doc["Code"].AsDocument,
-                    doc["Sender"].AsArray,
-                    doc["Content"].AsArray,
-                    doc["SenderSource"],
-                    doc["ContentSource"],
-                    doc["SortCode"].AsDocument
-                ));
-        }
-        else
-        {
-            BsonMapper.Global.Entity<Message>()
-                .Id(msg => msg.Id)
-                .Ctor(doc => new Message(
-                    doc["_id"].AsObjectId,
-                    (ulong) doc["Receiver"].AsInt64,
-                    (ulong) doc["ContentId"].AsInt64,
-                    DateTime.UnixEpoch.AddMilliseconds(doc["Date"].AsInt64),
-                    doc["Code"].AsDocument,
-                    doc["Sender"].AsArray,
-                    doc["Content"].AsArray,
-                    doc["SenderSource"],
-                    doc["ContentSource"],
-                    doc["SortCode"].AsDocument,
-                    doc["ExtraChatChannel"]
-                ));
-        }
+        BsonMapper.Global.Entity<Message>()
+            .Id(msg => msg.Id)
+            .Ctor(doc => new Message(
+                doc["_id"].AsObjectId,
+                (ulong) doc["Receiver"].AsInt64,
+                (ulong) doc["ContentId"].AsInt64,
+                DateTime.UnixEpoch.AddMilliseconds(doc["Date"].AsInt64),
+                doc["Code"].AsDocument,
+                doc["Sender"].AsArray,
+                doc["Content"].AsArray,
+                doc["SenderSource"],
+                doc["ContentSource"],
+                doc["SortCode"].AsDocument,
+                doc["ExtraChatChannel"]
+            ));
 
         BsonMapper.Global.RegisterType<Payload?>(
             payload =>

@@ -56,8 +56,6 @@ internal class Configuration : IPluginConfiguration
     public bool OverrideStyle;
     public string? ChosenStyle;
 
-    public uint DatabaseMigration = LatestDbVersion;
-
     internal void UpdateFrom(Configuration other)
     {
         HideChat = other.HideChat;
@@ -96,7 +94,6 @@ internal class Configuration : IPluginConfiguration
         WindowAlpha = other.WindowAlpha;
         ChatColours = other.ChatColours.ToDictionary(entry => entry.Key, entry => entry.Value);
         Tabs = other.Tabs.Select(t => t.Clone()).ToList();
-        DatabaseMigration = other.DatabaseMigration;
         OverrideStyle = other.OverrideStyle;
         ChosenStyle = other.ChosenStyle;
     }
