@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
 using ChatTwo.Ipc;
@@ -66,54 +67,66 @@ public sealed class Plugin : IDalamudPlugin
     #pragma warning disable CS8618
     public Plugin()
     {
-        GameStarted = Process.GetCurrentProcess().StartTime.ToUniversalTime();
+        try
+        {
+            GameStarted = Process.GetCurrentProcess().StartTime.ToUniversalTime();
 
-        Config = Interface.GetPluginConfig() as Configuration ?? new Configuration();
-        Config.Migrate();
+            Config = Interface.GetPluginConfig() as Configuration ?? new Configuration();
+            Config.Migrate();
 
-        if (Config.Tabs.Count == 0) {
-            Config.Tabs.Add(TabsUtil.VanillaGeneral);
+            if (Config.Tabs.Count == 0) {
+                Config.Tabs.Add(TabsUtil.VanillaGeneral);
+            }
+
+            LanguageChanged(Interface.UiLanguage);
+
+            Commands = new Commands(this);
+            Common = new XivCommonBase(Interface);
+            TextureCache = new TextureCache(TextureProvider);
+            Functions = new GameFunctions.GameFunctions(this);
+            Ipc = new IpcManager(Interface);
+            ExtraChat = new ExtraChat(this);
+            FontManager = new FontManager(this);
+
+            ChatLogWindow = new ChatLogWindow(this);
+            SettingsWindow = new SettingsWindow(this);
+            CommandHelpWindow = new CommandHelpWindow(ChatLogWindow);
+            SeStringDebugger = new SeStringDebugger(this);
+
+            WindowSystem.AddWindow(ChatLogWindow);
+            WindowSystem.AddWindow(SettingsWindow);
+            WindowSystem.AddWindow(CommandHelpWindow);
+            WindowSystem.AddWindow(SeStringDebugger);
+            FontManager.BuildFonts();
+
+            Interface.UiBuilder.DisableCutsceneUiHide = true;
+            Interface.UiBuilder.DisableGposeUiHide = true;
+
+            Store = new Store(this);  // requires Ui
+
+            // let all the other components register, then initialise commands
+            Commands.Initialise();
+
+            if (Interface.Reason is not PluginLoadReason.Boot) {
+                Store.FilterAllTabs(false);
+            }
+
+            Framework.Update += FrameworkUpdate;
+            Interface.UiBuilder.Draw += Draw;
+            Interface.LanguageChanged += LanguageChanged;
         }
-
-        LanguageChanged(Interface.UiLanguage);
-
-        Commands = new Commands(this);
-        Common = new XivCommonBase(Interface);
-        TextureCache = new TextureCache(TextureProvider);
-        Functions = new GameFunctions.GameFunctions(this);
-        Ipc = new IpcManager(Interface);
-        ExtraChat = new ExtraChat(this);
-        FontManager = new FontManager(this);
-
-        ChatLogWindow = new ChatLogWindow(this);
-        SettingsWindow = new SettingsWindow(this);
-        CommandHelpWindow = new CommandHelpWindow(ChatLogWindow);
-        SeStringDebugger = new SeStringDebugger(this);
-
-        WindowSystem.AddWindow(ChatLogWindow);
-        WindowSystem.AddWindow(SettingsWindow);
-        WindowSystem.AddWindow(CommandHelpWindow);
-        WindowSystem.AddWindow(SeStringDebugger);
-        FontManager.BuildFonts();
-
-        Interface.UiBuilder.DisableCutsceneUiHide = true;
-        Interface.UiBuilder.DisableGposeUiHide = true;
-
-        Store = new Store(this);  // requires Ui
-
-        // let all the other components register, then initialise commands
-        Commands.Initialise();
-
-        if (Interface.Reason is not PluginLoadReason.Boot) {
-            Store.FilterAllTabs(false);
+        catch
+        {
+            Dispose();
+            // Re-throw the exception to fail the plugin load.
+            throw;
         }
-
-        Framework.Update += FrameworkUpdate;
-        Interface.UiBuilder.Draw += Draw;
-        Interface.LanguageChanged += LanguageChanged;
     }
     #pragma warning restore CS8618
 
+    // Suppressing this warning because Dispose() is called in Plugin() if the
+    // load fails, so some values may not be initialized.
+    [SuppressMessage("ReSharper", "ConditionalAccessQualifierIsNonNullableAccordingToAPIContract")]
     public void Dispose()
     {
         Interface.LanguageChanged -= LanguageChanged;
@@ -121,18 +134,18 @@ public sealed class Plugin : IDalamudPlugin
         Framework.Update -= FrameworkUpdate;
         GameFunctions.GameFunctions.SetChatInteractable(true);
 
-        WindowSystem.RemoveAllWindows();
-        ChatLogWindow.Dispose();
-        SettingsWindow.Dispose();
-        SeStringDebugger.Dispose();
+        WindowSystem?.RemoveAllWindows();
+        ChatLogWindow?.Dispose();
+        SettingsWindow?.Dispose();
+        SeStringDebugger?.Dispose();
 
-        ExtraChat.Dispose();
-        Ipc.Dispose();
-        Store.Dispose();
-        Functions.Dispose();
-        TextureCache.Dispose();
-        Common.Dispose();
-        Commands.Dispose();
+        ExtraChat?.Dispose();
+        Ipc?.Dispose();
+        Store?.Dispose();
+        Functions?.Dispose();
+        TextureCache?.Dispose();
+        Common?.Dispose();
+        Commands?.Dispose();
     }
 
     private void Draw()
