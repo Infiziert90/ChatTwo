@@ -4,6 +4,7 @@ using ChatTwo.Util;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Utility;
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 
 namespace ChatTwo.Ui.SettingsTabs;
@@ -71,20 +72,20 @@ internal sealed class About : ISettingsTab {
         ImGui.Spacing();
 
         var height = ImGui.GetContentRegionAvail().Y - ImGui.CalcTextSize("A").Y - ImGui.GetStyle().ItemSpacing.Y * 2;
-        if (ImGui.BeginChild("about", new Vector2(-1, height))) {
-            if (ImGui.TreeNodeEx(Language.Options_About_Translators)) {
-                if (ImGui.BeginChild("translators")) {
+        using var aboutChild = ImRaii.Child("about", new Vector2(-1, height));
+        if (aboutChild)
+        {
+            using var treeNode = ImRaii.TreeNode(Language.Options_About_Translators);
+            if (treeNode)
+            {
+                using var translatorChild = ImRaii.Child("translators");
+                if (translatorChild) {
                     foreach (var translator in _translators) {
                         ImGui.TextUnformatted(translator);
                     }
-
                 }
-                ImGui.EndChild();
-
-                ImGui.TreePop();
             }
         }
-        ImGui.EndChild();
 
         ImGui.Spacing();
         ImGui.PopTextWrapPos();
