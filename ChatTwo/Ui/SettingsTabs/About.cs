@@ -78,14 +78,13 @@ internal sealed class About : ISettingsTab {
                         ImGui.TextUnformatted(translator);
                     }
 
-                    ImGui.EndChild();
                 }
+                ImGui.EndChild();
 
                 ImGui.TreePop();
             }
-
-            ImGui.EndChild();
         }
+        ImGui.EndChild();
 
         ImGui.Spacing();
         ImGui.PopTextWrapPos();
