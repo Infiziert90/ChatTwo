@@ -72,16 +72,20 @@ internal sealed class About : ISettingsTab {
         ImGui.Spacing();
 
         var height = ImGui.GetContentRegionAvail().Y - ImGui.CalcTextSize("A").Y - ImGui.GetStyle().ItemSpacing.Y * 2;
-        using var aboutChild = ImRaii.Child("about", new Vector2(-1, height));
-        if (aboutChild)
+        using (var aboutChild = ImRaii.Child("about", new Vector2(-1, height)))
         {
-            using var treeNode = ImRaii.TreeNode(Language.Options_About_Translators);
-            if (treeNode)
+            if (aboutChild)
             {
-                using var translatorChild = ImRaii.Child("translators");
-                if (translatorChild) {
-                    foreach (var translator in _translators) {
-                        ImGui.TextUnformatted(translator);
+                using var treeNode = ImRaii.TreeNode(Language.Options_About_Translators);
+                if (treeNode)
+                {
+                    using var translatorChild = ImRaii.Child("translators");
+                    if (translatorChild)
+                    {
+                        foreach (var translator in _translators)
+                        {
+                            ImGui.TextUnformatted(translator);
+                        }
                     }
                 }
             }
