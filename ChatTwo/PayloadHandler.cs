@@ -92,7 +92,7 @@ public sealed class PayloadHandler {
                 DrawItemPopup(item);
                 drawn = true;
                 break;
-            case URIPayload uri:
+            case UriPayload uri:
                 DrawUriPopup(uri);
                 drawn = true;
                 break;
@@ -252,7 +252,7 @@ public sealed class PayloadHandler {
 
                 DoHover(() => HoverItem(item), hoverSize);
                 break;
-            case URIPayload uri:
+            case UriPayload uri:
                 DoHover(() => HoverURI(uri), hoverSize);
                 break;
         }
@@ -376,7 +376,7 @@ public sealed class PayloadHandler {
         }
     }
 
-    private void HoverURI(URIPayload uri)
+    private void HoverURI(UriPayload uri)
     {
         ImGui.TextUnformatted(string.Format(Language.Context_URLDomain, uri.Uri.Authority));
         ImGuiUtil.WarningText(Language.Context_URLWarning);
@@ -411,7 +411,7 @@ public sealed class PayloadHandler {
                 if (Equals(raw, ChunkUtil.PeriodicRecruitmentLink))
                     GameFunctions.GameFunctions.OpenPartyFinder();
                 break;
-            case URIPayload uri:
+            case UriPayload uri:
                 TryOpenURI(uri.Uri);
                 break;
             default:
@@ -659,7 +659,7 @@ public sealed class PayloadHandler {
         return null;
     }
 
-    private void DrawUriPopup(URIPayload uri)
+    private void DrawUriPopup(UriPayload uri)
     {
         ImGui.TextUnformatted(string.Format(Language.Context_URLDomain, uri.Uri.Authority));
         ImGuiUtil.WarningText(Language.Context_URLWarning, false);

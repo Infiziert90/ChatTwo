@@ -1,5 +1,9 @@
+using System.Diagnostics;
+using ChatTwo.Code;
 using ChatTwo.Resources;
 using ChatTwo.Util;
+using Dalamud.Game.Text.SeStringHandling;
+using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface.Internal.Notifications;
 using ImGuiNET;
 
@@ -46,13 +50,6 @@ internal sealed class Database : ISettingsTab
                 Mutable.LoadPreviousSession = false;
         }
 
-        ImGuiUtil.OptionCheckbox(
-            ref Mutable.SharedMode,
-            Language.Options_SharedMode_Name,
-            string.Format(Language.Options_SharedMode_Description, Plugin.PluginName)
-        );
-        ImGuiUtil.WarningText(string.Format(Language.Options_SharedMode_Warning, Plugin.PluginName));
-
         ImGui.Spacing();
         ImGui.Separator();
         ImGui.Spacing();
@@ -65,18 +62,18 @@ internal sealed class Database : ISettingsTab
         // constant stat calls and spamming the database.
         if (DatabaseLastRefreshTicks + 5 * 1000 < Environment.TickCount64)
         {
-            DatabaseSize = Store.DatabaseSize();
-            DatabaseLogSize = Store.DatabaseLogSize();
-            DatabaseMessageCount = Plugin.Store.MessageCount();
+            DatabaseSize = Plugin.MessageManager.Store.DatabaseSize();
+            DatabaseLogSize = Plugin.MessageManager.Store.DatabaseLogSize();
+            DatabaseMessageCount = Plugin.MessageManager.Store.MessageCount();
             DatabaseLastRefreshTicks = Environment.TickCount64;
         }
 
-        ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_Path, Store.DatabasePath()));
+        ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_Path, MessageManager.DatabasePath()));
         if (ImGui.IsItemClicked(ImGuiMouseButton.Left))
         {
             // Copy the directory path instead of the file path so people can
             // paste it into their file explorer.
-            var path = Path.GetDirectoryName(Store.DatabasePath());
+            var path = Path.GetDirectoryName(MessageManager.DatabasePath());
             ImGui.SetClipboardText(path);
             WrapperUtil.AddNotification(Language.Options_Database_Metadata_CopyConfigPathNotification, NotificationType.Info);
         }
@@ -95,12 +92,12 @@ internal sealed class Database : ISettingsTab
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip(DatabaseLogSize.ToString("N0") + "B");
 
-        ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_MessageCount, DatabaseMessageCount, Store.MessagesLimit));
+        ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_MessageCount, DatabaseMessageCount, MessageStore.MessageQueryLimit));
 
         if (ImGuiUtil.CtrlShiftButton(Language.Options_ClearDatabase_Button, Language.Options_ClearDatabase_Tooltip))
         {
-            Plugin.Log.Warning("Clearing database");
-            Plugin.Store.ClearDatabase();
+            Plugin.Log.Warning("Clearing messages from database");
+            Plugin.MessageManager.Store.ClearMessages();
             foreach (var tab in Plugin.Config.Tabs)
                 tab.Clear();
 
@@ -117,16 +114,97 @@ internal sealed class Database : ISettingsTab
             ImGui.PushTextWrapPos();
             ImGuiUtil.WarningText(Language.Options_Database_Advanced_Warning);
 
-            if (ImGuiUtil.CtrlShiftButton("Checkpoint", "Ctrl+Shift: Database.Checkpoint()"))
-                Plugin.Store.Database.Checkpoint();
+            if (ImGuiUtil.CtrlShiftButton("Perform maintenance", "Ctrl+Shift: MessageManager.Store.PerformMaintenance()"))
+                Plugin.MessageManager.Store.PerformMaintenance();
 
-            if (ImGuiUtil.CtrlShiftButton("Rebuild", "Ctrl+Shift: Database.Rebuild()"))
-                Plugin.Store.Database.Rebuild();
+            if (ImGuiUtil.CtrlShiftButton("Reload messages from database",
+                    "Ctrl+Shift: MessageManager.FilterAllTabs(false)")) {
+                foreach (var tab in Plugin.Config.Tabs)
+                    tab.Clear();
+                Plugin.MessageManager.FilterAllTabs(false);
+            }
+
+            if (ImGuiUtil.CtrlShiftButton("Inject 10,000 messages", "Ctrl+Shift: creates 10,000 unique messages (async)"))
+                new Thread(() => InsertMessages(10_000)).Start();
 
             ImGui.PopTextWrapPos();
             ImGui.TreePop();
         }
 
         ImGui.Spacing();
+    }
+
+    private void InsertMessages(int count) {
+        Plugin.Log.Info($"Inserting {count} messages due to user request");
+
+        // Generate
+        var stopwatch = Stopwatch.StartNew();
+        var playerName = Plugin.ClientState.LocalPlayer?.Name.ToString() ?? "Unknown Player";
+        var worldId = Plugin.ClientState.LocalPlayer?.HomeWorld.Id ?? 0;
+        var senderSource = new SeStringBuilder()
+            .AddText("<")
+            .Add(new PlayerPayload(playerName, worldId))
+            .AddText("Random Message")
+            .Add(RawPayload.LinkTerminator)
+            .AddText(">: ")
+            .Build();
+        var senderChunks = ChunkUtil.ToChunks(senderSource, ChunkSource.Sender, ChatType.Debug).ToList();
+        var messages = new List<Message>(count);
+        for (var i = 0; i < count; i++) {
+            var contentSource = new SeStringBuilder()
+                .AddText("Random message payload - ")
+                .AddItalics(Guid.NewGuid().ToString())
+                .Build();
+            var contentChunks = ChunkUtil.ToChunks(contentSource, ChunkSource.Content, ChatType.Debug).ToList();
+
+            messages.Add(new Message(
+                Guid.NewGuid(),
+                Plugin.MessageManager.CurrentContentId,
+                Plugin.MessageManager.CurrentContentId,
+                DateTimeOffset.UtcNow,
+                new ChatCode(10),
+                senderChunks,
+                contentChunks,
+                senderSource,
+                contentSource,
+                new SortCode(ChatType.Debug, ChatSource.Self),
+                Guid.Empty
+            ));
+        }
+
+        var elapsedTicks = stopwatch.ElapsedTicks;
+        stopwatch.Stop();
+        Plugin.Log.Info($"Crafted {count} messages in {elapsedTicks} ticks ({elapsedTicks / TimeSpan.TicksPerMillisecond}ms)");
+
+        // Insert
+        stopwatch = Stopwatch.StartNew();
+        foreach (var message in messages) {
+            Plugin.MessageManager.Store.UpsertMessage(message);
+        }
+
+        elapsedTicks = stopwatch.ElapsedTicks;
+        stopwatch.Stop();
+        Plugin.Log.Info($"Upserted {count} messages in {elapsedTicks} ticks ({elapsedTicks / TimeSpan.TicksPerMillisecond}ms)");
+
+        // Clear tabs during framework frame
+        Plugin.Framework.Run(() => {
+            stopwatch = Stopwatch.StartNew();
+            foreach (var tab in Plugin.Config.Tabs)
+                tab.Clear();
+
+            elapsedTicks = stopwatch.ElapsedTicks;
+            stopwatch.Stop();
+            Plugin.Log.Info(
+                $"Cleared {Plugin.Config.Tabs.Count} tabs in {elapsedTicks} ticks ({elapsedTicks / TimeSpan.TicksPerMillisecond}ms)");
+        }).Wait();
+
+        // Fetch and filter during framework frame
+        Plugin.Framework.Run(() => {
+            stopwatch = Stopwatch.StartNew();
+            Plugin.MessageManager.FilterAllTabs(false);
+            elapsedTicks = stopwatch.ElapsedTicks;
+            stopwatch.Stop();
+            Plugin.Log.Info($"Fetched and filtered all tabs in {elapsedTicks} ticks ({elapsedTicks / TimeSpan.TicksPerMillisecond}ms)");
+        }).Wait();
     }
 }

@@ -108,7 +108,7 @@ internal static class ChunkUtil {
                     } else if (rawPayload.Data.Length > 5 && rawPayload.Data[1] == 0x27 && rawPayload.Data[3] == 0x07) {
                         // uri payload
                         var uri = new Uri(Encoding.UTF8.GetString(rawPayload.Data[4..]));
-                        link = new URIPayload(uri);
+                        link = new UriPayload(uri);
                     } else if (Equals(rawPayload, RawPayload.LinkTerminator)) {
                         link = null;
                     }

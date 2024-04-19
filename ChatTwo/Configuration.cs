@@ -35,7 +35,6 @@ internal class Configuration : IPluginConfiguration
     public bool DatabaseBattleMessages;
     public bool LoadPreviousSession;
     public bool FilterIncludePreviousSessions;
-    public bool SharedMode;
     public bool SortAutoTranslate;
     public bool CollapseDuplicateMessages;
     public bool PlaySounds = true;
@@ -80,7 +79,6 @@ internal class Configuration : IPluginConfiguration
         DatabaseBattleMessages = other.DatabaseBattleMessages;
         LoadPreviousSession = other.LoadPreviousSession;
         FilterIncludePreviousSessions = other.FilterIncludePreviousSessions;
-        SharedMode = other.SharedMode;
         SortAutoTranslate = other.SortAutoTranslate;
         CollapseDuplicateMessages = other.CollapseDuplicateMessages;
         PlaySounds = other.PlaySounds;
@@ -197,16 +195,16 @@ internal class Tab
 
     [NonSerialized]
     public List<Message> Messages = new();
+    [NonSerialized]
+    public HashSet<Guid> TrackedMessageIds = new();
 
     ~Tab() { MessagesMutex.Dispose(); }
 
-    internal bool Contains(Message message)
-    {
-        return Messages.Any(m => m.Hash == message.Hash);
+    internal bool Contains(Message message) {
+        return TrackedMessageIds.Contains(message.Id);
     }
 
-    internal bool Matches(Message message)
-    {
+    internal bool Matches(Message message) {
         if (message.ExtraChatChannel != Guid.Empty)
             return ExtraChatAll || ExtraChatChannels.Contains(message.ExtraChatChannel);
 
@@ -216,23 +214,25 @@ internal class Tab
                    || sources.HasFlag(message.Code.Source));
     }
 
-    internal void AddMessage(Message message, bool unread = true)
-    {
+    internal void AddMessage(Message message, bool unread = true) {
+        if (Contains(message)) return;
         MessagesMutex.Wait();
+        TrackedMessageIds.Add(message.Id);
         Messages.Add(message);
-        while (Messages.Count > Store.MessagesLimit)
+        while (Messages.Count > MessageManager.MessageDisplayLimit) {
+            TrackedMessageIds.Remove(Messages[0].Id);
             Messages.RemoveAt(0);
-
+        }
         MessagesMutex.Release();
 
         if (unread)
             Unread += 1;
     }
 
-    internal void Clear()
-    {
+    internal void Clear() {
         MessagesMutex.Wait();
         Messages.Clear();
+        TrackedMessageIds.Clear();
         MessagesMutex.Release();
     }
 
