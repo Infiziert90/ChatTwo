@@ -20,18 +20,14 @@ internal class Popout : Window
         Size = new Vector2(350, 350);
         SizeCondition = ImGuiCond.FirstUseEver;
 
+        IsOpen = true;
         RespectCloseHotkey = false;
         DisableWindowSounds = true;
     }
 
-    public override void PreOpenCheck()
+    public override bool DrawConditions()
     {
-        if (ChatLogWindow.IsHidden)
-        {
-            IsOpen = false;
-            return;
-        }
-        IsOpen = true;
+        return !ChatLogWindow.IsHidden;
     }
 
     public override void PreDraw()
@@ -66,7 +62,6 @@ internal class Popout : Window
 
     public override void PostDraw()
     {
-
         ChatLogWindow.PopOutDocked[Idx] = ImGui.IsWindowDocked();
 
         if (ChatLogWindow.Plugin.Config is { OverrideStyle: true, ChosenStyle: not null })

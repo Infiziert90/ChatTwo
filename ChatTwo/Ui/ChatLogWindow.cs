@@ -86,6 +86,7 @@ public sealed class ChatLogWindow : Window, IUiComponent
         Size = new Vector2(500, 250);
         SizeCondition = ImGuiCond.FirstUseEver;
 
+        IsOpen = true;
         RespectCloseHotkey = false;
         DisableWindowSounds = true;
 
@@ -430,13 +431,6 @@ public sealed class ChatLogWindow : Window, IUiComponent
 
     public override unsafe void PreOpenCheck()
     {
-        if (IsHidden)
-        {
-            IsOpen = false;
-            return;
-        }
-        IsOpen = true;
-
         Flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse;
         if (!Plugin.Config.CanMove)
             Flags |= ImGuiWindowFlags.NoMove;
@@ -452,6 +446,11 @@ public sealed class ChatLogWindow : Window, IUiComponent
 
         LastViewport = ImGui.GetWindowViewport().NativePtr;
         _wasDocked = ImGui.IsWindowDocked();
+    }
+
+    public override bool DrawConditions()
+    {
+        return !IsHidden;
     }
 
     public override void Draw()
@@ -1188,7 +1187,7 @@ public sealed class ChatLogWindow : Window, IUiComponent
             if (PopOutWindows.ContainsKey($"{tab.Name}{i}"))
                 continue;
 
-            var window = new Popout(this, tab, i) { IsOpen = true };
+            var window = new Popout(this, tab, i);
 
             Plugin.WindowSystem.AddWindow(window);
             PopOutWindows.Add($"{tab.Name}{i}", window);
