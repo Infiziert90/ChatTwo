@@ -5,16 +5,18 @@ using Dalamud.Plugin.Ipc;
 
 namespace ChatTwo;
 
-internal sealed class IpcManager : IDisposable {
+internal sealed class IpcManager : IDisposable
+{
     private DalamudPluginInterface Interface { get; }
     private ICallGateProvider<string> RegisterGate { get; }
     private ICallGateProvider<string, object?> UnregisterGate { get; }
     private ICallGateProvider<object?> AvailableGate { get; }
     private ICallGateProvider<string, PlayerPayload?, ulong, Payload?, SeString?, SeString?, object?> InvokeGate { get; }
 
-    internal List<string> Registered { get; } = new();
+    internal List<string> Registered { get; } = [];
 
-    public IpcManager(DalamudPluginInterface pluginInterface) {
+    public IpcManager(DalamudPluginInterface pluginInterface)
+    {
         Interface = pluginInterface;
 
         RegisterGate = Interface.GetIpcProvider<string>("ChatTwo.Register");
@@ -30,21 +32,25 @@ internal sealed class IpcManager : IDisposable {
         AvailableGate.SendMessage();
     }
 
-    internal void Invoke(string id, PlayerPayload? sender, ulong contentId, Payload? payload, SeString? senderString, SeString? content) {
+    internal void Invoke(string id, PlayerPayload? sender, ulong contentId, Payload? payload, SeString? senderString, SeString? content)
+    {
         InvokeGate.SendMessage(id, sender, contentId, payload, senderString, content);
     }
 
-    private string Register() {
+    private string Register()
+    {
         var id = Guid.NewGuid().ToString();
         Registered.Add(id);
         return id;
     }
 
-    private void Unregister(string id) {
+    private void Unregister(string id)
+    {
         Registered.Remove(id);
     }
 
-    public void Dispose() {
+    public void Dispose()
+    {
         UnregisterGate.UnregisterFunc();
         RegisterGate.UnregisterFunc();
         Registered.Clear();
