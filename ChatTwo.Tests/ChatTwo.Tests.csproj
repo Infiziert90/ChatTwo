@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net8.0-windows</TargetFrameworks>
-    
+
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
@@ -17,10 +17,40 @@
     <ProjectReference Include="..\ChatTwo\ChatTwo.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="Dalamud">
-      <HintPath>..\..\AppData\Roaming\XIVLauncher\addon\Hooks\dev\Dalamud.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  
+    <PropertyGroup>
+        <DalamudLibPath>$(AppData)\XIVLauncher\addon\Hooks\dev</DalamudLibPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))'">
+        <DalamudLibPath>$(DALAMUD_HOME)</DalamudLibPath>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(IsCI)' == 'true'">
+        <DalamudLibPath>$(HOME)/dalamud</DalamudLibPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Reference Include="Dalamud">
+            <HintPath>$(DalamudLibPath)\Dalamud.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="FFXIVClientStructs">
+            <HintPath>$(DalamudLibPath)\FFXIVClientStructs.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="ImGui.NET">
+            <HintPath>$(DalamudLibPath)\ImGui.NET.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="Lumina">
+            <HintPath>$(DalamudLibPath)\Lumina.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+        <Reference Include="Lumina.Excel">
+            <HintPath>$(DalamudLibPath)\Lumina.Excel.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
+    </ItemGroup>
+
+
 </Project>

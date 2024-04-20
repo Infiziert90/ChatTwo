@@ -387,6 +387,21 @@ public sealed class ChatLogWindow : Window, IUiComponent
         }
     }
 
+    private void TabChannelSwitch(Tab tab)
+    {
+        // Save the previous channel to restore it later
+        var current = CurrentTab;
+        if (current is { Channel: null })
+            current.PreviousChannel = Plugin.Functions.Chat.Channel.channel;
+
+        // Channel will be null if PreviousChannel is used
+        var channel = tab.Channel ?? tab.PreviousChannel;
+
+        // Channel being null it doesn't have a default, and we never selected this channel before
+        if (channel != null)
+            SetChannel(tab.Channel ?? tab.PreviousChannel);
+    }
+
     private bool CutsceneActive => Plugin.Condition[ConditionFlag.OccupiedInCutSceneEvent] || Plugin.Condition[ConditionFlag.WatchingCutscene78];
 
     private bool GposeActive => Plugin.Condition[ConditionFlag.WatchingCutscene];
@@ -1036,11 +1051,10 @@ public sealed class ChatLogWindow : Window, IUiComponent
 
             currentTab = tabI;
             var switchedTab = LastTab != tabI;
+            if (switchedTab)
+                TabChannelSwitch(tab);
             LastTab = tabI;
             tab.Unread = 0;
-
-            if (switchedTab && tab.Channel.HasValue)
-                SetChannel(tab.Channel.Value);
 
             DrawMessageLog(tab, PayloadHandler, GetRemainingHeightForMessageLog(), switchedTab);
 
@@ -1083,10 +1097,9 @@ public sealed class ChatLogWindow : Window, IUiComponent
 
                 currentTab = tabI;
                 switchedTab = LastTab != tabI;
+                if (switchedTab)
+                    TabChannelSwitch(tab);
                 LastTab = tabI;
-
-                if (switchedTab && tab.Channel.HasValue)
-                    SetChannel(tab.Channel.Value);
             }
         }
 

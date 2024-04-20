@@ -198,6 +198,9 @@ internal class Tab
     [NonSerialized]
     public HashSet<Guid> TrackedMessageIds = new();
 
+    [NonSerialized]
+    public InputChannel? PreviousChannel;
+
     ~Tab() { MessagesMutex.Dispose(); }
 
     internal bool Contains(Message message) {

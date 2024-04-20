@@ -162,6 +162,7 @@ internal sealed unsafe class Chat : IDisposable
     internal bool UsesTellTempChannel { get; set; }
     internal InputChannel? PreviousChannel { get; private set; }
 
+    private bool DirectChat;
     private long LastRefresh;
 
     internal Chat(Plugin plugin)
@@ -372,9 +373,9 @@ internal sealed unsafe class Chat : IDisposable
         if (LastRefresh + 5 * 1000 < Environment.TickCount64)
         {
             UpdateKeybinds();
+            DirectChat = Plugin.GameConfig.TryGet(UiControlOption.DirectChat, out bool option) && option;
             LastRefresh = Environment.TickCount64;
         }
-
 
         var modifierState = (ModifierFlag) 0;
         foreach (var modifier in Enum.GetValues<ModifierFlag>())
@@ -389,6 +390,18 @@ internal sealed unsafe class Chat : IDisposable
         {
             if (!Keybinds.TryGetValue(toIntercept, out var keybind))
                 continue;
+
+            // Vanilla input has focus, so we ignore Ready Chat and Ready Command keybind
+            if (toIntercept is "CMD_CHAT" or "CMD_COMMAND")
+            {
+                // Vanilla text input has focus
+                if (RaptureAtkModule.Instance()->AtkModule.IsTextInputActive())
+                    continue;
+
+                // Direct chat option is selected
+                if (DirectChat)
+                    continue;
+            }
 
             void Intercept(VirtualKey key, ModifierFlag modifier)
             {
@@ -450,38 +463,32 @@ internal sealed unsafe class Chat : IDisposable
         if (eventId != 0x31 || value == null || value->UInt is not (0x05 or 0x0C))
             return ChatLogRefreshHook!.Original(log, eventId, value);
 
-        if (Plugin.GameConfig.TryGet(UiControlOption.DirectChat, out bool option) && option)
+        if (DirectChat && CurrentCharacter != null)
         {
-            if (CurrentCharacter != null)
+            // FIXME: this whole system sucks
+            // FIXME v2: I hate everything about this, but it works
+            Plugin.Framework.RunOnTick(() =>
             {
-                // FIXME: this whole system sucks
-                // FIXME v2: I hate everything about this, but it works
-                Plugin.Framework.RunOnTick(() =>
+                string? input = null;
+
+                var utf8Bytes = MemoryHelper.ReadRaw((nint) CurrentCharacter, 2);
+                var chars = Encoding.UTF8.GetString(utf8Bytes).ToCharArray();
+                if (chars.Length == 0)
+                    return;
+
+                var c = chars[0];
+                if (c != '\0' && !char.IsControl(c))
+                    input = c.ToString();
+
+                try
                 {
-                    string? input = null;
-
-                    var utf8Bytes = MemoryHelper.ReadRaw((nint) CurrentCharacter, 2);
-                    var chars = Encoding.UTF8.GetString(utf8Bytes).ToCharArray();
-                    if (chars.Length == 0)
-                        return;
-
-                    var c = chars[0];
-                    if (c != '\0' && !char.IsControl(c))
-                        input = c.ToString();
-
-                    try
-                    {
-                        var args = new ChatActivatedArgs(new ChannelSwitchInfo(null)) {
-                            Input = input,
-                        };
-                        Activated?.Invoke(args);
-                    }
-                    catch (Exception ex)
-                    {
-                        Plugin.Log.Error(ex, "Error in chat Activated event");
-                    }
-                });
-            }
+                    Activated?.Invoke(new ChatActivatedArgs(new ChannelSwitchInfo(null)) { Input = input, });
+                }
+                catch (Exception ex)
+                {
+                    Plugin.Log.Error(ex, "Error in chat Activated event");
+                }
+            });
         }
 
         string? addIfNotPresent = null;
@@ -496,10 +503,7 @@ internal sealed unsafe class Chat : IDisposable
 
         try
         {
-            var args = new ChatActivatedArgs(new ChannelSwitchInfo(null)) {
-                AddIfNotPresent = addIfNotPresent,
-            };
-            Activated?.Invoke(args);
+            Activated?.Invoke(new ChatActivatedArgs(new ChannelSwitchInfo(null)) { AddIfNotPresent = addIfNotPresent, });
         }
         catch (Exception ex)
         {
