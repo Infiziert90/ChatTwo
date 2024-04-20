@@ -1788,6 +1788,51 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        internal static string Options_Database_Old_Delete {
+            get {
+                return ResourceManager.GetString("Options_Database_Old_Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to remove the old database, more information under /xllog..
+        /// </summary>
+        internal static string Options_Database_Old_Delete_Error {
+            get {
+                return ResourceManager.GetString("Options_Database_Old_Delete_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The old database was successfully removed..
+        /// </summary>
+        internal static string Options_Database_Old_Delete_Success {
+            get {
+                return ResourceManager.GetString("Options_Database_Old_Delete_Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Removes the database from your disk. This is not recoverable! Hold Ctrl+Shift to click..
+        /// </summary>
+        internal static string Options_Database_Old_Delete_Tooltip {
+            get {
+                return ResourceManager.GetString("Options_Database_Old_Delete_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Old database:.
+        /// </summary>
+        internal static string Options_Database_Old_Heading {
+            get {
+                return ResourceManager.GetString("Options_Database_Old_Heading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Database.
         /// </summary>
         internal static string Options_Database_Tab {

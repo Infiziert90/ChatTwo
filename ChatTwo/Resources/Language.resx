@@ -994,4 +994,19 @@
     <data name="LoadMessages_Error" xml:space="preserve">
         <value>An error occurred while loading chat history. Please see plugin logs for more information to report this issue.</value>
     </data>
+    <data name="Options_Database_Old_Heading" xml:space="preserve">
+        <value>Old database:</value>
+    </data>
+    <data name="Options_Database_Old_Delete" xml:space="preserve">
+        <value>Delete</value>
+    </data>
+    <data name="Options_Database_Old_Delete_Tooltip" xml:space="preserve">
+        <value>Removes the database from your disk. This is not recoverable! Hold Ctrl+Shift to click.</value>
+    </data>
+    <data name="Options_Database_Old_Delete_Error" xml:space="preserve">
+        <value>Unable to remove the old database, more information under /xllog.</value>
+    </data>
+    <data name="Options_Database_Old_Delete_Success" xml:space="preserve">
+        <value>The old database was successfully removed.</value>
+    </data>
 </root>

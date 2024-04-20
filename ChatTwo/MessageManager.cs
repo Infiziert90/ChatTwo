@@ -56,9 +56,7 @@ internal class MessageManager : IDisposable
 
     internal static string DatabasePath()
     {
-        var dir = Plugin.Interface.ConfigDirectory;
-        dir.Create();
-        return Path.Join(dir.FullName, "chat-sqlite.db");
+        return Path.Join(Plugin.Interface.ConfigDirectory.FullName, "chat-sqlite.db");
     }
 
     private void Logout()

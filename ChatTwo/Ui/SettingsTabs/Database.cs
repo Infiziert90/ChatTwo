@@ -54,7 +54,32 @@ internal sealed class Database : ISettingsTab
         ImGui.Separator();
         ImGui.Spacing();
 
-        ImGui.Text(Language.Options_Database_Metadata_Heading);
+        var old = new FileInfo(Path.Join(Plugin.Interface.ConfigDirectory.FullName, "chat.db"));
+        if (old.Exists)
+        {
+            ImGui.TextUnformatted(Language.Options_Database_Old_Heading);
+            ImGui.Spacing();
+
+            if (ImGuiUtil.CtrlShiftButton(Language.Options_Database_Old_Delete, Language.Options_Database_Old_Delete_Tooltip))
+            {
+                try
+                {
+                    old.Delete();
+                    WrapperUtil.AddNotification(Language.Options_Database_Old_Delete_Success, NotificationType.Success);
+                }
+                catch (Exception e)
+                {
+                    Plugin.Log.Error(e, "Unable to delete old database");
+                    WrapperUtil.AddNotification(Language.Options_Database_Old_Delete_Error, NotificationType.Error);
+                }
+            }
+
+            ImGui.Spacing();
+            ImGui.Separator();
+            ImGui.Spacing();
+        }
+
+        ImGui.TextUnformatted(Language.Options_Database_Metadata_Heading);
         var style = ImGui.GetStyle();
         ImGui.Indent(style.IndentSpacing);
 
