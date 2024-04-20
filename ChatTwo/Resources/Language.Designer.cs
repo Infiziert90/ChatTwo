@@ -1761,7 +1761,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Stored messages: {0:N0}/{1:N0}.
+        ///   Looks up a localized string similar to Stored messages: {0:N0}.
         /// </summary>
         internal static string Options_Database_Metadata_MessageCount {
             get {

@@ -117,7 +117,7 @@ internal sealed class Database : ISettingsTab
         if (ImGui.IsItemHovered())
             ImGui.SetTooltip(DatabaseLogSize.ToString("N0") + "B");
 
-        ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_MessageCount, DatabaseMessageCount, MessageStore.MessageQueryLimit));
+        ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_MessageCount, DatabaseMessageCount));
 
         if (ImGuiUtil.CtrlShiftButton(Language.Options_ClearDatabase_Button, Language.Options_ClearDatabase_Tooltip))
         {

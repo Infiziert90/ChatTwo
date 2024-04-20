@@ -13,85 +13,98 @@ using Encoding = System.Text.Encoding;
 
 namespace ChatTwo;
 
-internal static class DbExtensions {
-    internal static void Execute(this DbConnection conn, string sql) {
+internal static class DbExtensions
+{
+    internal static void Execute(this DbConnection conn, string sql)
+    {
         using var cmd = conn.CreateCommand();
         cmd.CommandText = sql;
         cmd.ExecuteNonQuery();
     }
 }
 
-internal enum PayloadMessagePackType : byte {
+internal enum PayloadMessagePackType : byte
+{
     Achievement,
     PartyFinder,
     Uri,
     Other = 255,
 }
 
-public class PayloadMessagePackFormatter : IMessagePackFormatter<Payload?> {
-    public void Serialize(ref MessagePackWriter writer, Payload? value, MessagePackSerializerOptions options) {
-        if (value == null) {
+public class PayloadMessagePackFormatter : IMessagePackFormatter<Payload?>
+{
+    public void Serialize(ref MessagePackWriter writer, Payload? value, MessagePackSerializerOptions options)
+    {
+        if (value == null)
+        {
             writer.WriteNil();
             return;
         }
 
         writer.WriteArrayHeader(2);
-        switch (value) {
+        switch (value)
+        {
             case AchievementPayload achievementPayload:
-                writer.WriteUInt8((byte) PayloadMessagePackType.Achievement);
+                writer.WriteUInt8((byte)PayloadMessagePackType.Achievement);
                 writer.WriteUInt32(achievementPayload.Id);
                 break;
             case PartyFinderPayload partyFinderPayload:
-                writer.WriteUInt8((byte) PayloadMessagePackType.PartyFinder);
+                writer.WriteUInt8((byte)PayloadMessagePackType.PartyFinder);
                 writer.WriteUInt32(partyFinderPayload.Id);
                 break;
             case UriPayload uriPayload:
-                writer.WriteUInt8((byte) PayloadMessagePackType.Uri);
+                writer.WriteUInt8((byte)PayloadMessagePackType.Uri);
                 writer.WriteString(Encoding.UTF8.GetBytes(uriPayload.Uri.ToString()));
                 break;
             default:
-                writer.WriteUInt8((byte) PayloadMessagePackType.Other);
+                writer.WriteUInt8((byte)PayloadMessagePackType.Other);
                 writer.Write(value.Encode());
                 break;
         }
     }
 
-    public Payload? Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options) {
+    public Payload? Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
+    {
         if (reader.TryReadNil())
             return null;
 
         if (reader.ReadArrayHeader() != 2)
             throw new InvalidOperationException("Invalid array count for Payload object");
 
-        var type = (PayloadMessagePackType) reader.ReadByte();
-        switch (type) {
-           case PayloadMessagePackType.Achievement:
-               return new AchievementPayload(reader.ReadUInt32());
-           case PayloadMessagePackType.PartyFinder:
-               return new PartyFinderPayload(reader.ReadUInt32());
-           case PayloadMessagePackType.Uri:
-               return new UriPayload(new Uri(reader.ReadString() ?? ""));
-           case PayloadMessagePackType.Other:
-           default:
-               var bytes = reader.ReadBytes() ?? new ReadOnlySequence<byte>();
-               var binReader = new BinaryReader(new MemoryStream(bytes.ToArray()));
-               return Payload.Decode(binReader);
+        var type = (PayloadMessagePackType)reader.ReadByte();
+        switch (type)
+        {
+            case PayloadMessagePackType.Achievement:
+                return new AchievementPayload(reader.ReadUInt32());
+            case PayloadMessagePackType.PartyFinder:
+                return new PartyFinderPayload(reader.ReadUInt32());
+            case PayloadMessagePackType.Uri:
+                return new UriPayload(new Uri(reader.ReadString() ?? ""));
+            case PayloadMessagePackType.Other:
+            default:
+                var bytes = reader.ReadBytes() ?? new ReadOnlySequence<byte>();
+                var binReader = new BinaryReader(new MemoryStream(bytes.ToArray()));
+                return Payload.Decode(binReader);
         }
     }
 }
 
-public class SeStringMessagePackFormatter : IMessagePackFormatter<SeString> {
-    public void Serialize(ref MessagePackWriter writer, SeString value, MessagePackSerializerOptions options) {
+public class SeStringMessagePackFormatter : IMessagePackFormatter<SeString>
+{
+    public void Serialize(ref MessagePackWriter writer, SeString value, MessagePackSerializerOptions options)
+    {
         options.Resolver.GetFormatter<List<Payload>>()!.Serialize(ref writer, value.Payloads, options);
     }
 
-    public SeString Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options) {
+    public SeString Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
+    {
         return new SeString(options.Resolver.GetFormatter<List<Payload>>()!.Deserialize(ref reader, options));
     }
 }
 
-internal class MessageStore : IDisposable {
-    internal const int MessageQueryLimit = 10_000;
+internal class MessageStore : IDisposable
+{
+    private const int MessageQueryLimit = 10_000;
 
     private string DbPath { get; }
 
@@ -99,19 +112,20 @@ internal class MessageStore : IDisposable {
 
     internal static readonly MessagePackSerializerOptions MsgPackOptions = MessagePackSerializerOptions.Standard
         .WithResolver(CompositeResolver.Create(
-            new IMessagePackFormatter[] {
-                new PayloadMessagePackFormatter(),
-                new SeStringMessagePackFormatter(),
-            },
-            new IFormatterResolver[] { StandardResolver.Instance }));
+            new IMessagePackFormatter[] { new PayloadMessagePackFormatter(), new SeStringMessagePackFormatter(), },
+            new IFormatterResolver[] { StandardResolver.Instance }
+            )
+        );
 
-    internal MessageStore(string dbPath) {
+    internal MessageStore(string dbPath)
+    {
         DbPath = dbPath;
         Connection = Connect();
         Migrate();
     }
 
-    public void Dispose() {
+    public void Dispose()
+    {
         Connection.Close();
         Connection.Dispose();
         // Closing the connection doesn't immediately release the file.
@@ -119,13 +133,16 @@ internal class MessageStore : IDisposable {
         GC.WaitForPendingFinalizers();
     }
 
-    private SqliteConnection Connect() {
-        var uriBuilder = new SqliteConnectionStringBuilder {
+    private SqliteConnection Connect()
+    {
+        var uriBuilder = new SqliteConnectionStringBuilder
+        {
             DataSource = DbPath,
             DefaultTimeout = 5,
             Pooling = false,
             Mode = SqliteOpenMode.ReadWriteCreate,
         };
+
         var conn = new SqliteConnection(uriBuilder.ToString());
         conn.Open();
         conn.Execute(@"PRAGMA journal_mode=WAL;");
@@ -135,7 +152,8 @@ internal class MessageStore : IDisposable {
         return conn;
     }
 
-    private void Migrate() {
+    private void Migrate()
+    {
         // TODO: this should be improved/swapped out for a library at some
         // point.
         Connection.Execute(@"
@@ -158,18 +176,21 @@ internal class MessageStore : IDisposable {
         ");
     }
 
-    internal void Reconnect() {
+    internal void Reconnect()
+    {
         Connection.Close();
         Connection.Dispose();
         Connection = Connect();
     }
 
-    internal void ClearMessages() {
+    internal void ClearMessages()
+    {
         Connection.Execute("DELETE FROM messages;");
         PerformMaintenance();
     }
 
-    internal void PerformMaintenance() {
+    internal void PerformMaintenance()
+    {
         Connection.Execute(@"
             VACUUM;
             REINDEX messages;
@@ -177,15 +198,9 @@ internal class MessageStore : IDisposable {
         ");
     }
 
-    internal long DatabaseSize() {
-        return !File.Exists(DbPath) ? 0 : new FileInfo(DbPath).Length;
-    }
-
     private string LogPath => DbPath + "-wal";
-
-    internal long DatabaseLogSize() {
-        return !File.Exists(LogPath) ? 0 : new FileInfo(LogPath).Length;
-    }
+    internal long DatabaseSize() => !File.Exists(DbPath) ? 0 : new FileInfo(DbPath).Length;
+    internal long DatabaseLogSize() => !File.Exists(LogPath) ? 0 : new FileInfo(LogPath).Length;
 
     internal int MessageCount()
     {
@@ -194,7 +209,8 @@ internal class MessageStore : IDisposable {
         return Convert.ToInt32(cmd.ExecuteScalar());
     }
 
-    internal void UpsertMessage(Message message) {
+    internal void UpsertMessage(Message message)
+    {
         var cmd = Connection.CreateCommand();
         cmd.CommandText = @"
             INSERT INTO messages (
@@ -256,7 +272,8 @@ internal class MessageStore : IDisposable {
     /// <param name="receiver">The receiver content ID to filter by. If null, no filtering is performed.</param>
     /// <param name="since">Only show messages since this date. If null, no filtering is performed.</param>
     /// <param name="count">The amount to return. Defaults to 10,000.</param>
-    internal MessageEnumerator GetMostRecentMessages(ulong? receiver = null, DateTimeOffset? since = null, int count = MessageQueryLimit) {
+    internal MessageEnumerator GetMostRecentMessages(ulong? receiver = null, DateTimeOffset? since = null, int count = MessageQueryLimit)
+    {
         var whereClauses = new List<string>();
         if (receiver != null)
             whereClauses.Add("Receiver = $Receiver");
@@ -303,17 +320,21 @@ internal class MessageStore : IDisposable {
     }
 }
 
-internal class MessageEnumerator(DbDataReader reader) : IEnumerable<Message> {
+internal class MessageEnumerator(DbDataReader reader) : IEnumerable<Message>
+{
     private const int MaxErrorLogs = 10;
 
     private int _errorCount;
     public bool DidError => _errorCount > 0;
 
-    public IEnumerator<Message> GetEnumerator() {
-        while (reader.Read()) {
+    public IEnumerator<Message> GetEnumerator()
+    {
+        while (reader.Read())
+        {
             var id = Guid.Empty;
             Message msg;
-            try {
+            try
+            {
                 id = reader.GetGuid(0);
                 msg = new Message(
                     id,
@@ -321,36 +342,35 @@ internal class MessageEnumerator(DbDataReader reader) : IEnumerable<Message> {
                     (ulong)reader.GetInt64(2),
                     DateTimeOffset.FromUnixTimeMilliseconds(reader.GetInt64(3)),
                     new ChatCode((ushort)reader.GetInt32(4)),
-                    MessagePackSerializer.Deserialize<List<Chunk>>(reader.GetFieldValue<byte[]>(5),
-                        MessageStore.MsgPackOptions),
-                    MessagePackSerializer.Deserialize<List<Chunk>>(reader.GetFieldValue<byte[]>(6),
-                        MessageStore.MsgPackOptions),
-                    MessagePackSerializer.Deserialize<SeString>(reader.GetFieldValue<byte[]>(7),
-                        MessageStore.MsgPackOptions),
-                    MessagePackSerializer.Deserialize<SeString>(reader.GetFieldValue<byte[]>(8),
-                        MessageStore.MsgPackOptions),
+                    MessagePackSerializer.Deserialize<List<Chunk>>(reader.GetFieldValue<byte[]>(5), MessageStore.MsgPackOptions),
+                    MessagePackSerializer.Deserialize<List<Chunk>>(reader.GetFieldValue<byte[]>(6), MessageStore.MsgPackOptions),
+                    MessagePackSerializer.Deserialize<SeString>(reader.GetFieldValue<byte[]>(7), MessageStore.MsgPackOptions),
+                    MessagePackSerializer.Deserialize<SeString>(reader.GetFieldValue<byte[]>(8), MessageStore.MsgPackOptions),
                     new SortCode((uint)reader.GetInt32(9)),
                     reader.GetGuid(10)
                 );
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 if (_errorCount < MaxErrorLogs)
                     Plugin.Log.Error($"Exception while reading message '{id}' from database: {e}");
                 _errorCount++;
                 if (_errorCount == MaxErrorLogs)
                     Plugin.Log.Error("Further parsing errors will not be logged");
 
-#if DEBUG
+                #if DEBUG
                 throw;
-#else
+                #else
                 continue;
-#endif
+                #endif
             }
 
             yield return msg;
         }
     }
 
-    IEnumerator IEnumerable.GetEnumerator() {
+    IEnumerator IEnumerable.GetEnumerator()
+    {
         return GetEnumerator();
     }
 }
