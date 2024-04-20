@@ -11,7 +11,8 @@ using Lumina.Excel.GeneratedSheets;
 
 namespace ChatTwo;
 
-internal class MessageManager : IDisposable {
+internal class MessageManager : IDisposable
+{
     internal const int MessageDisplayLimit = 10_000;
 
     private Plugin Plugin { get; }
@@ -22,14 +23,17 @@ internal class MessageManager : IDisposable {
     private Dictionary<ChatType, NameFormatting> Formats { get; } = new();
     private ulong LastContentId { get; set; }
 
-    internal ulong CurrentContentId {
-        get {
+    internal ulong CurrentContentId
+    {
+        get
+        {
             var contentId = Plugin.ClientState.LocalContentId;
             return contentId == 0 ? LastContentId : contentId;
         }
     }
 
-    internal MessageManager(Plugin plugin) {
+    internal MessageManager(Plugin plugin)
+    {
         Plugin = plugin;
         MaintenanceTimer.Start();
         Store = new MessageStore(DatabasePath());
@@ -40,7 +44,8 @@ internal class MessageManager : IDisposable {
         Plugin.ClientState.Logout += Logout;
     }
 
-    public void Dispose() {
+    public void Dispose()
+    {
         Plugin.ClientState.Logout -= Logout;
         Plugin.Framework.Update -= UpdateReceiver;
         Plugin.Framework.Update -= GetMessageInfo;
@@ -49,24 +54,29 @@ internal class MessageManager : IDisposable {
         Store.Dispose();
     }
 
-    internal static string DatabasePath() {
+    internal static string DatabasePath()
+    {
         var dir = Plugin.Interface.ConfigDirectory;
         dir.Create();
         return Path.Join(dir.FullName, "chat-sqlite.db");
     }
 
-    private void Logout() {
+    private void Logout()
+    {
         LastContentId = 0;
     }
 
-    private void UpdateReceiver(IFramework framework) {
+    private void UpdateReceiver(IFramework framework)
+    {
         var contentId = Plugin.ClientState.LocalContentId;
         if (contentId != 0)
             LastContentId = contentId;
     }
 
-    private void GetMessageInfo(IFramework framework) {
-        if (MaintenanceTimer.Elapsed > TimeSpan.FromMinutes(5)) {
+    private void GetMessageInfo(IFramework framework)
+    {
+        if (MaintenanceTimer.Elapsed > TimeSpan.FromMinutes(5))
+        {
             MaintenanceTimer.Restart();
             new Thread(() => Store.PerformMaintenance()).Start();
         }
@@ -80,13 +90,15 @@ internal class MessageManager : IDisposable {
             Store.UpsertMessage(entry.Item2);
     }
 
-    internal void AddMessage(Message message, Tab? currentTab) {
+    internal void AddMessage(Message message, Tab? currentTab)
+    {
         if (Plugin.Config.DatabaseBattleMessages || !message.Code.IsBattle())
             Store.UpsertMessage(message);
 
         var currentMatches = currentTab?.Matches(message) ?? false;
 
-        foreach (var tab in Plugin.Config.Tabs) {
+        foreach (var tab in Plugin.Config.Tabs)
+        {
             var unread = !(tab.UnreadMode == UnreadMode.Unseen && currentTab != tab && currentMatches);
 
             if (tab.Matches(message))
@@ -94,25 +106,26 @@ internal class MessageManager : IDisposable {
         }
     }
 
-    internal void FilterAllTabs(bool unread = true) {
+    internal void FilterAllTabs(bool unread = true)
+    {
         DateTimeOffset? since = null;
         if (!Plugin.Config.FilterIncludePreviousSessions)
             since = Plugin.GameStarted;
 
         var messages = Store.GetMostRecentMessages(CurrentContentId, since);
-        foreach (var message in messages) {
-            foreach (var tab in Plugin.Config.Tabs.Where(tab => tab.Matches(message))) {
+        foreach (var message in messages)
+            foreach (var tab in Plugin.Config.Tabs.Where(tab => tab.Matches(message)))
                 tab.AddMessage(message, unread);
-            }
-        }
 
         if (messages.DidError)
             WrapperUtil.AddNotification(Language.LoadMessages_Error, NotificationType.Error);
     }
 
     public (SeString? Sender, SeString? Message) LastMessage = (null, null);
-    private void ChatMessage(XivChatType type, uint senderId, SeString sender, SeString message) {
-        var chatCode = new ChatCode((ushort) type);
+
+    private void ChatMessage(XivChatType type, uint senderId, SeString sender, SeString message)
+    {
+        var chatCode = new ChatCode((ushort)type);
 
         NameFormatting? formatting = null;
         if (sender.Payloads.Count > 0)
@@ -120,12 +133,15 @@ internal class MessageManager : IDisposable {
 
         LastMessage = (sender, message);
         var senderChunks = new List<Chunk>();
-        if (formatting is { IsPresent: true }) {
-            senderChunks.Add(new TextChunk(ChunkSource.None, null, formatting.Before) {
+        if (formatting is { IsPresent: true })
+        {
+            senderChunks.Add(new TextChunk(ChunkSource.None, null, formatting.Before)
+            {
                 FallbackColour = chatCode.Type,
             });
             senderChunks.AddRange(ChunkUtil.ToChunks(sender, ChunkSource.Sender, chatCode.Type));
-            senderChunks.Add(new TextChunk(ChunkSource.None, null, formatting.After) {
+            senderChunks.Add(new TextChunk(ChunkSource.None, null, formatting.After)
+            {
                 FallbackColour = chatCode.Type,
             });
         }
@@ -140,16 +156,19 @@ internal class MessageManager : IDisposable {
             Pending.Enqueue((idx.Value - 1, msg));
     }
 
-    internal class NameFormatting {
+    internal class NameFormatting
+    {
         internal string Before { get; private set; } = string.Empty;
         internal string After { get; private set; } = string.Empty;
         internal bool IsPresent { get; private set; } = true;
 
-        internal static NameFormatting Empty() {
+        internal static NameFormatting Empty()
+        {
             return new NameFormatting { IsPresent = false, };
         }
 
-        internal static NameFormatting Of(string before, string after) {
+        internal static NameFormatting Of(string before, string after)
+        {
             return new NameFormatting
             {
                 Before = before,
@@ -158,16 +177,19 @@ internal class MessageManager : IDisposable {
         }
     }
 
-    private NameFormatting? FormatFor(ChatType type) {
+    private NameFormatting? FormatFor(ChatType type)
+    {
         if (Formats.TryGetValue(type, out var cached))
             return cached;
 
-        var logKind = Plugin.DataManager.GetExcelSheet<LogKind>()!.GetRow((ushort) type);
+        var logKind = Plugin.DataManager.GetExcelSheet<LogKind>()!.GetRow((ushort)type);
         if (logKind == null)
             return null;
 
-        var format = (SeString) logKind.Format;
-        static bool IsStringParam(Payload payload, byte num) {
+        var format = (SeString)logKind.Format;
+
+        static bool IsStringParam(Payload payload, byte num)
+        {
             var data = payload.Encode();
             return data.Length >= 5 && data[1] == 0x29 && data[4] == num + 1;
         }
