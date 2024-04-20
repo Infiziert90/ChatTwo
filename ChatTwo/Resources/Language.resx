@@ -460,15 +460,6 @@
     <data name="Options_Database_Advanced">
         <value>Advanced</value>
     </data>
-    <data name="Options_SharedMode_Name">
-        <value>Enable multi-client mode</value>
-    </data>
-    <data name="Options_SharedMode_Description">
-        <value>Allow multiple clients to run {0} at the same time, sharing the same database.</value>
-    </data>
-    <data name="Options_SharedMode_Warning">
-        <value>This option is not recommended. No support will be offered if you enable this option. This option will hurt the performance of {0}.</value>
-    </data>
     <data name="ChatLog_Tabs_PopOut">
         <value>Pop out</value>
     </data>
@@ -999,5 +990,8 @@
     </data>
     <data name="Options_MaxLinesToShow_Description" xml:space="preserve">
         <value>Limits the amount of log lines to show in the chat window. This may slightly improve performance.</value>
+    </data>
+    <data name="LoadMessages_Error" xml:space="preserve">
+        <value>An error occurred while loading chat history. Please see plugin logs for more information to report this issue.</value>
     </data>
 </root>

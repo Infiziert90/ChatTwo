@@ -39,11 +39,11 @@ internal class AchievementPayload : Payload {
 }
 
 
-internal class URIPayload(Uri uri) : Payload
+internal class UriPayload(Uri uri) : Payload
 {
     public override PayloadType Type => (PayloadType) 0x52;
 
-    public Uri Uri { get; init; } = uri;
+    public Uri Uri { get; } = uri;
 
     private static readonly string[] ExpectedSchemes = ["http", "https"];
     private static readonly string DefaultScheme = "https";
@@ -55,7 +55,7 @@ internal class URIPayload(Uri uri) : Payload
     /// <exception cref="UriFormatException">
     /// If the URI is invalid, or if the scheme is not supported.
     /// </exception>
-    public static URIPayload ResolveURI(string rawURI)
+    public static UriPayload ResolveURI(string rawURI)
     {
         ArgumentNullException.ThrowIfNull(rawURI);
 
@@ -64,7 +64,7 @@ internal class URIPayload(Uri uri) : Payload
         {
             if (rawURI.StartsWith($"{scheme}://"))
             {
-                return new URIPayload(new Uri(rawURI));
+                return new UriPayload(new Uri(rawURI));
             }
         }
         if (rawURI.Contains("://"))
@@ -72,7 +72,7 @@ internal class URIPayload(Uri uri) : Payload
             throw new UriFormatException($"Unsupported scheme in URL: {rawURI}");
         }
 
-        return new URIPayload(new Uri($"{DefaultScheme}://{rawURI}"));
+        return new UriPayload(new Uri($"{DefaultScheme}://{rawURI}"));
     }
 
     protected override void DecodeImpl(BinaryReader reader, long endOfStream)

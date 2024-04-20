@@ -460,15 +460,6 @@
     <data name="Options_Database_Advanced">
         <value>Geavanceerd</value>
     </data>
-    <data name="Options_SharedMode_Name">
-        <value>Modus voor meerdere vensters inschakelen</value>
-    </data>
-    <data name="Options_SharedMode_Description">
-        <value>Meerdere vensters toestaan om {0} tegelijkertijd uit te voeren en dezelfde database te delen.</value>
-    </data>
-    <data name="Options_SharedMode_Warning">
-        <value>Deze optie wordt niet aanbevolen. Er wordt geen ondersteuning aangeboden als je deze optie inschakelt. Deze optie is schadelijk voor de snelheid van {0}.</value>
-    </data>
     <data name="ChatLog_Tabs_PopOut">
         <value>Uitvouwen</value>
     </data>

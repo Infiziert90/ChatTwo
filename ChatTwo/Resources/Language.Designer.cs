@@ -1464,6 +1464,15 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occurred while loading chat history. Please see plugin logs for more information to report this issue..
+        /// </summary>
+        internal static string LoadMessages_Error {
+            get {
+                return ResourceManager.GetString("LoadMessages_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} is performing a database migration..
         /// </summary>
         internal static string Migration_Line1 {
@@ -2234,33 +2243,6 @@ namespace ChatTwo.Resources {
         internal static string Options_PrettierTimestamps_Name {
             get {
                 return ResourceManager.GetString("Options_PrettierTimestamps_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Allow multiple clients to run {0} at the same time, sharing the same database..
-        /// </summary>
-        internal static string Options_SharedMode_Description {
-            get {
-                return ResourceManager.GetString("Options_SharedMode_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Enable multi-client mode.
-        /// </summary>
-        internal static string Options_SharedMode_Name {
-            get {
-                return ResourceManager.GetString("Options_SharedMode_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to This option is not recommended. No support will be offered if you enable this option. This option will hurt the performance of {0}..
-        /// </summary>
-        internal static string Options_SharedMode_Warning {
-            get {
-                return ResourceManager.GetString("Options_SharedMode_Warning", resourceCulture);
             }
         }
         

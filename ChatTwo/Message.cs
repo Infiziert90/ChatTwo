@@ -2,21 +2,26 @@ using ChatTwo.Code;
 using ChatTwo.Util;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
-using LiteDB;
 using System.Text.RegularExpressions;
 
 namespace ChatTwo;
 
 internal class SortCode {
-    internal ChatType Type { get; set; }
-    internal ChatSource Source { get; set; }
+    internal ChatType Type { get; }
+    internal ChatSource Source { get; }
 
     internal SortCode(ChatType type, ChatSource source) {
         Type = type;
         Source = source;
     }
 
-    public SortCode() {
+    internal SortCode(uint raw) {
+        Type = (ChatType)(raw >> 16);
+        Source = (ChatSource)(raw & 0xFFFF);
+    }
+
+    internal uint Encode() {
+        return ((uint) Type << 16) | (uint) Source;
     }
 
     private bool Equals(SortCode other) {
@@ -43,18 +48,11 @@ internal class SortCode {
 }
 
 internal class Message {
-    // ReSharper disable once UnusedMember.Global
-    internal ObjectId Id { get; } = ObjectId.NewObjectId();
+    internal Guid Id { get; } = Guid.NewGuid();
     internal ulong Receiver { get; }
     internal ulong ContentId { get; set; }
 
-    [BsonIgnore]
-    internal float? Height;
-
-    [BsonIgnore]
-    internal bool IsVisible;
-
-    internal DateTime Date { get; }
+    internal DateTimeOffset Date { get; }
     internal ChatCode Code { get; }
     internal List<Chunk> Sender { get; }
     internal List<Chunk> Content { get; }
@@ -65,11 +63,14 @@ internal class Message {
     internal SortCode SortCode { get; }
     internal Guid ExtraChatChannel { get; }
 
+    // Not stored in the database:
     internal int Hash { get; }
+    internal float? Height { get; set; }
+    internal bool IsVisible { get; set; }
 
     internal Message(ulong receiver, ChatCode code, List<Chunk> sender, List<Chunk> content, SeString senderSource, SeString contentSource) {
         Receiver = receiver;
-        Date = DateTime.UtcNow;
+        Date = DateTimeOffset.UtcNow;
         Code = code;
         Sender = sender;
         Content = ReplaceContentURLs(content);
@@ -84,44 +85,23 @@ internal class Message {
         }
     }
 
-    internal Message(ObjectId id, ulong receiver, ulong contentId, DateTime date, BsonDocument code, BsonArray sender, BsonArray content, BsonValue senderSource, BsonValue contentSource, BsonDocument sortCode) {
+    internal Message(Guid id, ulong receiver, ulong contentId, DateTimeOffset date, ChatCode code, List<Chunk> sender, List<Chunk> content, SeString senderSource, SeString contentSource, SortCode sortCode, Guid extraChatChannel) {
         Id = id;
         Receiver = receiver;
         ContentId = contentId;
         Date = date;
-        Code = BsonMapper.Global.ToObject<ChatCode>(code);
-        Sender = BsonMapper.Global.Deserialize<List<Chunk>>(sender);
+        Code = code;
+        Sender = sender;
         // Don't call ReplaceContentURLs here since we're loading the message
         // from the database and it should already have parsed URL data.
-        Content = BsonMapper.Global.Deserialize<List<Chunk>>(content);
-        SenderSource = BsonMapper.Global.Deserialize<SeString>(senderSource);
-        ContentSource = BsonMapper.Global.Deserialize<SeString>(contentSource);
-        SortCode = BsonMapper.Global.ToObject<SortCode>(sortCode);
-        ExtraChatChannel = ExtractExtraChatChannel();
+        Content = content;
+        SenderSource = senderSource;
+        ContentSource = contentSource;
+        SortCode = sortCode;
+        ExtraChatChannel = extraChatChannel;
         Hash = GenerateHash();
 
-        foreach (var chunk in Sender.Concat(Content)) {
-            chunk.Message = this;
-        }
-    }
-
-    internal Message(ObjectId id, ulong receiver, ulong contentId, DateTime date, BsonDocument code, BsonArray sender, BsonArray content, BsonValue senderSource, BsonValue contentSource, BsonDocument sortCode, BsonValue extraChatChannel) {
-        Id = id;
-        Receiver = receiver;
-        ContentId = contentId;
-        Date = date;
-        Code = BsonMapper.Global.ToObject<ChatCode>(code);
-        Sender = BsonMapper.Global.Deserialize<List<Chunk>>(sender);
-        // Don't call ReplaceContentURLs here since we're loading the message
-        // from the database and it should already have parsed URL data.
-        Content = BsonMapper.Global.Deserialize<List<Chunk>>(content);
-        SenderSource = BsonMapper.Global.Deserialize<SeString>(senderSource);
-        ContentSource = BsonMapper.Global.Deserialize<SeString>(contentSource);
-        SortCode = BsonMapper.Global.ToObject<SortCode>(sortCode);
-        ExtraChatChannel = BsonMapper.Global.Deserialize<Guid>(extraChatChannel);
-        Hash = GenerateHash();
-
-        foreach (var chunk in Sender.Concat(Content)) {
+        foreach (var chunk in sender.Concat(content)) {
             chunk.Message = this;
         }
     }
@@ -203,7 +183,7 @@ internal class Message {
                 // Create a new TextChunk with a URIPayload for the URL text.
                 try
                 {
-                    var link = URIPayload.ResolveURI(match.Value);
+                    var link = UriPayload.ResolveURI(match.Value);
                     AddChunkWithMessage(text.NewWithStyle(chunk.Source, link, match.Value));
                 }
                 catch (UriFormatException)

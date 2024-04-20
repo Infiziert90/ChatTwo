@@ -55,7 +55,7 @@ public sealed class Plugin : IDalamudPlugin
     internal XivCommonBase Common { get; }
     internal TextureCache TextureCache { get; }
     internal GameFunctions.GameFunctions Functions { get; }
-    internal Store Store { get; }
+    internal MessageManager MessageManager { get; }
     internal IpcManager Ipc { get; }
     internal ExtraChat ExtraChat { get; }
     internal FontManager FontManager { get; }
@@ -102,13 +102,13 @@ public sealed class Plugin : IDalamudPlugin
             Interface.UiBuilder.DisableCutsceneUiHide = true;
             Interface.UiBuilder.DisableGposeUiHide = true;
 
-            Store = new Store(this);  // requires Ui
+            MessageManager = new MessageManager(this); // requires Ui
 
             // let all the other components register, then initialise commands
             Commands.Initialise();
 
             if (Interface.Reason is not PluginLoadReason.Boot) {
-                Store.FilterAllTabs(false);
+                MessageManager.FilterAllTabs(false);
             }
 
             Framework.Update += FrameworkUpdate;
@@ -141,7 +141,7 @@ public sealed class Plugin : IDalamudPlugin
 
         ExtraChat?.Dispose();
         Ipc?.Dispose();
-        Store?.Dispose();
+        MessageManager?.Dispose();
         Functions?.Dispose();
         TextureCache?.Dispose();
         Common?.Dispose();

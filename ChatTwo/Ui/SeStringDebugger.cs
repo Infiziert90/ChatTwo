@@ -42,7 +42,7 @@ public class SeStringDebugger : Window
 
     public override void Draw()
     {
-        if (Plugin.Store.LastMessage.Sender == null)
+        if (Plugin.MessageManager.LastMessage.Sender == null)
         {
             ImGui.TextUnformatted("Nothing to show");
             return;
@@ -51,15 +51,15 @@ public class SeStringDebugger : Window
         // TODO: Make SeString freely selectable through chat
         ImGui.TextUnformatted("Sender Content");
         ImGui.Spacing();
-        if (Plugin.Store.LastMessage.Sender != null)
-            ProcessPayloads(Plugin.Store.LastMessage.Sender.Payloads);
+        if (Plugin.MessageManager.LastMessage.Sender != null)
+            ProcessPayloads(Plugin.MessageManager.LastMessage.Sender.Payloads);
         else
             ImGui.TextUnformatted("Nothing to show");
 
         ImGui.TextUnformatted("Message Content");
         ImGui.Spacing();
-        if (Plugin.Store.LastMessage.Message != null)
-            ProcessPayloads(Plugin.Store.LastMessage.Message.Payloads);
+        if (Plugin.MessageManager.LastMessage.Message != null)
+            ProcessPayloads(Plugin.MessageManager.LastMessage.Message.Payloads);
         else
             ImGui.TextUnformatted("Nothing to show");
     }

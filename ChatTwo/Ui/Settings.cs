@@ -151,7 +151,6 @@ public sealed class SettingsWindow : Window, IUiComponent
                                   || Math.Abs(Mutable.JapaneseFontSize - Plugin.Config.JapaneseFontSize) > 0.001
                                   || Math.Abs(Mutable.SymbolsFontSize - Plugin.Config.SymbolsFontSize) > 0.001;
             var langChanged = Mutable.LanguageOverride != Plugin.Config.LanguageOverride;
-            var sharedChanged = Mutable.SharedMode != Plugin.Config.SharedMode;
 
             config.UpdateFrom(Mutable);
 
@@ -159,7 +158,7 @@ public sealed class SettingsWindow : Window, IUiComponent
             // commit any changes that cause a crash
             Plugin.DeferredSaveFrames = 60;
 
-            Plugin.Store.FilterAllTabs(false);
+            Plugin.MessageManager.FilterAllTabs(false);
 
             if (fontChanged || fontSizeChanged) {
                 Plugin.FontManager.BuildFonts();
@@ -167,10 +166,6 @@ public sealed class SettingsWindow : Window, IUiComponent
 
             if (langChanged) {
                 Plugin.LanguageChanged(Plugin.Interface.UiLanguage);
-            }
-
-            if (sharedChanged) {
-                Plugin.Store.Reconnect();
             }
 
             if (!Mutable.HideChat && hideChatChanged) {

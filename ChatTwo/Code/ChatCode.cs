@@ -1,5 +1,3 @@
-using LiteDB;
-
 namespace ChatTwo.Code;
 
 internal class ChatCode
@@ -19,15 +17,6 @@ internal class ChatCode
         Type = (ChatType) (Raw & Clear7);
         Source = SourceFrom(11);
         Target = SourceFrom(7);
-    }
-
-    [BsonCtor]
-    public ChatCode(ushort raw, ChatType type, ChatSource source, ChatSource target)
-    {
-        Raw = raw;
-        Type = type;
-        Source = source;
-        Target = target;
     }
 
     internal ChatType Parent() => Type switch

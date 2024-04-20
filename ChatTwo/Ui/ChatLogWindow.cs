@@ -139,7 +139,7 @@ public sealed class ChatLogWindow : Window, IUiComponent
 
     private void Login()
     {
-        Plugin.Store.FilterAllTabs(false);
+        Plugin.MessageManager.FilterAllTabs(false);
     }
 
     private void Activated(ChatActivatedArgs args) {
