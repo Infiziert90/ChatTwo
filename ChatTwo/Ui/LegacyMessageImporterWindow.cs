@@ -1,7 +1,5 @@
 ﻿using System.Numerics;
 using ChatTwo.Util;
-using Dalamud.Interface.Colors;
-using Dalamud.Interface.Components;
 using Dalamud.Interface.ImGuiNotification;
 using Dalamud.Interface.ImGuiNotification.EventArgs;
 using Dalamud.Interface.Internal.Notifications;
