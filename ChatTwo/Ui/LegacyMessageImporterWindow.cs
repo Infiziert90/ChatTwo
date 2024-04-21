@@ -97,8 +97,8 @@ internal class LegacyMessageImporterWindow : Window
     private void DrawEligible()
     {
         ImGui.TextWrapped("Import database messages from legacy LiteDB database to SQLite database?");
-        ImGui.Text($"Message count: {Eligibility.MessageCount:N0}");
-        ImGui.Text($"Database size: {StringUtil.BytesToString(Eligibility.DatabaseSizeBytes)}");
+        ImGui.TextWrapped($"Message count: {Eligibility.MessageCount:N0}");
+        ImGui.TextWrapped($"Database size: {StringUtil.BytesToString(Eligibility.DatabaseSizeBytes)}");
 
         ImGui.Spacing();
 
@@ -126,20 +126,20 @@ internal class LegacyMessageImporterWindow : Window
 
     private void DrawIneligible()
     {
-        ImGui.Text("Your legacy LiteDB database is not eligible for import:");
+        ImGui.TextWrapped("Your legacy LiteDB database is not eligible for import:");
         switch (Eligibility.Status)
         {
             case LegacyMessageImporterEligibilityStatus.IneligibleOriginalDbNotExists:
-                ImGui.Text("The old database could not be found.");
+                ImGui.TextWrapped("The old database could not be found.");
                 break;
             case LegacyMessageImporterEligibilityStatus.IneligibleMigrationDbExists:
-                ImGui.Text("The migration process was already started.");
+                ImGui.TextWrapped("The migration process was already started.");
                 break;
             case LegacyMessageImporterEligibilityStatus.IneligibleLiteDbFailed:
-                ImGui.Text("The old database could not be opened.");
+                ImGui.TextWrapped("The old database could not be opened.");
                 break;
             case LegacyMessageImporterEligibilityStatus.IneligibleNoMessages:
-                ImGui.Text("The old database contains no messages.");
+                ImGui.TextWrapped("The old database contains no messages.");
                 break;
             case LegacyMessageImporterEligibilityStatus.Eligible:
             default:
@@ -147,7 +147,7 @@ internal class LegacyMessageImporterWindow : Window
         }
 
         if (!string.IsNullOrWhiteSpace(Eligibility.AdditionalIneligibilityInfo))
-            ImGui.Text(Eligibility.AdditionalIneligibilityInfo);
+            ImGui.TextWrapped(Eligibility.AdditionalIneligibilityInfo);
 
         // LiteDB failures notify the user, so give them a chance to rename the
         // database to avoid prompting again.

@@ -53,7 +53,20 @@ internal sealed class Database : ISettingsTab
         ImGui.Spacing();
 
         var old = new FileInfo(Path.Join(Plugin.Interface.ConfigDirectory.FullName, "chat.db"));
+        var migratedOld = new FileInfo(Path.Join(Plugin.Interface.ConfigDirectory.FullName, "chat-litedb.db"));
         if (old.Exists)
+        {
+            ImGui.TextUnformatted(Language.Options_Database_Old_Heading);
+            ImGui.Spacing();
+
+            if (ImGui.Button(Language.Options_Database_Old_Migration))
+                Plugin.LegacyMessageImporterWindow.IsOpen = true;
+
+            ImGui.Spacing();
+            ImGui.Separator();
+            ImGui.Spacing();
+        }
+        else if (migratedOld.Exists)
         {
             ImGui.TextUnformatted(Language.Options_Database_Old_Heading);
             ImGui.Spacing();
@@ -62,7 +75,7 @@ internal sealed class Database : ISettingsTab
             {
                 try
                 {
-                    old.Delete();
+                    migratedOld.Delete();
                     WrapperUtil.AddNotification(Language.Options_Database_Old_Delete_Success, NotificationType.Success);
                 }
                 catch (Exception e)

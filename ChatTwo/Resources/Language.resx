@@ -1009,4 +1009,7 @@
     <data name="Options_Database_Old_Delete_Success" xml:space="preserve">
         <value>The old database was successfully removed.</value>
     </data>
+    <data name="Options_Database_Old_Migration" xml:space="preserve">
+        <value>Open migration window</value>
+    </data>
 </root>

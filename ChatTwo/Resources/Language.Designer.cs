@@ -1833,6 +1833,15 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open migration window.
+        /// </summary>
+        internal static string Options_Database_Old_Migration {
+            get {
+                return ResourceManager.GetString("Options_Database_Old_Migration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Database.
         /// </summary>
         internal static string Options_Database_Tab {
