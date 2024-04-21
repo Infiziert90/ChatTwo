@@ -46,7 +46,6 @@ internal class LegacyMesasgeImporterWindow : Window
                 });
                 // TODO: clicking does not dismiss
                 notification.Click += _ => IsOpen = true;
-                notification.Dismiss += _ => WriteChatMessage();
                 break;
             }
 
@@ -60,18 +59,11 @@ internal class LegacyMesasgeImporterWindow : Window
                     Content =
                         "Migration is not possible because the old database could not be opened. Click for more information."
                 });
+                // TODO: clicking does not dismiss
                 notification.Click += _ => IsOpen = true;
-                notification.Dismiss += _ => WriteChatMessage();
                 break;
             }
         }
-    }
-
-    private void WriteChatMessage()
-    {
-        // TODO: write a message to chat saying how to open the window again
-        // TODO: add a way of opening the window again, maybe a command or in
-        // database settings
     }
 
     public override void Draw()
