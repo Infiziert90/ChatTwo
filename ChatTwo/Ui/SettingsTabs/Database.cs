@@ -5,6 +5,7 @@ using ChatTwo.Util;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface.Internal.Notifications;
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 
 namespace ChatTwo.Ui.SettingsTabs;
@@ -29,7 +30,8 @@ internal sealed class Database : ISettingsTab
     private long DatabaseLogSize;
     private int DatabaseMessageCount;
 
-    public void Draw(bool changed) {
+    public void Draw(bool changed)
+    {
         if (changed)
             ShowAdvanced = ImGui.GetIO().KeyShift;
 
@@ -37,18 +39,14 @@ internal sealed class Database : ISettingsTab
         ImGui.Spacing();
 
         if (ImGuiUtil.OptionCheckbox(ref Mutable.LoadPreviousSession, Language.Options_LoadPreviousSession_Name, Language.Options_LoadPreviousSession_Description))
-        {
             if (Mutable.LoadPreviousSession)
                 Mutable.FilterIncludePreviousSessions = true;
-        }
 
         ImGui.Spacing();
 
         if (ImGuiUtil.OptionCheckbox(ref Mutable.FilterIncludePreviousSessions, Language.Options_FilterIncludePreviousSessions_Name, Language.Options_FilterIncludePreviousSessions_Description))
-        {
             if (!Mutable.FilterIncludePreviousSessions)
                 Mutable.LoadPreviousSession = false;
-        }
 
         ImGui.Spacing();
         ImGui.Separator();
@@ -80,86 +78,86 @@ internal sealed class Database : ISettingsTab
         }
 
         ImGui.TextUnformatted(Language.Options_Database_Metadata_Heading);
-        var style = ImGui.GetStyle();
-        ImGui.Indent(style.IndentSpacing);
-
-        // Refresh the database size and message count every 5 seconds to avoid
-        // constant stat calls and spamming the database.
-        if (DatabaseLastRefreshTicks + 5 * 1000 < Environment.TickCount64)
+        using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
         {
-            DatabaseSize = Plugin.MessageManager.Store.DatabaseSize();
-            DatabaseLogSize = Plugin.MessageManager.Store.DatabaseLogSize();
-            DatabaseMessageCount = Plugin.MessageManager.Store.MessageCount();
-            DatabaseLastRefreshTicks = Environment.TickCount64;
-        }
+            // Refresh the database size and message count every 5 seconds to avoid
+            // constant stat calls and spamming the database.
+            if (DatabaseLastRefreshTicks + 5 * 1000 < Environment.TickCount64)
+            {
+                DatabaseSize = Plugin.MessageManager.Store.DatabaseSize();
+                DatabaseLogSize = Plugin.MessageManager.Store.DatabaseLogSize();
+                DatabaseMessageCount = Plugin.MessageManager.Store.MessageCount();
+                DatabaseLastRefreshTicks = Environment.TickCount64;
+            }
 
-        ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_Path, MessageManager.DatabasePath()));
-        if (ImGui.IsItemClicked(ImGuiMouseButton.Left))
-        {
             // Copy the directory path instead of the file path so people can
             // paste it into their file explorer.
-            var path = Path.GetDirectoryName(MessageManager.DatabasePath());
-            ImGui.SetClipboardText(path);
-            WrapperUtil.AddNotification(Language.Options_Database_Metadata_CopyConfigPathNotification, NotificationType.Info);
+            ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_Path, MessageManager.DatabasePath()));
+            if (ImGui.IsItemClicked(ImGuiMouseButton.Left))
+            {
+                var path = Path.GetDirectoryName(MessageManager.DatabasePath());
+                ImGui.SetClipboardText(path);
+                WrapperUtil.AddNotification(Language.Options_Database_Metadata_CopyConfigPathNotification, NotificationType.Info);
+            }
+
+            if (ImGui.IsItemHovered())
+            {
+                ImGui.SetMouseCursor(ImGuiMouseCursor.Hand);
+                ImGui.SetTooltip(Language.Options_Database_Metadata_CopyConfigPath);
+            }
+
+            ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_Size, StringUtil.BytesToString(DatabaseSize)));
+            if (ImGui.IsItemHovered())
+                ImGui.SetTooltip(DatabaseSize.ToString("N0") + "B");
+
+            ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_LogSize, StringUtil.BytesToString(DatabaseLogSize)));
+            if (ImGui.IsItemHovered())
+                ImGui.SetTooltip(DatabaseLogSize.ToString("N0") + "B");
+
+            ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_MessageCount, DatabaseMessageCount));
+
+            if (ImGuiUtil.CtrlShiftButton(Language.Options_ClearDatabase_Button, Language.Options_ClearDatabase_Tooltip))
+            {
+                Plugin.Log.Warning("Clearing messages from database");
+                Plugin.MessageManager.Store.ClearMessages();
+                foreach (var tab in Plugin.Config.Tabs)
+                    tab.Clear();
+
+                // Refresh on next draw
+                DatabaseLastRefreshTicks = 0;
+                WrapperUtil.AddNotification(Language.Options_ClearDatabase_Success, NotificationType.Info);
+            }
         }
 
-        if (ImGui.IsItemHovered())
+        ImGui.Spacing();
+
+        if (!ShowAdvanced)
+            return;
+
+        using var treeNode = ImRaii.TreeNode(Language.Options_Database_Advanced);
+        ImGui.PushTextWrapPos();
+        ImGuiUtil.WarningText(Language.Options_Database_Advanced_Warning);
+
+        if (ImGuiUtil.CtrlShiftButton("Perform maintenance", "Ctrl+Shift: MessageManager.Store.PerformMaintenance()"))
+            Plugin.MessageManager.Store.PerformMaintenance();
+
+        if (ImGuiUtil.CtrlShiftButton("Reload messages from database", "Ctrl+Shift: MessageManager.FilterAllTabs(false)"))
         {
-            ImGui.SetMouseCursor(ImGuiMouseCursor.Hand);
-            ImGui.SetTooltip(Language.Options_Database_Metadata_CopyConfigPath);
-        }
-
-        ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_Size, StringUtil.BytesToString(DatabaseSize)));
-        if (ImGui.IsItemHovered())
-            ImGui.SetTooltip(DatabaseSize.ToString("N0") + "B");
-
-        ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_LogSize, StringUtil.BytesToString(DatabaseLogSize)));
-        if (ImGui.IsItemHovered())
-            ImGui.SetTooltip(DatabaseLogSize.ToString("N0") + "B");
-
-        ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_MessageCount, DatabaseMessageCount));
-
-        if (ImGuiUtil.CtrlShiftButton(Language.Options_ClearDatabase_Button, Language.Options_ClearDatabase_Tooltip))
-        {
-            Plugin.Log.Warning("Clearing messages from database");
-            Plugin.MessageManager.Store.ClearMessages();
             foreach (var tab in Plugin.Config.Tabs)
                 tab.Clear();
 
-            // Refresh on next draw
-            DatabaseLastRefreshTicks = 0;
-            WrapperUtil.AddNotification(Language.Options_ClearDatabase_Success, NotificationType.Info);
+            Plugin.MessageManager.FilterAllTabs(false);
         }
 
-        ImGui.Unindent(style.IndentSpacing);
-        ImGui.Spacing();
+        if (ImGuiUtil.CtrlShiftButton("Inject 10,000 messages", "Ctrl+Shift: creates 10,000 unique messages (async)"))
+            new Thread(() => InsertMessages(10_000)).Start();
 
-        if (ShowAdvanced && ImGui.TreeNodeEx(Language.Options_Database_Advanced))
-        {
-            ImGui.PushTextWrapPos();
-            ImGuiUtil.WarningText(Language.Options_Database_Advanced_Warning);
-
-            if (ImGuiUtil.CtrlShiftButton("Perform maintenance", "Ctrl+Shift: MessageManager.Store.PerformMaintenance()"))
-                Plugin.MessageManager.Store.PerformMaintenance();
-
-            if (ImGuiUtil.CtrlShiftButton("Reload messages from database",
-                    "Ctrl+Shift: MessageManager.FilterAllTabs(false)")) {
-                foreach (var tab in Plugin.Config.Tabs)
-                    tab.Clear();
-                Plugin.MessageManager.FilterAllTabs(false);
-            }
-
-            if (ImGuiUtil.CtrlShiftButton("Inject 10,000 messages", "Ctrl+Shift: creates 10,000 unique messages (async)"))
-                new Thread(() => InsertMessages(10_000)).Start();
-
-            ImGui.PopTextWrapPos();
-            ImGui.TreePop();
-        }
-
+        ImGui.PopTextWrapPos();
         ImGui.Spacing();
     }
 
-    private void InsertMessages(int count) {
+    private void InsertMessages(int count)
+    {
         Plugin.Log.Info($"Inserting {count} messages due to user request");
 
         // Generate
@@ -175,7 +173,8 @@ internal sealed class Database : ISettingsTab
             .Build();
         var senderChunks = ChunkUtil.ToChunks(senderSource, ChunkSource.Sender, ChatType.Debug).ToList();
         var messages = new List<Message>(count);
-        for (var i = 0; i < count; i++) {
+        for (var i = 0; i < count; i++)
+        {
             var contentSource = new SeStringBuilder()
                 .AddText("Random message payload - ")
                 .AddItalics(Guid.NewGuid().ToString())
@@ -203,28 +202,28 @@ internal sealed class Database : ISettingsTab
 
         // Insert
         stopwatch = Stopwatch.StartNew();
-        foreach (var message in messages) {
+        foreach (var message in messages)
             Plugin.MessageManager.Store.UpsertMessage(message);
-        }
 
         elapsedTicks = stopwatch.ElapsedTicks;
         stopwatch.Stop();
         Plugin.Log.Info($"Upserted {count} messages in {elapsedTicks} ticks ({elapsedTicks / TimeSpan.TicksPerMillisecond}ms)");
 
         // Clear tabs during framework frame
-        Plugin.Framework.Run(() => {
+        Plugin.Framework.Run(() =>
+        {
             stopwatch = Stopwatch.StartNew();
             foreach (var tab in Plugin.Config.Tabs)
                 tab.Clear();
 
             elapsedTicks = stopwatch.ElapsedTicks;
             stopwatch.Stop();
-            Plugin.Log.Info(
-                $"Cleared {Plugin.Config.Tabs.Count} tabs in {elapsedTicks} ticks ({elapsedTicks / TimeSpan.TicksPerMillisecond}ms)");
+            Plugin.Log.Info($"Cleared {Plugin.Config.Tabs.Count} tabs in {elapsedTicks} ticks ({elapsedTicks / TimeSpan.TicksPerMillisecond}ms)");
         }).Wait();
 
         // Fetch and filter during framework frame
-        Plugin.Framework.Run(() => {
+        Plugin.Framework.Run(() =>
+        {
             stopwatch = Stopwatch.StartNew();
             Plugin.MessageManager.FilterAllTabs(false);
             elapsedTicks = stopwatch.ElapsedTicks;

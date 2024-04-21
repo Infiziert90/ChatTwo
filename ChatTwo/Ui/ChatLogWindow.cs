@@ -23,7 +23,7 @@ using Lumina.Excel.GeneratedSheets;
 
 namespace ChatTwo.Ui;
 
-public sealed class ChatLogWindow : Window, IUiComponent
+public sealed class ChatLogWindow : Window
 {
     private const string ChatChannelPicker = "chat-channel-picker";
     private const string AutoCompleteId = "##chat2-autocomplete";

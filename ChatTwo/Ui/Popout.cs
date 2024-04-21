@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using Dalamud.Interface.Style;
+using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
 
@@ -47,7 +48,7 @@ internal class Popout : Window
 
     public override void Draw()
     {
-        ImGui.PushID($"popout-{Tab.Name}");
+        using var id = ImRaii.PushId($"popout-{Tab.Name}");
 
         if (!ChatLogWindow.Plugin.Config.ShowPopOutTitleBar) {
             ImGui.TextUnformatted(Tab.Name);
@@ -56,8 +57,6 @@ internal class Popout : Window
 
         var handler = ChatLogWindow.HandlerLender.Borrow();
         ChatLogWindow.DrawMessageLog(Tab, handler, ImGui.GetContentRegionAvail().Y, false);
-
-        ImGui.PopID();
     }
 
     public override void PostDraw()

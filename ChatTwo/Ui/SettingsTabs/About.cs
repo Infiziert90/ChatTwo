@@ -9,7 +9,8 @@ using ImGuiNET;
 
 namespace ChatTwo.Ui.SettingsTabs;
 
-internal sealed class About : ISettingsTab {
+internal sealed class About : ISettingsTab
+{
     public string Name => string.Format(Language.Options_About_Tab, Plugin.PluginName) + "###tabs-about";
 
     private readonly List<string> _translators =
@@ -25,11 +26,13 @@ internal sealed class About : ISettingsTab {
         "zomsakura", "Sirayuki"
     ];
 
-    internal About() {
+    internal About()
+    {
         _translators.Sort((a, b) => string.Compare(a.ToLowerInvariant(), b.ToLowerInvariant(), StringComparison.Ordinal));
     }
 
-    public void Draw(bool changed) {
+    public void Draw(bool changed)
+    {
         ImGui.PushTextWrapPos();
 
         ImGui.TextUnformatted(string.Format(Language.Options_About_Opening, Plugin.PluginName));
