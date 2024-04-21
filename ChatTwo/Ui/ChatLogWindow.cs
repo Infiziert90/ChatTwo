@@ -84,6 +84,7 @@ public sealed class ChatLogWindow : Window
 
     private ExcelSheet<World> WorldSheet;
     private ExcelSheet<LogFilter> LogFilterSheet;
+    private ExcelSheet<TextCommand> TextCommandSheet;
 
     internal ChatLogWindow(Plugin plugin) : base($"{Plugin.PluginName}###chat2")
     {
@@ -108,6 +109,7 @@ public sealed class ChatLogWindow : Window
 
         WorldSheet = Plugin.DataManager.GetExcelSheet<World>()!;
         LogFilterSheet = Plugin.DataManager.GetExcelSheet<LogFilter>()!;
+        TextCommandSheet = Plugin.DataManager.GetExcelSheet<TextCommand>()!;
         _fontIcon = Plugin.TextureProvider.GetTextureFromGame("common/font/fonticon_ps5.tex");
 
         Plugin.Functions.Chat.Activated += Activated;
@@ -861,10 +863,7 @@ public sealed class ChatLogWindow : Window
             using (ImRaii.PushStyle(ImGuiStyleVar.CellPadding, oldCellPadding))
             {
                 if (switchedTab || ImGui.GetScrollY() >= ImGui.GetScrollMaxY())
-                {
-                    Plugin.Log.Information($"Setting Scroll {ImGui.GetScrollY() >= ImGui.GetScrollMaxY()} {ImGui.GetScrollY()} {ImGui.GetScrollMaxY()}");
                     ImGui.SetScrollHereY(1f);
-                }
 
                 handler.Draw();
             }
@@ -996,7 +995,7 @@ public sealed class ChatLogWindow : Window
 
                 var afterDraw = ImGui.GetCursorScreenPos();
                 message.Height = ImGui.GetCursorPosY() - lastPos;
-                if (moreCompact)
+                if (isTable && !moreCompact)
                 {
                     message.Height -= oldCellPaddingY * 2;
                     beforeDraw.Y += oldCellPaddingY;
@@ -1317,7 +1316,6 @@ public sealed class ChatLogWindow : Window
                     _autoCompleteSelection--;
 
                 _autoCompleteShouldScroll = true;
-
                 return 1;
             case ImGuiKey.DownArrow:
                 if (_autoCompleteSelection == _autoCompleteList.Count - 1)
@@ -1326,7 +1324,6 @@ public sealed class ChatLogWindow : Window
                     _autoCompleteSelection++;
 
                 _autoCompleteShouldScroll = true;
-
                 return 1;
         }
 
@@ -1343,7 +1340,6 @@ public sealed class ChatLogWindow : Window
         }
 
         var ptr = new ImGuiInputTextCallbackDataPtr(data);
-
         if (data->EventFlag == ImGuiInputTextFlags.CallbackCompletion)
         {
             if (ptr.CursorPos == 0)
@@ -1395,10 +1391,10 @@ public sealed class ChatLogWindow : Window
         if (text.StartsWith('/'))
         {
             var command = text.Split(' ')[0];
-            var cmd = Plugin.DataManager.GetExcelSheet<TextCommand>()?.FirstOrDefault(cmd => cmd.Command.RawString == command
-                                                                                                     || cmd.Alias.RawString == command
-                                                                                                     || cmd.ShortCommand.RawString == command
-                                                                                                     || cmd.ShortAlias.RawString == command);
+            var cmd = TextCommandSheet.FirstOrDefault(cmd =>
+                cmd.Command.RawString == command || cmd.Alias.RawString == command ||
+                cmd.ShortCommand.RawString == command || cmd.ShortAlias.RawString == command);
+
             if (cmd != null)
                 Plugin.CommandHelpWindow.UpdateContent(cmd);
         }
@@ -1407,7 +1403,6 @@ public sealed class ChatLogWindow : Window
             return 0;
 
         var prevPos = _inputBacklogIdx;
-
         switch (data->EventKey)
         {
             case ImGuiKey.UpArrow:
@@ -1428,13 +1423,11 @@ public sealed class ChatLogWindow : Window
                         _inputBacklogIdx--;
                         break;
                 }
-
                 break;
             case ImGuiKey.DownArrow:
                 if (_inputBacklogIdx != -1)
                     if (++_inputBacklogIdx >= _inputBacklog.Count)
                         _inputBacklogIdx = -1;
-
                 break;
         }
 
@@ -1442,7 +1435,6 @@ public sealed class ChatLogWindow : Window
             return 0;
 
         var historyStr = _inputBacklogIdx >= 0 ? _inputBacklog[_inputBacklogIdx] : string.Empty;
-
         ptr.DeleteChars(0, ptr.BufTextLen);
         ptr.InsertChars(0, historyStr);
 
@@ -1451,22 +1443,16 @@ public sealed class ChatLogWindow : Window
 
     internal void DrawChunks(IReadOnlyList<Chunk> chunks, bool wrap = true, PayloadHandler? handler = null, float lineWidth = 0f)
     {
-        ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, Vector2.Zero);
-        try {
-            for (var i = 0; i < chunks.Count; i++)
-            {
-                if (chunks[i] is TextChunk text && string.IsNullOrEmpty(text.Content))
-                    continue;
-
-                DrawChunk(chunks[i], wrap, handler, lineWidth);
-
-                if (i < chunks.Count - 1)
-                    ImGui.SameLine();
-            }
-        }
-        finally
+        using var style = ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, Vector2.Zero);
+        for (var i = 0; i < chunks.Count; i++)
         {
-            ImGui.PopStyleVar();
+            if (chunks[i] is TextChunk text && string.IsNullOrEmpty(text.Content))
+                continue;
+
+            DrawChunk(chunks[i], wrap, handler, lineWidth);
+
+            if (i < chunks.Count - 1)
+                ImGui.SameLine();
         }
     }
 
@@ -1499,30 +1485,23 @@ public sealed class ChatLogWindow : Window
         if (colour == null && text.FallbackColour != null)
         {
             var type = text.FallbackColour.Value;
-            colour = Plugin.Config.ChatColours.TryGetValue(type, out var col)
-                ? col
-                : type.DefaultColour();
+            colour = Plugin.Config.ChatColours.TryGetValue(type, out var col) ? col : type.DefaultColour();
         }
 
-        if (colour != null)
-        {
-            colour = ColourUtil.RgbaToAbgr(colour.Value);
-            ImGui.PushStyleColor(ImGuiCol.Text, colour.Value);
-        }
+        var push = colour != null;
+        var uColor = push ? ColourUtil.RgbaToAbgr(colour!.Value) : 0;
+        using var pushedColor = ImRaii.PushColor(ImGuiCol.Text, uColor, push);
 
-        var pushed = false;
+        var useCustomItalicFont = Plugin.Config.FontsEnabled && Plugin.FontManager.ItalicFont != null;
         if (text.Italic)
-        {
-            pushed = true;
-            (Plugin.Config.FontsEnabled && Plugin.FontManager.ItalicFont != null ? Plugin.FontManager.ItalicFont : Plugin.FontManager.AxisItalic).Push();
-        }
+            (useCustomItalicFont ? Plugin.FontManager.ItalicFont! : Plugin.FontManager.AxisItalic).Push();
 
+        // Check for contains here as sometimes there are multiple
+        // TextChunks with the same PlayerPayload but only one has the name.
+        // E.g. party chat with cross world players adds extra chunks.
         var content = text.Content;
         if (ScreenshotMode)
         {
-            // Check for contains here as sometimes there are multiple
-            // TextChunks with the same PlayerPayload but only one has the name.
-            // E.g. party chat with cross world players adds extra chunks.
             if (chunk.Link is PlayerPayload playerPayload && content.Contains(playerPayload.PlayerName))
                 content = content.Replace(playerPayload.PlayerName, HashPlayer(playerPayload.PlayerName, playerPayload.World.RowId));
             else if (Plugin.ClientState.LocalPlayer is { } player && content.Contains(player.Name.TextValue))
@@ -1539,11 +1518,8 @@ public sealed class ChatLogWindow : Window
             ImGuiUtil.PostPayload(chunk, handler);
         }
 
-        if (pushed)
-            (Plugin.Config.FontsEnabled && Plugin.FontManager.ItalicFont != null ? Plugin.FontManager.ItalicFont : Plugin.FontManager.AxisItalic).Pop();
-
-        if (colour != null)
-            ImGui.PopStyleColor();
+        if (text.Italic)
+            (useCustomItalicFont ? Plugin.FontManager.ItalicFont! : Plugin.FontManager.AxisItalic).Pop();
     }
 
     private string HashPlayer(string playerName, uint worldId)
