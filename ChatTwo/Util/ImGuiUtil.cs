@@ -5,6 +5,7 @@ using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Interface;
 using Dalamud.Interface.Style;
 using Dalamud.Interface.Utility;
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 
 namespace ChatTwo.Util;
@@ -262,18 +263,37 @@ internal static class ImGuiUtil
 
     internal static bool CtrlShiftButton(string label, string tooltip = "")
     {
-        var io = ImGui.GetIO();
-        var ctrlShiftHeld = io.KeyCtrl && io.KeyShift;
-        if (!ctrlShiftHeld) ImGui.BeginDisabled();
+        var ctrlShiftHeld = ImGui.GetIO() is { KeyCtrl: true, KeyShift: true };
+        if (!ctrlShiftHeld)
+            ImGui.BeginDisabled();
+
         var ret = ImGui.Button(label) && ctrlShiftHeld;
-        if (!ctrlShiftHeld) ImGui.EndDisabled();
-        if (!string.IsNullOrEmpty(tooltip) && ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled)) {
-            ImGui.BeginTooltip();
-            ImGui.TextUnformatted(tooltip);
-            ImGui.EndTooltip();
-        }
+
+        if (!ctrlShiftHeld)
+            ImGui.EndDisabled();
+
+        if (!string.IsNullOrEmpty(tooltip) && ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
+            ImGui.SetTooltip(tooltip);
 
         return ret;
+    }
+
+    internal static bool CtrlShiftButtonColored(string label, string tooltip = "")
+    {
+        var ctrlShiftHeld = ImGui.GetIO() is { KeyCtrl: true, KeyShift: true };
+
+        var colorNormal = new Vector4(0.780f, 0.245f, 0.245f, 1.0f);
+        var colorHovered = new Vector4(0.7f, 0.0f, 0.0f, 1.0f);
+        using (ImRaii.PushColor(ImGuiCol.Button, colorNormal))
+        using (ImRaii.PushColor(ImGuiCol.ButtonHovered, colorHovered))
+        {
+            var ret = ImGui.Button(label) && ctrlShiftHeld;
+
+            if (!string.IsNullOrEmpty(tooltip) && ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
+                ImGui.SetTooltip(tooltip);
+
+            return ret;
+        }
     }
 
     internal static bool TryToImGui(this VirtualKey key, out ImGuiKey result)

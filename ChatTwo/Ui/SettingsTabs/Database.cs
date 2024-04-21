@@ -108,11 +108,11 @@ internal sealed class Database : ISettingsTab
 
             ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_Size, StringUtil.BytesToString(DatabaseSize)));
             if (ImGui.IsItemHovered())
-                ImGui.SetTooltip(DatabaseSize.ToString("N0") + "B");
+                ImGui.SetTooltip(StringUtil.BytesToString(DatabaseSize));
 
             ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_LogSize, StringUtil.BytesToString(DatabaseLogSize)));
             if (ImGui.IsItemHovered())
-                ImGui.SetTooltip(DatabaseLogSize.ToString("N0") + "B");
+                ImGui.SetTooltip(StringUtil.BytesToString(DatabaseLogSize));
 
             ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_MessageCount, DatabaseMessageCount));
 
