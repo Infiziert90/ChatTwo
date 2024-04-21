@@ -3,6 +3,7 @@ using ChatTwo.Util;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using System.Text.RegularExpressions;
+using LiteDB;
 
 namespace ChatTwo;
 
@@ -10,7 +11,8 @@ internal class SortCode {
     internal ChatType Type { get; }
     internal ChatSource Source { get; }
 
-    internal SortCode(ChatType type, ChatSource source) {
+    [BsonCtor] // Used by LegacyMessageImporter
+    public SortCode(ChatType type, ChatSource source) {
         Type = type;
         Source = source;
     }

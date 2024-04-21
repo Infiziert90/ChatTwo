@@ -49,6 +49,7 @@ public sealed class Plugin : IDalamudPlugin
     public ChatLogWindow ChatLogWindow { get; }
     public CommandHelpWindow CommandHelpWindow { get; }
     public SeStringDebugger SeStringDebugger { get; }
+    internal LegacyMesasgeImporterWindow LegacyMesasgeImporterWindow { get; }
 
     internal Configuration Config { get; }
     internal Commands Commands { get; }
@@ -104,6 +105,10 @@ public sealed class Plugin : IDalamudPlugin
 
             MessageManager = new MessageManager(this); // requires Ui
 
+            // Requires MessageManager
+            LegacyMesasgeImporterWindow = new LegacyMesasgeImporterWindow(MessageManager.Store);
+            WindowSystem.AddWindow(LegacyMesasgeImporterWindow);
+
             // let all the other components register, then initialise commands
             Commands.Initialise();
 
@@ -138,6 +143,7 @@ public sealed class Plugin : IDalamudPlugin
         ChatLogWindow?.Dispose();
         SettingsWindow?.Dispose();
         SeStringDebugger?.Dispose();
+        LegacyMesasgeImporterWindow?.Dispose();
 
         ExtraChat?.Dispose();
         Ipc?.Dispose();

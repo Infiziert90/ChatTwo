@@ -19,7 +19,6 @@ internal class MessageManager : IDisposable
     internal MessageStore Store { get; }
 
     private ConcurrentQueue<(uint, Message)> Pending { get; } = new();
-    private Stopwatch MaintenanceTimer { get; } = new();
     private Dictionary<ChatType, NameFormatting> Formats { get; } = new();
     private ulong LastContentId { get; set; }
 
@@ -35,7 +34,6 @@ internal class MessageManager : IDisposable
     internal MessageManager(Plugin plugin)
     {
         Plugin = plugin;
-        MaintenanceTimer.Start();
         Store = new MessageStore(DatabasePath());
 
         Plugin.ChatGui.ChatMessageUnhandled += ChatMessage;
@@ -73,12 +71,6 @@ internal class MessageManager : IDisposable
 
     private void GetMessageInfo(IFramework framework)
     {
-        if (MaintenanceTimer.Elapsed > TimeSpan.FromMinutes(5))
-        {
-            MaintenanceTimer.Restart();
-            new Thread(() => Store.PerformMaintenance()).Start();
-        }
-
         if (!Pending.TryDequeue(out var entry))
             return;
 

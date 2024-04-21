@@ -160,7 +160,7 @@ public class MessageStoreTest {
         }
     }
 
-    private static Message BigMessage(bool uniqId = true, uint receiver = 12345, DateTimeOffset? dateTime = null) {
+    internal static Message BigMessage(bool uniqId = true, uint receiver = 12345, DateTimeOffset? dateTime = null) {
         // NOTE: These values aren't valid in the game.
         // NOTE: we can't test UiForeground, UiGlow, or AutoTranslatePayload
         // because they load data from the game.
@@ -216,16 +216,13 @@ public class MessageStoreTest {
         );
     }
 
-    private void AssertMessagesEqual(Message input, Message output) {
+    internal static void AssertMessagesEqual(Message input, Message output) {
         // Check basic fields.
         Assert.AreEqual(input.Id, output.Id);
         Assert.AreEqual(input.Receiver, output.Receiver);
         Assert.AreEqual(input.ContentId, output.ContentId);
         // Assert time is within 1 second
-        TestContext.WriteLine($"Input date: {input.Date.ToUniversalTime()}");
-        TestContext.WriteLine($"Output date: {output.Date.ToUniversalTime()}");
         var timeDifference = Math.Abs(input.Date.ToUniversalTime().Subtract(output.Date.ToUniversalTime()).TotalSeconds);
-        TestContext.WriteLine($"Time difference: {timeDifference}s");
         Assert.IsTrue(timeDifference < 1);
         Assert.AreEqual(input.Code.Raw, output.Code.Raw);
         Assert.AreEqual($"{input.SenderSource.Encode():X}", $"{output.SenderSource.Encode():X}");
