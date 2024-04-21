@@ -1,5 +1,6 @@
 using ChatTwo.Code;
 using Dalamud.Game.Text.SeStringHandling;
+using LiteDB;
 using MessagePack;
 
 namespace ChatTwo;
@@ -9,6 +10,7 @@ namespace ChatTwo;
 [MessagePackObject]
 public abstract class Chunk {
     [IgnoreMember]
+    [BsonIgnore] // used by LegacyMessageImporter
     internal Message? Message { get; set; }
 
     [Key(0)]
