@@ -112,7 +112,6 @@ internal class MessageManager : IDisposable
     }
 
     public (SeString? Sender, SeString? Message) LastMessage = (null, null);
-
     private void ChatMessage(XivChatType type, uint senderId, SeString sender, SeString message)
     {
         var chatCode = new ChatCode((ushort)type);

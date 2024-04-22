@@ -143,6 +143,16 @@ public sealed class SettingsWindow : Window
         if (!save)
             return;
 
+        // calculate all conditions before updating config
+        var hideChanged = !Mutable.HideChat && Mutable.HideChat != Plugin.Config.HideChat;
+        var languageChanged = Mutable.LanguageOverride != Plugin.Config.LanguageOverride;
+        var fontChanged = Mutable.GlobalFont != Plugin.Config.GlobalFont
+                          || Mutable.JapaneseFont != Plugin.Config.JapaneseFont
+                          || Mutable.ExtraGlyphRanges != Plugin.Config.ExtraGlyphRanges;
+        var fontSizeChanged = Math.Abs(Mutable.FontSize - Plugin.Config.FontSize) > 0.001
+                              || Math.Abs(Mutable.JapaneseFontSize - Plugin.Config.JapaneseFontSize) > 0.001
+                              || Math.Abs(Mutable.SymbolsFontSize - Plugin.Config.SymbolsFontSize) > 0.001;
+
         Plugin.Config.UpdateFrom(Mutable);
 
         // save after 60 frames have passed, which should hopefully not
@@ -150,19 +160,13 @@ public sealed class SettingsWindow : Window
         Plugin.DeferredSaveFrames = 60;
         Plugin.MessageManager.FilterAllTabs(false);
 
-        var fontChanged = Mutable.GlobalFont != Plugin.Config.GlobalFont
-                          || Mutable.JapaneseFont != Plugin.Config.JapaneseFont
-                          || Mutable.ExtraGlyphRanges != Plugin.Config.ExtraGlyphRanges;
-        var fontSizeChanged = Math.Abs(Mutable.FontSize - Plugin.Config.FontSize) > 0.001
-                              || Math.Abs(Mutable.JapaneseFontSize - Plugin.Config.JapaneseFontSize) > 0.001
-                              || Math.Abs(Mutable.SymbolsFontSize - Plugin.Config.SymbolsFontSize) > 0.001;
         if (fontChanged || fontSizeChanged)
             Plugin.FontManager.BuildFonts();
 
-        if (Mutable.LanguageOverride != Plugin.Config.LanguageOverride)
+        if (languageChanged)
             Plugin.LanguageChanged(Plugin.Interface.UiLanguage);
 
-        if (!Mutable.HideChat && Mutable.HideChat != Plugin.Config.HideChat)
+        if (hideChanged)
             GameFunctions.GameFunctions.SetChatInteractable(true);
 
         Initialise();
