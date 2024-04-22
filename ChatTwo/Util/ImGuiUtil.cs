@@ -12,6 +12,13 @@ namespace ChatTwo.Util;
 
 internal static class ImGuiUtil
 {
+    private static Plugin Plugin;
+
+    public static void Initialize(Plugin plugin)
+    {
+        Plugin = plugin;
+    }
+
     private static readonly ImGuiMouseButton[] Buttons =
     [
         ImGuiMouseButton.Left,
@@ -166,22 +173,16 @@ internal static class ImGuiUtil
 
     internal static bool IconButton(FontAwesomeIcon icon, string? id = null, string? tooltip = null)
     {
-        ImGui.PushFont(UiBuilder.IconFont);
-
         var label = icon.ToIconString();
         if (id != null)
             label += $"##{id}";
 
+        Plugin.FontManager.FontAwesome.Push();
         var ret = ImGui.Button(label);
-
-        ImGui.PopFont();
+        Plugin.FontManager.FontAwesome.Pop();
 
         if (tooltip != null && ImGui.IsItemHovered())
-        {
-            ImGui.BeginTooltip();
-            ImGui.TextUnformatted(tooltip);
-            ImGui.EndTooltip();
-        }
+            ImGui.SetTooltip(tooltip);
 
         return ret;
     }

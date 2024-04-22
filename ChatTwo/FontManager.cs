@@ -17,6 +17,8 @@ public class FontManager
     internal IFontHandle RegularFont { get; private set; }
     internal IFontHandle? ItalicFont { get; private set; }
 
+    internal IFontHandle FontAwesome { get; private set; }
+
     private FaceData _regularFont;
     private FaceData? _italicFont;
     private FaceData _jpFont;
@@ -158,6 +160,10 @@ public class FontManager
         {
             SkewStrength = Plugin.Config.FontSize / 6
         });
+
+        FontAwesome = Plugin.Interface.UiBuilder.FontAtlas.NewDelegateFontHandle(e =>
+            e.OnPreBuild(tk => tk.AddFontAwesomeIconFont(new SafeFontConfig { SizePx = Plugin.Config.FontSize })
+            ));
 
         RegularFont = Plugin.Interface.UiBuilder.FontAtlas.NewDelegateFontHandle(
             e => e.OnPreBuild(

@@ -80,6 +80,7 @@ public sealed class Plugin : IDalamudPlugin
             }
 
             LanguageChanged(Interface.UiLanguage);
+            ImGuiUtil.Initialize(this);
 
             Commands = new Commands(this);
             Common = new XivCommonBase(Interface);

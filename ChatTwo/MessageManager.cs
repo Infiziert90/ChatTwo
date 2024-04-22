@@ -80,7 +80,7 @@ internal class MessageManager : IDisposable
             Store.UpsertMessage(entry.Item2);
     }
 
-    internal void AddMessage(Message message, Tab? currentTab)
+    private void AddMessage(Message message, Tab? currentTab)
     {
         if (Plugin.Config.DatabaseBattleMessages || !message.Code.IsBattle())
             Store.UpsertMessage(message);
