@@ -67,8 +67,8 @@ internal class Message {
 
     // Not stored in the database:
     internal int Hash { get; }
-    internal float? Height { get; set; }
-    internal bool IsVisible { get; set; }
+    internal Dictionary<Guid, float?> Height { get; } = new();
+    internal Dictionary<Guid, bool> IsVisible { get; } = new();
 
     internal Message(ulong receiver, ChatCode code, List<Chunk> sender, List<Chunk> content, SeString senderSource, SeString contentSource) {
         Receiver = receiver;

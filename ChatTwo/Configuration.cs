@@ -201,6 +201,9 @@ internal class Tab
     [NonSerialized]
     public InputChannel? PreviousChannel;
 
+    [NonSerialized]
+    public Guid Identifier = Guid.NewGuid();
+
     ~Tab() { MessagesMutex.Dispose(); }
 
     internal bool Contains(Message message) {

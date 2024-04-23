@@ -895,8 +895,8 @@ public sealed class ChatLogWindow : Window
                 var message = tab.Messages[i];
                 if (reset)
                 {
-                    message.Height = null;
-                    message.IsVisible = false;
+                    message.Height[tab.Identifier] = null;
+                    message.IsVisible[tab.Identifier] = false;
                 }
 
                 if (Plugin.Config.CollapseDuplicateMessages)
@@ -933,7 +933,9 @@ public sealed class ChatLogWindow : Window
 
                 // message has rendered once
                 // message isn't visible, so render dummy
-                if (message is { Height: not null, IsVisible: false })
+                message.Height.TryGetValue(tab.Identifier, out var height);
+                message.IsVisible.TryGetValue(tab.Identifier, out var visible);
+                if (height != null && !visible)
                 {
                     var beforeDummy = ImGui.GetCursorPos();
 
@@ -941,10 +943,10 @@ public sealed class ChatLogWindow : Window
                     if (isTable)
                         ImGui.TableNextColumn();
 
-                    ImGui.Dummy(new Vector2(10f, message.Height.Value));
-                    message.IsVisible = ImGui.IsItemVisible();
+                    ImGui.Dummy(new Vector2(10f, height.Value));
+                    message.IsVisible[tab.Identifier] = ImGui.IsItemVisible();
 
-                    if (message.IsVisible)
+                    if (message.IsVisible[tab.Identifier])
                     {
                         if (isTable)
                             ImGui.TableSetColumnIndex(0);
@@ -993,16 +995,16 @@ public sealed class ChatLogWindow : Window
                     DrawChunks(message.Content, true, handler, lineWidth);
 
                 var afterDraw = ImGui.GetCursorScreenPos();
-                message.Height = ImGui.GetCursorPosY() - lastPos;
+                message.Height[tab.Identifier] = ImGui.GetCursorPosY() - lastPos;
                 if (isTable && !moreCompact)
                 {
-                    message.Height -= oldCellPaddingY * 2;
+                    message.Height[tab.Identifier] -= oldCellPaddingY * 2;
                     beforeDraw.Y += oldCellPaddingY;
                     afterDraw.Y -= oldCellPaddingY;
                 }
 
                 lastPos = ImGui.GetCursorPosY();
-                message.IsVisible = ImGui.IsRectVisible(beforeDraw, afterDraw);
+                message.IsVisible[tab.Identifier] = ImGui.IsRectVisible(beforeDraw, afterDraw);
             }
         }
         finally
