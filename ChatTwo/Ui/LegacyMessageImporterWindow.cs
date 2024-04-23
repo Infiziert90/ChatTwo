@@ -174,9 +174,9 @@ internal class LegacyMessageImporterWindow : Window
         if (Importer.ImportComplete != null)
         {
             ImGui.TextUnformatted($"Completed migration in {Duration(Importer.ImportStart, Importer.ImportComplete.Value):g}");
-            ImGui.TextUnformatted($"Successfully imported: {Importer.SuccessfulMessages} messages");
-            ImGui.TextUnformatted($"Failed to import: {Importer.FailedMessages} messages");
-            ImGui.TextUnformatted($"Unaccounted for: {Importer.RemainingMessages}");
+            ImGui.TextUnformatted($"Successfully imported: {Importer.SuccessfulMessages:N0} messages");
+            ImGui.TextUnformatted($"Failed to import: {Importer.FailedMessages:N0} messages");
+            ImGui.TextUnformatted($"Unaccounted for: {Importer.RemainingMessages:N0}");
             ImGui.TextUnformatted("See logs for more details: /xllog");
 
             ImGui.Spacing();
@@ -191,7 +191,7 @@ internal class LegacyMessageImporterWindow : Window
         ImGuiHelpers.ScaledDummy(10.0f);
 
         ImGui.TextUnformatted($"Duration: {Duration(Importer.ImportStart, Environment.TickCount64):g}");
-        ImGui.TextUnformatted($"Progress: {Importer.ProcessedMessages}/{Importer.ImportCount} messages ({Importer.FailedMessages} failed)");
+        ImGui.TextUnformatted($"Progress: {Importer.ProcessedMessages:N0}/{Importer.ImportCount:N0} messages ({Importer.FailedMessages:N0} failed)");
         ImGuiHelpers.ScaledDummy(10.0f);
 
         var width = ImGui.GetContentRegionAvail().X / 2;
@@ -199,8 +199,8 @@ internal class LegacyMessageImporterWindow : Window
         ImGui.TextUnformatted("Import speed:");
         ImGui.SameLine();
         ImGui.SetNextItemWidth(width);
-        ImGui.SliderInt("##speedSlider", ref Importer.MaxMessageRate, 1, 10000, "%d m/sec", ImGuiSliderFlags.AlwaysClamp);
-        ImGui.TextUnformatted($"Current speed: {Importer.CurrentMessageRate:N0} m/sec");
+        ImGui.SliderInt("##speedSlider", ref Importer.MaxMessageRate, 1, 10000, "%d msgs/sec", ImGuiSliderFlags.AlwaysClamp);
+        ImGui.TextUnformatted($"Current speed: {Importer.CurrentMessageRate:N0} msgs/sec");
         ImGui.TextUnformatted($"Estimated time remaining: {Importer.EstimatedTimeRemaining:g}");
         ImGui.TextUnformatted("See logs for more details: /xllog");
         ImGuiHelpers.ScaledDummy(10.0f);
