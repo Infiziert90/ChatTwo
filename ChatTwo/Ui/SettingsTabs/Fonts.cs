@@ -36,58 +36,60 @@ public class Fonts : ISettingsTab
 
         if (Mutable.FontsEnabled)
         {
-            if (ImGuiUtil.BeginComboVertical(Language.Options_Font_Name, Mutable.GlobalFont))
+            using (var combo = ImGuiUtil.BeginComboVertical(Language.Options_Font_Name, Mutable.GlobalFont))
             {
-                foreach (var font in Ui.Fonts.GlobalFonts)
+                if (combo)
                 {
-                    if (ImGui.Selectable(font.Name, Mutable.GlobalFont == font.Name))
-                        Mutable.GlobalFont = font.Name;
+                    foreach (var font in Ui.Fonts.GlobalFonts)
+                    {
+                        if (ImGui.Selectable(font.Name, Mutable.GlobalFont == font.Name))
+                            Mutable.GlobalFont = font.Name;
 
-                    if (ImGui.IsWindowAppearing() && Mutable.GlobalFont == font.Name)
-                        ImGui.SetScrollHereY(0.5f);
+                        if (ImGui.IsWindowAppearing() && Mutable.GlobalFont == font.Name)
+                            ImGui.SetScrollHereY(0.5f);
+                    }
+
+                    ImGui.Separator();
+
+                    foreach (var name in GlobalFonts)
+                    {
+                        if (ImGui.Selectable(name, Mutable.GlobalFont == name))
+                            Mutable.GlobalFont = name;
+
+                        if (ImGui.IsWindowAppearing() && Mutable.GlobalFont == name)
+                            ImGui.SetScrollHereY(0.5f);
+                    }
                 }
-
-                ImGui.Separator();
-
-                foreach (var name in GlobalFonts)
-                {
-                    if (ImGui.Selectable(name, Mutable.GlobalFont == name))
-                        Mutable.GlobalFont = name;
-
-                    if (ImGui.IsWindowAppearing() && Mutable.GlobalFont == name)
-                        ImGui.SetScrollHereY(0.5f);
-                }
-
-                ImGui.EndCombo();
             }
 
             ImGuiUtil.HelpText(string.Format(Language.Options_Font_Description, Plugin.PluginName));
             ImGuiUtil.WarningText(Language.Options_Font_Warning);
             ImGui.Spacing();
 
-            if (ImGuiUtil.BeginComboVertical(Language.Options_JapaneseFont_Name, Mutable.JapaneseFont))
+            using (var combo = ImGuiUtil.BeginComboVertical(Language.Options_JapaneseFont_Name, Mutable.JapaneseFont))
             {
-                foreach (var (name, _) in Ui.Fonts.JapaneseFonts)
+                if (combo)
                 {
-                    if (ImGui.Selectable(name, Mutable.JapaneseFont == name))
-                        Mutable.JapaneseFont = name;
+                    foreach (var (name, _) in Ui.Fonts.JapaneseFonts)
+                    {
+                        if (ImGui.Selectable(name, Mutable.JapaneseFont == name))
+                            Mutable.JapaneseFont = name;
 
-                    if (ImGui.IsWindowAppearing() && Mutable.JapaneseFont == name)
-                        ImGui.SetScrollHereY(0.5f);
+                        if (ImGui.IsWindowAppearing() && Mutable.JapaneseFont == name)
+                            ImGui.SetScrollHereY(0.5f);
+                    }
+
+                    ImGui.Separator();
+
+                    foreach (var family in JpFonts)
+                    {
+                        if (ImGui.Selectable(family, Mutable.JapaneseFont == family))
+                            Mutable.JapaneseFont = family;
+
+                        if (ImGui.IsWindowAppearing() && Mutable.JapaneseFont == family)
+                            ImGui.SetScrollHereY(0.5f);
+                    }
                 }
-
-                ImGui.Separator();
-
-                foreach (var family in JpFonts)
-                {
-                    if (ImGui.Selectable(family, Mutable.JapaneseFont == family))
-                        Mutable.JapaneseFont = family;
-
-                    if (ImGui.IsWindowAppearing() && Mutable.JapaneseFont == family)
-                        ImGui.SetScrollHereY(0.5f);
-                }
-
-                ImGui.EndCombo();
             }
 
             ImGuiUtil.HelpText(string.Format(Language.Options_JapaneseFont_Description, Plugin.PluginName));

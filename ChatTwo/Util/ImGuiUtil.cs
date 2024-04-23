@@ -12,7 +12,7 @@ namespace ChatTwo.Util;
 
 internal static class ImGuiUtil
 {
-    private static Plugin Plugin;
+    private static Plugin Plugin = null!;
 
     public static void Initialize(Plugin plugin)
     {
@@ -26,22 +26,22 @@ internal static class ImGuiUtil
         ImGuiMouseButton.Right
     ];
 
-    private static Payload? _hovered;
-    private static Payload? _lastLink;
-    private static readonly List<(Vector2, Vector2)> PayloadBounds = new();
+    private static Payload? Hovered;
+    private static Payload? LastLink;
+    private static readonly List<(Vector2, Vector2)> PayloadBounds = [];
 
     internal static void PostPayload(Chunk chunk, PayloadHandler? handler)
     {
         var payload = chunk.Link;
         if (payload != null && ImGui.IsItemHovered())
         {
-            _hovered = payload;
+            Hovered = payload;
             ImGui.SetMouseCursor(ImGuiMouseCursor.Hand);
             handler?.Hover(payload);
         }
-        else if (!ReferenceEquals(_hovered, payload))
+        else if (!ReferenceEquals(Hovered, payload))
         {
-            _hovered = null;
+            Hovered = null;
         }
 
         if (handler == null)
@@ -61,12 +61,12 @@ internal static class ImGuiUtil
             ImGuiNative.igTextUnformatted(text, textEnd);
             PostPayload(chunk, handler);
 
-            if (!ReferenceEquals(_lastLink, chunk.Link))
+            if (!ReferenceEquals(LastLink, chunk.Link))
                 PayloadBounds.Clear();
 
-            _lastLink = chunk.Link;
+            LastLink = chunk.Link;
 
-            if (_hovered != null && ReferenceEquals(_hovered, chunk.Link))
+            if (Hovered != null && ReferenceEquals(Hovered, chunk.Link))
             {
                 defaultText.W = 0.25f;
                 var actualCol = ColourUtil.Vector4ToAbgr(defaultText);
@@ -78,14 +78,14 @@ internal static class ImGuiUtil
                 PayloadBounds.Clear();
             }
 
-            if (_hovered == null && chunk.Link != null)
+            if (Hovered == null && chunk.Link != null)
                 PayloadBounds.Add((oldPos, ImGui.GetItemRectSize()));
         }
 
         if (csText.Length == 0)
             return;
 
-        foreach (var part in csText.Split(new[] { "\r\n", "\r", "\n" }, StringSplitOptions.None))
+        foreach (var part in csText.Split(["\r\n", "\r", "\n"], StringSplitOptions.None))
         {
             var bytes = Encoding.UTF8.GetBytes(part);
             fixed (byte* rawText = bytes)
@@ -199,17 +199,11 @@ internal static class ImGuiUtil
     internal static void HelpText(string text)
     {
         var colour = ImGui.GetStyle().Colors[(int) ImGuiCol.TextDisabled];
-        ImGui.PushStyleColor(ImGuiCol.Text, colour);
-        ImGui.PushTextWrapPos();
-
-        try
+        using (ImRaii.PushColor(ImGuiCol.Text, colour))
         {
+            ImGui.PushTextWrapPos();
             ImGui.TextUnformatted(text);
-        }
-        finally
-        {
             ImGui.PopTextWrapPos();
-            ImGui.PopStyleColor();
         }
     }
 
@@ -217,22 +211,26 @@ internal static class ImGuiUtil
     {
         var style = StyleModel.GetConfiguredStyle() ?? StyleModel.GetFromCurrent();
         var dalamudOrange = style.BuiltInColors?.DalamudOrange;
-        if (dalamudOrange != null)
-            ImGui.PushStyleColor(ImGuiCol.Text, dalamudOrange.Value);
 
-        if (wrap) ImGui.PushTextWrapPos();
-        ImGui.TextUnformatted(text);
-        if (wrap) ImGui.PopTextWrapPos();
+        var push = dalamudOrange != null;
+        var color = dalamudOrange ?? Vector4.Zero;
+        using (ImRaii.PushColor(ImGuiCol.Text, color, push))
+        {
+            if (wrap)
+                ImGui.PushTextWrapPos();
 
-        if (dalamudOrange != null)
-            ImGui.PopStyleColor();
+            ImGui.TextUnformatted(text);
+
+            if (wrap)
+                ImGui.PopTextWrapPos();
+        }
     }
 
-    internal static bool BeginComboVertical(string label, string previewValue, ImGuiComboFlags flags = ImGuiComboFlags.None)
+    internal static ImRaii.IEndObject BeginComboVertical(string label, string previewValue, ImGuiComboFlags flags = ImGuiComboFlags.None)
     {
         ImGui.TextUnformatted(label);
         ImGui.SetNextItemWidth(-1);
-        return ImGui.BeginCombo($"##{label}", previewValue, flags);
+        return ImRaii.Combo($"##{label}", previewValue, flags);
     }
 
     internal static bool DragFloatVertical(string label, ref float value, float vSpeed = 1.0f, float vMin = float.MinValue, float vMax = float.MaxValue, string? format = null, ImGuiSliderFlags flags = ImGuiSliderFlags.None)
@@ -265,13 +263,10 @@ internal static class ImGuiUtil
     internal static bool CtrlShiftButton(string label, string tooltip = "")
     {
         var ctrlShiftHeld = ImGui.GetIO() is { KeyCtrl: true, KeyShift: true };
-        if (!ctrlShiftHeld)
-            ImGui.BeginDisabled();
 
-        var ret = ImGui.Button(label) && ctrlShiftHeld;
-
-        if (!ctrlShiftHeld)
-            ImGui.EndDisabled();
+        bool ret;
+        using (ImRaii.Disabled(!ctrlShiftHeld))
+            ret = ImGui.Button(label) && ctrlShiftHeld;
 
         if (!string.IsNullOrEmpty(tooltip) && ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
             ImGui.SetTooltip(tooltip);

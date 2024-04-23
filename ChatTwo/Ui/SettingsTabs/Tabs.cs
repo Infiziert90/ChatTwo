@@ -93,31 +93,33 @@ internal sealed class Tabs : ISettingsTab
                     ImGuiUtil.DragFloatVertical(Language.Options_Tabs_Opacity, ref tab.Opacity, 0.25f, 0f, 100f, $"{tab.Opacity:N2}%%", ImGuiSliderFlags.AlwaysClamp);
             }
 
-            if (ImGuiUtil.BeginComboVertical(Language.Options_Tabs_UnreadMode, tab.UnreadMode.Name()))
+            using (var combo = ImGuiUtil.BeginComboVertical(Language.Options_Tabs_UnreadMode, tab.UnreadMode.Name()))
             {
-                foreach (var mode in Enum.GetValues<UnreadMode>())
+                if (combo)
                 {
-                    if (ImGui.Selectable(mode.Name(), tab.UnreadMode == mode))
-                        tab.UnreadMode = mode;
+                    foreach (var mode in Enum.GetValues<UnreadMode>())
+                    {
+                        if (ImGui.Selectable(mode.Name(), tab.UnreadMode == mode))
+                            tab.UnreadMode = mode;
 
-                    if (mode.Tooltip() is { } tooltip && ImGui.IsItemHovered())
-                        ImGui.SetTooltip(tooltip);
+                        if (mode.Tooltip() is { } tooltip && ImGui.IsItemHovered())
+                            ImGui.SetTooltip(tooltip);
+                    }
                 }
-
-                ImGui.EndCombo();
             }
 
             var input = tab.Channel?.ToChatType().Name() ?? Language.Options_Tabs_NoInputChannel;
-            if (ImGuiUtil.BeginComboVertical(Language.Options_Tabs_InputChannel, input))
+            using (var combo = ImGuiUtil.BeginComboVertical(Language.Options_Tabs_InputChannel, input))
             {
-                if (ImGui.Selectable(Language.Options_Tabs_NoInputChannel, tab.Channel == null))
-                    tab.Channel = null;
+                if (combo)
+                {
+                    if (ImGui.Selectable(Language.Options_Tabs_NoInputChannel, tab.Channel == null))
+                        tab.Channel = null;
 
-                foreach (var channel in Enum.GetValues<InputChannel>())
-                    if (ImGui.Selectable(channel.ToChatType().Name(), tab.Channel == channel))
-                        tab.Channel = channel;
-
-                ImGui.EndCombo();
+                    foreach (var channel in Enum.GetValues<InputChannel>())
+                        if (ImGui.Selectable(channel.ToChatType().Name(), tab.Channel == channel))
+                            tab.Channel = channel;
+                }
             }
 
             using (var channelNode = ImRaii.TreeNode(Language.Options_Tabs_Channels))
