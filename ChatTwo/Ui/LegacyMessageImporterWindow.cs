@@ -25,6 +25,9 @@ internal class LegacyMessageImporterWindow : Window
         Flags = ImGuiWindowFlags.NoResize;
         Size = new Vector2(500, 400);
 
+        RespectCloseHotkey = false;
+        DisableWindowSounds = true;
+
         _store = plugin.MessageManager.Store;
         Eligibility = LegacyMessageImporterEligibility.CheckEligibility();
         LogAndNotify();
