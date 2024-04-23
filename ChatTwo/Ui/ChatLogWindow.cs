@@ -1157,7 +1157,7 @@ public sealed class ChatLogWindow : Window
     }
 
     internal readonly List<bool> PopOutDocked = [];
-    internal readonly Dictionary<string, Window> PopOutWindows = new();
+    internal readonly HashSet<Guid> PopOutWindows = [];
     private void AddPopOutsToDraw()
     {
         HandlerLender.ResetCounter();
@@ -1174,13 +1174,13 @@ public sealed class ChatLogWindow : Window
             if (!tab.PopOut)
                 continue;
 
-            if (PopOutWindows.ContainsKey($"{tab.Name}{i}"))
+            if (PopOutWindows.Contains(tab.Identifier))
                 continue;
 
             var window = new Popout(this, tab, i);
 
             Plugin.WindowSystem.AddWindow(window);
-            PopOutWindows.Add($"{tab.Name}{i}", window);
+            PopOutWindows.Add(tab.Identifier);
         }
     }
 

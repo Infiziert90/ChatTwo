@@ -56,8 +56,12 @@ internal class Configuration : IPluginConfiguration
     public bool OverrideStyle;
     public string? ChosenStyle;
 
-    internal void UpdateFrom(Configuration other)
+    internal void UpdateFrom(Configuration other, bool backToOriginal)
     {
+        if (backToOriginal)
+            foreach (var tab in Tabs.Where(t => t.PopOut))
+                tab.PopOut = false;
+
         HideChat = other.HideChat;
         HideDuringCutscenes = other.HideDuringCutscenes;
         HideWhenNotLoggedIn = other.HideWhenNotLoggedIn;
@@ -175,7 +179,7 @@ internal class Tab
     public string Name = Language.Tab_DefaultName;
     public Dictionary<ChatType, ChatSource> ChatCodes = new();
     public bool ExtraChatAll;
-    public HashSet<Guid> ExtraChatChannels = new();
+    public HashSet<Guid> ExtraChatChannels = [];
 
     [Obsolete("Use UnreadMode instead")]
     public bool DisplayUnread = true;
@@ -194,9 +198,9 @@ internal class Tab
     public SemaphoreSlim MessagesMutex = new(1, 1);
 
     [NonSerialized]
-    public List<Message> Messages = new();
+    public List<Message> Messages = [];
     [NonSerialized]
-    public HashSet<Guid> TrackedMessageIds = new();
+    public HashSet<Guid> TrackedMessageIds = [];
 
     [NonSerialized]
     public InputChannel? PreviousChannel;
@@ -204,13 +208,18 @@ internal class Tab
     [NonSerialized]
     public Guid Identifier = Guid.NewGuid();
 
-    ~Tab() { MessagesMutex.Dispose(); }
+    ~Tab()
+    {
+        MessagesMutex.Dispose();
+    }
 
-    internal bool Contains(Message message) {
+    internal bool Contains(Message message)
+    {
         return TrackedMessageIds.Contains(message.Id);
     }
 
-    internal bool Matches(Message message) {
+    internal bool Matches(Message message)
+    {
         if (message.ExtraChatChannel != Guid.Empty)
             return ExtraChatAll || ExtraChatChannels.Contains(message.ExtraChatChannel);
 
@@ -221,11 +230,14 @@ internal class Tab
     }
 
     internal void AddMessage(Message message, bool unread = true) {
-        if (Contains(message)) return;
+        if (Contains(message))
+            return;
+
         MessagesMutex.Wait();
         TrackedMessageIds.Add(message.Id);
         Messages.Add(message);
-        while (Messages.Count > MessageManager.MessageDisplayLimit) {
+        while (Messages.Count > MessageManager.MessageDisplayLimit)
+        {
             TrackedMessageIds.Remove(Messages[0].Id);
             Messages.RemoveAt(0);
         }
@@ -235,7 +247,8 @@ internal class Tab
             Unread += 1;
     }
 
-    internal void Clear() {
+    internal void Clear()
+    {
         MessagesMutex.Wait();
         Messages.Clear();
         TrackedMessageIds.Clear();
@@ -259,6 +272,7 @@ internal class Tab
             PopOut = PopOut,
             IndependentOpacity = IndependentOpacity,
             Opacity = Opacity,
+            Identifier = Identifier,
         };
     }
 }

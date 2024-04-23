@@ -26,6 +26,12 @@ internal class Popout : Window
         DisableWindowSounds = true;
     }
 
+    public override void PreOpenCheck()
+    {
+        if (!Tab.PopOut)
+            IsOpen = false;
+    }
+
     public override bool DrawConditions()
     {
         return !ChatLogWindow.IsHidden;
@@ -48,9 +54,10 @@ internal class Popout : Window
 
     public override void Draw()
     {
-        using var id = ImRaii.PushId($"popout-{Tab.Name}");
+        using var id = ImRaii.PushId($"popout-{Tab.Identifier}");
 
-        if (!ChatLogWindow.Plugin.Config.ShowPopOutTitleBar) {
+        if (!ChatLogWindow.Plugin.Config.ShowPopOutTitleBar)
+        {
             ImGui.TextUnformatted(Tab.Name);
             ImGui.Separator();
         }
@@ -69,7 +76,7 @@ internal class Popout : Window
 
     public override void OnClose()
     {
-        ChatLogWindow.PopOutWindows.Remove($"{Tab.Name}{Idx}");
+        ChatLogWindow.PopOutWindows.Remove(Tab.Identifier);
         ChatLogWindow.Plugin.WindowSystem.RemoveWindow(this);
 
         Tab.PopOut = false;

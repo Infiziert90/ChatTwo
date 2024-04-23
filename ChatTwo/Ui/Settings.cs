@@ -65,7 +65,7 @@ public sealed class SettingsWindow : Window
 
     private void Initialise()
     {
-        Mutable.UpdateFrom(Plugin.Config);
+        Mutable.UpdateFrom(Plugin.Config, false);
     }
 
     public override void Draw()
@@ -153,7 +153,7 @@ public sealed class SettingsWindow : Window
                               || Math.Abs(Mutable.JapaneseFontSize - Plugin.Config.JapaneseFontSize) > 0.001
                               || Math.Abs(Mutable.SymbolsFontSize - Plugin.Config.SymbolsFontSize) > 0.001;
 
-        Plugin.Config.UpdateFrom(Mutable);
+        Plugin.Config.UpdateFrom(Mutable, true);
 
         // save after 60 frames have passed, which should hopefully not
         // commit any changes that cause a crash

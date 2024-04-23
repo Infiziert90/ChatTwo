@@ -12,6 +12,7 @@ using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface.Internal;
 using Dalamud.Interface.Internal.Notifications;
 using Dalamud.Interface.Utility;
+using Dalamud.Interface.Utility.Raii;
 using Dalamud.Utility;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
@@ -73,14 +74,14 @@ public sealed class PayloadHandler {
 
         var (chunk, payload) = Popup.Value;
 
-        if (!ImGui.BeginPopup(PopupId))
+        using var popup = ImRaii.Popup(PopupId);
+        if (!popup.Success)
         {
             Popup = null;
             return;
         }
 
-        ImGui.PushID(PopupId);
-
+        using var id = ImRaii.PushId(PopupId);
         var drawn = false;
         switch (payload)
         {
@@ -100,9 +101,6 @@ public sealed class PayloadHandler {
 
         ContextFooter(drawn, chunk);
         Integrations(chunk, payload);
-
-        ImGui.PopID();
-        ImGui.EndPopup();
     }
 
     private void Integrations(Chunk chunk, Payload? payload)
