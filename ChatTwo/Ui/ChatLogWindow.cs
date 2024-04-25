@@ -50,40 +50,40 @@ public sealed class ChatLogWindow : Window
     }
 
     internal bool Activate;
-    private int _activatePos = -1;
+    private int ActivatePos = -1;
     internal string Chat = string.Empty;
-    private readonly IDalamudTextureWrap? _fontIcon;
-    private readonly List<string> _inputBacklog = [];
-    private int _inputBacklogIdx = -1;
+    private readonly IDalamudTextureWrap? FontIcon;
+    private readonly List<string> InputBacklog = [];
+    private int InputBacklogIdx = -1;
     private int LastTab { get; set; }
-    private InputChannel? _tempChannel;
-    private TellTarget? _tellTarget;
-    private readonly Stopwatch _lastResize = new();
-    private AutoCompleteInfo? _autoCompleteInfo;
-    private bool _autoCompleteOpen;
-    private List<AutoTranslateEntry>? _autoCompleteList;
-    private bool _fixCursor;
-    private int _autoCompleteSelection;
-    private bool _autoCompleteShouldScroll;
+    private InputChannel? TempChannel;
+    private TellTarget? TellTarget;
+    private readonly Stopwatch LastResize = new();
+    private AutoCompleteInfo? AutoCompleteInfo;
+    private bool AutoCompleteOpen;
+    private List<AutoTranslateEntry>? AutoCompleteList;
+    private bool FixCursor;
+    private int AutoCompleteSelection;
+    private bool AutoCompleteShouldScroll;
 
     public Vector2 LastWindowPos { get; private set; } = Vector2.Zero;
     public Vector2 LastWindowSize { get; private set; } = Vector2.Zero;
 
     public unsafe ImGuiViewport* LastViewport;
-    private bool _wasDocked;
+    private bool WasDocked;
 
     private PayloadHandler PayloadHandler { get; }
     internal Lender<PayloadHandler> HandlerLender { get; }
     private Dictionary<string, ChatType> TextCommandChannels { get; } = new();
     private HashSet<string> AllCommands { get; } = [];
 
-    private uint ChatOpenSfx = 35u;
-    private uint ChatCloseSfx = 3u;
+    private const uint ChatOpenSfx = 35u;
+    private const uint ChatCloseSfx = 3u;
     private bool PlayedClosingSound = true;
 
-    private ExcelSheet<World> WorldSheet;
-    private ExcelSheet<LogFilter> LogFilterSheet;
-    private ExcelSheet<TextCommand> TextCommandSheet;
+    private readonly ExcelSheet<World> WorldSheet;
+    private readonly ExcelSheet<LogFilter> LogFilterSheet;
+    private readonly ExcelSheet<TextCommand> TextCommandSheet;
 
     internal ChatLogWindow(Plugin plugin) : base($"{Plugin.PluginName}###chat2")
     {
@@ -109,7 +109,7 @@ public sealed class ChatLogWindow : Window
         WorldSheet = Plugin.DataManager.GetExcelSheet<World>()!;
         LogFilterSheet = Plugin.DataManager.GetExcelSheet<LogFilter>()!;
         TextCommandSheet = Plugin.DataManager.GetExcelSheet<TextCommand>()!;
-        _fontIcon = Plugin.TextureProvider.GetTextureFromGame("common/font/fonticon_ps5.tex");
+        FontIcon = Plugin.TextureProvider.GetTextureFromGame("common/font/fonticon_ps5.tex");
 
         Plugin.Functions.Chat.Activated += Activated;
         Plugin.ClientState.Login += Login;
@@ -136,7 +136,7 @@ public sealed class ChatLogWindow : Window
         Plugin.ClientState.Logout -= Logout;
         Plugin.ClientState.Login -= Login;
         Plugin.Functions.Chat.Activated -= Activated;
-        _fontIcon?.Dispose();
+        FontIcon?.Dispose();
         Plugin.Commands.Register("/chat2").Execute -= ToggleChat;
         Plugin.Commands.Register("/clearlog2").Execute -= ClearLog;
     }
@@ -165,11 +165,11 @@ public sealed class ChatLogWindow : Window
 
         if (info.Channel != null)
         {
-            var prevTemp = _tempChannel;
+            var prevTemp = TempChannel;
             if (info.Permanent)
                 SetChannel(info.Channel.Value);
             else
-                _tempChannel = info.Channel.Value;
+                TempChannel = info.Channel.Value;
 
             if (info.Channel is InputChannel.Tell)
             {
@@ -181,18 +181,18 @@ public sealed class ChatLogWindow : Window
 
                     var tellInfo = Plugin.Functions.Chat.GetTellHistoryInfo(idx);
                     if (tellInfo != null && reason != null)
-                        _tellTarget = new TellTarget(tellInfo.Name, (ushort) tellInfo.World, tellInfo.ContentId, reason.Value);
+                        TellTarget = new TellTarget(tellInfo.Name, (ushort) tellInfo.World, tellInfo.ContentId, reason.Value);
                 }
                 else
                 {
-                    _tellTarget = null;
+                    TellTarget = null;
                     if (target != null)
-                        _tellTarget = target;
+                        TellTarget = target;
                 }
             }
             else
             {
-                _tellTarget = null;
+                TellTarget = null;
             }
 
             var mode = prevTemp == null ? RotateMode.None : info.Rotate;
@@ -200,12 +200,12 @@ public sealed class ChatLogWindow : Window
             if (info.Channel is InputChannel.Linkshell1 && info.Rotate != RotateMode.None)
             {
                 var idx = Plugin.Functions.Chat.RotateLinkshellHistory(mode);
-                _tempChannel = info.Channel.Value + (uint) idx;
+                TempChannel = info.Channel.Value + (uint) idx;
             }
             else if (info.Channel is InputChannel.CrossLinkshell1 && info.Rotate != RotateMode.None)
             {
                 var idx = Plugin.Functions.Chat.RotateCrossLinkshellHistory(mode);
-                _tempChannel = info.Channel.Value + (uint) idx;
+                TempChannel = info.Channel.Value + (uint) idx;
             }
         }
 
@@ -315,16 +315,16 @@ public sealed class ChatLogWindow : Window
 
     private void AddBacklog(string message)
     {
-        for (var i = 0; i < _inputBacklog.Count; i++)
+        for (var i = 0; i < InputBacklog.Count; i++)
         {
-            if (_inputBacklog[i] != message)
+            if (InputBacklog[i] != message)
                 continue;
 
-            _inputBacklog.RemoveAt(i);
+            InputBacklog.RemoveAt(i);
             break;
         }
 
-        _inputBacklog.Add(message);
+        InputBacklog.Add(message);
     }
 
     private static float GetRemainingHeightForMessageLog()
@@ -397,12 +397,12 @@ public sealed class ChatLogWindow : Window
         // Save the previous channel to restore it later
         var current = CurrentTab;
         if (current is { Channel: null })
-            current.PreviousChannel = Plugin.Functions.Chat.Channel.channel;
+            current.PreviousChannel = Plugin.Functions.Chat.Channel.Channel;
 
         // Channel will be null if PreviousChannel is used
         var channel = tab.Channel ?? tab.PreviousChannel;
 
-        // Channel being null it doesn't have a default, and we never selected this channel before
+        // If channel is null it doesn't have a default, and we never selected this channel before
         if (channel != null)
             SetChannel(tab.Channel ?? tab.PreviousChannel);
     }
@@ -460,11 +460,11 @@ public sealed class ChatLogWindow : Window
         if (!Plugin.Config.ShowTitleBar)
             Flags |= ImGuiWindowFlags.NoTitleBar;
 
-        if (LastViewport == ImGuiHelpers.MainViewport.NativePtr && !_wasDocked)
+        if (LastViewport == ImGuiHelpers.MainViewport.NativePtr && !WasDocked)
             BgAlpha = Plugin.Config.WindowAlpha / 100f;
 
         LastViewport = ImGui.GetWindowViewport().NativePtr;
-        _wasDocked = ImGui.IsWindowDocked();
+        WasDocked = ImGui.IsWindowDocked();
     }
 
     public override bool DrawConditions()
@@ -487,10 +487,10 @@ public sealed class ChatLogWindow : Window
         LastWindowPos = ImGui.GetWindowPos();
 
         if (resized)
-            _lastResize.Restart();
+            LastResize.Restart();
 
         LastViewport = ImGui.GetWindowViewport().NativePtr;
-        _wasDocked = ImGui.IsWindowDocked();
+        WasDocked = ImGui.IsWindowDocked();
 
         var currentTab = Plugin.Config.SidebarTabView ? DrawTabSidebar() : DrawTabBar();
 
@@ -500,12 +500,12 @@ public sealed class ChatLogWindow : Window
 
         using (ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, Vector2.Zero))
         {
-            if (_tellTarget != null)
+            if (TellTarget != null)
             {
-                var playerName = _tellTarget.Name;
+                var playerName = TellTarget.Name;
                 if (ScreenshotMode)
-                    playerName = HashPlayer(_tellTarget.Name, _tellTarget.World);
-                var world = WorldSheet.GetRow(_tellTarget.World)?.Name?.RawString ?? "???";
+                    playerName = HashPlayer(TellTarget.Name, TellTarget.World);
+                var world = WorldSheet.GetRow(TellTarget.World)?.Name?.RawString ?? "???";
 
                 DrawChunks(new Chunk[]
                 {
@@ -515,23 +515,23 @@ public sealed class ChatLogWindow : Window
                     new TextChunk(ChunkSource.None, null, world),
                 });
             }
-            else if (_tempChannel != null)
+            else if (TempChannel != null)
             {
-                if (_tempChannel.Value.IsLinkshell())
+                if (TempChannel.Value.IsLinkshell())
                 {
-                    var idx = (uint) _tempChannel.Value - (uint) InputChannel.Linkshell1;
+                    var idx = (uint) TempChannel.Value - (uint) InputChannel.Linkshell1;
                     var lsName = Plugin.Functions.Chat.GetLinkshellName(idx);
                     ImGui.TextUnformatted($"LS #{idx + 1}: {lsName}");
                 }
-                else if (_tempChannel.Value.IsCrossLinkshell())
+                else if (TempChannel.Value.IsCrossLinkshell())
                 {
-                    var idx = (uint) _tempChannel.Value - (uint) InputChannel.CrossLinkshell1;
+                    var idx = (uint) TempChannel.Value - (uint) InputChannel.CrossLinkshell1;
                     var cwlsName = Plugin.Functions.Chat.GetCrossLinkshellName(idx);
                     ImGui.TextUnformatted($"CWLS [{idx + 1}]: {cwlsName}");
                 }
                 else
                 {
-                    ImGui.TextUnformatted(_tempChannel.Value.ToChatType().Name());
+                    ImGui.TextUnformatted(TempChannel.Value.ToChatType().Name());
                 }
             }
             else if (activeTab is { Channel: { } channel })
@@ -572,7 +572,7 @@ public sealed class ChatLogWindow : Window
             }
             else
             {
-                DrawChunks(Plugin.Functions.Chat.Channel.name);
+                DrawChunks(Plugin.Functions.Chat.Channel.Name);
             }
         }
 
@@ -630,7 +630,7 @@ public sealed class ChatLogWindow : Window
         var showNovice = Plugin.Config.ShowNoviceNetwork && Plugin.Functions.IsMentor();
         var inputWidth = ImGui.GetContentRegionAvail().X - buttonWidth * (showNovice ? 2 : 1);
 
-        var inputType = _tempChannel?.ToChatType() ?? activeTab?.Channel?.ToChatType() ?? Plugin.Functions.Chat.Channel.channel.ToChatType();
+        var inputType = TempChannel?.ToChatType() ?? activeTab?.Channel?.ToChatType() ?? Plugin.Functions.Chat.Channel.Channel.ToChatType();
         var isCommand = Chat.Trim().StartsWith('/');
         if (isCommand)
         {
@@ -691,7 +691,7 @@ public sealed class ChatLogWindow : Window
                 HandleKeybinds(true);
 
             // Only trigger unfocused if we are currently not calling the auto complete
-            if (!Activate && !ImGui.IsItemActive() && _autoCompleteInfo == null)
+            if (!Activate && !ImGui.IsItemActive() && AutoCompleteInfo == null)
             {
                 if (Plugin.Config.PlaySounds && !PlayedClosingSound)
                 {
@@ -699,10 +699,10 @@ public sealed class ChatLogWindow : Window
                     UIModule.PlaySound(ChatCloseSfx);
                 }
 
-                if (_tempChannel is InputChannel.Tell)
-                    _tellTarget = null;
+                if (TempChannel is InputChannel.Tell)
+                    TellTarget = null;
 
-                _tempChannel = null;
+                TempChannel = null;
                 if (Plugin.Functions.Chat.UsesTellTempChannel)
                 {
                     Plugin.Functions.Chat.UsesTellTempChannel = false;
@@ -738,7 +738,7 @@ public sealed class ChatLogWindow : Window
     internal void SetChannel(InputChannel? channel)
     {
         channel ??= InputChannel.Say;
-        _tellTarget = null;
+        TellTarget = null;
 
         // Instead of calling SetChannel(), we ask the ExtraChat plugin to set a
         // channel override by just calling the command directly.
@@ -767,13 +767,13 @@ public sealed class ChatLogWindow : Window
         {
             var trimmed = Chat.Trim();
             AddBacklog(trimmed);
-            _inputBacklogIdx = -1;
+            InputBacklogIdx = -1;
 
             if (!trimmed.StartsWith('/'))
             {
-                if (_tellTarget != null)
+                if (TellTarget != null)
                 {
-                    var target = _tellTarget;
+                    var target = TellTarget;
                     var reason = target.Reason;
                     var world = WorldSheet.GetRow(target.World);
                     if (world is { IsPublic: true })
@@ -787,16 +787,16 @@ public sealed class ChatLogWindow : Window
                         Plugin.Functions.Chat.SendTell(reason, target.ContentId, target.Name, (ushort) world.RowId, tellBytes);
                     }
 
-                    if (_tempChannel is InputChannel.Tell)
-                        _tellTarget = null;
+                    if (TempChannel is InputChannel.Tell)
+                        TellTarget = null;
 
                     Chat = string.Empty;
                     return;
                 }
 
 
-                if (_tempChannel != null)
-                    trimmed = $"{_tempChannel.Value.Prefix()} {trimmed}";
+                if (TempChannel != null)
+                    trimmed = $"{TempChannel.Value.Prefix()} {trimmed}";
                 else if (activeTab is { Channel: { } channel })
                     trimmed = $"{channel.Prefix()} {trimmed}";
             }
@@ -876,10 +876,10 @@ public sealed class ChatLogWindow : Window
             tab.MessagesMutex.Wait();
 
             var reset = false;
-            if (_lastResize is { IsRunning: true, Elapsed.TotalSeconds: > 0.25 })
+            if (LastResize is { IsRunning: true, Elapsed.TotalSeconds: > 0.25 })
             {
-                _lastResize.Stop();
-                _lastResize.Reset();
+                LastResize.Stop();
+                LastResize.Reset();
                 reset = true;
             }
 
@@ -1186,41 +1186,41 @@ public sealed class ChatLogWindow : Window
 
     private unsafe void DrawAutoComplete()
     {
-        if (_autoCompleteInfo == null)
+        if (AutoCompleteInfo == null)
             return;
 
-        _autoCompleteList ??= AutoTranslate.Matching(Plugin.DataManager, _autoCompleteInfo.ToComplete, Plugin.Config.SortAutoTranslate);
-        if (_autoCompleteOpen)
+        AutoCompleteList ??= AutoTranslate.Matching(Plugin.DataManager, AutoCompleteInfo.ToComplete, Plugin.Config.SortAutoTranslate);
+        if (AutoCompleteOpen)
         {
             ImGui.OpenPopup(AutoCompleteId);
-            _autoCompleteOpen = false;
+            AutoCompleteOpen = false;
         }
 
         ImGui.SetNextWindowSize(new Vector2(400, 300) * ImGuiHelpers.GlobalScale);
         using var popup = ImRaii.Popup(AutoCompleteId);
         if (!popup.Success)
         {
-            if (_activatePos == -1)
-                _activatePos = _autoCompleteInfo.EndPos;
+            if (ActivatePos == -1)
+                ActivatePos = AutoCompleteInfo.EndPos;
 
-            _autoCompleteInfo = null;
-            _autoCompleteList = null;
+            AutoCompleteInfo = null;
+            AutoCompleteList = null;
             Activate = true;
             return;
         }
 
         ImGui.SetNextItemWidth(-1);
-        if (ImGui.InputTextWithHint("##auto-complete-filter", Language.AutoTranslate_Search_Hint, ref _autoCompleteInfo.ToComplete, 256, ImGuiInputTextFlags.CallbackAlways | ImGuiInputTextFlags.CallbackHistory, AutoCompleteCallback))
+        if (ImGui.InputTextWithHint("##auto-complete-filter", Language.AutoTranslate_Search_Hint, ref AutoCompleteInfo.ToComplete, 256, ImGuiInputTextFlags.CallbackAlways | ImGuiInputTextFlags.CallbackHistory, AutoCompleteCallback))
         {
-            _autoCompleteList = AutoTranslate.Matching(Plugin.DataManager, _autoCompleteInfo.ToComplete, Plugin.Config.SortAutoTranslate);
-            _autoCompleteSelection = 0;
-            _autoCompleteShouldScroll = true;
+            AutoCompleteList = AutoTranslate.Matching(Plugin.DataManager, AutoCompleteInfo.ToComplete, Plugin.Config.SortAutoTranslate);
+            AutoCompleteSelection = 0;
+            AutoCompleteShouldScroll = true;
         }
 
         var selected = -1;
         if (ImGui.IsItemActive() && ImGui.GetIO().KeyCtrl)
         {
-            for (var i = 0; i < 10 && i < _autoCompleteList.Count; i++)
+            for (var i = 0; i < 10 && i < AutoCompleteList.Count; i++)
             {
                 var num = (i + 1) % 10;
                 var key = ImGuiKey._0 + num;
@@ -1239,13 +1239,13 @@ public sealed class ChatLogWindow : Window
             }
 
             var enter = ImGui.IsKeyDown(ImGuiKey.Enter) || ImGui.IsKeyDown(ImGuiKey.KeypadEnter);
-            if (_autoCompleteList.Count > 0 && enter)
-                selected = _autoCompleteSelection;
+            if (AutoCompleteList.Count > 0 && enter)
+                selected = AutoCompleteSelection;
         }
 
         if (ImGui.IsWindowAppearing())
         {
-            _fixCursor = true;
+            FixCursor = true;
             ImGui.SetKeyboardFocusHere(-1);
         }
 
@@ -1255,14 +1255,14 @@ public sealed class ChatLogWindow : Window
 
         var clipper = new ImGuiListClipperPtr(ImGuiNative.ImGuiListClipper_ImGuiListClipper());
 
-        clipper.Begin(_autoCompleteList.Count);
+        clipper.Begin(AutoCompleteList.Count);
         while (clipper.Step())
         {
             for (var i = clipper.DisplayStart; i < clipper.DisplayEnd; i++)
             {
-                var entry = _autoCompleteList[i];
+                var entry = AutoCompleteList[i];
 
-                var highlight = _autoCompleteSelection == i;
+                var highlight = AutoCompleteSelection == i;
                 var clicked = ImGui.Selectable($"{entry.String}##{entry.Group}/{entry.Row}", highlight) || selected == i;
                 if (i < 10)
                 {
@@ -1278,53 +1278,53 @@ public sealed class ChatLogWindow : Window
                 if (!clicked)
                     continue;
 
-                var before = Chat[.._autoCompleteInfo.StartPos];
-                var after = Chat[_autoCompleteInfo.EndPos..];
+                var before = Chat[..AutoCompleteInfo.StartPos];
+                var after = Chat[AutoCompleteInfo.EndPos..];
                 var replacement = $"<at:{entry.Group},{entry.Row}>";
                 Chat = $"{before}{replacement}{after}";
                 ImGui.CloseCurrentPopup();
                 Activate = true;
-                _activatePos = _autoCompleteInfo.StartPos + replacement.Length;
+                ActivatePos = AutoCompleteInfo.StartPos + replacement.Length;
             }
         }
 
-        if (!_autoCompleteShouldScroll)
+        if (!AutoCompleteShouldScroll)
             return;
 
-        _autoCompleteShouldScroll = false;
-        var selectedPos = clipper.StartPosY + clipper.ItemsHeight * (_autoCompleteSelection * 1f);
+        AutoCompleteShouldScroll = false;
+        var selectedPos = clipper.StartPosY + clipper.ItemsHeight * (AutoCompleteSelection * 1f);
         ImGui.SetScrollFromPosY(selectedPos - ImGui.GetWindowPos().Y);
     }
 
     private unsafe int AutoCompleteCallback(ImGuiInputTextCallbackData* data)
     {
-        if (_fixCursor && _autoCompleteInfo != null)
+        if (FixCursor && AutoCompleteInfo != null)
         {
-            _fixCursor = false;
-            data->CursorPos = _autoCompleteInfo.ToComplete.Length;
+            FixCursor = false;
+            data->CursorPos = AutoCompleteInfo.ToComplete.Length;
             data->SelectionStart = data->SelectionEnd = data->CursorPos;
         }
 
-        if (_autoCompleteList == null)
+        if (AutoCompleteList == null)
             return 0;
 
         switch (data->EventKey)
         {
             case ImGuiKey.UpArrow:
-                if (_autoCompleteSelection == 0)
-                    _autoCompleteSelection = _autoCompleteList.Count - 1;
+                if (AutoCompleteSelection == 0)
+                    AutoCompleteSelection = AutoCompleteList.Count - 1;
                 else
-                    _autoCompleteSelection--;
+                    AutoCompleteSelection--;
 
-                _autoCompleteShouldScroll = true;
+                AutoCompleteShouldScroll = true;
                 return 1;
             case ImGuiKey.DownArrow:
-                if (_autoCompleteSelection == _autoCompleteList.Count - 1)
-                    _autoCompleteSelection = 0;
+                if (AutoCompleteSelection == AutoCompleteList.Count - 1)
+                    AutoCompleteSelection = 0;
                 else
-                    _autoCompleteSelection++;
+                    AutoCompleteSelection++;
 
-                _autoCompleteShouldScroll = true;
+                AutoCompleteShouldScroll = true;
                 return 1;
         }
 
@@ -1345,13 +1345,13 @@ public sealed class ChatLogWindow : Window
         {
             if (ptr.CursorPos == 0)
             {
-                _autoCompleteInfo = new AutoCompleteInfo(
+                AutoCompleteInfo = new AutoCompleteInfo(
                     string.Empty,
                     ptr.CursorPos,
                     ptr.CursorPos
                 );
-                _autoCompleteOpen = true;
-                _autoCompleteSelection = 0;
+                AutoCompleteOpen = true;
+                AutoCompleteSelection = 0;
 
                 return 0;
             }
@@ -1365,13 +1365,13 @@ public sealed class ChatLogWindow : Window
             var end = ptr.CursorPos - white - 1;
             var utf8Message = Marshal.PtrToStringUTF8(start, end);
             var correctedCursor = ptr.CursorPos - (end - utf8Message.Length);
-            _autoCompleteInfo = new AutoCompleteInfo(
+            AutoCompleteInfo = new AutoCompleteInfo(
                 utf8Message,
                 white + 1,
                 correctedCursor
             );
-            _autoCompleteOpen = true;
-            _autoCompleteSelection = 0;
+            AutoCompleteOpen = true;
+            AutoCompleteSelection = 0;
             return 0;
         }
 
@@ -1382,9 +1382,9 @@ public sealed class ChatLogWindow : Window
         if (Activate)
         {
             Activate = false;
-            data->CursorPos = _activatePos > -1 ? _activatePos : Chat.Length;
+            data->CursorPos = ActivatePos > -1 ? ActivatePos : Chat.Length;
             data->SelectionStart = data->SelectionEnd = data->CursorPos;
-            _activatePos = -1;
+            ActivatePos = -1;
         }
 
         Plugin.CommandHelpWindow.IsOpen = false;
@@ -1403,11 +1403,11 @@ public sealed class ChatLogWindow : Window
         if (data->EventFlag != ImGuiInputTextFlags.CallbackHistory)
             return 0;
 
-        var prevPos = _inputBacklogIdx;
+        var prevPos = InputBacklogIdx;
         switch (data->EventKey)
         {
             case ImGuiKey.UpArrow:
-                switch (_inputBacklogIdx)
+                switch (InputBacklogIdx)
                 {
                     case -1:
                         var offset = 0;
@@ -1418,24 +1418,24 @@ public sealed class ChatLogWindow : Window
                             offset = 1;
                         }
 
-                        _inputBacklogIdx = _inputBacklog.Count - 1 - offset;
+                        InputBacklogIdx = InputBacklog.Count - 1 - offset;
                         break;
                     case > 0:
-                        _inputBacklogIdx--;
+                        InputBacklogIdx--;
                         break;
                 }
                 break;
             case ImGuiKey.DownArrow:
-                if (_inputBacklogIdx != -1)
-                    if (++_inputBacklogIdx >= _inputBacklog.Count)
-                        _inputBacklogIdx = -1;
+                if (InputBacklogIdx != -1)
+                    if (++InputBacklogIdx >= InputBacklog.Count)
+                        InputBacklogIdx = -1;
                 break;
         }
 
-        if (prevPos == _inputBacklogIdx)
+        if (prevPos == InputBacklogIdx)
             return 0;
 
-        var historyStr = _inputBacklogIdx >= 0 ? _inputBacklog[_inputBacklogIdx] : string.Empty;
+        var historyStr = InputBacklogIdx >= 0 ? InputBacklog[InputBacklogIdx] : string.Empty;
         ptr.DeleteChars(0, ptr.BufTextLen);
         ptr.InsertChars(0, historyStr);
 
@@ -1459,13 +1459,13 @@ public sealed class ChatLogWindow : Window
 
     private void DrawChunk(Chunk chunk, bool wrap = true, PayloadHandler? handler = null, float lineWidth = 0f)
     {
-        if (chunk is IconChunk icon && _fontIcon != null)
+        if (chunk is IconChunk icon && FontIcon != null)
         {
             var bounds = IconUtil.GfdFileView.TryGetEntry((uint) icon.Icon, out var entry);
             if (!bounds)
                 return;
 
-            var texSize = new Vector2(_fontIcon.Width, _fontIcon.Height);
+            var texSize = new Vector2(FontIcon.Width, FontIcon.Height);
 
             var sizeRatio = Plugin.Config.FontSize / entry.Height;
             var size = new Vector2(entry.Width, entry.Height) * sizeRatio * ImGuiHelpers.GlobalScale;
@@ -1473,7 +1473,7 @@ public sealed class ChatLogWindow : Window
             var uv0 = new Vector2(entry.Left, entry.Top + 170) * 2 / texSize;
             var uv1 = new Vector2(entry.Left + entry.Width, entry.Top + entry.Height + 170) * 2 / texSize;
 
-            ImGui.Image(_fontIcon.ImGuiHandle, size, uv0, uv1);
+            ImGui.Image(FontIcon.ImGuiHandle, size, uv0, uv1);
             ImGuiUtil.PostPayload(chunk, handler);
 
             return;

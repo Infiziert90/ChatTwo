@@ -154,10 +154,10 @@ internal sealed unsafe class Chat : IDisposable
 
     private Plugin Plugin { get; }
     /// <summary>
-    /// Holds the current game channel details. `tellplayerName` and
-    /// `tellWorldId` are only set when the channel is `InputChannel.Tell`.
+    /// Holds the current game channel details.
+    /// `TellPlayerName` and `TellWorldId` are only set when the channel is `InputChannel.Tell`.
     /// </summary>
-    internal (InputChannel channel, List<Chunk> name, string? tellPlayerName, ushort tellWorldId) Channel { get; private set; }
+    internal (InputChannel Channel, List<Chunk> Name, string? TellPlayerName, ushort TellWorldId) Channel { get; private set; }
 
     internal bool UsesTellTempChannel { get; set; }
     internal InputChannel? PreviousChannel { get; private set; }
@@ -613,7 +613,7 @@ internal sealed unsafe class Chat : IDisposable
         if (!UsesTellTempChannel)
         {
             UsesTellTempChannel = true;
-            PreviousChannel = Channel.channel;
+            PreviousChannel = Channel.Channel;
         }
 
         if (SetChannelTargetTell != null)
@@ -660,7 +660,7 @@ internal sealed unsafe class Chat : IDisposable
         if (!UsesTellTempChannel)
         {
             UsesTellTempChannel = true;
-            PreviousChannel = Channel.channel;
+            PreviousChannel = Channel.Channel;
         }
 
         var utfName = Utf8String.FromString(name);
