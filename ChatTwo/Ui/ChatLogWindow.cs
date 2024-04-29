@@ -66,6 +66,8 @@ public sealed class ChatLogWindow : Window
     private int AutoCompleteSelection;
     private bool AutoCompleteShouldScroll;
 
+    public int CursorPos;
+
     public Vector2 LastWindowPos { get; private set; } = Vector2.Zero;
     public Vector2 LastWindowSize { get; private set; } = Vector2.Zero;
 
@@ -1341,6 +1343,8 @@ public sealed class ChatLogWindow : Window
         }
 
         var ptr = new ImGuiInputTextCallbackDataPtr(data);
+
+        CursorPos = ptr.CursorPos;
         if (data->EventFlag == ImGuiInputTextFlags.CallbackCompletion)
         {
             if (ptr.CursorPos == 0)

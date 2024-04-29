@@ -49,6 +49,7 @@ public sealed class Plugin : IDalamudPlugin
     public ChatLogWindow ChatLogWindow { get; }
     public CommandHelpWindow CommandHelpWindow { get; }
     public SeStringDebugger SeStringDebugger { get; }
+    public DebuggerWindow DebuggerWindow { get; }
     internal LegacyMessageImporterWindow LegacyMessageImporterWindow { get; }
 
     internal Configuration Config { get; }
@@ -94,11 +95,13 @@ public sealed class Plugin : IDalamudPlugin
             SettingsWindow = new SettingsWindow(this);
             CommandHelpWindow = new CommandHelpWindow(ChatLogWindow);
             SeStringDebugger = new SeStringDebugger(this);
+            DebuggerWindow = new DebuggerWindow(this);
 
             WindowSystem.AddWindow(ChatLogWindow);
             WindowSystem.AddWindow(SettingsWindow);
             WindowSystem.AddWindow(CommandHelpWindow);
             WindowSystem.AddWindow(SeStringDebugger);
+            WindowSystem.AddWindow(DebuggerWindow);
             FontManager.BuildFonts();
 
             Interface.UiBuilder.DisableCutsceneUiHide = true;
