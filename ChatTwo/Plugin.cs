@@ -120,6 +120,13 @@ public sealed class Plugin : IDalamudPlugin
             Framework.Update += FrameworkUpdate;
             Interface.UiBuilder.Draw += Draw;
             Interface.LanguageChanged += LanguageChanged;
+
+#if !DEBUG
+            // Avoid 300ms hitch when sending first message by preloading the
+            // auto-translate cache. Don't do this in debug because it makes
+            // profiling difficult.
+            AutoTranslate.PreloadCache(DataManager);
+#endif
         }
         catch
         {
