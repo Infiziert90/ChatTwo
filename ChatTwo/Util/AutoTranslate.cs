@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 using Dalamud;
@@ -92,6 +93,23 @@ internal static class AutoTranslate
         return string.Join("", payloads);
     }
 
+    /// <summary>
+    /// Preloads auto-translate entries into the cache for the current game
+    /// language. Without this, the first message will take a long time to send
+    /// (which causes a hitch in the main thread).
+    ///
+    /// This spawns a new thread.
+    /// </summary>
+    internal static void PreloadCache(IDataManager data)
+    {
+        new Thread(() =>
+        {
+            var sw = Stopwatch.StartNew();
+            AllEntries(data);
+            Plugin.Log.Debug($"Warming up auto-translate took {sw.ElapsedMilliseconds}ms");
+        }).Start();
+    }
+
     private static List<AutoTranslateEntry> AllEntries(IDataManager data)
     {
         if (Entries.TryGetValue(data.Language, out var entries))
@@ -150,12 +168,21 @@ internal static class AutoTranslate
                 if (columns.Count == 0)
                     columns.Add(0);
 
-                if (rows.Count == 0)
-                    rows.Add(..);
-
                 var validRows = rowParsers.Select(p => p.RowId).ToArray();
+                if (rows.Count == 0)
+                    // We can't use an "index from end" (like `^0`) here because
+                    // we're iterating over integers, not an array directly.
+                    // Previously, we were setting `0..^0` which caused these
+                    // sheets to be completely skipped due to this bug.
+                    // See below.
+                    rows.Add(..Index.FromStart((int)validRows.Max()));
+
                 foreach (var range in rows)
                 {
+                    // We iterate over the range by numerical values here, so
+                    // we can't use an "index from end" otherwise nothing will
+                    // happen.
+                    // See above.
                     for (var i = range.Start.Value; i < range.End.Value; i++)
                     {
                         if (!validRows.Contains((uint) i))
