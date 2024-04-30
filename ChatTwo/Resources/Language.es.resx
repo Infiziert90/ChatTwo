@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-    <!--
+  <!--
       Microsoft ResX Schema
 
       Version 2.0
@@ -59,777 +59,963 @@
               : using a System.ComponentModel.TypeConverter
               : and then encoded with base64 encoding.
       -->
-    <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
-        <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
-        <xsd:element name="root" msdata:IsDataSet="true">
+  <xsd:schema xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"/>
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
             <xsd:complexType>
-                <xsd:choice maxOccurs="unbounded">
-                    <xsd:element name="metadata">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" use="required" type="xsd:string"/>
-                            <xsd:attribute name="type" type="xsd:string"/>
-                            <xsd:attribute name="mimetype" type="xsd:string"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="assembly">
-                        <xsd:complexType>
-                            <xsd:attribute name="alias" type="xsd:string"/>
-                            <xsd:attribute name="name" type="xsd:string"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="data">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
-                            <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
-                            <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
-                            <xsd:attribute ref="xml:space"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                    <xsd:element name="resheader">
-                        <xsd:complexType>
-                            <xsd:sequence>
-                                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
-                            </xsd:sequence>
-                            <xsd:attribute name="name" type="xsd:string" use="required"/>
-                        </xsd:complexType>
-                    </xsd:element>
-                </xsd:choice>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string"/>
+              <xsd:attribute name="type" type="xsd:string"/>
+              <xsd:attribute name="mimetype" type="xsd:string"/>
+              <xsd:attribute ref="xml:space"/>
             </xsd:complexType>
-        </xsd:element>
-    </xsd:schema>
-    <resheader name="resmimetype">
-        <value>text/microsoft-resx</value>
-    </resheader>
-    <resheader name="version">
-        <value>2.0</value>
-    </resheader>
-    <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string"/>
+              <xsd:attribute name="name" type="xsd:string"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1"/>
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3"/>
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4"/>
+              <xsd:attribute ref="xml:space"/>
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1"/>
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required"/>
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-    </resheader>
-    <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral,
             PublicKeyToken=b77a5c561934e089
         </value>
-    </resheader>
-    <data name="Options_HideChat_Name">
-        <value>Ocultar chat del juego por defecto</value>
-    </data>
-    <data name="Options_HideChat_Description">
-        <value>Oculta la ventana de chat del juego cuando el plug-in está activo.</value>
-    </data>
-    <data name="Options_HideDuringCutscenes_Name">
-        <value>Ocultar la interfaz del plug-in durante las cinemáticas</value>
-    </data>
-    <data name="Options_HideDuringCutscenes_Description">
-        <value>Ocultar {0} durante las cinemáticas.</value>
-    </data>
-    <data name="Options_NativeItemTooltips_Name">
-        <value>Mostrar descripción del ítem</value>
-    </data>
-    <data name="Options_NativeItemTooltips_Description">
-        <value>Mostrar descripción del ítem cuando el cursor pase sobre el objeto en el {0}.</value>
-    </data>
-    <data name="Options_SidebarTabView_Name">
-        <value>Mostrar pestañas en la barra lateral</value>
-    </data>
-    <data name="Options_SidebarTabView_Description">
-        <value>Mostrar pestañas en {0} como barra lateral en lugar de una barra en la parte superior.</value>
-    </data>
-    <data name="Options_PrettierTimestamps_Name">
-        <value>Usar diseño moderno</value>
-    </data>
-    <data name="Options_PrettierTimestamps_Description">
-        <value>Mostrar mensajes con un estilo más moderno.</value>
-    </data>
-    <data name="Options_MoreCompactPretty_Name">
-        <value>Diseño moderno y compacto</value>
-    </data>
-    <data name="Options_MoreCompactPretty_Description">
-        <value>Reduce el espacio entre mensajes.</value>
-    </data>
-    <data name="Options_ShowNoviceNetwork_Name">
-        <value>Mostrar botón de unirse a la Red de Novatos</value>
-    </data>
-    <data name="Options_ShowNoviceNetwork_Description">
-        <value>Mostrar el botón de unirse a la Red de Novatos junto al botón de configuración si se conecta como mentor.</value>
-    </data>
-    <data name="Options_FontSize_Name">
-        <value>Tamaño de fuente</value>
-    </data>
-    <data name="Options_WindowOpacity_Name">
-        <value>Opacidad de la ventana</value>
-    </data>
-    <data name="Options_CanMove_Name">
-        <value>Permitir mover chat</value>
-    </data>
-    <data name="Options_CanResize_Name">
-        <value>Permitir cambiar el tamaño del chat</value>
-    </data>
-    <data name="Options_ShowTitleBar_Name">
-        <value>Mostrar la barra de título en la parte superior izquierda del chat</value>
-    </data>
-    <data name="Options_Display_Tab">
-        <value>General</value>
-    </data>
-    <data name="Options_ChatColours_Tab">
-        <value>Color del chat</value>
-    </data>
-    <data name="Options_ChatColours_Reset">
-        <value>Restablecer por defecto</value>
-    </data>
-    <data name="Options_ChatColours_Import">
-        <value>Importar desde el juego</value>
-    </data>
-    <data name="Options_Tabs_Tab">
-        <value>Pestañas</value>
-    </data>
-    <data name="Options_Tabs_Add">
-        <value>Añadir</value>
-    </data>
-    <data name="Options_Tabs_Delete">
-        <value>Borrar</value>
-    </data>
-    <data name="Options_Tabs_MoveUp">
-        <value>Mover hacia arriba</value>
-    </data>
-    <data name="Options_Tabs_MoveDown">
-        <value>Mover hacia abajo</value>
-    </data>
-    <data name="Options_Tabs_Name">
-        <value>Nombre</value>
-    </data>
-    <data name="Options_Tabs_ShowTimestamps">
-        <value>Mostrar hora</value>
-    </data>
-    <data name="Options_Tabs_UnreadMode">
-        <value>Modo no leído</value>
-    </data>
-    <data name="Options_Tabs_NoInputChannel">
-        <value>&lt;Ninguno&gt;</value>
-    </data>
-    <data name="Options_Tabs_InputChannel">
-        <value>Canal de entrada</value>
-    </data>
-    <data name="Options_Tabs_Channels">
-        <value>Canales</value>
-    </data>
-    <data name="UnreadMode_All_Tooltip">
-        <value>Siempre mostrar indicadores no leídos.</value>
-    </data>
-    <data name="UnreadMode_Unseen_Tooltip">
-        <value>Mostrar solo los indicadores no leídos para los mensajes que no ha visto.</value>
-    </data>
-    <data name="UnreadMode_None_Tooltip">
-        <value>No mostrar nunca indicadores no leídos.</value>
-    </data>
-    <data name="Tab_DefaultName">
-        <value>Nueva pestaña</value>
-    </data>
-    <data name="Settings_SaveAndClose">
-        <value>Guardar y cerrar</value>
-    </data>
-    <data name="Settings_Save">
-        <value>Guardar</value>
-    </data>
-    <data name="Settings_Discard">
-        <value>Descartar</value>
-    </data>
-    <data name="Settings_Title">
-        <value>Configuración de {0}</value>
-    </data>
-    <data name="ChatLog_SwitcherDisabled">
-        <value>Desactivado para esta pestaña.</value>
-    </data>
-    <data name="ChatLog_HideChat">
-        <value>Ocultar chat</value>
-    </data>
-    <data name="ChatLog_Tabs_MoveUp">
-        <value>Mover hacia arriba</value>
-    </data>
-    <data name="ChatLog_Tabs_MoveLeft">
-        <value>Mover a la izquierda</value>
-    </data>
-    <data name="ChatLog_Tabs_MoveDown">
-        <value>Mover hacia abajo</value>
-    </data>
-    <data name="ChatLog_Tabs_MoveRight">
-        <value>Mover a la derecha</value>
-    </data>
-    <data name="Options_Tabs_ChannelTypes_Chat">
-        <value>Chat</value>
-    </data>
-    <data name="Options_Tabs_ChannelTypes_Battle">
-        <value>Combate</value>
-    </data>
-    <data name="Options_Tabs_ChannelTypes_Announcements">
-        <value>Anuncios</value>
-    </data>
-    <data name="UnreadMode_All">
-        <value>Todos</value>
-    </data>
-    <data name="UnreadMode_Unseen">
-        <value>No vistos</value>
-    </data>
-    <data name="UnreadMode_None">
-        <value>Ninguno</value>
-    </data>
-    <data name="ChatSource_Self">
-        <value>Uno mismo</value>
-    </data>
-    <data name="ChatSource_PartyMember">
-        <value>Miembros de grupo</value>
-    </data>
-    <data name="ChatSource_AllianceMember">
-        <value>Miembros de la alianza</value>
-    </data>
-    <data name="ChatSource_Other">
-        <value>Otros</value>
-    </data>
-    <data name="ChatSource_EngagedEnemy">
-        <value>Enemigo Atraido</value>
-    </data>
-    <data name="ChatSource_UnengagedEnemy">
-        <value>Enemigo sin atraer</value>
-    </data>
-    <data name="ChatSource_FriendlyNpc">
-        <value>NPC amistoso</value>
-    </data>
-    <data name="ChatSource_SelfPet">
-        <value>Mascota (Yo)</value>
-    </data>
-    <data name="ChatSource_PartyPet">
-        <value>Mascota (Grupo)</value>
-    </data>
-    <data name="ChatSource_AlliancePet">
-        <value>Mascota (Miembro de la Alianza)</value>
-    </data>
-    <data name="ChatSource_OtherPet">
-        <value>Mascota (Otros)</value>
-    </data>
-    <data name="Options_Font_Name">
-        <value>Tipo de fuente</value>
-    </data>
-    <data name="Options_JapaneseFont_Name">
-        <value>Fuente japonesa</value>
-    </data>
-    <data name="Options_Font_Description">
-        <value>La fuente {0} se utilizará para mostrar texto no japonés.</value>
-    </data>
-    <data name="Options_Font_Warning">
-        <value>El uso de ciertas fuentes del sistema puede fallar en su juego. Se le ha advertido.</value>
-    </data>
-    <data name="Options_JapaneseFont_Description">
-        <value>La fuente {0} se utilizará para mostrar el texto japonés.</value>
-    </data>
-    <data name="Options_Tabs_ChannelTypes_Special">
-        <value>Especiales</value>
-    </data>
-    <data name="Options_Fonts_Tab">
-        <value>Fuentes</value>
-    </data>
-    <data name="Options_SymbolsFontSize_Name">
-        <value>Tamaño de Símbolos</value>
-    </data>
-    <data name="Options_JapaneseFontSize_Name">
-        <value>Tamaño de la fuente japonesa</value>
-    </data>
-    <data name="Options_SymbolsFontSize_Description">
-        <value>El tamaño de fuente a usar para símbolos del juego.</value>
-    </data>
-    <data name="ChatLog_Tabs_Delete">
-        <value>Eliminar Pestaña</value>
-    </data>
-    <data name="Options_HideWhenNotLoggedIn_Name">
-        <value>Ocultar cuando no se inicie sesión</value>
-    </data>
-    <data name="Options_HideWhenNotLoggedIn_Description">
-        <value>Ocultar {0} cuando no haya iniciado sesión en un personaje.</value>
-    </data>
-    <data name="Tabs_Presets_General">
-        <value>General</value>
-    </data>
-    <data name="Options_Tabs_Preset">
-        <value>Preset: {0}</value>
-    </data>
-    <data name="Tabs_Presets_Event">
-        <value>Evento</value>
-    </data>
-    <data name="Options_Tabs_NewTab">
-        <value>Nueva pestaña</value>
-    </data>
-    <data name="Options_About_Tab">
-        <value>Acerca de</value>
-    </data>
-    <data name="Options_About_Opening">
-        <value>{0} es un proyecto para recrear por completo el chat del juego y hacerlo incluso mejor.</value>
-    </data>
-    <data name="Options_About_ClickUp">
-        <value>Haz clic en el botón de la izquierda para ver en qué funciones se está trabajando y qué está por llegar.</value>
-    </data>
-    <data name="Options_About_CrowdIn">
-        <value>Haz clic en el botón de la izquierda para ayudar a traducir {0}.</value>
-    </data>
-    <data name="Options_About_Translators">
-        <value>Traductores</value>
-    </data>
-    <data name="CommandHelpSide_None">
-        <value>Ninguno</value>
-    </data>
-    <data name="CommandHelpSide_Left">
-        <value>Izquierda</value>
-    </data>
-    <data name="CommandHelpSide_Right">
-        <value>Derecha</value>
-    </data>
-    <data name="Options_CommandHelpSide_Name">
-        <value>Lado de la ayuda de comando</value>
-    </data>
-    <data name="Options_CommandHelpSide_Description">
-        <value>El lado de {0} donde se mostrará la ayuda para comandos.</value>
-    </data>
-    <data name="Options_HideWhenUiHidden_Name">
-        <value>Ocultar cuando la interfaz de juego está oculta</value>
-    </data>
-    <data name="Options_HideWhenUiHidden_Description">
-        <value>Ocultar {0} cuando la UI del juego está oculta.</value>
-    </data>
-    <data name="Options_KeybindMode_Name">
-        <value>Combinacion de Teclas</value>
-    </data>
-    <data name="Options_KeybindMode_Description">
-        <value>La forma en la que {0} debe manejar los atajos.</value>
-    </data>
-    <data name="Options_Miscellaneous_Tab">
-        <value>Otros</value>
-    </data>
-    <data name="LanguageOverride_None">
-        <value>Usar el idioma por defecto de Dalamud</value>
-    </data>
-    <data name="KeybindMode_Flexible_Name">
-        <value>Flexible</value>
-    </data>
-    <data name="KeybindMode_Strict_Name">
-        <value>Estricto</value>
-    </data>
-    <data name="KeybindMode_Flexible_Tooltip">
-        <value>Procesar teclas con modificadores incluso si se presionan otros modificadores.</value>
-    </data>
-    <data name="KeybindMode_Strict_Tooltip">
-        <value>Procesar teclas con modificadores incluso si se presionan otros modificadores.</value>
-    </data>
-    <data name="Options_Language_Name">
-        <value>Idioma</value>
-    </data>
-    <data name="Options_Language_Description">
-        <value>El idioma en el que se mostrará {0}.</value>
-    </data>
-    <data name="Options_DatabaseBattleMessages_Name">
-        <value>Guardar mensajes de batalla en la base de datos</value>
-    </data>
-    <data name="Options_DatabaseBattleMessages_Description">
-        <value>Si los mensajes de la batalla se guardan en la base de datos, el tamaño de la base de datos crecerá mucho más rápido, y habrá una congelación notable al guardar los ajustes. Se recomienda dejar esto desactivado.</value>
-    </data>
-    <data name="Options_LoadPreviousSession_Name">
-        <value>Mostrar sesión de chat previa al iniciar sesión</value>
-    </data>
-    <data name="Options_LoadPreviousSession_Description">
-        <value>Después de iniciar sesión, rellene el chat con los mensajes desde la última vez que se desconectó.</value>
-    </data>
-    <data name="Options_Database_Tab">
-        <value>Base de datos</value>
-    </data>
-    <data name="Options_FilterIncludePreviousSessions_Name">
-        <value>Incluir sesiones anteriores al llenar pestañas</value>
-    </data>
-    <data name="Options_FilterIncludePreviousSessions_Description">
-        <value>Incluye mensajes anteriores al lanzamiento del juego cuando se llenan las pestañas. Las pestañas se llenan cuando se guardan los ajustes.</value>
-    </data>
-    <data name="Options_Database_Advanced_Warning">
-        <value>No haga clic en estos botones a menos que sepa lo que está haciendo.</value>
-    </data>
-    <data name="Options_Database_Advanced">
-        <value>Avanzado</value>
-    </data>
-    <data name="ChatLog_Tabs_PopOut">
-        <value>Nueva pestaña</value>
-    </data>
-    <data name="Options_HideSameTimestamps_Name">
-        <value>Ocultar marcas de tiempo cuando existan múltiples</value>
-    </data>
-    <data name="Options_HideSameTimestamps_Description">
-        <value>Ocultar marcas de tiempo cuando mensajes anteriores tengan la misma marca de tiempo.</value>
-    </data>
-    <data name="Options_ShowPopOutTitleBar_Name">
-        <value>Mostrar barra de título en las pestañas desplegadas</value>
-    </data>
-    <data name="Options_Tabs_PopOut">
-        <value>Mostrar en ventana separada</value>
-    </data>
-    <data name="Options_Tabs_IndependentOpacity">
-        <value>Usar opacidad distinta a la ventana principal</value>
-    </data>
-    <data name="Options_Tabs_Opacity">
-        <value>Opacidad</value>
-    </data>
-    <data name="Options_FontsEnabled">
-        <value>Habilitar fuentes personalizadas</value>
-    </data>
-    <data name="AutoTranslate_Search_Hint">
-        <value>Buscar en el Traductor Automático...</value>
-    </data>
-    <data name="Options_SortAutoTranslate_Name">
-        <value>Ordenar la lista del Traductor Automático</value>
-    </data>
-    <data name="Options_SortAutoTranslate_Description">
-        <value>Si esto está habilitado, la lista del Traductor Automático se ordenará alfabéticamente.</value>
-    </data>
-    <data name="AutoTranslate_Completion_Key">
-        <value>Ctrl + {0}</value>
-    </data>
-    <data name="Options_ExtraGlyphs_Name">
-        <value>Glifos de fuente adicionales</value>
-    </data>
-    <data name="Options_ExtraGlyphs_Description">
-        <value>Se pueden añadir glifos adicionales a la fuente global de {0} habilitando la casilla inferior. Esto probablemente incremente el tamaño del atlas de la fuente de Dalamud.</value>
-    </data>
-    <data name="ExtraGlyphRanges_ChineseFull_Name">
-        <value>Chino (completo)</value>
-    </data>
-    <data name="ExtraGlyphRanges_ChineseSimplifiedCommon_Name">
-        <value>Chino (común simplificado)</value>
-    </data>
-    <data name="ExtraGlyphRanges_Cyrillic_Name">
-        <value>Cirílico</value>
-    </data>
-    <data name="ExtraGlyphRanges_Japanese_Name">
-        <value>Japonés</value>
-    </data>
-    <data name="ExtraGlyphRanges_Korean_Name">
-        <value>Coreano</value>
-    </data>
-    <data name="ExtraGlyphRanges_Thai_Name">
-        <value>Tailandés</value>
-    </data>
-    <data name="ExtraGlyphRanges_Vietnamese_Name">
-        <value>Vietnamita</value>
-    </data>
-    <data name="Context_Integrations">
-        <value>Integraciones</value>
-    </data>
-    <data name="Context_ScreenshotMode">
-        <value>Modo pantallazo</value>
-    </data>
-    <data name="Context_HideChat">
-        <value>Ocultar chat</value>
-    </data>
-    <data name="Context_Copy">
-        <value>Copiar</value>
-    </data>
-    <data name="Context_TryOn">
-        <value>Probar</value>
-    </data>
-    <data name="Context_ItemComparison">
-        <value>Comparar Objetos</value>
-    </data>
-    <data name="Context_SearchRecipes">
-        <value>Buscar Recetas Usando Este Material</value>
-    </data>
-    <data name="Context_SearchForItem">
-        <value>Buscar Objeto</value>
-    </data>
-    <data name="Context_Link">
-        <value>Enlazar</value>
-    </data>
-    <data name="Context_CopyItemName">
-        <value>Copiar Nombre de Objeto</value>
-    </data>
-    <data name="Context_SendTell">
-        <value>Mandar Tell</value>
-    </data>
-    <data name="Context_InviteToParty">
-        <value>Invitar a Party</value>
-    </data>
-    <data name="Context_InviteToParty_SameWorld">
-        <value>Mismo mundo</value>
-    </data>
-    <data name="Context_InviteToParty_DifferentWorld">
-        <value>Diferente mundo</value>
-    </data>
-    <data name="Context_Promote">
-        <value>Ascender</value>
-    </data>
-    <data name="Context_KickFromParty">
-        <value>Echar de Party</value>
-    </data>
-    <data name="Context_SendFriendRequest">
-        <value>Mandar Petición de Amistad</value>
-    </data>
-    <data name="Context_AddToBlacklist">
-        <value>Añadir a Blacklist</value>
-    </data>
-    <data name="Context_InviteToNoviceNetwork">
-        <value>Invitar a la Novice Network</value>
-    </data>
-    <data name="Context_ReplyInSelectedChatMode">
-        <value>Responder en Modo de Chat Seleccionado</value>
-    </data>
-    <data name="Context_Target">
-        <value>Seleccionar</value>
-    </data>
-    <data name="ChatType_Debug">
-        <value>Debug</value>
-    </data>
-    <data name="ChatType_Urgent">
-        <value>Urgente</value>
-    </data>
-    <data name="ChatType_Notice">
-        <value>Avisos</value>
-    </data>
-    <data name="ChatType_Say">
-        <value>Say</value>
-    </data>
-    <data name="ChatType_Shout">
-        <value>Shout</value>
-    </data>
-    <data name="ChatType_TellOutgoing">
-        <value>Tell (saliente)</value>
-    </data>
-    <data name="ChatType_TellIncoming">
-        <value>Tell (entrante)</value>
-    </data>
-    <data name="ChatType_Party">
-        <value>Party</value>
-    </data>
-    <data name="ChatType_Alliance">
-        <value>Alliance</value>
-    </data>
-    <data name="ChatType_Linkshell1">
-        <value>Linkshell [1]</value>
-    </data>
-    <data name="ChatType_Linkshell2">
-        <value>Linkshell [2]</value>
-    </data>
-    <data name="ChatType_Linkshell3">
-        <value>Linkshell [3]</value>
-    </data>
-    <data name="ChatType_Linkshell4">
-        <value>Linkshell [4]</value>
-    </data>
-    <data name="ChatType_Linkshell5">
-        <value>Linkshell [5]</value>
-    </data>
-    <data name="ChatType_Linkshell6">
-        <value>Linkshell [6]</value>
-    </data>
-    <data name="ChatType_Linkshell7">
-        <value>Linkshell [7]</value>
-    </data>
-    <data name="ChatType_Linkshell8">
-        <value>Linkshell [8]</value>
-    </data>
-    <data name="ChatType_FreeCompany">
-        <value>Free Company</value>
-    </data>
-    <data name="ChatType_NoviceNetwork">
-        <value>Novice Network</value>
-    </data>
-    <data name="ChatType_CustomEmotes">
-        <value>Emotes Personalizados</value>
-    </data>
-    <data name="ChatType_StandardEmotes">
-        <value>Emotes estándar</value>
-    </data>
-    <data name="ChatType_Yell">
-        <value>Yell</value>
-    </data>
-    <data name="ChatType_CrossWorldParty">
-        <value>Party Cross-world</value>
-    </data>
-    <data name="ChatType_PvpTeam">
-        <value>Equipo PvP</value>
-    </data>
-    <data name="ChatType_CrossLinkshell1">
-        <value>Linkshell Cross-world [1]</value>
-    </data>
-    <data name="ChatType_CrossLinkshell2">
-        <value>Linkshell Cross-world [2]</value>
-    </data>
-    <data name="ChatType_CrossLinkshell3">
-        <value>Linkshell Cross-world [3]</value>
-    </data>
-    <data name="ChatType_CrossLinkshell4">
-        <value>Linkshell Cross-world [4]</value>
-    </data>
-    <data name="ChatType_CrossLinkshell5">
-        <value>Linkshell Cross-world [5]</value>
-    </data>
-    <data name="ChatType_CrossLinkshell6">
-        <value>Linkshell Cross-world [6]</value>
-    </data>
-    <data name="ChatType_CrossLinkshell7">
-        <value>Linkshell Cross-world [7]</value>
-    </data>
-    <data name="ChatType_CrossLinkshell8">
-        <value>Linkshell Cross-world [8]</value>
-    </data>
-    <data name="ChatType_Damage">
-        <value>Daño inflingido</value>
-    </data>
-    <data name="ChatType_Miss">
-        <value>Ataques fallidos</value>
-    </data>
-    <data name="ChatType_Action">
-        <value>Acciones usadas</value>
-    </data>
-    <data name="ChatType_Item">
-        <value>Objetos usados</value>
-    </data>
-    <data name="ChatType_Healing">
-        <value>Sanación</value>
-    </data>
-    <data name="ChatType_GainBuff">
-        <value>Efectos beneficiosos concedidos</value>
-    </data>
-    <data name="ChatType_GainDebuff">
-        <value>Efectos perjudiciales infligidos</value>
-    </data>
-    <data name="ChatType_LoseBuff">
-        <value>Efectos beneficiosos perdidos</value>
-    </data>
-    <data name="ChatType_LoseDebuff">
-        <value>Efectos perjudiciales sanados</value>
-    </data>
-    <data name="ChatType_Alarm">
-        <value>Notificaciones de Alarma</value>
-    </data>
-    <data name="ChatType_Echo">
-        <value>Echo</value>
-    </data>
-    <data name="ChatType_System">
-        <value>Mensajes de Sistema</value>
-    </data>
-    <data name="ChatType_BattleSystem">
-        <value>Mensajes del Sistema de Batalla</value>
-    </data>
-    <data name="ChatType_GatheringSystem">
-        <value>Mensajes de Sistema de Gathering</value>
-    </data>
-    <data name="ChatType_Error">
-        <value>Mensajes de Error</value>
-    </data>
-    <data name="ChatType_NpcDialogue">
-        <value>Diálogo de NPC</value>
-    </data>
-    <data name="ChatType_LootNotice">
-        <value>Avisos de Loot</value>
-    </data>
-    <data name="ChatType_Progress">
-        <value>Mensajes de Progresión</value>
-    </data>
-    <data name="ChatType_LootRoll">
-        <value>Mensajes de Loot</value>
-    </data>
-    <data name="ChatType_Crafting">
-        <value>Mensajes de Síntesis</value>
-    </data>
-    <data name="ChatType_Gathering">
-        <value>Mensajes de Gathering</value>
-    </data>
-    <data name="ChatType_NpcAnnouncement">
-        <value>Diálogo de NPC (Anuncios)</value>
-    </data>
-    <data name="ChatType_FreeCompanyAnnouncement">
-        <value>Anuncios de Free Company</value>
-    </data>
-    <data name="ChatType_FreeCompanyLoginLogout">
-        <value>Notificaciones de Inicio de Sesión de Miembro de Free Company</value>
-    </data>
-    <data name="ChatType_RetainerSale">
-        <value>Notificaciones de Venta de Retainer</value>
-    </data>
-    <data name="ChatType_PeriodicRecruitmentNotification">
-        <value>Notificaciones Periódicas de Reclutamiento</value>
-    </data>
-    <data name="ChatType_Sign">
-        <value>Mensajes al Marcar a Jugadores</value>
-    </data>
-    <data name="ChatType_RandomNumber">
-        <value>Mensajes de Números al Azar</value>
-    </data>
-    <data name="ChatType_NoviceNetworkSystem">
-        <value>Anuncios de la Novice Network</value>
-    </data>
-    <data name="ChatType_Orchestrion">
-        <value>Mensajes de Canción Actual</value>
-    </data>
-    <data name="ChatType_PvpTeamAnnouncement">
-        <value>Anuncios de Equipo de PvP</value>
-    </data>
-    <data name="ChatType_PvpTeamLoginLogout">
-        <value>Notificaciones de Inicio de Sesión de Miembro de Equipo de PvP</value>
-    </data>
-    <data name="ChatType_MessageBook">
-        <value>Alerta de Libro de Visitas</value>
-    </data>
-    <data name="ChatType_GmTell">
-        <value>Tell (GM)</value>
-    </data>
-    <data name="ChatType_GmSay">
-        <value>Say (GM)</value>
-    </data>
-    <data name="ChatType_GmShout">
-        <value>Shout (GM)</value>
-    </data>
-    <data name="ChatType_GmYell">
-        <value>Yell (GM)</value>
-    </data>
-    <data name="ChatType_GmParty">
-        <value>Party (GM)</value>
-    </data>
-    <data name="ChatType_GmFreeCompany">
-        <value>Free Company (GM)</value>
-    </data>
-    <data name="ChatType_GmLinkshell1">
-        <value>Linkshell [1] (GM)</value>
-    </data>
-    <data name="ChatType_GmLinkshell2">
-        <value>Linkshell [2] (GM)</value>
-    </data>
-    <data name="ChatType_GmLinkshell3">
-        <value>Linkshell [3] (GM)</value>
-    </data>
-    <data name="ChatType_GmLinkshell4">
-        <value>Linkshell [4] (GM)</value>
-    </data>
-    <data name="ChatType_GmLinkshell5">
-        <value>Linkshell [5] (GM)</value>
-    </data>
-    <data name="ChatType_GmLinkshell6">
-        <value>Linkshell [6] (GM)</value>
-    </data>
-    <data name="ChatType_GmLinkshell7">
-        <value>Linkshell [7] (GM)</value>
-    </data>
-    <data name="ChatType_GmLinkshell8">
-        <value>Linkshell [8] (GM)</value>
-    </data>
-    <data name="ChatType_GmNoviceNetwork">
-        <value>Novice Network (GM)</value>
-    </data>
-    <data name="Options_CollapseDuplicateMessages_Name">
-        <value>Colapsar mensajes duplicados</value>
-    </data>
-    <data name="Options_CollapseDuplicateMessages_Description">
-        <value>Reemplaza los mensajes duplicados consecutivos con un contador anexado a la primera instancia del mensaje.</value>
+  </resheader>
+  <data name="Options_HideChat_Name">
+    <value>Ocultar chat del juego por defecto</value>
+  </data>
+  <data name="Options_HideChat_Description">
+    <value>Oculta la ventana de chat del juego cuando el plug-in está activo.</value>
+  </data>
+  <data name="Options_HideDuringCutscenes_Name">
+    <value>Ocultar la interfaz del plug-in durante las cinemáticas</value>
+  </data>
+  <data name="Options_HideDuringCutscenes_Description">
+    <value>Ocultar {0} durante las cinemáticas.</value>
+  </data>
+  <data name="Options_NativeItemTooltips_Name">
+    <value>Mostrar descripción del ítem</value>
+  </data>
+  <data name="Options_NativeItemTooltips_Description">
+    <value>Mostrar descripción del ítem cuando el cursor pase sobre el objeto en el {0}.</value>
+  </data>
+  <data name="Options_SidebarTabView_Name">
+    <value>Mostrar pestañas en la barra lateral</value>
+  </data>
+  <data name="Options_SidebarTabView_Description">
+    <value>Mostrar pestañas en {0} como barra lateral en lugar de una barra en la parte superior.</value>
+  </data>
+  <data name="Options_PrettierTimestamps_Name">
+    <value>Usar diseño moderno</value>
+  </data>
+  <data name="Options_PrettierTimestamps_Description">
+    <value>Mostrar mensajes con un estilo más moderno.</value>
+  </data>
+  <data name="Options_MoreCompactPretty_Name">
+    <value>Diseño moderno y compacto</value>
+  </data>
+  <data name="Options_MoreCompactPretty_Description">
+    <value>Reduce el espacio entre mensajes.</value>
+  </data>
+  <data name="Options_ShowNoviceNetwork_Name">
+    <value>Mostrar botón de unirse a la Red de Novatos</value>
+  </data>
+  <data name="Options_ShowNoviceNetwork_Description">
+    <value>Mostrar el botón de unirse a la Red de Novatos junto al botón de configuración si se conecta como mentor.</value>
+  </data>
+  <data name="Options_FontSize_Name">
+    <value>Tamaño de fuente</value>
+  </data>
+  <data name="Options_WindowOpacity_Name">
+    <value>Opacidad de la ventana</value>
+  </data>
+  <data name="Options_CanMove_Name">
+    <value>Permitir mover chat</value>
+  </data>
+  <data name="Options_CanResize_Name">
+    <value>Permitir cambiar el tamaño del chat</value>
+  </data>
+  <data name="Options_ShowTitleBar_Name">
+    <value>Mostrar la barra de título en la parte superior izquierda del chat</value>
+  </data>
+  <data name="Options_Display_Tab">
+    <value>General</value>
+  </data>
+  <data name="Options_ChatColours_Tab">
+    <value>Color del chat</value>
+  </data>
+  <data name="Options_ChatColours_Reset">
+    <value>Restablecer por defecto</value>
+  </data>
+  <data name="Options_ChatColours_Import">
+    <value>Importar desde el juego</value>
+  </data>
+  <data name="Options_Tabs_Tab">
+    <value>Pestañas</value>
+  </data>
+  <data name="Options_Tabs_Add">
+    <value>Añadir</value>
+  </data>
+  <data name="Options_Tabs_Delete">
+    <value>Borrar</value>
+  </data>
+  <data name="Options_Tabs_MoveUp">
+    <value>Mover hacia arriba</value>
+  </data>
+  <data name="Options_Tabs_MoveDown">
+    <value>Mover hacia abajo</value>
+  </data>
+  <data name="Options_Tabs_Name">
+    <value>Nombre</value>
+  </data>
+  <data name="Options_Tabs_ShowTimestamps">
+    <value>Mostrar hora</value>
+  </data>
+  <data name="Options_Tabs_UnreadMode">
+    <value>Modo no leído</value>
+  </data>
+  <data name="Options_Tabs_NoInputChannel">
+    <value>&lt;Ninguno&gt;</value>
+  </data>
+  <data name="Options_Tabs_InputChannel">
+    <value>Canal de entrada</value>
+  </data>
+  <data name="Options_Tabs_Channels">
+    <value>Canales</value>
+  </data>
+  <data name="UnreadMode_All_Tooltip">
+    <value>Siempre mostrar indicadores no leídos.</value>
+  </data>
+  <data name="UnreadMode_Unseen_Tooltip">
+    <value>Mostrar solo los indicadores no leídos para los mensajes que no ha visto.</value>
+  </data>
+  <data name="UnreadMode_None_Tooltip">
+    <value>No mostrar nunca indicadores no leídos.</value>
+  </data>
+  <data name="Tab_DefaultName">
+    <value>Nueva pestaña</value>
+  </data>
+  <data name="Settings_SaveAndClose">
+    <value>Guardar y cerrar</value>
+  </data>
+  <data name="Settings_Save">
+    <value>Guardar</value>
+  </data>
+  <data name="Settings_Discard">
+    <value>Descartar</value>
+  </data>
+  <data name="Settings_Title">
+    <value>Configuración de {0}</value>
+  </data>
+  <data name="ChatLog_SwitcherDisabled">
+    <value>Desactivado para esta pestaña.</value>
+  </data>
+  <data name="ChatLog_HideChat">
+    <value>Ocultar chat</value>
+  </data>
+  <data name="ChatLog_Tabs_MoveUp">
+    <value>Mover hacia arriba</value>
+  </data>
+  <data name="ChatLog_Tabs_MoveLeft">
+    <value>Mover a la izquierda</value>
+  </data>
+  <data name="ChatLog_Tabs_MoveDown">
+    <value>Mover hacia abajo</value>
+  </data>
+  <data name="ChatLog_Tabs_MoveRight">
+    <value>Mover a la derecha</value>
+  </data>
+  <data name="Options_Tabs_ChannelTypes_Chat">
+    <value>Chat</value>
+  </data>
+  <data name="Options_Tabs_ChannelTypes_Battle">
+    <value>Combate</value>
+  </data>
+  <data name="Options_Tabs_ChannelTypes_Announcements">
+    <value>Anuncios</value>
+  </data>
+  <data name="UnreadMode_All">
+    <value>Todos</value>
+  </data>
+  <data name="UnreadMode_Unseen">
+    <value>No vistos</value>
+  </data>
+  <data name="UnreadMode_None">
+    <value>Ninguno</value>
+  </data>
+  <data name="ChatSource_Self">
+    <value>Uno mismo</value>
+  </data>
+  <data name="ChatSource_PartyMember">
+    <value>Miembros de grupo</value>
+  </data>
+  <data name="ChatSource_AllianceMember">
+    <value>Miembros de la alianza</value>
+  </data>
+  <data name="ChatSource_Other">
+    <value>Otros</value>
+  </data>
+  <data name="ChatSource_EngagedEnemy">
+    <value>Enemigo Atraido</value>
+  </data>
+  <data name="ChatSource_UnengagedEnemy">
+    <value>Enemigo sin atraer</value>
+  </data>
+  <data name="ChatSource_FriendlyNpc">
+    <value>NPC amistoso</value>
+  </data>
+  <data name="ChatSource_SelfPet">
+    <value>Mascota (Yo)</value>
+  </data>
+  <data name="ChatSource_PartyPet">
+    <value>Mascota (Grupo)</value>
+  </data>
+  <data name="ChatSource_AlliancePet">
+    <value>Mascota (Miembro de la Alianza)</value>
+  </data>
+  <data name="ChatSource_OtherPet">
+    <value>Mascota (Otros)</value>
+  </data>
+  <data name="Options_Font_Name">
+    <value>Tipo de fuente</value>
+  </data>
+  <data name="Options_JapaneseFont_Name">
+    <value>Fuente japonesa</value>
+  </data>
+  <data name="Options_Font_Description">
+    <value>La fuente {0} se utilizará para mostrar texto no japonés.</value>
+  </data>
+  <data name="Options_Font_Warning">
+    <value>El uso de ciertas fuentes del sistema puede fallar en su juego. Se le ha advertido.</value>
+  </data>
+  <data name="Options_JapaneseFont_Description">
+    <value>La fuente {0} se utilizará para mostrar el texto japonés.</value>
+  </data>
+  <data name="Options_Tabs_ChannelTypes_Special">
+    <value>Especiales</value>
+  </data>
+  <data name="Options_Fonts_Tab">
+    <value>Fuentes</value>
+  </data>
+  <data name="Options_SymbolsFontSize_Name">
+    <value>Tamaño de Símbolos</value>
+  </data>
+  <data name="Options_JapaneseFontSize_Name">
+    <value>Tamaño de la fuente japonesa</value>
+  </data>
+  <data name="Options_SymbolsFontSize_Description">
+    <value>El tamaño de fuente a usar para símbolos del juego.</value>
+  </data>
+  <data name="ChatLog_Tabs_Delete">
+    <value>Eliminar Pestaña</value>
+  </data>
+  <data name="Options_HideWhenNotLoggedIn_Name">
+    <value>Ocultar cuando no se inicie sesión</value>
+  </data>
+  <data name="Options_HideWhenNotLoggedIn_Description">
+    <value>Ocultar {0} cuando no haya iniciado sesión en un personaje.</value>
+  </data>
+  <data name="Tabs_Presets_General">
+    <value>General</value>
+  </data>
+  <data name="Options_Tabs_Preset">
+    <value>Preset: {0}</value>
+  </data>
+  <data name="Tabs_Presets_Event">
+    <value>Evento</value>
+  </data>
+  <data name="Options_Tabs_NewTab">
+    <value>Nueva pestaña</value>
+  </data>
+  <data name="Options_About_Tab">
+    <value>Acerca de</value>
+  </data>
+  <data name="Options_About_Opening">
+    <value>{0} es un proyecto para recrear por completo el chat del juego y hacerlo incluso mejor.</value>
+  </data>
+  <data name="Options_About_ClickUp">
+    <value>Haz clic en el botón de la izquierda para ver en qué funciones se está trabajando y qué está por llegar.</value>
+  </data>
+  <data name="Options_About_CrowdIn">
+    <value>Haz clic en el botón de la izquierda para ayudar a traducir {0}.</value>
+  </data>
+  <data name="Options_About_Translators">
+    <value>Traductores</value>
+  </data>
+  <data name="CommandHelpSide_None">
+    <value>Ninguno</value>
+  </data>
+  <data name="CommandHelpSide_Left">
+    <value>Izquierda</value>
+  </data>
+  <data name="CommandHelpSide_Right">
+    <value>Derecha</value>
+  </data>
+  <data name="Options_CommandHelpSide_Name">
+    <value>Lado de la ayuda de comando</value>
+  </data>
+  <data name="Options_CommandHelpSide_Description">
+    <value>El lado de {0} donde se mostrará la ayuda para comandos.</value>
+  </data>
+  <data name="Options_HideWhenUiHidden_Name">
+    <value>Ocultar cuando la interfaz de juego está oculta</value>
+  </data>
+  <data name="Options_HideWhenUiHidden_Description">
+    <value>Ocultar {0} cuando la UI del juego está oculta.</value>
+  </data>
+  <data name="Options_KeybindMode_Name">
+    <value>Combinacion de Teclas</value>
+  </data>
+  <data name="Options_KeybindMode_Description">
+    <value>La forma en la que {0} debe manejar los atajos.</value>
+  </data>
+  <data name="Options_Miscellaneous_Tab">
+    <value>Otros</value>
+  </data>
+  <data name="LanguageOverride_None">
+    <value>Usar el idioma por defecto de Dalamud</value>
+  </data>
+  <data name="KeybindMode_Flexible_Name">
+    <value>Flexible</value>
+  </data>
+  <data name="KeybindMode_Strict_Name">
+    <value>Estricto</value>
+  </data>
+  <data name="KeybindMode_Flexible_Tooltip">
+    <value>Procesar teclas con modificadores incluso si se presionan otros modificadores.</value>
+  </data>
+  <data name="KeybindMode_Strict_Tooltip">
+    <value>Procesar teclas con modificadores incluso si se presionan otros modificadores.</value>
+  </data>
+  <data name="Options_Language_Name">
+    <value>Idioma</value>
+  </data>
+  <data name="Options_Language_Description">
+    <value>El idioma en el que se mostrará {0}.</value>
+  </data>
+  <data name="Options_DatabaseBattleMessages_Name">
+    <value>Guardar mensajes de batalla en la base de datos</value>
+  </data>
+  <data name="Options_DatabaseBattleMessages_Description">
+    <value>Si los mensajes de la batalla se guardan en la base de datos, el tamaño de la base de datos crecerá mucho más rápido, y habrá una congelación notable al guardar los ajustes. Se recomienda dejar esto desactivado.</value>
+  </data>
+  <data name="Options_LoadPreviousSession_Name">
+    <value>Mostrar sesión de chat previa al iniciar sesión</value>
+  </data>
+  <data name="Options_LoadPreviousSession_Description">
+    <value>Después de iniciar sesión, rellene el chat con los mensajes desde la última vez que se desconectó.</value>
+  </data>
+  <data name="Options_Database_Tab">
+    <value>Base de datos</value>
+  </data>
+  <data name="Options_FilterIncludePreviousSessions_Name">
+    <value>Incluir sesiones anteriores al llenar pestañas</value>
+  </data>
+  <data name="Options_FilterIncludePreviousSessions_Description">
+    <value>Incluye mensajes anteriores al lanzamiento del juego cuando se llenan las pestañas. Las pestañas se llenan cuando se guardan los ajustes.</value>
+  </data>
+  <data name="Options_Database_Advanced_Warning">
+    <value>No haga clic en estos botones a menos que sepa lo que está haciendo.</value>
+  </data>
+  <data name="Options_Database_Advanced">
+    <value>Avanzado</value>
+  </data>
+  <data name="ChatLog_Tabs_PopOut">
+    <value>Nueva pestaña</value>
+  </data>
+  <data name="Options_HideSameTimestamps_Name">
+    <value>Ocultar marcas de tiempo cuando existan múltiples</value>
+  </data>
+  <data name="Options_HideSameTimestamps_Description">
+    <value>Ocultar marcas de tiempo cuando mensajes anteriores tengan la misma marca de tiempo.</value>
+  </data>
+  <data name="Options_ShowPopOutTitleBar_Name">
+    <value>Mostrar barra de título en las pestañas desplegadas</value>
+  </data>
+  <data name="Options_Tabs_PopOut">
+    <value>Mostrar en ventana separada</value>
+  </data>
+  <data name="Options_Tabs_IndependentOpacity">
+    <value>Usar opacidad distinta a la ventana principal</value>
+  </data>
+  <data name="Options_Tabs_Opacity">
+    <value>Opacidad</value>
+  </data>
+  <data name="Options_FontsEnabled">
+    <value>Habilitar fuentes personalizadas</value>
+  </data>
+  <data name="AutoTranslate_Search_Hint">
+    <value>Buscar en el Traductor Automático...</value>
+  </data>
+  <data name="Options_SortAutoTranslate_Name">
+    <value>Ordenar la lista del Traductor Automático</value>
+  </data>
+  <data name="Options_SortAutoTranslate_Description">
+    <value>Si esto está habilitado, la lista del Traductor Automático se ordenará alfabéticamente.</value>
+  </data>
+  <data name="Options_OverrideStyle_Name">
+    <value>Override Style</value>
+  </data>
+  <data name="Options_OverrideStyleDropdown_Name">
+    <value>Styles</value>
+  </data>
+  <data name="AutoTranslate_Completion_Key">
+    <value>Ctrl + {0}</value>
+  </data>
+  <data name="Options_ExtraGlyphs_Name">
+    <value>Glifos de fuente adicionales</value>
+  </data>
+  <data name="Options_ExtraGlyphs_Description">
+    <value>Se pueden añadir glifos adicionales a la fuente global de {0} habilitando la casilla inferior. Esto probablemente incremente el tamaño del atlas de la fuente de Dalamud.</value>
+  </data>
+  <data name="ExtraGlyphRanges_ChineseFull_Name">
+    <value>Chino (completo)</value>
+  </data>
+  <data name="ExtraGlyphRanges_ChineseSimplifiedCommon_Name">
+    <value>Chino (común simplificado)</value>
+  </data>
+  <data name="ExtraGlyphRanges_Cyrillic_Name">
+    <value>Cirílico</value>
+  </data>
+  <data name="ExtraGlyphRanges_Japanese_Name">
+    <value>Japonés</value>
+  </data>
+  <data name="ExtraGlyphRanges_Korean_Name">
+    <value>Coreano</value>
+  </data>
+  <data name="ExtraGlyphRanges_Thai_Name">
+    <value>Tailandés</value>
+  </data>
+  <data name="ExtraGlyphRanges_Vietnamese_Name">
+    <value>Vietnamita</value>
+  </data>
+  <data name="Context_Integrations">
+    <value>Integraciones</value>
+  </data>
+  <data name="Context_ScreenshotMode">
+    <value>Modo pantallazo</value>
+  </data>
+  <data name="Context_HideChat">
+    <value>Ocultar chat</value>
+  </data>
+  <data name="Context_Copy">
+    <value>Copiar</value>
+  </data>
+  <data name="Context_TryOn">
+    <value>Probar</value>
+  </data>
+  <data name="Context_ItemComparison">
+    <value>Comparar Objetos</value>
+  </data>
+  <data name="Context_SearchRecipes">
+    <value>Buscar Recetas Usando Este Material</value>
+  </data>
+  <data name="Context_SearchForItem">
+    <value>Buscar Objeto</value>
+  </data>
+  <data name="Context_Link">
+    <value>Enlazar</value>
+  </data>
+  <data name="Context_CopyItemName">
+    <value>Copiar Nombre de Objeto</value>
+  </data>
+  <data name="Context_SendTell">
+    <value>Mandar Tell</value>
+  </data>
+  <data name="Context_InviteToParty">
+    <value>Invitar a Party</value>
+  </data>
+  <data name="Context_InviteToParty_SameWorld">
+    <value>Mismo mundo</value>
+  </data>
+  <data name="Context_InviteToParty_DifferentWorld">
+    <value>Diferente mundo</value>
+  </data>
+  <data name="Context_Promote">
+    <value>Ascender</value>
+  </data>
+  <data name="Context_KickFromParty">
+    <value>Echar de Party</value>
+  </data>
+  <data name="Context_SendFriendRequest">
+    <value>Mandar Petición de Amistad</value>
+  </data>
+  <data name="Context_AddToBlacklist">
+    <value>Añadir a Blacklist</value>
+  </data>
+  <data name="Context_InviteToNoviceNetwork">
+    <value>Invitar a la Novice Network</value>
+  </data>
+  <data name="Context_ReplyInSelectedChatMode">
+    <value>Responder en Modo de Chat Seleccionado</value>
+  </data>
+  <data name="Context_Target">
+    <value>Seleccionar</value>
+  </data>
+  <data name="ChatType_Debug">
+    <value>Debug</value>
+  </data>
+  <data name="ChatType_Urgent">
+    <value>Urgente</value>
+  </data>
+  <data name="ChatType_Notice">
+    <value>Avisos</value>
+  </data>
+  <data name="ChatType_Say">
+    <value>Say</value>
+  </data>
+  <data name="ChatType_Shout">
+    <value>Shout</value>
+  </data>
+  <data name="ChatType_TellOutgoing">
+    <value>Tell (saliente)</value>
+  </data>
+  <data name="ChatType_TellIncoming">
+    <value>Tell (entrante)</value>
+  </data>
+  <data name="ChatType_Party">
+    <value>Party</value>
+  </data>
+  <data name="ChatType_Alliance">
+    <value>Alliance</value>
+  </data>
+  <data name="ChatType_Linkshell1">
+    <value>Linkshell [1]</value>
+  </data>
+  <data name="ChatType_Linkshell2">
+    <value>Linkshell [2]</value>
+  </data>
+  <data name="ChatType_Linkshell3">
+    <value>Linkshell [3]</value>
+  </data>
+  <data name="ChatType_Linkshell4">
+    <value>Linkshell [4]</value>
+  </data>
+  <data name="ChatType_Linkshell5">
+    <value>Linkshell [5]</value>
+  </data>
+  <data name="ChatType_Linkshell6">
+    <value>Linkshell [6]</value>
+  </data>
+  <data name="ChatType_Linkshell7">
+    <value>Linkshell [7]</value>
+  </data>
+  <data name="ChatType_Linkshell8">
+    <value>Linkshell [8]</value>
+  </data>
+  <data name="ChatType_FreeCompany">
+    <value>Free Company</value>
+  </data>
+  <data name="ChatType_NoviceNetwork">
+    <value>Novice Network</value>
+  </data>
+  <data name="ChatType_CustomEmotes">
+    <value>Emotes Personalizados</value>
+  </data>
+  <data name="ChatType_StandardEmotes">
+    <value>Emotes estándar</value>
+  </data>
+  <data name="ChatType_Yell">
+    <value>Yell</value>
+  </data>
+  <data name="ChatType_CrossWorldParty">
+    <value>Party Cross-world</value>
+  </data>
+  <data name="ChatType_PvpTeam">
+    <value>Equipo PvP</value>
+  </data>
+  <data name="ChatType_CrossLinkshell1">
+    <value>Linkshell Cross-world [1]</value>
+  </data>
+  <data name="ChatType_CrossLinkshell2">
+    <value>Linkshell Cross-world [2]</value>
+  </data>
+  <data name="ChatType_CrossLinkshell3">
+    <value>Linkshell Cross-world [3]</value>
+  </data>
+  <data name="ChatType_CrossLinkshell4">
+    <value>Linkshell Cross-world [4]</value>
+  </data>
+  <data name="ChatType_CrossLinkshell5">
+    <value>Linkshell Cross-world [5]</value>
+  </data>
+  <data name="ChatType_CrossLinkshell6">
+    <value>Linkshell Cross-world [6]</value>
+  </data>
+  <data name="ChatType_CrossLinkshell7">
+    <value>Linkshell Cross-world [7]</value>
+  </data>
+  <data name="ChatType_CrossLinkshell8">
+    <value>Linkshell Cross-world [8]</value>
+  </data>
+  <data name="ChatType_Damage">
+    <value>Daño inflingido</value>
+  </data>
+  <data name="ChatType_Miss">
+    <value>Ataques fallidos</value>
+  </data>
+  <data name="ChatType_Action">
+    <value>Acciones usadas</value>
+  </data>
+  <data name="ChatType_Item">
+    <value>Objetos usados</value>
+  </data>
+  <data name="ChatType_Healing">
+    <value>Sanación</value>
+  </data>
+  <data name="ChatType_GainBuff">
+    <value>Efectos beneficiosos concedidos</value>
+  </data>
+  <data name="ChatType_GainDebuff">
+    <value>Efectos perjudiciales infligidos</value>
+  </data>
+  <data name="ChatType_LoseBuff">
+    <value>Efectos beneficiosos perdidos</value>
+  </data>
+  <data name="ChatType_LoseDebuff">
+    <value>Efectos perjudiciales sanados</value>
+  </data>
+  <data name="ChatType_Alarm">
+    <value>Notificaciones de Alarma</value>
+  </data>
+  <data name="ChatType_Echo">
+    <value>Echo</value>
+  </data>
+  <data name="ChatType_System">
+    <value>Mensajes de Sistema</value>
+  </data>
+  <data name="ChatType_BattleSystem">
+    <value>Mensajes del Sistema de Batalla</value>
+  </data>
+  <data name="ChatType_GatheringSystem">
+    <value>Mensajes de Sistema de Gathering</value>
+  </data>
+  <data name="ChatType_Error">
+    <value>Mensajes de Error</value>
+  </data>
+  <data name="ChatType_NpcDialogue">
+    <value>Diálogo de NPC</value>
+  </data>
+  <data name="ChatType_LootNotice">
+    <value>Avisos de Loot</value>
+  </data>
+  <data name="ChatType_Progress">
+    <value>Mensajes de Progresión</value>
+  </data>
+  <data name="ChatType_LootRoll">
+    <value>Mensajes de Loot</value>
+  </data>
+  <data name="ChatType_Crafting">
+    <value>Mensajes de Síntesis</value>
+  </data>
+  <data name="ChatType_Gathering">
+    <value>Mensajes de Gathering</value>
+  </data>
+  <data name="ChatType_NpcAnnouncement">
+    <value>Diálogo de NPC (Anuncios)</value>
+  </data>
+  <data name="ChatType_FreeCompanyAnnouncement">
+    <value>Anuncios de Free Company</value>
+  </data>
+  <data name="ChatType_FreeCompanyLoginLogout">
+    <value>Notificaciones de Inicio de Sesión de Miembro de Free Company</value>
+  </data>
+  <data name="ChatType_RetainerSale">
+    <value>Notificaciones de Venta de Retainer</value>
+  </data>
+  <data name="ChatType_PeriodicRecruitmentNotification">
+    <value>Notificaciones Periódicas de Reclutamiento</value>
+  </data>
+  <data name="ChatType_Sign">
+    <value>Mensajes al Marcar a Jugadores</value>
+  </data>
+  <data name="ChatType_RandomNumber">
+    <value>Mensajes de Números al Azar</value>
+  </data>
+  <data name="ChatType_NoviceNetworkSystem">
+    <value>Anuncios de la Novice Network</value>
+  </data>
+  <data name="ChatType_Orchestrion">
+    <value>Mensajes de Canción Actual</value>
+  </data>
+  <data name="ChatType_PvpTeamAnnouncement">
+    <value>Anuncios de Equipo de PvP</value>
+  </data>
+  <data name="ChatType_PvpTeamLoginLogout">
+    <value>Notificaciones de Inicio de Sesión de Miembro de Equipo de PvP</value>
+  </data>
+  <data name="ChatType_MessageBook">
+    <value>Alerta de Libro de Visitas</value>
+  </data>
+  <data name="ChatType_GmTell">
+    <value>Tell (GM)</value>
+  </data>
+  <data name="ChatType_GmSay">
+    <value>Say (GM)</value>
+  </data>
+  <data name="ChatType_GmShout">
+    <value>Shout (GM)</value>
+  </data>
+  <data name="ChatType_GmYell">
+    <value>Yell (GM)</value>
+  </data>
+  <data name="ChatType_GmParty">
+    <value>Party (GM)</value>
+  </data>
+  <data name="ChatType_GmFreeCompany">
+    <value>Free Company (GM)</value>
+  </data>
+  <data name="ChatType_GmLinkshell1">
+    <value>Linkshell [1] (GM)</value>
+  </data>
+  <data name="ChatType_GmLinkshell2">
+    <value>Linkshell [2] (GM)</value>
+  </data>
+  <data name="ChatType_GmLinkshell3">
+    <value>Linkshell [3] (GM)</value>
+  </data>
+  <data name="ChatType_GmLinkshell4">
+    <value>Linkshell [4] (GM)</value>
+  </data>
+  <data name="ChatType_GmLinkshell5">
+    <value>Linkshell [5] (GM)</value>
+  </data>
+  <data name="ChatType_GmLinkshell6">
+    <value>Linkshell [6] (GM)</value>
+  </data>
+  <data name="ChatType_GmLinkshell7">
+    <value>Linkshell [7] (GM)</value>
+  </data>
+  <data name="ChatType_GmLinkshell8">
+    <value>Linkshell [8] (GM)</value>
+  </data>
+  <data name="ChatType_GmNoviceNetwork">
+    <value>Novice Network (GM)</value>
+  </data>
+  <data name="Options_CollapseDuplicateMessages_Name">
+    <value>Colapsar mensajes duplicados</value>
+  </data>
+  <data name="Options_CollapseDuplicateMessages_Description">
+    <value>Reemplaza los mensajes duplicados consecutivos con un contador anexado a la primera instancia del mensaje.</value>
+  </data>
+  <data name="Options_Tabs_ExtraChatChannels">
+    <value>ExtraChat channels</value>
+  </data>
+  <data name="Options_Tabs_ExtraChatAll">
+    <value>All</value>
+  </data>
+  <data name="Migration_Line1">
+    <value>{0} is performing a database migration.</value>
+  </data>
+  <data name="Migration_Line2">
+    <value>{0} and the plugin installer will be unavailable until it is complete.</value>
+  </data>
+  <data name="Migration_Line3">
+    <value>This may take a few minutes depending on the size of your chat database.</value>
+  </data>
+  <data name="Migration_Line4">
+    <value>Do not close FFXIV, unload Dalamud, or turn off your computer during this time.</value>
+  </data>
+  <data name="Context_AdventurerPlate">
+    <value>View Adventurer Plate</value>
+  </data>
+  <data name="Context_AdventurerPlateError">
+    <value>Unable to open adventurer plate at this moment</value>
+  </data>
+  <data name="Options_TooltipOffset_Name">
+    <value>Tooltip offset </value>
+  </data>
+  <data name="Options_TooltipOffset_Desc">
+    <value>Use this option if you experience cut-off tooltips.</value>
+  </data>
+  <data name="ChatType_ExtraChatLinkshell1" xml:space="preserve">
+        <value>ExtraChat Linkshell [1]</value>
+    </data>
+  <data name="ChatType_ExtraChatLinkshell2" xml:space="preserve">
+        <value>ExtraChat Linkshell [2]</value>
+    </data>
+  <data name="ChatType_ExtraChatLinkshell3" xml:space="preserve">
+        <value>ExtraChat Linkshell [3]</value>
+    </data>
+  <data name="ChatType_ExtraChatLinkshell4" xml:space="preserve">
+        <value>ExtraChat Linkshell [4]</value>
+    </data>
+  <data name="ChatType_ExtraChatLinkshell5" xml:space="preserve">
+        <value>ExtraChat Linkshell [5]</value>
+    </data>
+  <data name="ChatType_ExtraChatLinkshell6" xml:space="preserve">
+        <value>ExtraChat Linkshell [6]</value>
+    </data>
+  <data name="ChatType_ExtraChatLinkshell7" xml:space="preserve">
+        <value>ExtraChat Linkshell [7]</value>
+    </data>
+  <data name="ChatType_ExtraChatLinkshell8" xml:space="preserve">
+        <value>ExtraChat Linkshell [8]</value>
+    </data>
+  <data name="Context_CopyContent">
+    <value>Copy content</value>
+  </data>
+  <data name="Context_CopyContentSuccess">
+    <value>Copied message content to clipboard</value>
+  </data>
+  <data name="Context_CopySuccess">
+    <value>Copied message to clipboard</value>
+  </data>
+  <data name="Context_CopyLink" xml:space="preserve">
+        <value>Copy link to clipboard</value>
+    </data>
+  <data name="Context_CopyLinkNotification" xml:space="preserve">
+        <value>Copied link to clipboard</value>
+    </data>
+  <data name="Context_OpenInBrowser" xml:space="preserve">
+        <value>Open link in browser</value>
+    </data>
+  <data name="Context_OpenInBrowserError" xml:space="preserve">
+        <value>Failed to open the link in the browser, please report this issue</value>
+    </data>
+  <data name="Context_URLDomain" xml:space="preserve">
+        <value>URL at {0}</value>
+    </data>
+  <data name="Context_URLWarning" xml:space="preserve">
+        <value>Only open URLs from websites you trust</value>
+    </data>
+  <data name="Options_About_Authors" xml:space="preserve">
+        <value>Authors: </value>
+    </data>
+  <data name="Options_About_Discord" xml:space="preserve">
+        <value>Discord: </value>
+    </data>
+  <data name="Options_About_Version" xml:space="preserve">
+        <value>Version: </value>
+    </data>
+  <data name="Options_About_Github_Issues" xml:space="preserve">
+        <value>Get help through github issues: </value>
+    </data>
+  <data name="Options_About_Discord_Thread" xml:space="preserve">
+        <value>Get help in the discord thread: </value>
+    </data>
+  <data name="Options_OverrideStyle_Name_Desc" xml:space="preserve">
+        <value>Override your selected dalamud style with a different one</value>
+    </data>
+  <data name="Options_HideInLoadingScreens_Name" xml:space="preserve">
+        <value>Hide during loading screens</value>
+    </data>
+  <data name="Options_HideInLoadingScreens_Description" xml:space="preserve">
+        <value>Hide {0} during loading screens.</value>
+    </data>
+  <data name="Options_ClearDatabase_Button">
+    <value>Clear the message history database</value>
+  </data>
+  <data name="Options_ClearDatabase_Success">
+    <value>Successfully cleared the chat database</value>
+  </data>
+  <data name="Options_ClearDatabase_Tooltip">
+    <value>Removes all message history. Cannot be restored. Hold Ctrl+Shift to click.</value>
+  </data>
+  <data name="Options_Database_Metadata_CopyConfigPath">
+    <value>Click to copy database directory path</value>
+  </data>
+  <data name="Options_Database_Metadata_CopyConfigPathNotification">
+    <value>Copied database directory path to clipboard</value>
+  </data>
+  <data name="Options_Database_Metadata_Heading">
+    <value>Database details:</value>
+  </data>
+  <data name="Options_Database_Metadata_LogSize">
+    <value>Log size: {0}</value>
+  </data>
+  <data name="Options_Database_Metadata_MessageCount">
+    <value>Stored messages: {0:N0}</value>
+  </data>
+  <data name="Options_Database_Metadata_Path">
+    <value>Path: {0}</value>
+  </data>
+  <data name="Options_Database_Metadata_Size">
+    <value>Size: {0}</value>
+  </data>
+  <data name="Options_OverrideStyle_NotSelected" xml:space="preserve">
+        <value>Not selected</value>
+    </data>
+  <data name="Options_OverrideStyle_NotAvailable" xml:space="preserve">
+        <value>No dalamud styles available</value>
+    </data>
+  <data name="Options_PlaySounds_Name" xml:space="preserve">
+        <value>Play sounds</value>
+    </data>
+  <data name="Options_PlaySounds_Description" xml:space="preserve">
+        <value>Play sounds on interaction.</value>
+    </data>
+  <data name="Options_MaxLinesToShow_Name" xml:space="preserve">
+        <value>Maximum amount of log lines to display in the chat window</value>
+    </data>
+  <data name="Options_MaxLinesToShow_Description" xml:space="preserve">
+        <value>Limits the amount of log lines to show in the chat window. This may slightly improve performance.</value>
+    </data>
+  <data name="LoadMessages_Error" xml:space="preserve">
+        <value>An error occurred while loading chat history. Please see plugin logs for more information to report this issue.</value>
+    </data>
+  <data name="Options_Database_Old_Heading" xml:space="preserve">
+        <value>Old database:</value>
+    </data>
+  <data name="Options_Database_Old_Delete" xml:space="preserve">
+        <value>Delete</value>
+    </data>
+  <data name="Options_Database_Old_Delete_Tooltip" xml:space="preserve">
+        <value>Removes the database from your disk. This is not recoverable! Hold Ctrl+Shift to click.</value>
+    </data>
+  <data name="Options_Database_Old_Delete_Error" xml:space="preserve">
+        <value>Unable to remove the old database, more information under /xllog.</value>
+    </data>
+  <data name="Options_Database_Old_Delete_Success" xml:space="preserve">
+        <value>The old database was successfully removed.</value>
+    </data>
+  <data name="Options_Database_Old_Migration" xml:space="preserve">
+        <value>Open migration window</value>
+    </data>
+  <data name="Options_Tabs_NoInput" xml:space="preserve">
+        <value>Disable input for this channel</value>
+    </data>
+  <data name="ChatLog_DisabledInput" xml:space="preserve">
+        <value>Input is disabled for this tab</value>
     </data>
 </root>
