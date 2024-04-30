@@ -32,17 +32,17 @@ public sealed class PayloadHandler {
     private ChatLogWindow LogWindow { get; }
     private (Chunk, Payload?)? Popup { get; set; }
 
-    private bool _handleTooltips;
-    private uint _hoveredItem;
-    private uint _hoverCounter;
-    private uint _lastHoverCounter;
+    public bool _handleTooltips;
+    public uint _hoveredItem;
+    public uint _hoverCounter;
+    public uint _lastHoverCounter;
 
     private readonly ExcelSheet<Item> ItemSheet;
     private readonly ExcelSheet<EventItem> EventItemSheet;
     private readonly ExcelSheet<TerritoryType> TerritorySheet;
     private readonly ExcelSheet<EventItemHelp> EventItemHelpSheet;
 
-    private uint PopupSfx = 1u;
+    private const uint PopupSfx = 1u;
 
     internal PayloadHandler(ChatLogWindow logWindow)
     {
@@ -230,9 +230,11 @@ public sealed class PayloadHandler {
                 DoHover(() => HoverStatus(status), hoverSize);
                 break;
             case ItemPayload item:
-                if (LogWindow.Plugin.Config.NativeItemTooltips)
+                // Event Item do weird things with the client, so we stop vanilla tooltips for now
+                if (LogWindow.Plugin.Config.NativeItemTooltips && item.Kind != ItemPayload.ItemKind.EventItem)
                 {
-                    GameFunctions.GameFunctions.OpenItemTooltip(item.RawItemId);
+                    if (!_handleTooltips)
+                        GameFunctions.GameFunctions.OpenItemTooltip(item.RawItemId);
 
                     _handleTooltips = true;
                     if (_hoveredItem != item.RawItemId)
@@ -245,7 +247,7 @@ public sealed class PayloadHandler {
                         _lastHoverCounter = _hoverCounter;
                     }
 
-                    break;
+                    return;
                 }
 
                 DoHover(() => HoverItem(item), hoverSize);

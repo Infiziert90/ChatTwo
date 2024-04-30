@@ -190,6 +190,7 @@ internal class Tab
     public bool PopOut;
     public bool IndependentOpacity;
     public float Opacity = 100f;
+    public bool InputDisabled;
 
     [NonSerialized]
     public uint Unread;
@@ -273,6 +274,7 @@ internal class Tab
             IndependentOpacity = IndependentOpacity,
             Opacity = Opacity,
             Identifier = Identifier,
+            InputDisabled = InputDisabled,
         };
     }
 }

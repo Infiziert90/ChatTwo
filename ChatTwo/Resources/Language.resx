@@ -1012,4 +1012,10 @@
     <data name="Options_Database_Old_Migration" xml:space="preserve">
         <value>Open migration window</value>
     </data>
+    <data name="Options_Tabs_NoInput" xml:space="preserve">
+        <value>Disable input for this channel</value>
+    </data>
+    <data name="ChatLog_DisabledInput" xml:space="preserve">
+        <value>Input is disabled for this tab</value>
+    </data>
 </root>

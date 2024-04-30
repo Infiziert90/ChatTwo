@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Reflection;
 using ChatTwo.Ipc;
 using ChatTwo.Resources;
 using ChatTwo.Ui;
@@ -40,9 +39,6 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IGameConfig GameConfig { get; private set; } = null!;
     [PluginService] internal static INotificationManager Notification { get; private set; } = null!;
     [PluginService] internal static IAddonLifecycle AddonLifecycle { get; private set; } = null!;
-
-    public const string Authors = "Infi, Anna";
-    public static readonly string Version = Assembly.GetExecutingAssembly().GetName().Version?.ToString(3) ?? "Unknown";
 
     public readonly WindowSystem WindowSystem = new(PluginName);
     public SettingsWindow SettingsWindow { get; }
@@ -124,12 +120,12 @@ public sealed class Plugin : IDalamudPlugin
             Interface.UiBuilder.Draw += Draw;
             Interface.LanguageChanged += LanguageChanged;
 
-#if !DEBUG
+            #if !DEBUG
             // Avoid 300ms hitch when sending first message by preloading the
             // auto-translate cache. Don't do this in debug because it makes
             // profiling difficult.
             AutoTranslate.PreloadCache(DataManager);
-#endif
+            #endif
         }
         catch
         {

@@ -108,9 +108,11 @@ internal sealed class Tabs : ISettingsTab
                 }
             }
 
-            var input = tab.Channel?.ToChatType().Name() ?? Language.Options_Tabs_NoInputChannel;
-            using (var combo = ImGuiUtil.BeginComboVertical(Language.Options_Tabs_InputChannel, input))
+            ImGui.Checkbox(Language.Options_Tabs_NoInput, ref tab.InputDisabled);
+            if (!tab.InputDisabled)
             {
+                var input = tab.Channel?.ToChatType().Name() ?? Language.Options_Tabs_NoInputChannel;
+                using var combo = ImGuiUtil.BeginComboVertical(Language.Options_Tabs_InputChannel, input);
                 if (combo)
                 {
                     if (ImGui.Selectable(Language.Options_Tabs_NoInputChannel, tab.Channel == null))

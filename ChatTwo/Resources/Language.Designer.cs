@@ -78,6 +78,15 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Input is disabled for this tab.
+        /// </summary>
+        internal static string ChatLog_DisabledInput {
+            get {
+                return ResourceManager.GetString("ChatLog_DisabledInput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hide chat.
         /// </summary>
         internal static string ChatLog_HideChat {
@@ -2522,6 +2531,15 @@ namespace ChatTwo.Resources {
         internal static string Options_Tabs_NewTab {
             get {
                 return ResourceManager.GetString("Options_Tabs_NewTab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Disable input for this channel.
+        /// </summary>
+        internal static string Options_Tabs_NoInput {
+            get {
+                return ResourceManager.GetString("Options_Tabs_NoInput", resourceCulture);
             }
         }
         

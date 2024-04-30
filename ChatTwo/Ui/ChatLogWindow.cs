@@ -74,7 +74,7 @@ public sealed class ChatLogWindow : Window
     public unsafe ImGuiViewport* LastViewport;
     private bool WasDocked;
 
-    private PayloadHandler PayloadHandler { get; }
+    public PayloadHandler PayloadHandler { get; }
     internal Lender<PayloadHandler> HandlerLender { get; }
     private Dictionary<string, ChatType> TextCommandChannels { get; } = new();
     private HashSet<string> AllCommands { get; } = [];
@@ -578,6 +578,32 @@ public sealed class ChatLogWindow : Window
             }
         }
 
+        var showNovice = Plugin.Config.ShowNoviceNetwork && Plugin.Functions.IsMentor();
+        if (activeTab is { InputDisabled: true })
+        {
+            Plugin.FontManager.FontAwesome.Push();
+            var buttonSize = ImGui.CalcTextSize(FontAwesomeIcon.Cog.ToIconString());
+            var spacing = ImGui.GetContentRegionAvail().X - buttonSize.X * (showNovice ? 2 : 1);
+            Plugin.FontManager.FontAwesome.Pop();
+
+            ImGui.Dummy(buttonSize with { X = spacing });
+            if (ImGui.IsItemHovered())
+                ImGui.SetTooltip(Language.ChatLog_DisabledInput);
+
+            ImGui.SameLine(spacing);
+            if (ImGuiUtil.IconButton(FontAwesomeIcon.Cog))
+                Plugin.SettingsWindow.Toggle();
+
+            if (!showNovice)
+                return;
+
+            ImGui.SameLine();
+            if (ImGuiUtil.IconButton(FontAwesomeIcon.Leaf))
+                Plugin.Functions.ClickNoviceNetworkButton();
+
+            return;
+        }
+
         var beforeIcon = ImGui.GetCursorPos();
         if (ImGuiUtil.IconButton(FontAwesomeIcon.Comment) && activeTab is not { Channel: not null })
             ImGui.OpenPopup(ChatChannelPicker);
@@ -629,7 +655,6 @@ public sealed class ChatLogWindow : Window
         var afterIcon = ImGui.GetCursorPos();
 
         var buttonWidth = afterIcon.X - beforeIcon.X;
-        var showNovice = Plugin.Config.ShowNoviceNetwork && Plugin.Functions.IsMentor();
         var inputWidth = ImGui.GetContentRegionAvail().X - buttonWidth * (showNovice ? 2 : 1);
 
         var inputType = TempChannel?.ToChatType() ?? activeTab?.Channel?.ToChatType() ?? Plugin.Functions.Chat.Channel.Channel.ToChatType();

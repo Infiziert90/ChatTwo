@@ -41,7 +41,7 @@ internal sealed class About : ISettingsTab
 
         ImGui.TextUnformatted(Language.Options_About_Authors);
         ImGui.SameLine();
-        ImGui.TextColored(ImGuiColors.ParsedGold, Plugin.Authors);
+        ImGui.TextColored(ImGuiColors.ParsedGold, Plugin.Interface.Manifest.Author);
 
         ImGui.TextUnformatted(Language.Options_About_Discord);
         ImGui.SameLine();
@@ -49,7 +49,7 @@ internal sealed class About : ISettingsTab
 
         ImGui.TextUnformatted(Language.Options_About_Version);
         ImGui.SameLine();
-        ImGui.TextColored(ImGuiColors.ParsedOrange, Plugin.Version);
+        ImGui.TextColored(ImGuiColors.ParsedOrange, Plugin.Interface.Manifest.AssemblyVersion.ToString(3));
 
         ImGuiHelpers.ScaledDummy(10.0f);
 
