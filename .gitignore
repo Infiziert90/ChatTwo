@@ -367,5 +367,3 @@ FodyWeavers.xsd
 TestResults
 *.db-shm
 *.db-wal
-
-ChatTwo/Resources/Language.*.resx linguist-generated=true
