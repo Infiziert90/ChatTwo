@@ -664,8 +664,11 @@ public sealed class ChatLogWindow : Window
             var isChatEnabled = activeTab is { InputDisabled: false };
             using (ImRaii.Disabled(!isChatEnabled))
             {
+                // TODO: Prevent ENTER key focusing chat while input is disabled
+
+                var flags = InputFlags | (!isChatEnabled ? ImGuiInputTextFlags.ReadOnly : ImGuiInputTextFlags.None);
                 ImGui.SetNextItemWidth(inputWidth);
-                ImGui.InputTextWithHint("##chat2-input", isChatEnabled ? "": Language.ChatLog_DisabledInput, ref Chat, 500, InputFlags, Callback);
+                ImGui.InputTextWithHint("##chat2-input", isChatEnabled ? "": Language.ChatLog_DisabledInput, ref Chat, 500, flags, Callback);
             }
 
             if (ImGui.IsItemDeactivated())
