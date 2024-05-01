@@ -232,15 +232,13 @@ public sealed class PayloadHandler {
             case ItemPayload item:
                 if (LogWindow.Plugin.Config.NativeItemTooltips)
                 {
-                    if (!_handleTooltips)
-                        GameFunctions.GameFunctions.OpenItemTooltip(item.RawItemId, item.Kind);
-
-                    _handleTooltips = true;
-                    if (_hoveredItem != item.RawItemId)
+                    if (!_handleTooltips || _hoveredItem != item.RawItemId)
                     {
-                        _handleTooltips = false;
+                        _handleTooltips = true;
                         _hoveredItem = item.RawItemId;
                         _hoverCounter = _lastHoverCounter = 0;
+
+                        GameFunctions.GameFunctions.OpenItemTooltip(item.RawItemId, item.Kind);
                     }
                     else
                     {
