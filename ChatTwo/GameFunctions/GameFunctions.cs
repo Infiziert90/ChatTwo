@@ -203,13 +203,45 @@ internal unsafe class GameFunctions : IDisposable
         var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.ItemDetail);
         if (agent != null)
         {
-            Plugin.Log.Information("close and clean was called");
-            agent->Hide();
+            var atkValues = CloseItemTooltipAtkValues();
+            if (atkValues != null)
+            {
+                try {
+                    var eventObject = stackalloc EventObject[1];
+                    agent->ReceiveEvent(eventObject, atkValues, 1, 0);
+                } finally {
+                    Marshal.FreeHGlobal(new IntPtr(atkValues));
+                }
+            }
+            else
+            {
+                Plugin.Log.Warning("Failed to close tooltip via event");
+                agent->Hide();
 
-            // The game sets them to 0 whenever tooltips aren't hovered anymore
-            var agentPtr = (nint)agent;
-           *(uint*) (agentPtr + 0x138) = 0;
-           *(uint*) (agentPtr + 0x13C) = 0;
+                // The game sets them to 0 whenever tooltips aren't hovered anymore
+                var agentPtr = (nint)agent;
+                *(uint*) (agentPtr + 0x138) = 0;
+                *(uint*) (agentPtr + 0x13C) = 0;
+            }
+        }
+    }
+
+    [StructLayout(LayoutKind.Explicit, Size = 64)]
+    private struct EventObject {
+        [FieldOffset(0)] public ulong Unknown0;
+        [FieldOffset(8)] public ulong Unknown8;
+    }
+
+    private static AtkValue* CloseItemTooltipAtkValues()
+    {
+        try {
+            var atkValues = (AtkValue*) Marshal.AllocHGlobal(sizeof(AtkValue));
+            if (atkValues == null) return null;
+            atkValues->Type = ValueType.Int;
+            atkValues->Int = -1;
+            return atkValues;
+        } catch {
+            return null;
         }
     }
 
