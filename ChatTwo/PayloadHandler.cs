@@ -239,6 +239,7 @@ public sealed class PayloadHandler {
                     _handleTooltips = true;
                     if (_hoveredItem != item.RawItemId)
                     {
+                        _handleTooltips = false;
                         _hoveredItem = item.RawItemId;
                         _hoverCounter = _lastHoverCounter = 0;
                     }
