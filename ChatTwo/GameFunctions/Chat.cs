@@ -377,6 +377,9 @@ internal sealed unsafe class Chat : IDisposable
             LastRefresh = Environment.TickCount64;
         }
 
+        if (Plugin.ChatLogWindow is { CurrentTab.InputDisabled: true, IsHidden: false })
+            return;
+
         var modifierState = (ModifierFlag) 0;
         foreach (var modifier in Enum.GetValues<ModifierFlag>())
         {
@@ -460,6 +463,9 @@ internal sealed unsafe class Chat : IDisposable
 
     private byte ChatLogRefreshDetour(IntPtr log, ushort eventId, AtkValue* value)
     {
+        if (Plugin.ChatLogWindow.CurrentTab is { InputDisabled: true })
+            return ChatLogRefreshHook!.Original(log, eventId, value);
+
         if (eventId != 0x31 || value == null || value->UInt is not (0x05 or 0x0C))
             return ChatLogRefreshHook!.Original(log, eventId, value);
 

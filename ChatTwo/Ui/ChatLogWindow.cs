@@ -253,18 +253,18 @@ public sealed class ChatLogWindow : Window
         switch (parts[1])
         {
             case "hide":
-                _hideState = HideState.User;
+                CurrentHideState = HideState.User;
                 break;
             case "show":
-                _hideState = HideState.None;
+                CurrentHideState = HideState.None;
                 break;
             case "toggle":
-                _hideState = _hideState switch
+                CurrentHideState = CurrentHideState switch
                 {
                     HideState.User or HideState.CutsceneOverride => HideState.None,
                     HideState.Cutscene => HideState.CutsceneOverride,
                     HideState.None => HideState.User,
-                    _ => _hideState,
+                    _ => CurrentHideState,
                 };
                 break;
         }
@@ -420,28 +420,28 @@ public sealed class ChatLogWindow : Window
         User,
     }
 
-    private HideState _hideState = HideState.None;
+    private HideState CurrentHideState = HideState.None;
 
     public bool IsHidden;
     public void HideStateCheck()
     {
         // if the chat has no hide state and in a cutscene, set the hide state to cutscene
-        if (Plugin.Config.HideDuringCutscenes && _hideState == HideState.None && (CutsceneActive || GposeActive))
-            _hideState = HideState.Cutscene;
+        if (Plugin.Config.HideDuringCutscenes && CurrentHideState == HideState.None && (CutsceneActive || GposeActive))
+            CurrentHideState = HideState.Cutscene;
 
         // if the chat is hidden because of a cutscene and no longer in a cutscene, set the hide state to none
-        if (_hideState is HideState.Cutscene or HideState.CutsceneOverride && !CutsceneActive && !GposeActive)
-            _hideState = HideState.None;
+        if (CurrentHideState is HideState.Cutscene or HideState.CutsceneOverride && !CutsceneActive && !GposeActive)
+            CurrentHideState = HideState.None;
 
         // if the chat is hidden because of a cutscene and the chat has been activated, show chat
-        if (_hideState == HideState.Cutscene && Activate)
-            _hideState = HideState.CutsceneOverride;
+        if (CurrentHideState == HideState.Cutscene && Activate)
+            CurrentHideState = HideState.CutsceneOverride;
 
         // if the user hid the chat and is now activating chat, reset the hide state
-        if (_hideState == HideState.User && Activate)
-            _hideState = HideState.None;
+        if (CurrentHideState == HideState.User && Activate)
+            CurrentHideState = HideState.None;
 
-        if (_hideState is HideState.Cutscene or HideState.User || (Plugin.Config.HideWhenNotLoggedIn && !Plugin.ClientState.IsLoggedIn))
+        if (CurrentHideState is HideState.Cutscene or HideState.User || (Plugin.Config.HideWhenNotLoggedIn && !Plugin.ClientState.IsLoggedIn))
         {
             IsHidden = true;
             return;
@@ -664,8 +664,6 @@ public sealed class ChatLogWindow : Window
             var isChatEnabled = activeTab is { InputDisabled: false };
             using (ImRaii.Disabled(!isChatEnabled))
             {
-                // TODO: Prevent ENTER key focusing chat while input is disabled
-
                 var flags = InputFlags | (!isChatEnabled ? ImGuiInputTextFlags.ReadOnly : ImGuiInputTextFlags.None);
                 ImGui.SetNextItemWidth(inputWidth);
                 ImGui.InputTextWithHint("##chat2-input", isChatEnabled ? "": Language.ChatLog_DisabledInput, ref Chat, 500, flags, Callback);
@@ -822,7 +820,7 @@ public sealed class ChatLogWindow : Window
 
     internal void UserHide()
     {
-        _hideState = HideState.User;
+        CurrentHideState = HideState.User;
     }
 
     internal void DrawMessageLog(Tab tab, PayloadHandler handler, float childHeight, bool switchedTab)
