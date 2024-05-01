@@ -230,11 +230,10 @@ public sealed class PayloadHandler {
                 DoHover(() => HoverStatus(status), hoverSize);
                 break;
             case ItemPayload item:
-                // Event Item do weird things with the client, so we stop vanilla tooltips for now
-                if (LogWindow.Plugin.Config.NativeItemTooltips && item.Kind != ItemPayload.ItemKind.EventItem)
+                if (LogWindow.Plugin.Config.NativeItemTooltips)
                 {
                     if (!_handleTooltips)
-                        GameFunctions.GameFunctions.OpenItemTooltip(item.RawItemId);
+                        GameFunctions.GameFunctions.OpenItemTooltip(item.RawItemId, item.Kind);
 
                     _handleTooltips = true;
                     if (_hoveredItem != item.RawItemId)

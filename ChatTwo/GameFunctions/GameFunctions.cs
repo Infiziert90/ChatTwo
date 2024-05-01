@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices;
+using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Hooking;
 using Dalamud.Memory;
 using Dalamud.Utility.Signatures;
@@ -151,7 +152,7 @@ internal unsafe class GameFunctions : IDisposable
         return (*flags & (1 << 22)) == 0;
     }
 
-    internal static void OpenItemTooltip(uint id)
+    internal static void OpenItemTooltip(uint id, ItemPayload.ItemKind itemKind)
     {
         var atkStage = AtkStage.GetSingleton();
         var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.ItemDetail);
@@ -169,7 +170,7 @@ internal unsafe class GameFunctions : IDisposable
         // A54B19: sets some shit
         *(uint*) (agentPtr + 0x20) = 22;
         // A55218: switch goes down to default, which is what we want
-        *(byte*) (agentPtr + 0x118) = 1;
+        *(byte*) (agentPtr + 0x118) = itemKind == ItemPayload.ItemKind.EventItem ? (byte)8 : (byte)1;
         // A54BE0: item id when hovering over item in chat
         *(uint*) (agentPtr + 0x11C) = id;
         // A54BCC: always 0 when hovering over item in chat
