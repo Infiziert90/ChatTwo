@@ -204,13 +204,11 @@ internal unsafe class GameFunctions : IDisposable
         var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.ItemDetail);
         if (agent != null)
         {
-            Plugin.Log.Information("close and clean was called");
-            agent->Hide();
-
-            // The game sets them to 0 whenever tooltips aren't hovered anymore
-            var agentPtr = (nint)agent;
-           *(uint*) (agentPtr + 0x138) = 0;
-           *(uint*) (agentPtr + 0x13C) = 0;
+            var eventData = stackalloc AtkValue[1];
+            var atkValues = stackalloc AtkValue[1];
+            atkValues->Type = ValueType.Int;
+            atkValues->Int = -1;
+            agent->ReceiveEvent(eventData, atkValues, 1, 1);
         }
     }
 
