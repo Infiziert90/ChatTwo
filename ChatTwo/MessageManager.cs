@@ -11,16 +11,21 @@ using Lumina.Excel.GeneratedSheets;
 
 namespace ChatTwo;
 
-internal class MessageManager : IDisposable
+internal class MessageManager : IAsyncDisposable
 {
     internal const int MessageDisplayLimit = 10_000;
 
     private Plugin Plugin { get; }
     internal MessageStore Store { get; }
 
-    private ConcurrentQueue<(uint, Message)> Pending { get; } = new();
     private Dictionary<ChatType, NameFormatting> Formats { get; } = new();
     private ulong LastContentId { get; set; }
+
+    private ConcurrentQueue<PendingMessage> Pending { get; } = new();
+    private ulong LastMessageIndex { get; set; }
+
+    private readonly Thread PendingMessageThread;
+    private readonly CancellationTokenSource PendingThreadCancellationToken = new();
 
     internal ulong CurrentContentId
     {
@@ -36,18 +41,31 @@ internal class MessageManager : IDisposable
         Plugin = plugin;
         Store = new MessageStore(DatabasePath());
 
+        PendingMessageThread = new Thread(() => ProcessPendingMessages(PendingThreadCancellationToken.Token));
+        PendingMessageThread.Start();
+
         Plugin.ChatGui.ChatMessageUnhandled += ChatMessage;
-        Plugin.Framework.Update += GetMessageInfo;
         Plugin.Framework.Update += UpdateReceiver;
         Plugin.ClientState.Logout += Logout;
     }
 
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
         Plugin.ClientState.Logout -= Logout;
         Plugin.Framework.Update -= UpdateReceiver;
-        Plugin.Framework.Update -= GetMessageInfo;
         Plugin.ChatGui.ChatMessageUnhandled -= ChatMessage;
+
+        await PendingThreadCancellationToken.CancelAsync();
+        var timeout = 10_000; // 10s
+        while (timeout > 0)
+        {
+            if (!PendingMessageThread.IsAlive)
+                break;
+
+            timeout -= 100;
+            await Task.Delay(100);
+            Plugin.Log.Debug("Sleeping because PendingMessageThread thread still alive");
+        }
 
         Store.Dispose();
     }
@@ -69,30 +87,28 @@ internal class MessageManager : IDisposable
             LastContentId = contentId;
     }
 
-    private void GetMessageInfo(IFramework framework)
+    private void ProcessPendingMessages(CancellationToken token)
     {
-        if (!Pending.TryDequeue(out var entry))
-            return;
-
-        var contentId = Plugin.Functions.Chat.GetContentIdForEntry(entry.Item1);
-        entry.Item2.ContentId = contentId ?? 0;
-        if (Plugin.Config.DatabaseBattleMessages || !entry.Item2.Code.IsBattle())
-            Store.UpsertMessage(entry.Item2);
+        while (!token.IsCancellationRequested)
+        {
+            if (Pending.TryDequeue(out var pendingMessage))
+                try
+                {
+                    ProcessMessage(pendingMessage);
+                }
+                catch (Exception ex)
+                {
+                    Plugin.Log.Error(ex, "Error processing pending message");
+                }
+            else
+                Thread.Sleep(1);
+        }
     }
 
-    private void AddMessage(Message message, Tab? currentTab)
+    internal void ClearAllTabs()
     {
-        if (Plugin.Config.DatabaseBattleMessages || !message.Code.IsBattle())
-            Store.UpsertMessage(message);
-
-        var currentMatches = currentTab?.Matches(message) ?? false;
         foreach (var tab in Plugin.Config.Tabs)
-        {
-            var unread = !(tab.UnreadMode == UnreadMode.Unseen && currentTab != tab && currentMatches);
-
-            if (tab.Matches(message))
-                tab.AddMessage(message, unread);
-        }
+            tab.Clear();
     }
 
     internal void FilterAllTabs(bool unread = true)
@@ -109,17 +125,68 @@ internal class MessageManager : IDisposable
         if (messages.DidError)
             WrapperUtil.AddNotification(Language.LoadMessages_Error, NotificationType.Error);
     }
+    internal void FilterAllTabsAsync(bool unread = true)
+    {
+        Task.Run(() =>
+        {
+            var stopwatch = Stopwatch.StartNew();
+            try
+            {
+                FilterAllTabs(unread);
+            }
+            catch (Exception ex)
+            {
+                Plugin.Log.Error(ex, "Error in FilterAllTabs");
+            }
+
+            Plugin.Log.Debug($"FilterAllTabs took {stopwatch.ElapsedMilliseconds}ms");
+        });
+    }
 
     public (SeString? Sender, SeString? Message) LastMessage = (null, null);
     private void ChatMessage(XivChatType type, uint senderId, SeString sender, SeString message)
     {
-        var chatCode = new ChatCode((ushort)type);
+        LastMessage = (sender, message);
+        var pendingMessage = new PendingMessage
+        {
+            ReceiverId = CurrentContentId,
+            ContentId = 0,
+            Type = type,
+            SenderId = senderId,
+            Sender = sender,
+            Content = message,
+        };
+
+        // If the message was rendered in the vanilla chat log window it has an
+        // index, and we can use that to get the sender's content ID. The
+        // content ID is used to show "invite to party" buttons in the context
+        // menu.
+        var idx = Plugin.Functions.GetCurrentChatLogEntryIndex() ?? 0;
+        if (idx > LastMessageIndex)
+        {
+            LastMessageIndex = idx;
+            // You can't call GetContentIdForEntry in the same framework tick
+            // that you received the message, or you just get null.
+            Plugin.Framework.RunOnTick(() =>
+            {
+                var contentId = Plugin.Functions.Chat.GetContentIdForEntry(idx - 1);
+                pendingMessage.ContentId = contentId ?? 0;
+                Pending.Enqueue(pendingMessage);
+            });
+            return;
+        }
+
+        Pending.Enqueue(pendingMessage);
+    }
+
+    private void ProcessMessage(PendingMessage pendingMessage)
+    {
+        var chatCode = new ChatCode((ushort)pendingMessage.Type);
 
         NameFormatting? formatting = null;
-        if (sender.Payloads.Count > 0)
+        if (pendingMessage.Sender.Payloads.Count > 0)
             formatting = FormatFor(chatCode.Type);
 
-        LastMessage = (sender, message);
         var senderChunks = new List<Chunk>();
         if (formatting is { IsPresent: true })
         {
@@ -127,21 +194,29 @@ internal class MessageManager : IDisposable
             {
                 FallbackColour = chatCode.Type,
             });
-            senderChunks.AddRange(ChunkUtil.ToChunks(sender, ChunkSource.Sender, chatCode.Type));
+            senderChunks.AddRange(ChunkUtil.ToChunks(pendingMessage.Sender, ChunkSource.Sender, chatCode.Type));
             senderChunks.Add(new TextChunk(ChunkSource.None, null, formatting.After)
             {
                 FallbackColour = chatCode.Type,
             });
         }
 
-        var messageChunks = ChunkUtil.ToChunks(message, ChunkSource.Content, chatCode.Type).ToList();
+        var contentChunks = ChunkUtil.ToChunks(pendingMessage.Content, ChunkSource.Content, chatCode.Type).ToList();
 
-        var msg = new Message(CurrentContentId, chatCode, senderChunks, messageChunks, sender, message);
-        AddMessage(msg, Plugin.ChatLogWindow.CurrentTab ?? null);
+        var msg = new Message(pendingMessage.ReceiverId, pendingMessage.ContentId, chatCode, senderChunks, contentChunks, pendingMessage.Sender, pendingMessage.Content);
 
-        var idx = Plugin.Functions.GetCurrentChatLogEntryIndex();
-        if (idx != null)
-            Pending.Enqueue((idx.Value - 1, msg));
+        if (Plugin.Config.DatabaseBattleMessages || !msg.Code.IsBattle())
+            Store.UpsertMessage(msg);
+
+        var currentMatches = Plugin.ChatLogWindow.CurrentTab?.Matches(msg) ?? false;
+
+        foreach (var tab in Plugin.Config.Tabs)
+        {
+            var unread = !(tab.UnreadMode == UnreadMode.Unseen && Plugin.ChatLogWindow.CurrentTab != tab && currentMatches);
+
+            if (tab.Matches(msg))
+                tab.AddMessage(msg, unread);
+        }
     }
 
     internal class NameFormatting
@@ -207,5 +282,15 @@ internal class MessageManager : IDisposable
         Formats[type] = nameFormatting;
 
         return nameFormatting;
+    }
+
+    private class PendingMessage
+    {
+        internal ulong ReceiverId { get; set; }
+        internal ulong ContentId { get; set; } // 0 if unknown
+        internal XivChatType Type { get; set; }
+        internal uint SenderId { get; set; }
+        internal SeString Sender { get; set; }
+        internal SeString Content { get; set; }
     }
 }

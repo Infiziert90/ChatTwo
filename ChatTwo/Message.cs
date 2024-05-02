@@ -70,8 +70,9 @@ internal class Message {
     internal Dictionary<Guid, float?> Height { get; } = new();
     internal Dictionary<Guid, bool> IsVisible { get; } = new();
 
-    internal Message(ulong receiver, ChatCode code, List<Chunk> sender, List<Chunk> content, SeString senderSource, SeString contentSource) {
+    internal Message(ulong receiver, ulong contentId, ChatCode code, List<Chunk> sender, List<Chunk> content, SeString senderSource, SeString contentSource) {
         Receiver = receiver;
+        ContentId = contentId;
         Date = DateTimeOffset.UtcNow;
         Code = code;
         Sender = sender;
