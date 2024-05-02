@@ -49,7 +49,8 @@ internal class SortCode {
     }
 }
 
-internal class Message {
+internal class Message
+{
     internal Guid Id { get; } = Guid.NewGuid();
     internal ulong Receiver { get; }
     internal ulong ContentId { get; set; }
@@ -83,12 +84,12 @@ internal class Message {
         ExtraChatChannel = ExtractExtraChatChannel();
         Hash = GenerateHash();
 
-        foreach (var chunk in sender.Concat(content)) {
+        foreach (var chunk in sender.Concat(content))
             chunk.Message = this;
-        }
     }
 
-    internal Message(Guid id, ulong receiver, ulong contentId, DateTimeOffset date, ChatCode code, List<Chunk> sender, List<Chunk> content, SeString senderSource, SeString contentSource, SortCode sortCode, Guid extraChatChannel) {
+    internal Message(Guid id, ulong receiver, ulong contentId, DateTimeOffset date, ChatCode code, List<Chunk> sender, List<Chunk> content, SeString senderSource, SeString contentSource, SortCode sortCode, Guid extraChatChannel)
+    {
         Id = id;
         Receiver = receiver;
         ContentId = contentId;
@@ -96,7 +97,7 @@ internal class Message {
         Code = code;
         Sender = sender;
         // Don't call ReplaceContentURLs here since we're loading the message
-        // from the database and it should already have parsed URL data.
+        // from the database, and it should already have parsed URL data.
         Content = content;
         SenderSource = senderSource;
         ContentSource = contentSource;
@@ -104,25 +105,26 @@ internal class Message {
         ExtraChatChannel = extraChatChannel;
         Hash = GenerateHash();
 
-        foreach (var chunk in sender.Concat(content)) {
+        foreach (var chunk in sender.Concat(content))
             chunk.Message = this;
-        }
     }
 
-    private int GenerateHash() {
+    private int GenerateHash()
+    {
         return SortCode.GetHashCode()
                ^ ExtraChatChannel.GetHashCode()
                ^ string.Join("", Sender.Select(c => c.StringValue())).GetHashCode()
                ^ string.Join("", Content.Select(c => c.StringValue())).GetHashCode();
     }
 
-    private Guid ExtractExtraChatChannel() {
-        if (ContentSource.Payloads.Count > 0 && ContentSource.Payloads[0] is RawPayload raw) {
+    private Guid ExtractExtraChatChannel()
+    {
+        if (ContentSource.Payloads.Count > 0 && ContentSource.Payloads[0] is RawPayload raw)
+        {
             // this does an encode and clone every time it's accessed, so cache
             var data = raw.Data;
-            if (data[1] == 0x27 && data[2] == 18 && data[3] == 0x20) {
+            if (data[1] == 0x27 && data[2] == 18 && data[3] == 0x20)
                 return new Guid(data[4..^1]);
-            }
         }
 
         return Guid.Empty;
@@ -152,7 +154,8 @@ internal class Message {
     private List<Chunk> ReplaceContentURLs(List<Chunk> content)
     {
         var newChunks = new List<Chunk>();
-        void AddChunkWithMessage(Chunk chunk) {
+        void AddChunkWithMessage(Chunk chunk)
+        {
             chunk.Message = this;
             newChunks.Add(chunk);
         }

@@ -274,11 +274,7 @@ internal class MessageManager : IAsyncDisposable
             .Cast<ITextProvider>()
             .Select(text => text.Text);
 
-        var nameFormatting = NameFormatting.Of(
-            string.Join("", before),
-            string.Join("", after)
-        );
-
+        var nameFormatting = NameFormatting.Of(string.Join("", before), string.Join("", after));
         Formats[type] = nameFormatting;
 
         return nameFormatting;

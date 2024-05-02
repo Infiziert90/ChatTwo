@@ -10,7 +10,6 @@ namespace ChatTwo;
 internal class Configuration : IPluginConfiguration
 {
     private const int LatestVersion = 5;
-    internal const int LatestDbVersion = 1;
 
     public int Version { get; set; } = LatestVersion;
 
@@ -101,49 +100,6 @@ internal class Configuration : IPluginConfiguration
         OverrideStyle = other.OverrideStyle;
         ChosenStyle = other.ChosenStyle;
     }
-
-    public void Migrate()
-    {
-        var loop = true;
-        while (loop && Version < LatestVersion)
-        {
-            switch (Version) {
-                case 1: {
-                    Version = 2;
-
-                    foreach (var tab in Tabs)
-                    {
-                        #pragma warning disable CS0618
-                        tab.UnreadMode = tab.DisplayUnread ? UnreadMode.Unseen : UnreadMode.None;
-                        #pragma warning restore CS0618
-                    }
-
-                    break;
-                }
-                case 2:
-                    Version = 3;
-
-                    JapaneseFontSize = FontSize;
-                    SymbolsFontSize = FontSize;
-                    break;
-                case 3:
-                    Version = 4;
-
-                    WindowAlpha *= 100f;
-                    break;
-                case 4:
-                    Version = 5;
-
-                    foreach (var tab in Tabs)
-                        tab.ExtraChatAll = true;
-                    break;
-                default:
-                    Plugin.Log.Warning($"Couldn't migrate config version {Version}");
-                    loop = false;
-                    break;
-            }
-        }
-    }
 }
 
 [Serializable]
@@ -180,9 +136,6 @@ internal class Tab
     public Dictionary<ChatType, ChatSource> ChatCodes = new();
     public bool ExtraChatAll;
     public HashSet<Guid> ExtraChatChannels = [];
-
-    [Obsolete("Use UnreadMode instead")]
-    public bool DisplayUnread = true;
 
     public UnreadMode UnreadMode = UnreadMode.Unseen;
     public bool DisplayTimestamp = true;
@@ -264,9 +217,6 @@ internal class Tab
             ChatCodes = ChatCodes.ToDictionary(entry => entry.Key, entry => entry.Value),
             ExtraChatAll = ExtraChatAll,
             ExtraChatChannels = ExtraChatChannels.ToHashSet(),
-            #pragma warning disable CS0618
-            DisplayUnread = DisplayUnread,
-            #pragma warning restore CS0618
             UnreadMode = UnreadMode,
             DisplayTimestamp = DisplayTimestamp,
             Channel = Channel,

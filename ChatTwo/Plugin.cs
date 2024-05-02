@@ -70,18 +70,16 @@ public sealed class Plugin : IDalamudPlugin
             GameStarted = Process.GetCurrentProcess().StartTime.ToUniversalTime();
 
             Config = Interface.GetPluginConfig() as Configuration ?? new Configuration();
-            Config.Migrate();
 
-            if (Config.Tabs.Count == 0) {
+            if (Config.Tabs.Count == 0)
                 Config.Tabs.Add(TabsUtil.VanillaGeneral);
-            }
 
             LanguageChanged(Interface.UiLanguage);
             ImGuiUtil.Initialize(this);
 
             Commands = new Commands(this);
             Common = new XivCommonBase(Interface);
-            TextureCache = new TextureCache(TextureProvider);
+            TextureCache = new TextureCache();
             Functions = new GameFunctions.GameFunctions(this);
             Ipc = new IpcManager(Interface);
             ExtraChat = new ExtraChat(this);
@@ -112,9 +110,8 @@ public sealed class Plugin : IDalamudPlugin
             // let all the other components register, then initialise commands
             Commands.Initialise();
 
-            if (Interface.Reason is not PluginLoadReason.Boot) {
+            if (Interface.Reason is not PluginLoadReason.Boot)
                 MessageManager.FilterAllTabsAsync(false);
-            }
 
             Framework.Update += FrameworkUpdate;
             Interface.UiBuilder.Draw += Draw;
@@ -203,18 +200,14 @@ public sealed class Plugin : IDalamudPlugin
 
     private void FrameworkUpdate(IFramework framework)
     {
-        if (DeferredSaveFrames >= 0 && DeferredSaveFrames-- == 0) {
+        if (DeferredSaveFrames >= 0 && DeferredSaveFrames-- == 0)
             SaveConfig();
-        }
 
-        if (!Config.HideChat) {
+        if (!Config.HideChat)
             return;
-        }
 
-        foreach (var name in ChatAddonNames) {
-            if (GameFunctions.GameFunctions.IsAddonInteractable(name)) {
+        foreach (var name in ChatAddonNames)
+            if (GameFunctions.GameFunctions.IsAddonInteractable(name))
                 GameFunctions.GameFunctions.SetAddonInteractable(name, false);
-            }
-        }
     }
 }
