@@ -166,11 +166,6 @@ internal class LegacyMessageImporter : IAsyncDisposable
         WorkingThread.Start();
     }
 
-    public void Dispose()
-    {
-        _database?.Dispose();
-    }
-
     public async ValueTask DisposeAsync()
     {
         await CancellationToken.CancelAsync();
@@ -339,8 +334,7 @@ internal class LegacyMessageImporter : IAsyncDisposable
         _database.Dispose();
         _database = null;
 
-        if (Plugin != null)
-            Plugin.Framework.Run(() => Plugin.MessageManager.FilterAllTabs(false), token);
+        Plugin?.MessageManager.FilterAllTabsAsync(false);
     }
 
     private static Message BsonDocumentToMessage(BsonDocument doc)

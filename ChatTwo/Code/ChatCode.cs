@@ -92,6 +92,9 @@ internal class ChatCode
     {
         switch (Type)
         {
+            // Error isn't a battle message, but it can be just as spammy if you
+            // use macros with unavailable actions.
+            case ChatType.Error:
             case ChatType.Damage:
             case ChatType.Miss:
             case ChatType.Action:

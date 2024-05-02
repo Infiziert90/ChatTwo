@@ -35,7 +35,7 @@ internal class LegacyMessageImporterWindow : Window
 
     public void Dispose()
     {
-        Importer?.Dispose();
+        Importer?.DisposeAsync().AsTask().Wait();
     }
 
     private void NotificationClicked(INotificationClickArgs args)

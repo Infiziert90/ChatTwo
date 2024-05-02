@@ -145,13 +145,12 @@ public sealed class ChatLogWindow : Window
 
     private void Logout()
     {
-        foreach (var tab in Plugin.Config.Tabs)
-            tab.Clear();
+        Plugin.MessageManager.ClearAllTabs();
     }
 
     private void Login()
     {
-        Plugin.MessageManager.FilterAllTabs(false);
+        Plugin.MessageManager.FilterAllTabsAsync(false);
     }
 
     private void Activated(ChatActivatedArgs args)
@@ -229,8 +228,7 @@ public sealed class ChatLogWindow : Window
         switch (arguments)
         {
             case "all":
-                foreach (var tab in Plugin.Config.Tabs)
-                    tab.Clear();
+                Plugin.MessageManager.ClearAllTabs();
                 break;
             case "help":
                 Plugin.ChatGui.Print("- /clearlog2: clears the active tab's log");

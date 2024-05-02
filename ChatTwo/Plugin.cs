@@ -113,7 +113,7 @@ public sealed class Plugin : IDalamudPlugin
             Commands.Initialise();
 
             if (Interface.Reason is not PluginLoadReason.Boot) {
-                MessageManager.FilterAllTabs(false);
+                MessageManager.FilterAllTabsAsync(false);
             }
 
             Framework.Update += FrameworkUpdate;
@@ -154,7 +154,7 @@ public sealed class Plugin : IDalamudPlugin
 
         ExtraChat?.Dispose();
         Ipc?.Dispose();
-        MessageManager?.Dispose();
+        MessageManager?.DisposeAsync().AsTask().Wait();
         Functions?.Dispose();
         TextureCache?.Dispose();
         Common?.Dispose();

@@ -133,8 +133,7 @@ internal sealed class Database : ISettingsTab
             {
                 Plugin.Log.Warning("Clearing messages from database");
                 Plugin.MessageManager.Store.ClearMessages();
-                foreach (var tab in Plugin.Config.Tabs)
-                    tab.Clear();
+                Plugin.MessageManager.ClearAllTabs();
 
                 // Refresh on next draw
                 DatabaseLastRefreshTicks = 0;
@@ -156,10 +155,8 @@ internal sealed class Database : ISettingsTab
 
         if (ImGuiUtil.CtrlShiftButton("Reload messages from database", "Ctrl+Shift: MessageManager.FilterAllTabs(false)"))
         {
-            foreach (var tab in Plugin.Config.Tabs)
-                tab.Clear();
-
-            Plugin.MessageManager.FilterAllTabs(false);
+            Plugin.MessageManager.ClearAllTabs();
+            Plugin.MessageManager.FilterAllTabsAsync(false);
         }
 
         if (ImGuiUtil.CtrlShiftButton("Inject 10,000 messages", "Ctrl+Shift: creates 10,000 unique messages (async)"))
@@ -226,9 +223,7 @@ internal sealed class Database : ISettingsTab
         Plugin.Framework.Run(() =>
         {
             stopwatch = Stopwatch.StartNew();
-            foreach (var tab in Plugin.Config.Tabs)
-                tab.Clear();
-
+            Plugin.MessageManager.ClearAllTabs();
             elapsedTicks = stopwatch.ElapsedTicks;
             stopwatch.Stop();
             Plugin.Log.Info($"Cleared {Plugin.Config.Tabs.Count} tabs in {elapsedTicks} ticks ({elapsedTicks / TimeSpan.TicksPerMillisecond}ms)");
@@ -238,6 +233,7 @@ internal sealed class Database : ISettingsTab
         Plugin.Framework.Run(() =>
         {
             stopwatch = Stopwatch.StartNew();
+            // Intentionally synchronous
             Plugin.MessageManager.FilterAllTabs(false);
             elapsedTicks = stopwatch.ElapsedTicks;
             stopwatch.Stop();
