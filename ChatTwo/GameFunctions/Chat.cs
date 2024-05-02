@@ -32,9 +32,6 @@ internal sealed unsafe class Chat : IDisposable
     [Signature("48 89 5C 24 ?? 55 56 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B 02", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<RaptureShellModule*, Utf8String*, Utf8String*, ushort, ulong, ushort, byte, bool> SetChannelTargetTell = null!;
 
-    [Signature("4C 8B 81 ?? ?? ?? ?? 4D 85 C0 74 17", Fallibility = Fallibility.Fallible)]
-    private readonly delegate* unmanaged<RaptureLogModule*, uint, ulong> GetContentIdForChatEntry = null!;
-
     [Signature("E8 ?? ?? ?? ?? 48 8D 4D A0 8B F8")]
     private readonly delegate* unmanaged<IntPtr, Utf8String*, IntPtr, uint> GetKeybindNative = null!;
 
@@ -70,10 +67,6 @@ internal sealed unsafe class Chat : IDisposable
 
     [Signature("E8 ?? ?? ?? ?? EB 0A 48 8D 4C 24 ?? E8 ?? ?? ?? ?? 48 8D 8D")]
     private readonly delegate* unmanaged<Utf8String*, int, IntPtr, void> SanitiseString = null!;
-
-    // Currently Unused
-    [Signature("E8 ?? ?? ?? ?? 48 3B F0 74 35")]
-    private readonly delegate* unmanaged<AtkStage*, IntPtr> GetFocus = null!;
 
     // Hooks
 
@@ -181,7 +174,8 @@ internal sealed unsafe class Chat : IDisposable
         Login();
     }
 
-    public void Dispose() {
+    public void Dispose()
+    {
         Plugin.ClientState.Login -= Login;
         Plugin.Framework.Update -= InterceptKeybinds;
 
@@ -194,26 +188,25 @@ internal sealed unsafe class Chat : IDisposable
         Activated = null;
     }
 
-    internal string? GetLinkshellName(uint idx) {
-        if (LinkshellInfoProxyIdx is not { } proxyIdx) {
+    internal string? GetLinkshellName(uint idx)
+    {
+        if (LinkshellInfoProxyIdx is not { } proxyIdx)
             return null;
-        }
 
         var infoProxy = Plugin.Functions.GetInfoProxyByIndex(proxyIdx);
-        if (infoProxy == IntPtr.Zero) {
+        if (infoProxy == IntPtr.Zero)
             return null;
-        }
 
         var lsInfo = GetLinkshellInfo(infoProxy, idx);
-        if (lsInfo == null) {
+        if (lsInfo == null)
             return null;
-        }
 
         var utf = GetLinkshellNameNative(infoProxy, *lsInfo);
         return utf == null ? null : MemoryHelper.ReadStringNullTerminated((IntPtr) utf);
     }
 
-    internal string? GetCrossLinkshellName(uint idx) {
+    internal string? GetCrossLinkshellName(uint idx)
+    {
         if (CrossLinkshellInfoProxyIdx is not { } proxyIdx)
             return null;
 
@@ -239,7 +232,8 @@ internal sealed unsafe class Chat : IDisposable
 
     internal ulong RotateCrossLinkshellHistory(RotateMode mode) => RotateLinkshellHistoryInternal(RotateCrossLinkshellHistoryNative, mode);
 
-    private static ulong RotateLinkshellHistoryInternal(delegate* unmanaged<UIModule*, int, ulong> func, RotateMode mode) {
+    private static ulong RotateLinkshellHistoryInternal(delegate* unmanaged<UIModule*, int, ulong> func, RotateMode mode)
+    {
         // ReSharper disable once ConditionIsAlwaysTrueOrFalse
         if (func == null)
             return 0;
@@ -258,7 +252,8 @@ internal sealed unsafe class Chat : IDisposable
     // This function looks up a channel's user-defined colour.
     //
     // If this function would ever return 0, it returns null instead.
-    internal uint? GetChannelColour(ChatType type) {
+    internal uint? GetChannelColour(ChatType type)
+    {
         if (GetColourInfo == null || ColourLookup == IntPtr.Zero)
             return null;
 
@@ -269,7 +264,8 @@ internal sealed unsafe class Chat : IDisposable
 
         var parent = new ChatCode((ushort) type).Parent();
 
-        switch (parent) {
+        switch (parent)
+        {
             case ChatType.Debug:
             case ChatType.Urgent:
             case ChatType.Notice:
@@ -291,7 +287,8 @@ internal sealed unsafe class Chat : IDisposable
     private readonly Dictionary<string, Keybind> _keybinds = new();
     internal IReadOnlyDictionary<string, Keybind> Keybinds => _keybinds;
 
-    internal static readonly IReadOnlyDictionary<string, ChannelSwitchInfo> KeybindsToIntercept = new Dictionary<string, ChannelSwitchInfo> {
+    internal static readonly IReadOnlyDictionary<string, ChannelSwitchInfo> KeybindsToIntercept = new Dictionary<string, ChannelSwitchInfo>
+    {
         ["CMD_CHAT"] = new(null),
         ["CMD_COMMAND"] = new(null, text: "/"),
         ["CMD_REPLY"] = new(InputChannel.Tell, rotate: RotateMode.Forward),
@@ -450,7 +447,8 @@ internal sealed unsafe class Chat : IDisposable
         }
     }
 
-    private void Login() {
+    private void Login()
+    {
         if (ChangeChannelNameHook == null)
             return;
 
@@ -630,10 +628,7 @@ internal sealed unsafe class Chat : IDisposable
 
     internal ulong? GetContentIdForEntry(uint index)
     {
-        if (GetContentIdForChatEntry == null)
-            return null;
-
-        return GetContentIdForChatEntry(Framework.Instance()->GetUiModule()->GetRaptureLogModule(), index);
+        return Framework.Instance()->GetUiModule()->GetRaptureLogModule()->GetContentIdForLogMessage((int) index);
     }
 
     internal void SetChannel(InputChannel channel, string? tellTarget = null)

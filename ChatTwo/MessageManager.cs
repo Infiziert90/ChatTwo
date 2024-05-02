@@ -86,7 +86,6 @@ internal class MessageManager : IDisposable
             Store.UpsertMessage(message);
 
         var currentMatches = currentTab?.Matches(message) ?? false;
-
         foreach (var tab in Plugin.Config.Tabs)
         {
             var unread = !(tab.UnreadMode == UnreadMode.Unseen && currentTab != tab && currentMatches);
