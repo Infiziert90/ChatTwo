@@ -12,12 +12,12 @@ namespace ChatTwo.Ui.SettingsTabs;
 
 internal sealed class Database : ISettingsTab
 {
-    private Configuration Mutable { get; }
     private Plugin Plugin { get; }
+    private Configuration Mutable { get; }
 
     public string Name => Language.Options_Database_Tab + "###tabs-database";
 
-    internal Database(Configuration mutable, Plugin plugin)
+    internal Database(Plugin plugin, Configuration mutable)
     {
         Plugin = plugin;
         Mutable = mutable;

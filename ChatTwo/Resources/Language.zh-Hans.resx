@@ -373,9 +373,6 @@
   <data name="Options_About_Opening">
     <value>{0} 是一个完全重新创建游戏内聊天并使其变得更好的项目。</value>
   </data>
-  <data name="Options_About_ClickUp">
-    <value>点击左边的按钮来查看正在做些什么以及下一步做什么。</value>
-  </data>
   <data name="Options_About_CrowdIn">
     <value>点击左边的按钮来帮助翻译 {0}。</value>
   </data>
@@ -843,18 +840,6 @@
   </data>
   <data name="Options_Tabs_ExtraChatAll">
     <value>全选</value>
-  </data>
-  <data name="Migration_Line1">
-    <value>{0} 正在执行数据库迁移。</value>
-  </data>
-  <data name="Migration_Line2">
-    <value>{0} 和插件安装程序将在完成前不可用。</value>
-  </data>
-  <data name="Migration_Line3">
-    <value>这可能需要几分钟，具体取决于聊天数据库的大小。</value>
-  </data>
-  <data name="Migration_Line4">
-    <value>在此期间不要关闭FFXIV, 卸载Dalamud, 或关闭您的计算机。</value>
   </data>
   <data name="Context_AdventurerPlate">
     <value>View Adventurer Plate</value>

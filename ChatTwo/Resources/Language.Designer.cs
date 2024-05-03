@@ -1482,56 +1482,11 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} is performing a database migration..
-        /// </summary>
-        internal static string Migration_Line1 {
-            get {
-                return ResourceManager.GetString("Migration_Line1", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to {0} and the plugin installer will be unavailable until it is complete..
-        /// </summary>
-        internal static string Migration_Line2 {
-            get {
-                return ResourceManager.GetString("Migration_Line2", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to This may take a few minutes depending on the size of your chat database..
-        /// </summary>
-        internal static string Migration_Line3 {
-            get {
-                return ResourceManager.GetString("Migration_Line3", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Do not close FFXIV, unload Dalamud, or turn off your computer during this time..
-        /// </summary>
-        internal static string Migration_Line4 {
-            get {
-                return ResourceManager.GetString("Migration_Line4", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Authors: .
         /// </summary>
         internal static string Options_About_Authors {
             get {
                 return ResourceManager.GetString("Options_About_Authors", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Click the button to the left to see what&apos;s being worked on and what&apos;s next..
-        /// </summary>
-        internal static string Options_About_ClickUp {
-            get {
-                return ResourceManager.GetString("Options_About_ClickUp", resourceCulture);
             }
         }
         
@@ -1604,6 +1559,24 @@ namespace ChatTwo.Resources {
         internal static string Options_About_Version {
             get {
                 return ResourceManager.GetString("Options_About_Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Adjust chat log position.
+        /// </summary>
+        internal static string Options_AdjustPosition_Name {
+            get {
+                return ResourceManager.GetString("Options_AdjustPosition_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Attention, this change applies immediately and is not discardable!.
+        /// </summary>
+        internal static string Options_AdjustPosition_Warning {
+            get {
+                return ResourceManager.GetString("Options_AdjustPosition_Warning", resourceCulture);
             }
         }
         

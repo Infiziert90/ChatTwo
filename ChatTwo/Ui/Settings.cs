@@ -34,11 +34,11 @@ public sealed class SettingsWindow : Window
         Tabs = new List<ISettingsTab>
         {
             new Display(Mutable),
-            new ChatLog(Mutable),
+            new ChatLog(Plugin, Mutable),
             new Ui.SettingsTabs.Fonts(Mutable),
-            new ChatColours(Mutable, Plugin),
+            new ChatColours(Plugin, Mutable),
             new Tabs(Plugin, Mutable),
-            new Database(Mutable, Plugin),
+            new Database(Plugin, Mutable),
             new Miscellaneous(Mutable),
             new About(),
         };

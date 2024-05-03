@@ -373,9 +373,6 @@
   <data name="Options_About_Opening">
     <value>{0} est un projet visant à recréer complètement le chat en jeu et à l'améliorer.</value>
   </data>
-  <data name="Options_About_ClickUp">
-    <value>Cliquez sur le bouton à gauche afin d'avoir un aperçu des fonctionnalités en cours de développement et de celles à venir.</value>
-  </data>
   <data name="Options_About_CrowdIn">
     <value>Cliquez sur le bouton à gauche pour nous aider à traduire {0}.</value>
   </data>
@@ -843,18 +840,6 @@
   </data>
   <data name="Options_Tabs_ExtraChatAll">
     <value>All</value>
-  </data>
-  <data name="Migration_Line1">
-    <value>{0} is performing a database migration.</value>
-  </data>
-  <data name="Migration_Line2">
-    <value>{0} and the plugin installer will be unavailable until it is complete.</value>
-  </data>
-  <data name="Migration_Line3">
-    <value>Cela peut prendre quelques minutes selon la taille de votre base de données de discussion.</value>
-  </data>
-  <data name="Migration_Line4">
-    <value>Ne fermez pas FFXIV, ne déchargez pas Dalamud ni n'éteignez votre ordinateur pendant cette migration.</value>
   </data>
   <data name="Context_AdventurerPlate">
     <value>View Adventurer Plate</value>

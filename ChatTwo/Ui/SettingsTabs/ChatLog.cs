@@ -8,12 +8,14 @@ namespace ChatTwo.Ui.SettingsTabs;
 
 internal sealed class ChatLog : ISettingsTab
 {
+    private readonly Plugin Plugin;
     private Configuration Mutable { get; }
 
     public string Name => Language.Options_ChatLog_Tab + "###tabs-chatlog";
 
-    internal ChatLog(Configuration mutable)
+    internal ChatLog(Plugin plugin, Configuration mutable)
     {
+        Plugin = plugin;
         Mutable = mutable;
     }
 
@@ -58,6 +60,18 @@ internal sealed class ChatLog : ISettingsTab
         ImGui.Spacing();
 
         ImGuiUtil.OptionCheckbox(ref Mutable.OverrideStyle, Language.Options_OverrideStyle_Name, Language.Options_OverrideStyle_Name_Desc);
+        ImGui.Spacing();
+
+        ImGui.Spacing();
+        ImGui.Separator();
+        ImGui.Spacing();
+
+        ImGui.TextUnformatted(Language.Options_AdjustPosition_Name);
+        var pos = Plugin.ChatLogWindow.LastWindowPos;
+        ImGui.SetNextItemWidth(-1);
+        if (ImGui.DragFloat2($"##{Language.Options_AdjustPosition_Name}", ref pos, 1, 0, float.MaxValue, "%.0fpx"))
+            Plugin.ChatLogWindow.Position = pos;
+        ImGuiUtil.WarningText(Language.Options_AdjustPosition_Warning);
         ImGui.Spacing();
         ImGui.PopTextWrapPos();
 

@@ -95,6 +95,8 @@ public sealed class ChatLogWindow : Window
         Size = new Vector2(500, 250);
         SizeCondition = ImGuiCond.FirstUseEver;
 
+        PositionCondition = ImGuiCond.Always;
+
         IsOpen = true;
         RespectCloseHotkey = false;
         DisableWindowSounds = true;
@@ -482,8 +484,12 @@ public sealed class ChatLogWindow : Window
 
     private unsafe void DrawChatLog()
     {
-        var resized = LastWindowSize != ImGui.GetWindowSize();
-        LastWindowSize = ImGui.GetWindowSize();
+        // Position change has applied, so we set it to null again
+        Position = null;
+
+        var currentSize = ImGui.GetWindowSize();
+        var resized = LastWindowSize != currentSize;
+        LastWindowSize = currentSize;
         LastWindowPos = ImGui.GetWindowPos();
 
         if (resized)

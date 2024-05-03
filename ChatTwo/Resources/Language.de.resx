@@ -374,9 +374,6 @@ Sie wurden gewarnt.</value>
   <data name="Options_About_Opening">
     <value>{0} ist ein Projekt, dessen Ziel es ist, den Spielchat zu verbessern und neu zu gestalten.</value>
   </data>
-  <data name="Options_About_ClickUp">
-    <value>Drücken Sie auf den linken Knopf, um zu sehen, woran gerade gearbeitet wird.</value>
-  </data>
   <data name="Options_About_CrowdIn">
     <value>Drücken Sie auf den linken Knopf, um bei der Übersetzung von {0} zu helfen.</value>
   </data>
@@ -844,18 +841,6 @@ Sie wurden gewarnt.</value>
   </data>
   <data name="Options_Tabs_ExtraChatAll">
     <value>Alles</value>
-  </data>
-  <data name="Migration_Line1">
-    <value>{0} führt eine Datenbank-Migration durch.</value>
-  </data>
-  <data name="Migration_Line2">
-    <value>{0} und der Plugin-Installer sind nicht verfügbar, bis der Vorgang abgeschlossen ist.</value>
-  </data>
-  <data name="Migration_Line3">
-    <value>Dies könnte je nach Größe Ihrer Chat Datenbank mehrere Minuten in Anspruch nehmen.</value>
-  </data>
-  <data name="Migration_Line4">
-    <value>Bitte schließen Sie weder FFXIV, noch fahren Sie Dalamud oder Ihren Computer herab.</value>
   </data>
   <data name="Context_AdventurerPlate">
     <value>Abenteurerpass anschauen</value>

@@ -374,9 +374,6 @@
     <value>{0} 是一個完全重新建立遊戲内聊天並使其變得更好的專案。
 繁體中文是為了不開補全功能也能與其他玩家正常顯示溝通所翻譯及修改。</value>
   </data>
-  <data name="Options_About_ClickUp">
-    <value>點選左邊的按鈕來檢視正在做些什麼以及下一歩做什麼。</value>
-  </data>
   <data name="Options_About_CrowdIn">
     <value>點選左邊的按鈕來幇助翻譯 {0}。</value>
   </data>
@@ -844,18 +841,6 @@
   </data>
   <data name="Options_Tabs_ExtraChatAll">
     <value>全選</value>
-  </data>
-  <data name="Migration_Line1">
-    <value>{0} 正在執行資料庫遷移。</value>
-  </data>
-  <data name="Migration_Line2">
-    <value>{0} 和外掛安裝程式將在完成前不可用。</value>
-  </data>
-  <data name="Migration_Line3">
-    <value>這可能需要幾分鐘，具體取決於聊天資料庫的大小。</value>
-  </data>
-  <data name="Migration_Line4">
-    <value>在此期間不要關閉FFXIV, 解除安裝Dalamud, 或關閉計算機。</value>
   </data>
   <data name="Context_AdventurerPlate">
     <value>View Adventurer Plate</value>

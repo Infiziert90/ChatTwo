@@ -373,9 +373,6 @@
   <data name="Options_About_Opening">
     <value>{0} - проект, полностью пересоздаёт внутриигровой чат и делает его еще лучше.</value>
   </data>
-  <data name="Options_About_ClickUp">
-    <value>Нажмите на кнопку слева, чтобы увидеть, что в работе и что будет дальше.</value>
-  </data>
   <data name="Options_About_CrowdIn">
     <value>Нажмите кнопку слева, чтобы помочь перевести {0}.</value>
   </data>
@@ -843,18 +840,6 @@
   </data>
   <data name="Options_Tabs_ExtraChatAll">
     <value>Все</value>
-  </data>
-  <data name="Migration_Line1">
-    <value>{0} в процессе миграции базы данных.</value>
-  </data>
-  <data name="Migration_Line2">
-    <value>{0} и инсталлятор плагинов будут недоступны, пока не завершится текущая операция.</value>
-  </data>
-  <data name="Migration_Line3">
-    <value>Это может занять несколько минут в зависимости от размера базы данных Вашего чата.</value>
-  </data>
-  <data name="Migration_Line4">
-    <value>Не закрывайте FFXIV, не выгружайте Dalamud и не выключайте компьютер в это время.</value>
   </data>
   <data name="Context_AdventurerPlate">
     <value>View Adventurer Plate</value>

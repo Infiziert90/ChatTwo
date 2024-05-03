@@ -8,15 +8,15 @@ namespace ChatTwo.Ui.SettingsTabs;
 
 internal sealed class ChatColours : ISettingsTab
 {
-    private Configuration Mutable { get; }
     private Plugin Plugin { get; }
+    private Configuration Mutable { get; }
 
     public string Name => Language.Options_ChatColours_Tab + "###tabs-chat-colours";
 
-    internal ChatColours(Configuration mutable, Plugin plugin)
+    internal ChatColours(Plugin plugin, Configuration mutable)
     {
-        Mutable = mutable;
         Plugin = plugin;
+        Mutable = mutable;
 
         #if DEBUG
         // Users can set colours for ExtraChat linkshells in the ExtraChat plugin directly.
