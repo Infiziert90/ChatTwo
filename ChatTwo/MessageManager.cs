@@ -92,6 +92,7 @@ internal class MessageManager : IAsyncDisposable
         while (!token.IsCancellationRequested)
         {
             if (Pending.TryDequeue(out var pendingMessage))
+            {
                 try
                 {
                     ProcessMessage(pendingMessage);
@@ -100,8 +101,11 @@ internal class MessageManager : IAsyncDisposable
                 {
                     Plugin.Log.Error(ex, "Error processing pending message");
                 }
+            }
             else
+            {
                 Thread.Sleep(1);
+            }
         }
     }
 

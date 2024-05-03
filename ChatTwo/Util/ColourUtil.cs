@@ -1,3 +1,4 @@
+using System.Buffers.Binary;
 using System.Numerics;
 
 namespace ChatTwo.Util;
@@ -11,10 +12,7 @@ internal static class ColourUtil {
         return (r, g, b, a);
     }
 
-    internal static uint RgbaToAbgr(uint rgba) {
-        var tmp = ((rgba << 8) & 0xFF00FF00) | ((rgba >> 8) & 0xFF00FF);
-        return (tmp << 16) | (tmp >> 16);
-    }
+    internal static uint RgbaToAbgr(uint rgba) => BinaryPrimitives.ReverseEndianness(rgba);
 
     internal static Vector3 RgbaToVector3(uint rgba) {
         var (r, g, b, _) = RgbaToComponents(rgba);
@@ -45,8 +43,6 @@ internal static class ColourUtil {
         return x;
     }
 
-    internal static uint ComponentsToRgba(byte red, byte green, byte blue, byte alpha = 0xFF) => alpha
-                                                                                                 | (uint) (red << 24)
-                                                                                                 | (uint) (green << 16)
-                                                                                                 | (uint) (blue << 8);
+    internal static uint ComponentsToRgba(byte red, byte green, byte blue, byte alpha = 0xFF)
+        => alpha | (uint) (red << 24) | (uint) (green << 16) | (uint) (blue << 8);
 }
