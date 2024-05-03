@@ -1004,4 +1004,13 @@ Sie wurden gewarnt.</value>
   <data name="ChatLog_DisabledInput" xml:space="preserve">
         <value>Eingabe ist für diesen Tab deaktiviert</value>
     </data>
+  <data name="Options_ChatLog_Tab" xml:space="preserve">
+        <value>Chat</value>
+    </data>
+  <data name="Options_AdjustPosition_Name" xml:space="preserve">
+        <value>Pass die Position des Chats an</value>
+    </data>
+  <data name="Options_AdjustPosition_Warning" xml:space="preserve">
+        <value>Achtung, diese Änderung tritt sofort ein und ist nicht verwerfbar!</value>
+    </data>
 </root>

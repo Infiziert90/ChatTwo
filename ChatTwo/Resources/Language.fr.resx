@@ -881,19 +881,19 @@
     <value>Copy content</value>
   </data>
   <data name="Context_CopyContentSuccess">
-    <value>Copied message content to clipboard</value>
+    <value>Le message a été copié dans le presse-papiers</value>
   </data>
   <data name="Context_CopySuccess">
-    <value>Copied message to clipboard</value>
+    <value>Copier le message dans le presse-papiers</value>
   </data>
   <data name="Context_CopyLink" xml:space="preserve">
-        <value>Copy link to clipboard</value>
+        <value>Copier le lien dans le presse-papiers</value>
     </data>
   <data name="Context_CopyLinkNotification" xml:space="preserve">
-        <value>Copied link to clipboard</value>
+        <value>Le lien a été copié dans le presse-papiers</value>
     </data>
   <data name="Context_OpenInBrowser" xml:space="preserve">
-        <value>Open link in browser</value>
+        <value>Ouvrir le lien dans le navigateur</value>
     </data>
   <data name="Context_OpenInBrowserError" xml:space="preserve">
         <value>Failed to open the link in the browser, please report this issue</value>
@@ -1002,5 +1002,14 @@
     </data>
   <data name="ChatLog_DisabledInput" xml:space="preserve">
         <value>Input is disabled for this tab</value>
+    </data>
+  <data name="Options_ChatLog_Tab" xml:space="preserve">
+        <value>Chat log</value>
+    </data>
+  <data name="Options_AdjustPosition_Name" xml:space="preserve">
+        <value>Adjust chat log position</value>
+    </data>
+  <data name="Options_AdjustPosition_Warning" xml:space="preserve">
+        <value>Attention, this change applies immediately and is not discardable!</value>
     </data>
 </root>

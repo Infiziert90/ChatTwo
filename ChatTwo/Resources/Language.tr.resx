@@ -125,16 +125,16 @@
     <value>Hide vanilla chat</value>
   </data>
   <data name="Options_HideChat_Description">
-    <value>Hide the in-game chat window when the plugin is active.</value>
+    <value>Eklenti etkinken oyun içi sohbet penceresini gizleyin.</value>
   </data>
   <data name="Options_HideDuringCutscenes_Name">
-    <value>Hide during cutscenes</value>
+    <value>Ara sahneler sırasında gizle</value>
   </data>
   <data name="Options_HideDuringCutscenes_Description">
-    <value>Hide {0} during cutscenes.</value>
+    <value>Ara sahneler sırasında {0} gizle.</value>
   </data>
   <data name="Options_NativeItemTooltips_Name">
-    <value>Show native item tooltips</value>
+    <value>Yerel öğe araç ipuçlarını göster</value>
   </data>
   <data name="Options_NativeItemTooltips_Description">
     <value>Show in-game item tooltips when hovering over items in {0}.</value>
@@ -1002,5 +1002,14 @@
     </data>
   <data name="ChatLog_DisabledInput" xml:space="preserve">
         <value>Input is disabled for this tab</value>
+    </data>
+  <data name="Options_ChatLog_Tab" xml:space="preserve">
+        <value>Chat log</value>
+    </data>
+  <data name="Options_AdjustPosition_Name" xml:space="preserve">
+        <value>Adjust chat log position</value>
+    </data>
+  <data name="Options_AdjustPosition_Warning" xml:space="preserve">
+        <value>Attention, this change applies immediately and is not discardable!</value>
     </data>
 </root>

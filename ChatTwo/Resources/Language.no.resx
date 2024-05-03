@@ -373,9 +373,6 @@
   <data name="Options_About_Opening">
     <value>{0} is a project to completely recreate the in-game chat and make it even better.</value>
   </data>
-  <data name="Options_About_ClickUp">
-    <value>Click the button to the left to see what's being worked on and what's next.</value>
-  </data>
   <data name="Options_About_CrowdIn">
     <value>Help to translate: </value>
   </data>
@@ -844,18 +841,6 @@
   <data name="Options_Tabs_ExtraChatAll">
     <value>All</value>
   </data>
-  <data name="Migration_Line1">
-    <value>{0} is performing a database migration.</value>
-  </data>
-  <data name="Migration_Line2">
-    <value>{0} and the plugin installer will be unavailable until it is complete.</value>
-  </data>
-  <data name="Migration_Line3">
-    <value>This may take a few minutes depending on the size of your chat database.</value>
-  </data>
-  <data name="Migration_Line4">
-    <value>Do not close FFXIV, unload Dalamud, or turn off your computer during this time.</value>
-  </data>
   <data name="Context_AdventurerPlate">
     <value>View Adventurer Plate</value>
   </data>
@@ -1017,5 +1002,14 @@
     </data>
   <data name="ChatLog_DisabledInput" xml:space="preserve">
         <value>Input is disabled for this tab</value>
+    </data>
+  <data name="Options_ChatLog_Tab" xml:space="preserve">
+        <value>Chat log</value>
+    </data>
+  <data name="Options_AdjustPosition_Name" xml:space="preserve">
+        <value>Adjust chat log position</value>
+    </data>
+  <data name="Options_AdjustPosition_Warning" xml:space="preserve">
+        <value>Attention, this change applies immediately and is not discardable!</value>
     </data>
 </root>
