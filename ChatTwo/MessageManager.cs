@@ -21,7 +21,7 @@ internal class MessageManager : IAsyncDisposable
     private Dictionary<ChatType, NameFormatting> Formats { get; } = new();
     private ulong LastContentId { get; set; }
 
-    private ConcurrentQueue<PendingMessage> Pending { get; } = new();
+    private ConcurrentQueue<Message> Pending { get; } = new();
     private ulong LastMessageIndex { get; set; }
 
     private readonly Thread PendingMessageThread;
@@ -147,15 +147,29 @@ internal class MessageManager : IAsyncDisposable
     private void ChatMessage(XivChatType type, uint senderId, SeString sender, SeString message)
     {
         LastMessage = (sender, message);
-        var pendingMessage = new PendingMessage
+
+        var chatCode = new ChatCode((ushort)type);
+
+        NameFormatting? formatting = null;
+        if (sender.Payloads.Count > 0)
+            formatting = FormatFor(chatCode.Type);
+
+        var senderChunks = new List<Chunk>();
+        if (formatting is { IsPresent: true })
         {
-            ReceiverId = CurrentContentId,
-            ContentId = 0,
-            Type = type,
-            SenderId = senderId,
-            Sender = sender,
-            Content = message,
-        };
+            senderChunks.Add(new TextChunk(ChunkSource.None, null, formatting.Before)
+            {
+                FallbackColour = chatCode.Type,
+            });
+            senderChunks.AddRange(ChunkUtil.ToChunks(sender, ChunkSource.Sender, chatCode.Type));
+            senderChunks.Add(new TextChunk(ChunkSource.None, null, formatting.After)
+            {
+                FallbackColour = chatCode.Type,
+            });
+        }
+
+        var contentChunks = ChunkUtil.ToChunks(message, ChunkSource.Content, chatCode.Type).ToList();
+        var msg = new Message(CurrentContentId, 0, chatCode, senderChunks, contentChunks, sender, message);
 
         // If the message was rendered in the vanilla chat log window it has an
         // index, and we can use that to get the sender's content ID. The
@@ -169,47 +183,22 @@ internal class MessageManager : IAsyncDisposable
             // that you received the message, or you just get null.
             Plugin.Framework.RunOnTick(() =>
             {
-                var contentId = Plugin.Functions.Chat.GetContentIdForEntry(idx - 1);
-                pendingMessage.ContentId = contentId ?? 0;
-                Pending.Enqueue(pendingMessage);
+                msg.ContentId = Plugin.Functions.Chat.GetContentIdForEntry(idx - 1);
+                Pending.Enqueue(msg);
             });
+
             return;
         }
 
-        Pending.Enqueue(pendingMessage);
+        Pending.Enqueue(msg);
     }
 
-    private void ProcessMessage(PendingMessage pendingMessage)
+    private void ProcessMessage(Message msg)
     {
-        var chatCode = new ChatCode((ushort)pendingMessage.Type);
-
-        NameFormatting? formatting = null;
-        if (pendingMessage.Sender.Payloads.Count > 0)
-            formatting = FormatFor(chatCode.Type);
-
-        var senderChunks = new List<Chunk>();
-        if (formatting is { IsPresent: true })
-        {
-            senderChunks.Add(new TextChunk(ChunkSource.None, null, formatting.Before)
-            {
-                FallbackColour = chatCode.Type,
-            });
-            senderChunks.AddRange(ChunkUtil.ToChunks(pendingMessage.Sender, ChunkSource.Sender, chatCode.Type));
-            senderChunks.Add(new TextChunk(ChunkSource.None, null, formatting.After)
-            {
-                FallbackColour = chatCode.Type,
-            });
-        }
-
-        var contentChunks = ChunkUtil.ToChunks(pendingMessage.Content, ChunkSource.Content, chatCode.Type).ToList();
-
-        var msg = new Message(pendingMessage.ReceiverId, pendingMessage.ContentId, chatCode, senderChunks, contentChunks, pendingMessage.Sender, pendingMessage.Content);
-
         if (Plugin.Config.DatabaseBattleMessages || !msg.Code.IsBattle())
             Store.UpsertMessage(msg);
 
         var currentMatches = Plugin.ChatLogWindow.CurrentTab?.Matches(msg) ?? false;
-
         foreach (var tab in Plugin.Config.Tabs)
         {
             var unread = !(tab.UnreadMode == UnreadMode.Unseen && Plugin.ChatLogWindow.CurrentTab != tab && currentMatches);
@@ -278,15 +267,5 @@ internal class MessageManager : IAsyncDisposable
         Formats[type] = nameFormatting;
 
         return nameFormatting;
-    }
-
-    private class PendingMessage
-    {
-        internal ulong ReceiverId { get; set; }
-        internal ulong ContentId { get; set; } // 0 if unknown
-        internal XivChatType Type { get; set; }
-        internal uint SenderId { get; set; }
-        internal SeString Sender { get; set; }
-        internal SeString Content { get; set; }
     }
 }

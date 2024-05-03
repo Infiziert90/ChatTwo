@@ -626,7 +626,7 @@ internal sealed unsafe class Chat : IDisposable
         EurekaContextMenuTellHook!.Original(param1, playerName, worldName, world, id, param6);
     }
 
-    internal ulong? GetContentIdForEntry(uint index)
+    internal ulong GetContentIdForEntry(uint index)
     {
         return Framework.Instance()->GetUiModule()->GetRaptureLogModule()->GetContentIdForLogMessage((int) index);
     }
