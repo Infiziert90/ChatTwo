@@ -34,6 +34,7 @@ public sealed class SettingsWindow : Window
         Tabs = new List<ISettingsTab>
         {
             new Display(Mutable),
+            new ChatLog(Mutable),
             new Ui.SettingsTabs.Fonts(Mutable),
             new ChatColours(Mutable, Plugin),
             new Tabs(Plugin, Mutable),

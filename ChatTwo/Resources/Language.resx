@@ -1018,4 +1018,7 @@
     <data name="ChatLog_DisabledInput" xml:space="preserve">
         <value>Input is disabled for this tab</value>
     </data>
+    <data name="Options_ChatLog_Tab" xml:space="preserve">
+        <value>Chat log</value>
+    </data>
 </root>

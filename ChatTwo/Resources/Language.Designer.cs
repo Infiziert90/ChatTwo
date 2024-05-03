@@ -1653,6 +1653,15 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chat log.
+        /// </summary>
+        internal static string Options_ChatLog_Tab {
+            get {
+                return ResourceManager.GetString("Options_ChatLog_Tab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Clear the message history database.
         /// </summary>
         internal static string Options_ClearDatabase_Button {
