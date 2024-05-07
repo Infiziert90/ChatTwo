@@ -122,18 +122,6 @@ public sealed class ChatLogWindow : Window
         Plugin.AddonLifecycle.RegisterListener(AddonEvent.PostRequestedUpdate, "ItemDetail", PayloadHandler.MoveTooltip);
     }
 
-    public override void PreDraw()
-    {
-        if (Plugin.Config is { OverrideStyle: true, ChosenStyle: not null })
-            StyleModel.GetConfiguredStyles()?.FirstOrDefault(style => style.Name == Plugin.Config.ChosenStyle)?.Push();
-    }
-
-    public override void PostDraw()
-    {
-        if (Plugin.Config is { OverrideStyle: true, ChosenStyle: not null })
-            StyleModel.GetConfiguredStyles()?.FirstOrDefault(style => style.Name == Plugin.Config.ChosenStyle)?.Pop();
-    }
-
     public void Dispose()
     {
         Plugin.AddonLifecycle.UnregisterListener(AddonEvent.PostRequestedUpdate, "ItemDetail", PayloadHandler.MoveTooltip);
@@ -472,6 +460,21 @@ public sealed class ChatLogWindow : Window
     public override bool DrawConditions()
     {
         return !IsHidden;
+    }
+
+    public override void PreDraw()
+    {
+        if (Plugin.Config.KeepInputFocus && Activate)
+            ImGui.SetWindowFocus(WindowName);
+
+        if (Plugin.Config is { OverrideStyle: true, ChosenStyle: not null })
+            StyleModel.GetConfiguredStyles()?.FirstOrDefault(style => style.Name == Plugin.Config.ChosenStyle)?.Push();
+    }
+
+    public override void PostDraw()
+    {
+        if (Plugin.Config is { OverrideStyle: true, ChosenStyle: not null })
+            StyleModel.GetConfiguredStyles()?.FirstOrDefault(style => style.Name == Plugin.Config.ChosenStyle)?.Pop();
     }
 
     public override void Draw()
@@ -1495,6 +1498,20 @@ public sealed class ChatLogWindow : Window
 
         if (chunk is not TextChunk text)
             return;
+
+        if (chunk.Link?.Type == (PayloadType)0x53)
+        {
+            var emoteSize = ImGui.CalcTextSize("W");
+            emoteSize = emoteSize with { Y = emoteSize.X } * 1.5f;
+
+            var emotePayload = (EmotePayload) chunk.Link;
+            var image = EmoteCache.GetEmote(emotePayload.Code);
+            if (image is { IsLoaded: true })
+                image.Draw(emoteSize);
+            else
+                ImGui.Dummy(emoteSize);
+            return;
+        }
 
         var colour = text.Foreground;
         if (colour == null && text.FallbackColour != null)

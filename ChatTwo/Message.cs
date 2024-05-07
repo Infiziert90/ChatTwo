@@ -1,3 +1,4 @@
+using System.Text;
 using ChatTwo.Code;
 using ChatTwo.Util;
 using Dalamud.Game.Text.SeStringHandling;
@@ -77,7 +78,7 @@ internal class Message
         Date = DateTimeOffset.UtcNow;
         Code = code;
         Sender = sender;
-        Content = ReplaceContentURLs(content);
+        Content = CheckMessageContent(content);
         SenderSource = senderSource;
         ContentSource = contentSource;
         SortCode = new SortCode(Code.Type, Code.Source);
@@ -130,28 +131,7 @@ internal class Message
         return Guid.Empty;
     }
 
-    /// <summary>
-    /// URLRegex returns a regex object that matches URLs like:
-    /// - https://example.com
-    /// - http://example.com
-    /// - www.example.com
-    /// - https://sub.example.com
-    /// - example.com
-    /// - sub.example.com
-    ///
-    /// It matches URLs with www. or https:// prefix, and also matches URLs
-    /// without a prefix on specific TLDs.
-    /// </summary>
-    private static Regex URLRegex = new(
-        @"((https?:\/\/|www\.)[a-z0-9-]+(\.[a-z0-9-]+)*|([a-z0-9-]+(\.[a-z0-9-]+)*\.(com|net|org|co|io|app)))(:[\d]{1,5})?(\/[^\s]+)?",
-        RegexOptions.Compiled | RegexOptions.IgnoreCase
-    );
-
-    /// <summary>
-    /// Finds all URL strings in all TextChunks, splits the parent TextChunk
-    /// apart and inserts a new TextChunk with a URIPayload.
-    /// </summary>
-    private List<Chunk> ReplaceContentURLs(List<Chunk> content)
+    private List<Chunk> CheckMessageContent(List<Chunk> content)
     {
         var newChunks = new List<Chunk>();
         void AddChunkWithMessage(Chunk chunk)
@@ -171,42 +151,65 @@ internal class Message
                 continue;
             }
 
-            // Find all URLs with the regex and insert a new TextChunk with a
-            // URIPayload.
-            var matches = URLRegex.Matches(text.Content);
-            var remainderIndex = 0;
-            foreach (Match match in matches.Cast<Match>())
+            // We replace every emote before checking for URLs
+            var builder = new StringBuilder();
+            foreach (var word in text.Content.Split(" "))
             {
-                // Add the text before the URL.
-                if (match.Index > remainderIndex)
+                if (EmoteCache.Exists(word))
                 {
-                    AddChunkWithMessage(text.NewWithStyle(chunk.Source, chunk.Link, text.Content[remainderIndex..match.Index]));
+                    // We add all the previous collected text parts
+                    AddChunkWithMessage(text.NewWithStyle(chunk.Source, chunk.Link, builder.ToString()));
+                    builder.Clear();
+
+                    newChunks.Add(new TextChunk(chunk.Source, EmotePayload.ResolveEmote(word), "Cool BetterTTV"));
+                    builder.Append(' ');
+                    continue;
                 }
 
-                // Update the remainder index.
-                remainderIndex = match.Index + match.Length;
+                if (URLRegex.IsMatch(word))
+                {
+                    // We add all the previous collected text parts
+                    AddChunkWithMessage(text.NewWithStyle(chunk.Source, chunk.Link, builder.ToString()));
+                    builder.Clear();
 
-                // Create a new TextChunk with a URIPayload for the URL text.
-                try
-                {
-                    var link = UriPayload.ResolveURI(match.Value);
-                    AddChunkWithMessage(text.NewWithStyle(chunk.Source, link, match.Value));
+                    // Create a new TextChunk with a URIPayload for the URL text.
+                    try
+                    {
+                        var link = UriPayload.ResolveURI(word);
+                        AddChunkWithMessage(text.NewWithStyle(chunk.Source, link, word));
+                        builder.Append(' ');
+
+                        continue;
+                    }
+                    catch (UriFormatException)
+                    {
+                        Plugin.Log.Debug($"Invalid URL accepted by Regex but failed URI parsing: '{word}'");
+                    }
                 }
-                catch (UriFormatException)
-                {
-                    Plugin.Log.Debug($"Invalid URL accepted by Regex but failed URI parsing: '{match.Value}'");
-                    // If the URL is invalid, set the remainder index to the
-                    // beginning of the match so it'll get included in the next
-                    // regular text chunk.
-                    remainderIndex = match.Index;
-                }
+
+                builder.Append($"{word} ");
             }
-
-            // Add the text after the last URL.
-            if (remainderIndex < text.Content.Length)
-                AddChunkWithMessage(text.NewWithStyle(chunk.Source, null, text.Content[remainderIndex..]));
+            // We add the leftovers
+            AddChunkWithMessage(text.NewWithStyle(chunk.Source, chunk.Link, builder.ToString()[..^1]));
         }
 
         return newChunks;
     }
+
+    /// <summary>
+    /// URLRegex returns a regex object that matches URLs like:
+    /// - https://example.com
+    /// - http://example.com
+    /// - www.example.com
+    /// - https://sub.example.com
+    /// - example.com
+    /// - sub.example.com
+    ///
+    /// It matches URLs with www. or https:// prefix, and also matches URLs
+    /// without a prefix on specific TLDs.
+    /// </summary>
+    private static Regex URLRegex = new(
+        @"((https?:\/\/|www\.)[a-z0-9-]+(\.[a-z0-9-]+)*|([a-z0-9-]+(\.[a-z0-9-]+)*\.(com|net|org|co|io|app)))(:[\d]{1,5})?(\/[^\s]+)?",
+        RegexOptions.Compiled | RegexOptions.IgnoreCase
+    );
 }

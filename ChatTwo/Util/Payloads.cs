@@ -85,3 +85,25 @@ internal class UriPayload(Uri uri) : Payload
         throw new NotImplementedException();
     }
 }
+
+internal class EmotePayload : Payload
+{
+    public override PayloadType Type => (PayloadType) 0x53;
+
+    public string Code;
+
+    public static EmotePayload ResolveEmote(string code)
+    {
+        return new EmotePayload { Code = code };
+    }
+
+    protected override void DecodeImpl(BinaryReader reader, long endOfStream)
+    {
+        throw new NotImplementedException();
+    }
+
+    protected override byte[] EncodeImpl()
+    {
+        throw new NotImplementedException();
+    }
+}

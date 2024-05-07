@@ -2094,6 +2094,24 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Keeps the input focus, even if you enter battle or do other actions.
+        /// </summary>
+        internal static string Options_KeepInputFocus_Description {
+            get {
+                return ResourceManager.GetString("Options_KeepInputFocus_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keep input focus.
+        /// </summary>
+        internal static string Options_KeepInputFocus_Name {
+            get {
+                return ResourceManager.GetString("Options_KeepInputFocus_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The way in which {0} should handle keybinds..
         /// </summary>
         internal static string Options_KeybindMode_Description {

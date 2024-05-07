@@ -28,6 +28,7 @@ internal enum PayloadMessagePackType : byte
     Achievement,
     PartyFinder,
     Uri,
+    Emote,
     Other = 255,
 }
 
@@ -56,6 +57,10 @@ public class PayloadMessagePackFormatter : IMessagePackFormatter<Payload?>
                 writer.WriteUInt8((byte)PayloadMessagePackType.Uri);
                 writer.WriteString(Encoding.UTF8.GetBytes(uriPayload.Uri.ToString()));
                 break;
+            case EmotePayload emotePayload:
+                writer.WriteUInt8((byte)PayloadMessagePackType.Emote);
+                writer.WriteString(Encoding.UTF8.GetBytes(emotePayload.Code));
+                break;
             default:
                 writer.WriteUInt8((byte)PayloadMessagePackType.Other);
                 writer.Write(value.Encode());
@@ -80,6 +85,8 @@ public class PayloadMessagePackFormatter : IMessagePackFormatter<Payload?>
                 return new PartyFinderPayload(reader.ReadUInt32());
             case PayloadMessagePackType.Uri:
                 return new UriPayload(new Uri(reader.ReadString() ?? ""));
+            case PayloadMessagePackType.Emote:
+                return EmotePayload.ResolveEmote(reader.ReadString() ?? "");
             case PayloadMessagePackType.Other:
             default:
                 var bytes = reader.ReadBytes() ?? new ReadOnlySequence<byte>();

@@ -23,6 +23,9 @@ internal sealed class ChatLog : ISettingsTab
     {
         ImGui.PushTextWrapPos();
 
+        ImGuiUtil.OptionCheckbox(ref Mutable.KeepInputFocus, Language.Options_KeepInputFocus_Name, Language.Options_KeepInputFocus_Description);
+        ImGui.Spacing();
+
         ImGuiUtil.OptionCheckbox(ref Mutable.PlaySounds, Language.Options_PlaySounds_Name, Language.Options_PlaySounds_Description);
         ImGui.Spacing();
 
