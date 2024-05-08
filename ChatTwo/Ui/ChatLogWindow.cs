@@ -997,7 +997,6 @@ public sealed class ChatLogWindow : Window
                     ImGui.TableNextColumn();
 
                 var lineWidth = ImGui.GetContentRegionAvail().X;
-                var beforeDraw = ImGui.GetCursorScreenPos();
                 if (message.Sender.Count > 0)
                 {
                     DrawChunks(message.Sender, true, handler, lineWidth);
@@ -1005,21 +1004,25 @@ public sealed class ChatLogWindow : Window
                 }
 
                 if (message.Content.Count == 0)
+                    // We need to draw something otherwise the item visibility
+                    // check below won't work.
                     DrawChunks(new[] { new TextChunk(ChunkSource.Content, null, " ") }, true, handler, lineWidth);
                 else
                     DrawChunks(message.Content, true, handler, lineWidth);
 
-                var afterDraw = ImGui.GetCursorScreenPos();
                 message.Height[tab.Identifier] = ImGui.GetCursorPosY() - lastPos;
                 if (isTable && !moreCompact)
-                {
                     message.Height[tab.Identifier] -= oldCellPaddingY * 2;
-                    beforeDraw.Y += oldCellPaddingY;
-                    afterDraw.Y -= oldCellPaddingY;
-                }
+
+                var itemVisible = ImGui.IsItemVisible();
+                message.IsVisible[tab.Identifier] = itemVisible;
+                if (itemVisible && i < tab.Messages.Count - 1)
+                    // If this message is visible, the next message should also
+                    // be visible. This helps alleviate jittering issues when
+                    // scrolling down.
+                    tab.Messages[i + 1].IsVisible[tab.Identifier] = true;
 
                 lastPos = ImGui.GetCursorPosY();
-                message.IsVisible[tab.Identifier] = ImGui.IsRectVisible(beforeDraw, afterDraw);
             }
         }
         finally
