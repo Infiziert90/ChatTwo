@@ -60,13 +60,8 @@ public static class EmoteCache
                 .ReadAsStringAsync()
                 .Result;
 
-            Plugin.Log.Information(top100);
-            var json = JsonSerializer.Deserialize<List<Top100>>(top100);
-            foreach (var emote in json)
-            {
-                Plugin.Log.Information($"emote {emote.Emote.Code}");
+            foreach (var emote in JsonSerializer.Deserialize<List<Top100>>(top100)!)
                 Cache.TryAdd(emote.Emote.Code, emote.Emote);
-            }
 
             EmoteCodeArray = Cache.Keys.ToArray();
             IsBTTVDataLoaded = true;
