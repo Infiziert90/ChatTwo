@@ -131,7 +131,7 @@ internal class Message
         return Guid.Empty;
     }
 
-    private List<Chunk> CheckMessageContent(List<Chunk> content)
+    private List<Chunk> CheckMessageContent(List<Chunk> oldChunks)
     {
         var newChunks = new List<Chunk>();
         void AddChunkWithMessage(Chunk chunk)
@@ -140,7 +140,44 @@ internal class Message
             newChunks.Add(chunk);
         }
 
-        foreach (var chunk in content)
+        void AddContentAfterURLCheck(string content, TextChunk text, Chunk chunk)
+        {
+            // This works because c# will split regex string, while keeping named groups as separated splits
+            // If the match is the first content of a string, the array will start with a ""
+            // Same if 2 matches are next to each other, they will be split with a ""
+            var splits = URLRegex.Split(content);
+            if (splits.Length == 1)
+            {
+                AddChunkWithMessage(text.NewWithStyle(chunk.Source, chunk.Link, content));
+                return;
+            }
+
+            var nextIsMatch = false;
+            foreach (var split in splits)
+            {
+                if (split == "" || !nextIsMatch)
+                {
+                    nextIsMatch = true;
+                    AddChunkWithMessage(text.NewWithStyle(chunk.Source, chunk.Link, split));
+                    continue;
+                }
+
+                // Create a new TextChunk with a URIPayload for the URL text.
+                nextIsMatch = false;
+                try
+                {
+                    var link = UriPayload.ResolveURI(split);
+                    AddChunkWithMessage(text.NewWithStyle(chunk.Source, link, split));
+                }
+                catch (UriFormatException)
+                {
+                    AddChunkWithMessage(text.NewWithStyle(chunk.Source, chunk.Link, split));
+                    Plugin.Log.Debug($"Invalid URL accepted by Regex but failed URI parsing: '{split}'");
+                }
+            }
+        }
+
+        foreach (var chunk in oldChunks)
         {
             // Use as is if it's not a text chunk or it already has a payload.
             if (chunk is not TextChunk text || chunk.Link != null)
@@ -151,46 +188,26 @@ internal class Message
                 continue;
             }
 
-            // We replace every emote before checking for URLs
             var builder = new StringBuilder();
             foreach (var word in text.Content.Split(" "))
             {
                 if (EmoteCache.Exists(word))
                 {
                     // We add all the previous collected text parts
-                    AddChunkWithMessage(text.NewWithStyle(chunk.Source, chunk.Link, builder.ToString()));
+                    AddContentAfterURLCheck(builder.ToString(), text, chunk);
                     builder.Clear();
 
-                    newChunks.Add(new TextChunk(chunk.Source, EmotePayload.ResolveEmote(word), "Cool BetterTTV"));
+                    newChunks.Add(new TextChunk(chunk.Source, EmotePayload.ResolveEmote(word), word));
                     builder.Append(' ');
                     continue;
                 }
 
-                if (URLRegex.IsMatch(word))
-                {
-                    // We add all the previous collected text parts
-                    AddChunkWithMessage(text.NewWithStyle(chunk.Source, chunk.Link, builder.ToString()));
-                    builder.Clear();
-
-                    // Create a new TextChunk with a URIPayload for the URL text.
-                    try
-                    {
-                        var link = UriPayload.ResolveURI(word);
-                        AddChunkWithMessage(text.NewWithStyle(chunk.Source, link, word));
-                        builder.Append(' ');
-
-                        continue;
-                    }
-                    catch (UriFormatException)
-                    {
-                        Plugin.Log.Debug($"Invalid URL accepted by Regex but failed URI parsing: '{word}'");
-                    }
-                }
-
                 builder.Append($"{word} ");
             }
+
             // We add the leftovers
-            AddChunkWithMessage(text.NewWithStyle(chunk.Source, chunk.Link, builder.ToString()[..^1]));
+            // Removing the last whitespace as it is set by us
+            AddContentAfterURLCheck(builder.ToString()[..^1], text, chunk);
         }
 
         return newChunks;
@@ -209,7 +226,7 @@ internal class Message
     /// without a prefix on specific TLDs.
     /// </summary>
     private static Regex URLRegex = new(
-        @"((https?:\/\/|www\.)[a-z0-9-]+(\.[a-z0-9-]+)*|([a-z0-9-]+(\.[a-z0-9-]+)*\.(com|net|org|co|io|app)))(:[\d]{1,5})?(\/[^\s]+)?",
-        RegexOptions.Compiled | RegexOptions.IgnoreCase
+        @"(?<URL>((https?:\/\/|www\.)[a-z0-9-]+(\.[a-z0-9-]+)*|([a-z0-9-]+(\.[a-z0-9-]+)*\.(com|net|org|co|io|app)))(:[\d]{1,5})?(\/[^\s]+)?)",
+        RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture
     );
 }
