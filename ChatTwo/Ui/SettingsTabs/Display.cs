@@ -49,5 +49,7 @@ internal sealed class Display : ISettingsTab
 
         ImGuiUtil.OptionCheckbox(ref Mutable.CollapseDuplicateMessages, Language.Options_CollapseDuplicateMessages_Name, Language.Options_CollapseDuplicateMessages_Description);
         ImGui.Spacing();
+
+        ImGui.PopTextWrapPos();
     }
 }

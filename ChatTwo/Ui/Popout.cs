@@ -39,15 +39,16 @@ internal class Popout : Window
 
     public override void PreDraw()
     {
-        if (ChatLogWindow.Plugin.Config is { OverrideStyle: true, ChosenStyle: not null })
-            StyleModel.GetConfiguredStyles()?.FirstOrDefault(style => style.Name == ChatLogWindow.Plugin.Config.ChosenStyle)?.Push();
+        if (Plugin.Config is { OverrideStyle: true, ChosenStyle: not null })
+            StyleModel.GetConfiguredStyles()?.FirstOrDefault(style => style.Name == Plugin.Config.ChosenStyle)?.Push();
 
         Flags = ImGuiWindowFlags.None;
-        if (!ChatLogWindow.Plugin.Config.ShowPopOutTitleBar)
+        if (!Plugin.Config.ShowPopOutTitleBar)
             Flags |= ImGuiWindowFlags.NoTitleBar;
 
-        if (!ChatLogWindow.PopOutDocked[Idx]) {
-            var alpha = Tab.IndependentOpacity ? Tab.Opacity : ChatLogWindow.Plugin.Config.WindowAlpha;
+        if (!ChatLogWindow.PopOutDocked[Idx])
+        {
+            var alpha = Tab.IndependentOpacity ? Tab.Opacity : Plugin.Config.WindowAlpha;
             BgAlpha = alpha / 100f;
         }
     }
@@ -56,7 +57,7 @@ internal class Popout : Window
     {
         using var id = ImRaii.PushId($"popout-{Tab.Identifier}");
 
-        if (!ChatLogWindow.Plugin.Config.ShowPopOutTitleBar)
+        if (!Plugin.Config.ShowPopOutTitleBar)
         {
             ImGui.TextUnformatted(Tab.Name);
             ImGui.Separator();
@@ -70,8 +71,8 @@ internal class Popout : Window
     {
         ChatLogWindow.PopOutDocked[Idx] = ImGui.IsWindowDocked();
 
-        if (ChatLogWindow.Plugin.Config is { OverrideStyle: true, ChosenStyle: not null })
-            StyleModel.GetConfiguredStyles()?.FirstOrDefault(style => style.Name == ChatLogWindow.Plugin.Config.ChosenStyle)?.Pop();
+        if (Plugin.Config is { OverrideStyle: true, ChosenStyle: not null })
+            StyleModel.GetConfiguredStyles()?.FirstOrDefault(style => style.Name == Plugin.Config.ChosenStyle)?.Pop();
     }
 
     public override void OnClose()

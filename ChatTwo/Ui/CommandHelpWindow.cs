@@ -31,7 +31,7 @@ public class CommandHelpWindow : Window {
         var width = 350;
         var scaledWidth = width * ImGuiHelpers.GlobalScale;
         var pos = LogWindow.LastWindowPos;
-        switch (LogWindow.Plugin.Config.CommandHelpSide) {
+        switch (Plugin.Config.CommandHelpSide) {
             case CommandHelpSide.Right:
                 pos.X += LogWindow.LastWindowSize.X;
                 break;

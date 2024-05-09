@@ -3,6 +3,7 @@ using System.Text;
 using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Interface;
+using Dalamud.Interface.Components;
 using Dalamud.Interface.Style;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
@@ -258,6 +259,15 @@ internal static class ImGuiUtil
         HelpText(description);
 
         return r;
+    }
+
+    public static bool Button(string id, FontAwesomeIcon icon, bool disabled)
+    {
+        var clicked = false;
+        using (ImRaii.Disabled(disabled))
+            clicked = ImGuiComponents.IconButton(id, icon);
+
+        return clicked;
     }
 
     internal static bool CtrlShiftButton(string label, string tooltip = "")

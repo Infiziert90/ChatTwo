@@ -1869,6 +1869,33 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Blocked emotes.
+        /// </summary>
+        internal static string Options_Emote_BlockedEmotes {
+            get {
+                return ResourceManager.GetString("Options_Emote_BlockedEmotes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Emote.
+        /// </summary>
+        internal static string Options_Emote_EmoteTable {
+            get {
+                return ResourceManager.GetString("Options_Emote_EmoteTable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Emotes.
+        /// </summary>
+        internal static string Options_Emote_Tab {
+            get {
+                return ResourceManager.GetString("Options_Emote_Tab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Extra glyphs can be added to {0}&apos;s global font by enabling the checkboxes below. This will likely require increasing Dalamud&apos;s font atlas size..
         /// </summary>
         internal static string Options_ExtraGlyphs_Description {
@@ -2306,6 +2333,24 @@ namespace ChatTwo.Resources {
         internal static string Options_PrettierTimestamps_Name {
             get {
                 return ResourceManager.GetString("Options_PrettierTimestamps_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replaces words with their emote version, currently supports BetterTTV.
+        /// </summary>
+        internal static string Options_ShowEmotes_Desc {
+            get {
+                return ResourceManager.GetString("Options_ShowEmotes_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show emotes.
+        /// </summary>
+        internal static string Options_ShowEmotes_Name {
+            get {
+                return ResourceManager.GetString("Options_ShowEmotes_Name", resourceCulture);
             }
         }
         

@@ -39,7 +39,7 @@ public static class EmoteCache
 
     private static readonly Dictionary<string, Emote> Cache = new();
 
-    private static readonly string[] EmoteCodeArray = [];
+    public static readonly string[] EmoteCodeArray = [];
 
     static EmoteCache()
     {

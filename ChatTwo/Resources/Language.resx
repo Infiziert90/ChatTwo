@@ -1018,4 +1018,19 @@
     <data name="Options_KeepInputFocus_Description" xml:space="preserve">
         <value>Keeps the input focus, even if you enter battle or do other actions</value>
     </data>
+    <data name="Options_ShowEmotes_Name" xml:space="preserve">
+        <value>Show emotes</value>
+    </data>
+    <data name="Options_ShowEmotes_Desc" xml:space="preserve">
+        <value>Replaces words with their emote version, currently supports BetterTTV</value>
+    </data>
+    <data name="Options_Emote_Tab" xml:space="preserve">
+        <value>Emotes</value>
+    </data>
+    <data name="Options_Emote_BlockedEmotes" xml:space="preserve">
+        <value>Blocked emotes</value>
+    </data>
+    <data name="Options_Emote_EmoteTable" xml:space="preserve">
+        <value>Emote</value>
+    </data>
 </root>

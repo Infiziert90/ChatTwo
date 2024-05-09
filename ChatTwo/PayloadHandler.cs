@@ -207,7 +207,7 @@ public sealed class PayloadHandler {
 
     internal void Click(Chunk chunk, Payload? payload, ImGuiMouseButton button)
     {
-        if (LogWindow.Plugin.Config.PlaySounds)
+        if (Plugin.Config.PlaySounds)
             UIModule.PlaySound(PopupSfx);
 
         switch (button)
@@ -230,7 +230,7 @@ public sealed class PayloadHandler {
                 DoHover(() => HoverStatus(status), hoverSize);
                 break;
             case ItemPayload item:
-                if (LogWindow.Plugin.Config.NativeItemTooltips)
+                if (Plugin.Config.NativeItemTooltips)
                 {
                     if (!_handleTooltips || _hoveredItem != item.RawItemId)
                     {
@@ -302,7 +302,7 @@ public sealed class PayloadHandler {
 
         var x = isLeft ? window.X : LogWindow.LastWindowPos.X - atkSize.X;
         var y = Math.Clamp(window.Y - atkSize.Y, 0, float.MaxValue);
-        y -= isTop ? 0 : LogWindow.Plugin.Config.TooltipOffset; // offset to prevent cut-off on the bottom
+        y -= isTop ? 0 : Plugin.Config.TooltipOffset; // offset to prevent cut-off on the bottom
 
         atk->SetPosition((short) x, (short) y);
     }

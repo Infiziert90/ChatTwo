@@ -40,6 +40,8 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static INotificationManager Notification { get; private set; } = null!;
     [PluginService] internal static IAddonLifecycle AddonLifecycle { get; private set; } = null!;
 
+    internal static Configuration Config = null!;
+
     public readonly WindowSystem WindowSystem = new(PluginName);
     public SettingsWindow SettingsWindow { get; }
     public ChatLogWindow ChatLogWindow { get; }
@@ -48,7 +50,6 @@ public sealed class Plugin : IDalamudPlugin
     public DebuggerWindow DebuggerWindow { get; }
     internal LegacyMessageImporterWindow LegacyMessageImporterWindow { get; }
 
-    internal Configuration Config { get; }
     internal Commands Commands { get; }
     internal XivCommonBase Common { get; }
     internal TextureCache TextureCache { get; }

@@ -40,6 +40,9 @@ internal class Configuration : IPluginConfiguration
     public bool KeepInputFocus = true;
     public int MaxLinesToRender = 10_000;
 
+    public bool ShowEmotes = true;
+    public HashSet<string> BlockedEmotes = [];
+
     public bool FontsEnabled = true;
     public ExtraGlyphRanges ExtraGlyphRanges = 0;
     public float FontSize = 17f;
@@ -88,6 +91,8 @@ internal class Configuration : IPluginConfiguration
         PlaySounds = other.PlaySounds;
         KeepInputFocus = other.KeepInputFocus;
         MaxLinesToRender = other.MaxLinesToRender;
+        ShowEmotes = other.ShowEmotes;
+        BlockedEmotes = other.BlockedEmotes;
         FontsEnabled = other.FontsEnabled;
         ExtraGlyphRanges = other.ExtraGlyphRanges;
         FontSize = other.FontSize;

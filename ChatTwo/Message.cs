@@ -72,7 +72,8 @@ internal class Message
     internal Dictionary<Guid, float?> Height { get; } = new();
     internal Dictionary<Guid, bool> IsVisible { get; } = new();
 
-    internal Message(ulong receiver, ulong contentId, ChatCode code, List<Chunk> sender, List<Chunk> content, SeString senderSource, SeString contentSource) {
+    internal Message(ulong receiver, ulong contentId, ChatCode code, List<Chunk> sender, List<Chunk> content, SeString senderSource, SeString contentSource)
+    {
         Receiver = receiver;
         ContentId = contentId;
         Date = DateTimeOffset.UtcNow;
@@ -191,7 +192,7 @@ internal class Message
             var builder = new StringBuilder();
             foreach (var word in text.Content.Split(" "))
             {
-                if (EmoteCache.Exists(word))
+                if (Plugin.Config.ShowEmotes && EmoteCache.Exists(word) && !Plugin.Config.BlockedEmotes.Contains(word))
                 {
                     // We add all the previous collected text parts
                     AddContentAfterURLCheck(builder.ToString(), text, chunk);
