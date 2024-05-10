@@ -1033,4 +1033,10 @@
     <data name="Options_Emote_EmoteTable" xml:space="preserve">
         <value>Emote</value>
     </data>
+    <data name="Options_HideInBattle_Name" xml:space="preserve">
+        <value>Hide during battle</value>
+    </data>
+    <data name="Options_HideInBattle_Description" xml:space="preserve">
+        <value>Hide the chat during battles.</value>
+    </data>
 </root>

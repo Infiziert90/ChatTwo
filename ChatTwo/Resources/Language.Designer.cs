@@ -2022,6 +2022,24 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hide the chat during battles..
+        /// </summary>
+        internal static string Options_HideInBattle_Description {
+            get {
+                return ResourceManager.GetString("Options_HideInBattle_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hide during battle.
+        /// </summary>
+        internal static string Options_HideInBattle_Name {
+            get {
+                return ResourceManager.GetString("Options_HideInBattle_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hide {0} during loading screens..
         /// </summary>
         internal static string Options_HideInLoadingScreens_Description {

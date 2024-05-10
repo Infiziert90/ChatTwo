@@ -397,6 +397,7 @@ public sealed class ChatLogWindow : Window
             SetChannel(tab.Channel ?? tab.PreviousChannel);
     }
 
+    private static bool InBattle => Plugin.Condition[ConditionFlag.InCombat];
     private static bool GposeActive => Plugin.Condition[ConditionFlag.WatchingCutscene];
     private static bool CutsceneActive => Plugin.Condition[ConditionFlag.OccupiedInCutSceneEvent] || Plugin.Condition[ConditionFlag.WatchingCutscene78];
 
@@ -406,6 +407,7 @@ public sealed class ChatLogWindow : Window
         Cutscene,
         CutsceneOverride,
         User,
+        Battle
     }
 
     private HideState CurrentHideState = HideState.None;
@@ -413,6 +415,14 @@ public sealed class ChatLogWindow : Window
     public bool IsHidden;
     public void HideStateCheck()
     {
+        // if the chat has no hide state set, and the player has entered battle, we hide chat if they have configured it
+        if (Plugin.Config.HideInBattle && CurrentHideState == HideState.None && InBattle)
+            CurrentHideState = HideState.Battle;
+
+        // If the chat is hidden because of battle, we reset it here
+        if (CurrentHideState is HideState.Battle && !InBattle)
+            CurrentHideState = HideState.None;
+
         // if the chat has no hide state and in a cutscene, set the hide state to cutscene
         if (Plugin.Config.HideDuringCutscenes && CurrentHideState == HideState.None && (CutsceneActive || GposeActive))
             CurrentHideState = HideState.Cutscene;
@@ -429,7 +439,7 @@ public sealed class ChatLogWindow : Window
         if (CurrentHideState == HideState.User && Activate)
             CurrentHideState = HideState.None;
 
-        if (CurrentHideState is HideState.Cutscene or HideState.User || (Plugin.Config.HideWhenNotLoggedIn && !Plugin.ClientState.IsLoggedIn))
+        if (CurrentHideState is HideState.Cutscene or HideState.User or HideState.Battle || (Plugin.Config.HideWhenNotLoggedIn && !Plugin.ClientState.IsLoggedIn))
         {
             IsHidden = true;
             return;

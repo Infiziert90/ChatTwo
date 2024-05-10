@@ -18,6 +18,7 @@ internal class Configuration : IPluginConfiguration
     public bool HideWhenNotLoggedIn = true;
     public bool HideWhenUiHidden = true;
     public bool HideInLoadingScreens;
+    public bool HideInBattle;
     public bool NativeItemTooltips = true;
     public bool PrettierTimestamps = true;
     public bool MoreCompactPretty;
@@ -70,6 +71,7 @@ internal class Configuration : IPluginConfiguration
         HideWhenNotLoggedIn = other.HideWhenNotLoggedIn;
         HideWhenUiHidden = other.HideWhenUiHidden;
         HideInLoadingScreens = other.HideInLoadingScreens;
+        HideInBattle = other.HideInBattle;
         NativeItemTooltips = other.NativeItemTooltips;
         PrettierTimestamps = other.PrettierTimestamps;
         MoreCompactPretty = other.MoreCompactPretty;
