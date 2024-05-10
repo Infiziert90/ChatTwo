@@ -898,7 +898,7 @@ public sealed class ChatLogWindow : Window
                 reset = true;
             }
 
-            var lastPos = ImGui.GetCursorPosY();
+            var lastPosY = ImGui.GetCursorPosY();
             var lastTimestamp = string.Empty;
             int? lastMessageHash = null;
             var sameCount = 0;
@@ -921,6 +921,7 @@ public sealed class ChatLogWindow : Window
                     if (same)
                     {
                         sameCount += 1;
+                        message.IsVisible[tab.Identifier] = false;
                         if (i != tab.Messages.Count - 1)
                             continue;
                     }
@@ -946,6 +947,25 @@ public sealed class ChatLogWindow : Window
                 if (isTable)
                     ImGui.TableNextColumn();
 
+                // Set the height of the previous message. `lastPosY` is set to
+                // the top of the previous message, and the current cursor is at
+                // the top of the current message.
+                if (i > 0)
+                {
+                    var prevMessage = tab.Messages[i - 1];
+                    if (prevMessage.IsVisible.TryGetValue(tab.Identifier, out var prevVisible) && prevVisible)
+                    {
+                        var newHeight = ImGui.GetCursorPosY() - lastPosY;
+                        if (isTable && !moreCompact)
+                            // Remove the padding from the bottom of the
+                            // previous row and the top of the current row.
+                            newHeight -= oldCellPaddingY * 2;
+                        if (newHeight != 0)
+                            prevMessage.Height[tab.Identifier] = newHeight;
+                    }
+                }
+                lastPosY = ImGui.GetCursorPosY();
+
                 // message has rendered once
                 // message isn't visible, so render dummy
                 message.Height.TryGetValue(tab.Identifier, out var height);
@@ -969,10 +989,7 @@ public sealed class ChatLogWindow : Window
                         ImGui.SetCursorPos(beforeDummy);
                     }
                     else
-                    {
-                        lastPos = ImGui.GetCursorPosY();
                         continue;
-                    }
                 }
 
                 if (tab.DisplayTimestamp)
@@ -1010,19 +1027,7 @@ public sealed class ChatLogWindow : Window
                 else
                     DrawChunks(message.Content, true, handler, lineWidth);
 
-                message.Height[tab.Identifier] = ImGui.GetCursorPosY() - lastPos;
-                if (isTable && !moreCompact)
-                    message.Height[tab.Identifier] -= oldCellPaddingY * 2;
-
-                var itemVisible = ImGui.IsItemVisible();
-                message.IsVisible[tab.Identifier] = itemVisible;
-                if (itemVisible && i < tab.Messages.Count - 1)
-                    // If this message is visible, the next message should also
-                    // be visible. This helps alleviate jittering issues when
-                    // scrolling down.
-                    tab.Messages[i + 1].IsVisible[tab.Identifier] = true;
-
-                lastPos = ImGui.GetCursorPosY();
+                message.IsVisible[tab.Identifier] = ImGui.IsItemVisible();
             }
         }
         finally
