@@ -1878,11 +1878,47 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Emote Stats.
+        /// </summary>
+        internal static string Options_Emote_EmoteStats {
+            get {
+                return ResourceManager.GetString("Options_Emote_EmoteStats", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Emote.
         /// </summary>
         internal static string Options_Emote_EmoteTable {
             get {
                 return ResourceManager.GetString("Options_Emote_EmoteTable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Emotes available:.
+        /// </summary>
+        internal static string Options_Emote_Loaded {
+            get {
+                return ResourceManager.GetString("Options_Emote_Loaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Not Ready.
+        /// </summary>
+        internal static string Options_Emote_NotReady {
+            get {
+                return ResourceManager.GetString("Options_Emote_NotReady", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ready.
+        /// </summary>
+        internal static string Options_Emote_Ready {
+            get {
+                return ResourceManager.GetString("Options_Emote_Ready", resourceCulture);
             }
         }
         

@@ -15,7 +15,7 @@ internal sealed class Emote : ISettingsTab
 
     public string Name => Language.Options_Emote_Tab + "###tabs-emote";
 
-    private static SearchSelector.SelectorPopupOptions WordPopupOptions = null!;
+    private static SearchSelector.SelectorPopupOptions? WordPopupOptions;
 
     internal Emote(Plugin plugin, Configuration mutable)
     {
@@ -24,7 +24,15 @@ internal sealed class Emote : ISettingsTab
 
         WordPopupOptions = new SearchSelector.SelectorPopupOptions
         {
-            FilteredSheet = EmoteCache.EmoteCodeArray.Where(w => !Mutable.BlockedEmotes.Contains(w))
+            FilteredSheet = EmoteCache.SortedCodeArray.Where(w => !Mutable.BlockedEmotes.Contains(w)).ToArray()
+        };
+    }
+
+    private SearchSelector.SelectorPopupOptions RefillSheet()
+    {
+        return new SearchSelector.SelectorPopupOptions
+        {
+            FilteredSheet = EmoteCache.SortedCodeArray.Where(w => !Mutable.BlockedEmotes.Contains(w)).ToArray()
         };
     }
 
@@ -37,6 +45,10 @@ internal sealed class Emote : ISettingsTab
 
         ImGui.TextUnformatted(Language.Options_Emote_BlockedEmotes);
         ImGui.Spacing();
+
+        WordPopupOptions ??= RefillSheet();
+        if (EmoteCache.State is EmoteCache.LoadingState.Done && WordPopupOptions.FilteredSheet.Length == 0)
+            WordPopupOptions = RefillSheet();
 
         var buttonWidth = ImGui.GetContentRegionAvail().X / 3;
         using (Plugin.FontManager.FontAwesome.Push())
@@ -71,14 +83,32 @@ internal sealed class Emote : ISettingsTab
         ImGui.Separator();
         ImGui.Spacing();
 
-        if (EmoteCache.State is EmoteCache.LoadingState.Done)
-            ImGui.TextColored(ImGuiColors.HealerGreen, "Ready");
-        else
-            ImGui.TextColored(ImGuiColors.DPSRed, "Not Ready");
+        ImGui.TextUnformatted(Language.Options_Emote_EmoteStats);
+        ImGui.Spacing();
 
-        ImGui.TextUnformatted($"Emotes loaded: {EmoteCache.EmoteCodeArray.Length}");
-        foreach (var word in EmoteCache.EmoteCodeArray)
-            ImGui.TextUnformatted(word);
+        if (EmoteCache.State is EmoteCache.LoadingState.Done)
+            ImGui.TextColored(ImGuiColors.HealerGreen, Language.Options_Emote_Ready);
+        else
+            ImGui.TextColored(ImGuiColors.DPSRed, Language.Options_Emote_NotReady);
+
+        ImGui.TextUnformatted($"{Language.Options_Emote_Loaded} {EmoteCache.SortedCodeArray.Length}");
+        using (var emoteTable = ImRaii.Table("##LoadedEmotes", 5, ImGuiTableFlags.RowBg | ImGuiTableFlags.BordersInner))
+        {
+            if (emoteTable)
+            {
+                ImGui.TableSetupColumn("##word1");
+                ImGui.TableSetupColumn("##word2");
+                ImGui.TableSetupColumn("##word3");
+                ImGui.TableSetupColumn("##word4");
+                ImGui.TableSetupColumn("##word5");
+
+                foreach (var word in EmoteCache.SortedCodeArray)
+                {
+                    ImGui.TableNextColumn();
+                    ImGui.TextUnformatted(word);
+                }
+            }
+        }
 
         ImGui.PopTextWrapPos();
     }

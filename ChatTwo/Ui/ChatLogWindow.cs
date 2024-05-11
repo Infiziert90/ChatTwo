@@ -1531,7 +1531,10 @@ public sealed class ChatLogWindow : Window
                 image.Draw(emoteSize);
             else
                 ImGui.Dummy(emoteSize);
-            ImGui.SetTooltip(emotePayload.Code);
+
+            if (ImGui.IsItemHovered())
+                ImGui.SetTooltip(emotePayload.Code);
+
             return;
         }
 

@@ -1039,4 +1039,16 @@
     <data name="Options_HideInBattle_Description" xml:space="preserve">
         <value>Hide the chat during battles.</value>
     </data>
+    <data name="Options_Emote_EmoteStats" xml:space="preserve">
+        <value>Emote Stats</value>
+    </data>
+    <data name="Options_Emote_Ready" xml:space="preserve">
+        <value>Ready</value>
+    </data>
+    <data name="Options_Emote_NotReady" xml:space="preserve">
+        <value>Not Ready</value>
+    </data>
+    <data name="Options_Emote_Loaded" xml:space="preserve">
+        <value>Emotes available:</value>
+    </data>
 </root>

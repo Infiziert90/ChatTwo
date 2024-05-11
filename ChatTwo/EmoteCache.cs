@@ -28,8 +28,6 @@ public static class EmoteCache
         public string Code { get; set; }
         [JsonPropertyName("imageType")]
         public string ImageType { get; set; }
-        [JsonPropertyName("animated")]
-        public bool Animated { get; set; }
     };
 
     public enum LoadingState
@@ -41,9 +39,8 @@ public static class EmoteCache
 
     private const string BetterTTV = "https://api.betterttv.net/3";
     private const string GlobalEmotes = $"{BetterTTV}/cached/emotes/global";
-    private const string Top100Emotes = $"{BetterTTV}/emotes/shared/top?limit=100";
-    private const string Top100BeforeEmotes = "{0}/emotes/shared/top?before={1}&limit=100";
-    private const string EmotePath = "https://cdn.betterttv.net/emote/{0}/3x";
+    private const string Top100Emotes = "{0}/emotes/shared/top?before={1}&limit=100";
+    private const string EmotePath = "https://cdn.betterttv.net/emote/{0}/1x";
 
     private static readonly HttpClient Client = new();
 
@@ -53,7 +50,7 @@ public static class EmoteCache
 
     private static Dictionary<string, Emote> Cache = new();
 
-    public static string[] EmoteCodeArray = [];
+    public static string[] SortedCodeArray = [];
 
     public static async void LoadData()
     {
@@ -70,9 +67,9 @@ public static class EmoteCache
                 Cache.TryAdd(emote.Code, emote);
 
             var lastId = string.Empty;
-            for (var i = 0; i < 10; i++)
+            for (var i = 0; i < 15; i++)
             {
-                var top = await Client.GetAsync(lastId == string.Empty ? Top100Emotes : Top100BeforeEmotes.Format(BetterTTV, lastId));
+                var top = await Client.GetAsync(Top100Emotes.Format(BetterTTV, lastId));
                 var topList = await top.Content.ReadAsStringAsync();
 
                 var jsonList = JsonSerializer.Deserialize<List<Top100>>(topList)!;
@@ -82,18 +79,18 @@ public static class EmoteCache
                 lastId = jsonList.Last().Id;
             }
 
-            EmoteCodeArray = Cache.Keys.ToArray();
+            SortedCodeArray = Cache.Keys.Order().ToArray();
             State = LoadingState.Done;
         }
         catch (Exception ex)
         {
-            Plugin.Log.Error(ex, "BetterTTV cache wasn't initialized1");
+            Plugin.Log.Error(ex, "BetterTTV cache wasn't initialized");
         }
     }
 
     internal static bool Exists(string code)
     {
-        return State is LoadingState.Done && EmoteCodeArray.Contains(code);
+        return State is LoadingState.Done && SortedCodeArray.Contains(code);
     }
 
     internal static IEmote? GetEmote(string code)

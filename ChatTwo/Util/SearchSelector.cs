@@ -20,7 +20,7 @@ public static class SearchSelector
         public Func<string, string> FormatRow { get; init; } = row => row.ToString();
         public Func<string, string, bool>? SearchPredicate { get; init; } = null;
         public Func<string, bool, bool>? DrawSelectable { get; init; } = null;
-        public IEnumerable<string> FilteredSheet { get; init; } = [];
+        public string[] FilteredSheet { get; init; } = [];
         public Vector2? Size { get; init; } = null;
     }
 
