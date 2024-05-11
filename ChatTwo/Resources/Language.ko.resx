@@ -1004,12 +1004,51 @@
         <value>이 탭에서 입력이 비활성화된 상태입니다.</value>
     </data>
   <data name="Options_ChatLog_Tab" xml:space="preserve">
-        <value>Chat log</value>
+        <value>대화 내역</value>
     </data>
   <data name="Options_AdjustPosition_Name" xml:space="preserve">
-        <value>Adjust chat log position</value>
+        <value>대화 내역 위치 조정</value>
     </data>
   <data name="Options_AdjustPosition_Warning" xml:space="preserve">
-        <value>Attention, this change applies immediately and is not discardable!</value>
+        <value>주의, 이 옵션은 즉시 적용되며, 취소할 수 없습니다!</value>
+    </data>
+  <data name="Options_KeepInputFocus_Name" xml:space="preserve">
+        <value>Keep input focus</value>
+    </data>
+  <data name="Options_KeepInputFocus_Description" xml:space="preserve">
+        <value>Keeps the input focus, even if you enter battle or do other actions</value>
+    </data>
+  <data name="Options_ShowEmotes_Name" xml:space="preserve">
+        <value>Show emotes</value>
+    </data>
+  <data name="Options_ShowEmotes_Desc" xml:space="preserve">
+        <value>Replaces words with their emote version, currently supports BetterTTV</value>
+    </data>
+  <data name="Options_Emote_Tab" xml:space="preserve">
+        <value>Emotes</value>
+    </data>
+  <data name="Options_Emote_BlockedEmotes" xml:space="preserve">
+        <value>Blocked emotes</value>
+    </data>
+  <data name="Options_Emote_EmoteTable" xml:space="preserve">
+        <value>Emote</value>
+    </data>
+  <data name="Options_HideInBattle_Name" xml:space="preserve">
+        <value>Hide during battle</value>
+    </data>
+  <data name="Options_HideInBattle_Description" xml:space="preserve">
+        <value>Hide the chat during battles.</value>
+    </data>
+  <data name="Options_Emote_EmoteStats" xml:space="preserve">
+        <value>Emote Stats</value>
+    </data>
+  <data name="Options_Emote_Ready" xml:space="preserve">
+        <value>Ready</value>
+    </data>
+  <data name="Options_Emote_NotReady" xml:space="preserve">
+        <value>Not Ready</value>
+    </data>
+  <data name="Options_Emote_Loaded" xml:space="preserve">
+        <value>Emotes available:</value>
     </data>
 </root>
