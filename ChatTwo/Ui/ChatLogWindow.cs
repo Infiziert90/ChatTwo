@@ -1015,7 +1015,7 @@ public sealed class ChatLogWindow : Window
                     }
                     else
                     {
-                        DrawChunk(new TextChunk(ChunkSource.None, null, $"[{timestamp}]") { Foreground = 0xFFFFFFFF, });
+                        DrawChunk(new TextChunk(ChunkSource.None, null, $"[{timestamp}] ") { Foreground = 0xFFFFFFFF, });
                         ImGui.SameLine();
                     }
                 }
@@ -1482,13 +1482,17 @@ public sealed class ChatLogWindow : Window
         using var style = ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, Vector2.Zero);
         for (var i = 0; i < chunks.Count; i++)
         {
-            if (chunks[i] is TextChunk text && string.IsNullOrEmpty(text.Content))
-                continue;
-
             DrawChunk(chunks[i], wrap, handler, lineWidth);
 
             if (i < chunks.Count - 1)
                 ImGui.SameLine();
+            else if (chunks[i].Link is EmotePayload) {
+                // Emote payloads seem to not automatically put newlines, which
+                // is an issue when modern mode is disabled.
+                ImGui.SameLine();
+                // Use default ImGui behavior for newlines.
+                ImGui.TextUnformatted("");
+            }
         }
     }
 
@@ -1517,17 +1521,17 @@ public sealed class ChatLogWindow : Window
         if (chunk is not TextChunk text)
             return;
 
-        if (chunk.Link?.Type == (PayloadType)0x53)
+        if (chunk.Link is EmotePayload emotePayload)
         {
             var emoteSize = ImGui.CalcTextSize("W");
             emoteSize = emoteSize with { Y = emoteSize.X } * 1.5f;
 
-            var emotePayload = (EmotePayload) chunk.Link;
             var image = EmoteCache.GetEmote(emotePayload.Code);
             if (image is { IsLoaded: true })
                 image.Draw(emoteSize);
             else
                 ImGui.Dummy(emoteSize);
+            ImGui.SetTooltip(emotePayload.Code);
             return;
         }
 

@@ -135,8 +135,11 @@ internal class Message
     private List<Chunk> CheckMessageContent(List<Chunk> oldChunks)
     {
         var newChunks = new List<Chunk>();
-        void AddChunkWithMessage(Chunk chunk)
+        void AddChunkWithMessage(TextChunk chunk)
         {
+            if (string.IsNullOrEmpty(chunk.Content))
+                return;
+
             chunk.Message = this;
             newChunks.Add(chunk);
         }
@@ -198,7 +201,7 @@ internal class Message
                     AddContentAfterURLCheck(builder.ToString(), text, chunk);
                     builder.Clear();
 
-                    newChunks.Add(new TextChunk(chunk.Source, EmotePayload.ResolveEmote(word), word));
+                    AddChunkWithMessage(new TextChunk(chunk.Source, EmotePayload.ResolveEmote(word), word));
                     builder.Append(' ');
                     continue;
                 }
