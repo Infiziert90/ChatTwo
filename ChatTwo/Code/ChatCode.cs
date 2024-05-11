@@ -110,4 +110,47 @@ internal class ChatCode
                 return false;
         }
     }
+
+    internal bool IsPlayerMessage()
+    {
+        switch (Type)
+        {
+            case ChatType.Say:
+            case ChatType.Shout:
+            case ChatType.TellOutgoing:
+            case ChatType.TellIncoming:
+            case ChatType.Party:
+            case ChatType.CrossParty:
+            case ChatType.Linkshell1:
+            case ChatType.Linkshell2:
+            case ChatType.Linkshell3:
+            case ChatType.Linkshell4:
+            case ChatType.Linkshell5:
+            case ChatType.Linkshell6:
+            case ChatType.Linkshell7:
+            case ChatType.Linkshell8:
+            case ChatType.CrossLinkshell1:
+            case ChatType.CrossLinkshell2:
+            case ChatType.CrossLinkshell3:
+            case ChatType.CrossLinkshell4:
+            case ChatType.CrossLinkshell5:
+            case ChatType.CrossLinkshell6:
+            case ChatType.CrossLinkshell7:
+            case ChatType.CrossLinkshell8:
+            case ChatType.FreeCompany:
+            case ChatType.NoviceNetwork:
+            case ChatType.Yell:
+            case ChatType.ExtraChatLinkshell1:
+            case ChatType.ExtraChatLinkshell2:
+            case ChatType.ExtraChatLinkshell3:
+            case ChatType.ExtraChatLinkshell4:
+            case ChatType.ExtraChatLinkshell5:
+            case ChatType.ExtraChatLinkshell6:
+            case ChatType.ExtraChatLinkshell7:
+            case ChatType.ExtraChatLinkshell8:
+                return true;
+            default:
+                return false;
+        }
+    }
 }

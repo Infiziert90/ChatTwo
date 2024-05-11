@@ -192,10 +192,11 @@ internal class Message
                 continue;
             }
 
+            var checkForEmotes = Code.IsPlayerMessage();
             var builder = new StringBuilder();
             foreach (var word in text.Content.Split(" "))
             {
-                if (Plugin.Config.ShowEmotes && EmoteCache.Exists(word) && !Plugin.Config.BlockedEmotes.Contains(word))
+                if (checkForEmotes && Plugin.Config.ShowEmotes && EmoteCache.Exists(word) && !Plugin.Config.BlockedEmotes.Contains(word))
                 {
                     // We add all the previous collected text parts
                     AddContentAfterURLCheck(builder.ToString(), text, chunk);
