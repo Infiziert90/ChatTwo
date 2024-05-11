@@ -15,6 +15,9 @@ public static class EmoteCache
     {
         [JsonPropertyName("emote")]
         public Emote Emote { get; set; }
+
+        [JsonPropertyName("id")]
+        public string Id { get; set; }
     }
 
     public struct Emote
@@ -29,7 +32,7 @@ public static class EmoteCache
         public bool Animated { get; set; }
     };
 
-    private enum LoadingState
+    public enum LoadingState
     {
         Unloaded,
         Loading,
@@ -39,12 +42,13 @@ public static class EmoteCache
     private const string BetterTTV = "https://api.betterttv.net/3";
     private const string GlobalEmotes = $"{BetterTTV}/cached/emotes/global";
     private const string Top100Emotes = $"{BetterTTV}/emotes/shared/top?limit=100";
+    private const string Top100BeforeEmotes = "{0}/emotes/shared/top?before={1}&limit=100";
     private const string EmotePath = "https://cdn.betterttv.net/emote/{0}/3x";
 
     private static readonly HttpClient Client = new();
 
     // All of this data is uninitalized while State is not `LoadingState.Done`
-    private static LoadingState State = LoadingState.Unloaded;
+    public static LoadingState State = LoadingState.Unloaded;
     private static Dictionary<string, IEmote> EmoteImages = new();
 
     private static Dictionary<string, Emote> Cache = new();
@@ -65,11 +69,18 @@ public static class EmoteCache
             foreach (var emote in JsonSerializer.Deserialize<Emote[]>(globalList)!)
                 Cache.TryAdd(emote.Code, emote);
 
-            var top = await Client.GetAsync(Top100Emotes);
-            var topList = await top.Content.ReadAsStringAsync();
+            var lastId = string.Empty;
+            for (var i = 0; i < 10; i++)
+            {
+                var top = await Client.GetAsync(lastId == string.Empty ? Top100Emotes : Top100BeforeEmotes.Format(BetterTTV, lastId));
+                var topList = await top.Content.ReadAsStringAsync();
 
-            foreach (var emote in JsonSerializer.Deserialize<List<Top100>>(topList)!)
-                Cache.TryAdd(emote.Emote.Code, emote.Emote);
+                var jsonList = JsonSerializer.Deserialize<List<Top100>>(topList)!;
+                foreach (var emote in jsonList)
+                    Cache.TryAdd(emote.Emote.Code, emote.Emote);
+
+                lastId = jsonList.Last().Id;
+            }
 
             EmoteCodeArray = Cache.Keys.ToArray();
             State = LoadingState.Done;

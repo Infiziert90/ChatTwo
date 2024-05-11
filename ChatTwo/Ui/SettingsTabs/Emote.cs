@@ -2,6 +2,7 @@ using System.Numerics;
 using ChatTwo.Resources;
 using ChatTwo.Util;
 using Dalamud.Interface;
+using Dalamud.Interface.Colors;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 
@@ -44,25 +45,40 @@ internal sealed class Emote : ISettingsTab
         if (SearchSelector.SelectorPopup("WordAddPopup", out var newWord, WordPopupOptions))
             Mutable.BlockedEmotes.Add(newWord);
 
-        using var table = ImRaii.Table("##BlockedWords", 2, ImGuiTableFlags.RowBg | ImGuiTableFlags.BordersInner);
-        if (table)
+        using(var table = ImRaii.Table("##BlockedWords", 2, ImGuiTableFlags.RowBg | ImGuiTableFlags.BordersInner))
         {
-            ImGui.TableSetupColumn(Language.Options_Emote_EmoteTable);
-            ImGui.TableSetupColumn("##Del", 0, 0.07f);
-
-            ImGui.TableHeadersRow();
-
-            var copiedList = Mutable.BlockedEmotes.ToArray();
-            foreach (var word in copiedList)
+            if (table)
             {
-                ImGui.TableNextColumn();
-                ImGui.TextUnformatted(word);
+                ImGui.TableSetupColumn(Language.Options_Emote_EmoteTable);
+                ImGui.TableSetupColumn("##Del", 0, 0.07f);
 
-                ImGui.TableNextColumn();
-                if (ImGuiUtil.Button($"##{word}Del", FontAwesomeIcon.Trash, !ImGui.GetIO().KeyCtrl))
-                    Mutable.BlockedEmotes.Remove(word);
+                ImGui.TableHeadersRow();
+
+                var copiedList = Mutable.BlockedEmotes.ToArray();
+                foreach (var word in copiedList)
+                {
+                    ImGui.TableNextColumn();
+                    ImGui.TextUnformatted(word);
+
+                    ImGui.TableNextColumn();
+                    if (ImGuiUtil.Button($"##{word}Del", FontAwesomeIcon.Trash, !ImGui.GetIO().KeyCtrl))
+                        Mutable.BlockedEmotes.Remove(word);
+                }
             }
         }
+
+        ImGui.Spacing();
+        ImGui.Separator();
+        ImGui.Spacing();
+
+        if (EmoteCache.State is EmoteCache.LoadingState.Done)
+            ImGui.TextColored(ImGuiColors.HealerGreen, "Ready");
+        else
+            ImGui.TextColored(ImGuiColors.DPSRed, "Not Ready");
+
+        ImGui.TextUnformatted($"Emotes loaded: {EmoteCache.EmoteCodeArray.Length}");
+        foreach (var word in EmoteCache.EmoteCodeArray)
+            ImGui.TextUnformatted(word);
 
         ImGui.PopTextWrapPos();
     }
