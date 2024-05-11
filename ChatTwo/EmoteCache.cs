@@ -29,42 +29,50 @@ public static class EmoteCache
         public bool Animated { get; set; }
     };
 
+    private enum LoadingState
+    {
+        Unloaded,
+        Loading,
+        Done
+    }
+
     private const string BetterTTV = "https://api.betterttv.net/3";
     private const string GlobalEmotes = $"{BetterTTV}/cached/emotes/global";
     private const string Top100Emotes = $"{BetterTTV}/emotes/shared/top?limit=100";
     private const string EmotePath = "https://cdn.betterttv.net/emote/{0}/3x";
 
-    private static readonly bool IsBTTVDataLoaded;
-    private static readonly Dictionary<string, IEmote> EmoteImages = new();
+    private static readonly HttpClient Client = new();
 
-    private static readonly Dictionary<string, Emote> Cache = new();
+    // All of this data is uninitalized while State is not `LoadingState.Done`
+    private static LoadingState State = LoadingState.Unloaded;
+    private static Dictionary<string, IEmote> EmoteImages = new();
 
-    public static readonly string[] EmoteCodeArray = [];
+    private static Dictionary<string, Emote> Cache = new();
 
-    static EmoteCache()
+    public static string[] EmoteCodeArray = [];
+
+    public static async void LoadData()
     {
+        if (State is not LoadingState.Unloaded)
+            return;
+
+        State = LoadingState.Loading;
         try
         {
-            var globalCache = new HttpClient().GetAsync(GlobalEmotes)
-                .Result
-                .Content
-                .ReadAsStringAsync()
-                .Result;
+            var global = await Client.GetAsync(GlobalEmotes);
+            var globalList = await global.Content.ReadAsStringAsync();
 
-            foreach (var emote in JsonSerializer.Deserialize<Emote[]>(globalCache)!)
+            foreach (var emote in JsonSerializer.Deserialize<Emote[]>(globalList)!)
                 Cache.TryAdd(emote.Code, emote);
 
-            var top100 = new HttpClient().GetAsync(Top100Emotes)
-                .Result
-                .Content
-                .ReadAsStringAsync()
-                .Result;
+            var top = await Client.GetAsync(Top100Emotes);
+            var topList = await top.Content.ReadAsStringAsync();
 
-            foreach (var emote in JsonSerializer.Deserialize<List<Top100>>(top100)!)
+            foreach (var emote in JsonSerializer.Deserialize<List<Top100>>(topList)!)
                 Cache.TryAdd(emote.Emote.Code, emote.Emote);
 
             EmoteCodeArray = Cache.Keys.ToArray();
-            IsBTTVDataLoaded = true;
+            State = LoadingState.Done;
         }
         catch (Exception ex)
         {
@@ -74,12 +82,12 @@ public static class EmoteCache
 
     internal static bool Exists(string code)
     {
-        return IsBTTVDataLoaded && EmoteCodeArray.Contains(code);
+        return State is LoadingState.Done && EmoteCodeArray.Contains(code);
     }
 
     internal static IEmote? GetEmote(string code)
     {
-        if (!IsBTTVDataLoaded)
+        if (State is not LoadingState.Done)
             return null;
 
         if (!Cache.TryGetValue(code, out var emoteDetail))
@@ -111,7 +119,7 @@ public static class EmoteCache
 
     public class IEmote
     {
-        public bool IsLoaded = false;
+        public bool IsLoaded;
 
         public bool IsAnimated = false;
         public IDalamudTextureWrap Texture;

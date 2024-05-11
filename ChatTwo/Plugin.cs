@@ -118,6 +118,9 @@ public sealed class Plugin : IDalamudPlugin
             Interface.UiBuilder.Draw += Draw;
             Interface.LanguageChanged += LanguageChanged;
 
+            if (Config.ShowEmotes)
+                Task.Run(EmoteCache.LoadData);
+
             #if !DEBUG
             // Avoid 300ms hitch when sending first message by preloading the
             // auto-translate cache. Don't do this in debug because it makes

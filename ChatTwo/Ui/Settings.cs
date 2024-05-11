@@ -172,6 +172,9 @@ public sealed class SettingsWindow : Window
         if (hideChanged)
             GameFunctions.GameFunctions.SetChatInteractable(true);
 
+        if (Plugin.Config.ShowEmotes)
+            Task.Run(EmoteCache.LoadData);
+
         Initialise();
     }
 }
