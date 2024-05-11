@@ -255,6 +255,11 @@ public static class EmoteCache
                 foreach (var frame in img.Frames)
                 {
                     var delay = frame.Metadata.GetGifMetadata().FrameDelay / 100f;
+
+                    // Follows the same pattern as browsers, anything under 0.02s delay will be rounded up to 0.1s
+                    if (delay < 0.02f)
+                        delay = 0.1f;
+
                     var buffer = new byte[4 * frame.Width * frame.Height];
                     frame.CopyPixelDataTo(buffer);
                     var tex = await Plugin.Interface.UiBuilder.LoadImageRawAsync(buffer, frame.Width, frame.Height, 4);
