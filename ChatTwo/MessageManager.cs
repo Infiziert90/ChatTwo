@@ -21,7 +21,7 @@ internal class MessageManager : IAsyncDisposable
     private Dictionary<ChatType, NameFormatting> Formats { get; } = new();
     private ulong LastContentId { get; set; }
 
-    private ConcurrentQueue<Message> Pending { get; } = new();
+    private ConcurrentQueue<PendingMessage> Pending { get; } = new();
     private ulong LastMessageIndex { get; set; }
 
     private readonly Thread PendingMessageThread;
@@ -152,10 +152,52 @@ internal class MessageManager : IAsyncDisposable
     {
         LastMessage = (sender, message);
 
-        var chatCode = new ChatCode((ushort)type);
+        var pendingMessage = new PendingMessage
+        {
+            ReceiverId = CurrentContentId,
+            ContentId = 0,
+            Type = type,
+            SenderId = senderId,
+            Sender = sender,
+            Content = message,
+        };
+
+        // Update colour codes.
+        GlobalParametersCache.Refresh();
+
+        // If the message was rendered in the vanilla chat log window it has an
+        // index, and we can use that to get the sender's content ID. The
+        // content ID is used to show "invite to party" buttons in the context
+        // menu.
+        var idx = Plugin.Functions.GetCurrentChatLogEntryIndex() ?? 0;
+        var shouldGetContentId = false;
+        if (idx > LastMessageIndex)
+        {
+            LastMessageIndex = idx;
+            shouldGetContentId = true;
+        }
+
+        // You can't call GetContentIdForEntry in the same framework tick
+        // that you received the message, or you just get null.
+        //
+        // We delay all messages to be enqueued in the next framework tick
+        // because of this. We used to only delay messages that we wanted to
+        // fetch a content ID for, but this results in out-of-order messages
+        // occasionally.
+        Plugin.Framework.RunOnTick(() =>
+        {
+            if (shouldGetContentId)
+                pendingMessage.ContentId = Plugin.Functions.Chat.GetContentIdForEntry(idx - 1);
+            Pending.Enqueue(pendingMessage);
+        });
+    }
+
+    private void ProcessMessage(PendingMessage pendingMessage)
+    {
+        var chatCode = new ChatCode((ushort)pendingMessage.Type);
 
         NameFormatting? formatting = null;
-        if (sender.Payloads.Count > 0)
+        if (pendingMessage.Sender.Payloads.Count > 0)
             formatting = FormatFor(chatCode.Type);
 
         var senderChunks = new List<Chunk>();
@@ -165,50 +207,26 @@ internal class MessageManager : IAsyncDisposable
             {
                 FallbackColour = chatCode.Type,
             });
-            senderChunks.AddRange(ChunkUtil.ToChunks(sender, ChunkSource.Sender, chatCode.Type));
+            senderChunks.AddRange(ChunkUtil.ToChunks(pendingMessage.Sender, ChunkSource.Sender, chatCode.Type));
             senderChunks.Add(new TextChunk(ChunkSource.None, null, formatting.After)
             {
                 FallbackColour = chatCode.Type,
             });
         }
 
-        var contentChunks = ChunkUtil.ToChunks(message, ChunkSource.Content, chatCode.Type).ToList();
-        var msg = new Message(CurrentContentId, 0, chatCode, senderChunks, contentChunks, sender, message);
+        var contentChunks = ChunkUtil.ToChunks(pendingMessage.Content, ChunkSource.Content, chatCode.Type).ToList();
+        var message = new Message(CurrentContentId, pendingMessage.ContentId, chatCode, senderChunks, contentChunks, pendingMessage.Sender, pendingMessage.Content);
 
-        // If the message was rendered in the vanilla chat log window it has an
-        // index, and we can use that to get the sender's content ID. The
-        // content ID is used to show "invite to party" buttons in the context
-        // menu.
-        var idx = Plugin.Functions.GetCurrentChatLogEntryIndex() ?? 0;
-        if (idx > LastMessageIndex)
-        {
-            LastMessageIndex = idx;
-            // You can't call GetContentIdForEntry in the same framework tick
-            // that you received the message, or you just get null.
-            Plugin.Framework.RunOnTick(() =>
-            {
-                msg.ContentId = Plugin.Functions.Chat.GetContentIdForEntry(idx - 1);
-                Pending.Enqueue(msg);
-            });
+        if (Plugin.Config.DatabaseBattleMessages || !message.Code.IsBattle())
+            Store.UpsertMessage(message);
 
-            return;
-        }
-
-        Pending.Enqueue(msg);
-    }
-
-    private void ProcessMessage(Message msg)
-    {
-        if (Plugin.Config.DatabaseBattleMessages || !msg.Code.IsBattle())
-            Store.UpsertMessage(msg);
-
-        var currentMatches = Plugin.ChatLogWindow.CurrentTab?.Matches(msg) ?? false;
+        var currentMatches = Plugin.ChatLogWindow.CurrentTab?.Matches(message) ?? false;
         foreach (var tab in Plugin.Config.Tabs)
         {
             var unread = !(tab.UnreadMode == UnreadMode.Unseen && Plugin.ChatLogWindow.CurrentTab != tab && currentMatches);
 
-            if (tab.Matches(msg))
-                tab.AddMessage(msg, unread);
+            if (tab.Matches(message))
+                tab.AddMessage(message, unread);
         }
     }
 
@@ -271,5 +289,15 @@ internal class MessageManager : IAsyncDisposable
         Formats[type] = nameFormatting;
 
         return nameFormatting;
+    }
+
+    private class PendingMessage
+    {
+        internal ulong ReceiverId { get; set; }
+        internal ulong ContentId { get; set; } // 0 if unknown
+        internal XivChatType Type { get; set; }
+        internal uint SenderId { get; set; }
+        internal SeString Sender { get; set; }
+        internal SeString Content { get; set; }
     }
 }
