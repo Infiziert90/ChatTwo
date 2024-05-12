@@ -1012,6 +1012,10 @@ public sealed class ChatLogWindow : Window
                             ImGui.TextUnformatted(timestamp);
                             lastTimestamp = timestamp;
                         }
+                        else
+                            // Avoids rendering issues caused by emojis in
+                            // message content.
+                            ImGui.TextUnformatted("");
                     }
                     else
                     {
@@ -1480,8 +1484,12 @@ public sealed class ChatLogWindow : Window
     internal void DrawChunks(IReadOnlyList<Chunk> chunks, bool wrap = true, PayloadHandler? handler = null, float lineWidth = 0f)
     {
         using var style = ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, Vector2.Zero);
+
         for (var i = 0; i < chunks.Count; i++)
         {
+            if (chunks[i] is TextChunk text && string.IsNullOrEmpty(text.Content))
+                continue;
+
             DrawChunk(chunks[i], wrap, handler, lineWidth);
 
             if (i < chunks.Count - 1)
@@ -1556,7 +1564,12 @@ public sealed class ChatLogWindow : Window
         // Check for contains here as sometimes there are multiple
         // TextChunks with the same PlayerPayload but only one has the name.
         // E.g. party chat with cross world players adds extra chunks.
-        var content = text.Content;
+        //
+        // Note: This has been null before, I'm guessing due to some issues with
+        // other plugins. New TextChunks will now enforce empty string in ctor,
+        // but old ones may still be null.
+        // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
+        var content = text.Content ?? "";
         if (ScreenshotMode)
         {
             if (chunk.Link is PlayerPayload playerPayload && content.Contains(playerPayload.PlayerName))
