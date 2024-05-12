@@ -202,7 +202,7 @@ internal class Message
                     AddContentAfterURLCheck(builder.ToString(), text, chunk);
                     builder.Clear();
 
-                    AddChunkWithMessage(new TextChunk(chunk.Source, EmotePayload.ResolveEmote(word), word));
+                    AddChunkWithMessage(new TextChunk(chunk.Source, EmotePayload.ResolveEmote(word), word) { FallbackColour = text.FallbackColour });
                     builder.Append(' ');
                     continue;
                 }

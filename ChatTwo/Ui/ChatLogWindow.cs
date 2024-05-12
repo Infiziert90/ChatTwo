@@ -1486,7 +1486,7 @@ public sealed class ChatLogWindow : Window
 
             if (i < chunks.Count - 1)
                 ImGui.SameLine();
-            else if (chunks[i].Link is EmotePayload) {
+            else if (chunks[i].Link is EmotePayload && Plugin.Config.ShowEmotes) {
                 // Emote payloads seem to not automatically put newlines, which
                 // is an issue when modern mode is disabled.
                 ImGui.SameLine();
@@ -1521,7 +1521,7 @@ public sealed class ChatLogWindow : Window
         if (chunk is not TextChunk text)
             return;
 
-        if (chunk.Link is EmotePayload emotePayload)
+        if (chunk.Link is EmotePayload emotePayload && Plugin.Config.ShowEmotes)
         {
             var emoteSize = ImGui.CalcTextSize("W");
             emoteSize = emoteSize with { Y = emoteSize.X } * 1.5f;
