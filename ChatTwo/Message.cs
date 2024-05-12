@@ -181,6 +181,7 @@ internal class Message
             }
         }
 
+        var checkForEmotes = Code.IsPlayerMessage() && Plugin.Config.ShowEmotes;
         foreach (var chunk in oldChunks)
         {
             // Use as is if it's not a text chunk or it already has a payload.
@@ -192,11 +193,10 @@ internal class Message
                 continue;
             }
 
-            var checkForEmotes = Code.IsPlayerMessage();
             var builder = new StringBuilder();
             foreach (var word in text.Content.Split(" "))
             {
-                if (checkForEmotes && Plugin.Config.ShowEmotes && EmoteCache.Exists(word) && !Plugin.Config.BlockedEmotes.Contains(word))
+                if (checkForEmotes && EmoteCache.Exists(word) && !Plugin.Config.BlockedEmotes.Contains(word))
                 {
                     // We add all the previous collected text parts
                     AddContentAfterURLCheck(builder.ToString(), text, chunk);
