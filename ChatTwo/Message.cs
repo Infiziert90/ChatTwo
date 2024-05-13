@@ -74,16 +74,17 @@ internal class Message
 
     internal Message(ulong receiver, ulong contentId, ChatCode code, List<Chunk> sender, List<Chunk> content, SeString senderSource, SeString contentSource)
     {
+        var extraChatChannel = ExtractExtraChatChannel(contentSource);
         Receiver = receiver;
         ContentId = contentId;
         Date = DateTimeOffset.UtcNow;
         Code = code;
         Sender = sender;
-        Content = CheckMessageContent(content);
+        Content = CheckMessageContent(content, extraChatChannel);
         SenderSource = senderSource;
         ContentSource = contentSource;
         SortCode = new SortCode(Code.Type, Code.Source);
-        ExtraChatChannel = ExtractExtraChatChannel();
+        ExtraChatChannel = extraChatChannel;
         Hash = GenerateHash();
 
         foreach (var chunk in sender.Concat(content))
@@ -119,9 +120,9 @@ internal class Message
                ^ string.Join("", Content.Select(c => c.StringValue())).GetHashCode();
     }
 
-    private Guid ExtractExtraChatChannel()
+    private static Guid ExtractExtraChatChannel(SeString contentSource)
     {
-        if (ContentSource.Payloads.Count > 0 && ContentSource.Payloads[0] is RawPayload raw)
+        if (contentSource.Payloads.Count > 0 && contentSource.Payloads[0] is RawPayload raw)
         {
             // this does an encode and clone every time it's accessed, so cache
             var data = raw.Data;
@@ -132,7 +133,7 @@ internal class Message
         return Guid.Empty;
     }
 
-    private List<Chunk> CheckMessageContent(List<Chunk> oldChunks)
+    private List<Chunk> CheckMessageContent(List<Chunk> oldChunks, Guid extraChatChannel)
     {
         var newChunks = new List<Chunk>();
         void AddChunkWithMessage(TextChunk chunk)
@@ -181,7 +182,7 @@ internal class Message
             }
         }
 
-        var checkForEmotes = Code.IsPlayerMessage() && Plugin.Config.ShowEmotes;
+        var checkForEmotes = (Code.IsPlayerMessage() || extraChatChannel != Guid.Empty) && Plugin.Config.ShowEmotes;
         foreach (var chunk in oldChunks)
         {
             // Use as is if it's not a text chunk or it already has a payload.
