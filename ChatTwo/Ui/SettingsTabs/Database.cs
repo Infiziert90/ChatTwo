@@ -147,9 +147,9 @@ internal sealed class Database : ISettingsTab
             return;
 
         using var treeNode = ImRaii.TreeNode(Language.Options_Database_Advanced);
-        ImGui.PushTextWrapPos();
-        ImGuiUtil.WarningText(Language.Options_Database_Advanced_Warning);
+        using var wrap = ImGuiUtil.TextWrapPos();
 
+        ImGuiUtil.WarningText(Language.Options_Database_Advanced_Warning);
         if (ImGuiUtil.CtrlShiftButton("Perform maintenance", "Ctrl+Shift: MessageManager.Store.PerformMaintenance()"))
             Plugin.MessageManager.Store.PerformMaintenance();
 
@@ -161,8 +161,6 @@ internal sealed class Database : ISettingsTab
 
         if (ImGuiUtil.CtrlShiftButton("Inject 10,000 messages", "Ctrl+Shift: creates 10,000 unique messages (async)"))
             new Thread(() => InsertMessages(10_000)).Start();
-
-        ImGui.PopTextWrapPos();
         ImGui.Spacing();
     }
 

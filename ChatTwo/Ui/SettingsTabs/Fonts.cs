@@ -29,7 +29,7 @@ public class Fonts : ISettingsTab
         if (changed)
             UpdateFonts();
 
-        ImGui.PushTextWrapPos();
+        using var wrap = ImGuiUtil.TextWrapPos();
 
         ImGui.Checkbox(Language.Options_FontsEnabled, ref Mutable.FontsEnabled);
         ImGui.Spacing();
@@ -118,6 +118,5 @@ public class Fonts : ISettingsTab
         ImGuiUtil.HelpText(Language.Options_SymbolsFontSize_Description);
 
         ImGui.Spacing();
-        ImGui.PopTextWrapPos();
     }
 }

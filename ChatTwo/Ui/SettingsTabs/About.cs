@@ -33,7 +33,7 @@ internal sealed class About : ISettingsTab
 
     public void Draw(bool changed)
     {
-        ImGui.PushTextWrapPos();
+        using var wrap = ImGuiUtil.TextWrapPos();
 
         ImGui.TextUnformatted(string.Format(Language.Options_About_Opening, Plugin.PluginName));
 
@@ -93,8 +93,6 @@ internal sealed class About : ISettingsTab
                 }
             }
         }
-
         ImGui.Spacing();
-        ImGui.PopTextWrapPos();
     }
 }

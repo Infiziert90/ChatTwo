@@ -19,7 +19,7 @@ internal sealed class Display : ISettingsTab
 
     public void Draw(bool changed)
     {
-        ImGui.PushTextWrapPos();
+        using var wrap = ImGuiUtil.TextWrapPos();
 
         ImGuiUtil.OptionCheckbox(ref Mutable.HideChat, Language.Options_HideChat_Name, Language.Options_HideChat_Description);
         ImGui.Spacing();
@@ -52,7 +52,5 @@ internal sealed class Display : ISettingsTab
 
         ImGuiUtil.OptionCheckbox(ref Mutable.CollapseDuplicateMessages, Language.Options_CollapseDuplicateMessages_Name, Language.Options_CollapseDuplicateMessages_Description);
         ImGui.Spacing();
-
-        ImGui.PopTextWrapPos();
     }
 }

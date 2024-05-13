@@ -200,11 +200,11 @@ internal static class ImGuiUtil
     internal static void HelpText(string text)
     {
         var colour = ImGui.GetStyle().Colors[(int) ImGuiCol.TextDisabled];
+
+        using (TextWrapPos())
         using (ImRaii.PushColor(ImGuiCol.Text, colour))
         {
-            ImGui.PushTextWrapPos();
             ImGui.TextUnformatted(text);
-            ImGui.PopTextWrapPos();
         }
     }
 
@@ -215,15 +215,11 @@ internal static class ImGuiUtil
 
         var push = dalamudOrange != null;
         var color = dalamudOrange ?? Vector4.Zero;
+
+        using (TextWrapPos(wrap))
         using (ImRaii.PushColor(ImGuiCol.Text, color, push))
         {
-            if (wrap)
-                ImGui.PushTextWrapPos();
-
             ImGui.TextUnformatted(text);
-
-            if (wrap)
-                ImGui.PopTextWrapPos();
         }
     }
 
@@ -442,9 +438,15 @@ internal static class ImGuiUtil
         return new EndUnconditionally(ImGui.PopTextWrapPos, true);
     }
 
-    public static ImRaii.IEndObject TextWrapPos(float wrapLocalPosX)
+    public static ImRaii.IEndObject TextWrapPos(bool condition)
     {
-        ImGui.PushTextWrapPos(wrapLocalPosX);
+        if (!condition)
+            return new EndUnconditionally(Nop, false);
+
+        ImGui.PushTextWrapPos();
         return new EndUnconditionally(ImGui.PopTextWrapPos, true);
     }
+
+    // Used to avoid pops if condition is false for Push.
+    private static void Nop() { }
 }
