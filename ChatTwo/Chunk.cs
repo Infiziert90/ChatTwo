@@ -72,7 +72,9 @@ public class TextChunk : Chunk
 
     internal TextChunk(ChunkSource source, Payload? link, string content) : base(source, link)
     {
-        Content = content;
+        // This has been null in the past, and it broke rendering code.
+        // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
+        Content = content ?? "";
     }
 
     // ReSharper disable once UnusedMember.Global // Used by MessagePack
@@ -82,7 +84,9 @@ public class TextChunk : Chunk
         Foreground = foreground;
         Glow = glow;
         Italic = italic;
-        Content = content;
+        // See above.
+        // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
+        Content = content ?? "";
     }
 
     /// <summary>
