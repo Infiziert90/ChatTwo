@@ -11,6 +11,11 @@ public class DebuggerWindow : Window
     private readonly Plugin Plugin;
     private readonly ChatLogWindow ChatLogWindow;
 
+    public int InvisibleMessages;
+    public int InvisibleAfter;
+    public int HeightNull;
+    public int HeightCalculationsInside;
+
     public DebuggerWindow(Plugin plugin) : base($"Debugger###chat2-debugger")
     {
         Plugin = plugin;
@@ -50,5 +55,11 @@ public class DebuggerWindow : Window
         ImGui.TextUnformatted($"Hovered Item: {ChatLogWindow.PayloadHandler._hoveredItem}");
         ImGui.TextUnformatted($"Hover Counter: {ChatLogWindow.PayloadHandler._hoverCounter}");
         ImGui.TextUnformatted($"Last Hover Counter: {ChatLogWindow.PayloadHandler._lastHoverCounter}");
+        ImGui.NewLine();
+        ImGui.NewLine();
+        ImGui.TextUnformatted($"Invisible Messages: {InvisibleMessages}");
+        ImGui.TextUnformatted($"Invisible After: {InvisibleAfter}");
+        ImGui.TextUnformatted($"Height was null: {HeightNull}");
+        ImGui.TextUnformatted($"Actual Height Calculations {HeightCalculationsInside}");
     }
 }

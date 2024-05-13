@@ -417,4 +417,34 @@ internal static class ImGuiUtil
 
         return result != 0 || key == VirtualKey.NO_KEY;
     }
+
+    private struct EndUnconditionally(Action endAction, bool success) : ImRaii.IEndObject
+    {
+        private Action EndAction { get; } = endAction;
+
+        public bool Success { get; } = success;
+
+        public bool Disposed { get; private set; } = false;
+
+        public void Dispose()
+        {
+            if (!Disposed)
+            {
+                EndAction();
+                Disposed = true;
+            }
+        }
+    }
+
+    public static ImRaii.IEndObject TextWrapPos()
+    {
+        ImGui.PushTextWrapPos();
+        return new EndUnconditionally(ImGui.PopTextWrapPos, true);
+    }
+
+    public static ImRaii.IEndObject TextWrapPos(float wrapLocalPosX)
+    {
+        ImGui.PushTextWrapPos(wrapLocalPosX);
+        return new EndUnconditionally(ImGui.PopTextWrapPos, true);
+    }
 }

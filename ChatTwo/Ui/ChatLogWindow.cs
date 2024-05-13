@@ -896,6 +896,12 @@ public sealed class ChatLogWindow : Window
 
     private void DrawMessages(Tab tab, PayloadHandler handler, bool isTable, bool moreCompact = false, float oldCellPaddingY = 0)
     {
+        // TODO Remove when the temp fix is replaced with a perm one
+        Plugin.DebuggerWindow.InvisibleMessages = 0;
+        Plugin.DebuggerWindow.InvisibleAfter = 0;
+        Plugin.DebuggerWindow.HeightNull = 0;
+        Plugin.DebuggerWindow.HeightCalculationsInside = 0;
+
         try
         {
             tab.MessagesMutex.Wait();
@@ -963,13 +969,19 @@ public sealed class ChatLogWindow : Window
                 if (i > 0)
                 {
                     var prevMessage = tab.Messages[i - 1];
-                    if (prevMessage.IsVisible.TryGetValue(tab.Identifier, out var prevVisible) && prevVisible)
+
+                    // TODO: TryGetValue isn't always true for some strange reason
+                    // This should be looked into, because default will be null for the prevHeight in that case
+                    prevMessage.Height.TryGetValue(tab.Identifier, out var prevHeight);
+                    if (prevHeight == null || (prevMessage.IsVisible.TryGetValue(tab.Identifier, out var prevVisible) && prevVisible))
                     {
+                        Plugin.DebuggerWindow.HeightCalculationsInside++;
                         var newHeight = ImGui.GetCursorPosY() - lastPosY;
+
+                        // Remove the padding from the bottom of the previous row and the top of the current row.
                         if (isTable && !moreCompact)
-                            // Remove the padding from the bottom of the
-                            // previous row and the top of the current row.
                             newHeight -= oldCellPaddingY * 2;
+
                         if (newHeight != 0)
                             prevMessage.Height[tab.Identifier] = newHeight;
                     }
@@ -979,9 +991,12 @@ public sealed class ChatLogWindow : Window
                 // message has rendered once
                 // message isn't visible, so render dummy
                 message.Height.TryGetValue(tab.Identifier, out var height);
+                if (height == null)
+                    Plugin.DebuggerWindow.HeightNull++;
                 message.IsVisible.TryGetValue(tab.Identifier, out var visible);
                 if (height != null && !visible)
                 {
+                    Plugin.DebuggerWindow.InvisibleMessages++;
                     var beforeDummy = ImGui.GetCursorPos();
 
                     // skip to the message column for vis test
@@ -999,7 +1014,9 @@ public sealed class ChatLogWindow : Window
                         ImGui.SetCursorPos(beforeDummy);
                     }
                     else
+                    {
                         continue;
+                    }
                 }
 
                 if (tab.DisplayTimestamp)
@@ -1034,14 +1051,17 @@ public sealed class ChatLogWindow : Window
                     ImGui.SameLine();
                 }
 
+                // We need to draw something otherwise the item visibility check below won't work.
                 if (message.Content.Count == 0)
-                    // We need to draw something otherwise the item visibility
-                    // check below won't work.
                     DrawChunks(new[] { new TextChunk(ChunkSource.Content, null, " ") }, true, handler, lineWidth);
                 else
                     DrawChunks(message.Content, true, handler, lineWidth);
 
-                message.IsVisible[tab.Identifier] = ImGui.IsItemVisible();
+                var vis = ImGui.IsItemVisible();
+                if (!vis)
+                    Plugin.DebuggerWindow.InvisibleAfter++;
+
+                message.IsVisible[tab.Identifier] = vis;
             }
         }
         finally

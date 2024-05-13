@@ -222,7 +222,7 @@ public sealed class PayloadHandler {
     }
 
     internal void Hover(Payload payload) {
-        var hoverSize = 250f * ImGuiHelpers.GlobalScale;
+        var hoverSize = 350f * ImGuiHelpers.GlobalScale;
 
         switch (payload)
         {
@@ -260,20 +260,11 @@ public sealed class PayloadHandler {
     {
         ImGui.SetNextWindowSize(new Vector2(width, -1f));
 
-        ImGui.BeginTooltip();
-        ImGui.PushTextWrapPos();
-        ImGui.PushStyleColor(ImGuiCol.Text, LogWindow.DefaultText);
+        using var tooltip = ImRaii.Tooltip();
+        using var color = ImRaii.PushColor(ImGuiCol.Text, LogWindow.DefaultText);
+        using var wrap = ImGuiUtil.TextWrapPos();
 
-        try
-        {
-            inside();
-        }
-        finally
-        {
-            ImGui.PopStyleColor();
-            ImGui.PopTextWrapPos();
-            ImGui.EndTooltip();
-        }
+        inside();
     }
 
     public unsafe void MoveTooltip(AddonEvent type, AddonArgs args)
