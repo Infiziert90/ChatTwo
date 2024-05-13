@@ -5,8 +5,10 @@ using System.Text;
 
 namespace ChatTwo.Util;
 
-internal static class ChunkUtil {
-    internal static IEnumerable<Chunk> ToChunks(SeString msg, ChunkSource source, ChatType? defaultColour) {
+internal static class ChunkUtil
+{
+    internal static IEnumerable<Chunk> ToChunks(SeString msg, ChunkSource source, ChatType? defaultColour)
+    {
         var chunks = new List<Chunk>();
 
         var italic = false;
@@ -14,8 +16,10 @@ internal static class ChunkUtil {
         var glow = new Stack<uint>();
         Payload? link = null;
 
-        void Append(string text) {
-            chunks.Add(new TextChunk(source, link, text) {
+        void Append(string text)
+        {
+            chunks.Add(new TextChunk(source, link, text)
+            {
                 FallbackColour = defaultColour,
                 Foreground = foreground.Count > 0 ? foreground.Peek() : null,
                 Glow = glow.Count > 0 ? glow.Peek() : null,
@@ -23,29 +27,27 @@ internal static class ChunkUtil {
             });
         }
 
-        foreach (var payload in msg.Payloads) {
-            switch (payload.Type) {
+        foreach (var payload in msg.Payloads)
+        {
+            switch (payload.Type)
+            {
                 case PayloadType.EmphasisItalic:
                     var newStatus = ((EmphasisItalicPayload) payload).IsEnabled;
                     italic = newStatus;
                     break;
                 case PayloadType.UIForeground:
                     var foregroundPayload = (UIForegroundPayload) payload;
-                    if (foregroundPayload.IsEnabled) {
+                    if (foregroundPayload.IsEnabled)
                         foreground.Push(foregroundPayload.UIColor.UIForeground);
-                    } else if (foreground.Count > 0) {
+                    else if (foreground.Count > 0)
                         foreground.Pop();
-                    }
-
                     break;
                 case PayloadType.UIGlow:
                     var glowPayload = (UIGlowPayload) payload;
-                    if (glowPayload.IsEnabled) {
+                    if (glowPayload.IsEnabled)
                         glow.Push(glowPayload.UIColor.UIGlow);
-                    } else if (glow.Count > 0) {
+                    else if (glow.Count > 0)
                         glow.Pop();
-                    }
-
                     break;
                 case PayloadType.AutoTranslateText:
                     chunks.Add(new IconChunk(source, link, BitmapFontIcon.AutoTranslateBegin));
@@ -86,7 +88,8 @@ internal static class ChunkUtil {
                     }
                     else if (rawPayload.Data.Length > 1 && rawPayload.Data[1] == 0x14)
                     {
-                        if (glow.Count > 0) {
+                        if (glow.Count > 0)
+                        {
                             glow.Pop();
                         }
                         else if (rawPayload.Data.Length > 6 && rawPayload.Data[2] == 0x05 && rawPayload.Data[3] == 0xF6)
@@ -95,30 +98,34 @@ internal static class ChunkUtil {
                             glow.Push(ColourUtil.ComponentsToRgba(r, g, b));
                         }
                     }
-                    else if (rawPayload.Data.Length > 7 && rawPayload.Data[1] == 0x27 && rawPayload.Data[3] == 0x0A) {
+                    else if (rawPayload.Data.Length > 7 && rawPayload.Data[1] == 0x27 && rawPayload.Data[3] == 0x0A)
+                    {
                         // pf payload
                         var reader = new BinaryReader(new MemoryStream(rawPayload.Data[4..]));
                         var id = GetInteger(reader);
                         link = new PartyFinderPayload(id);
-                    } else if (rawPayload.Data.Length > 5 && rawPayload.Data[1] == 0x27 && rawPayload.Data[3] == 0x06) {
+                    }
+                    else if (rawPayload.Data.Length > 5 && rawPayload.Data[1] == 0x27 && rawPayload.Data[3] == 0x06)
+                    {
                         // achievement payload
                         var reader = new BinaryReader(new MemoryStream(rawPayload.Data[4..]));
                         var id = GetInteger(reader);
                         link = new AchievementPayload(id);
-                    } else if (rawPayload.Data.Length > 5 && rawPayload.Data[1] == 0x27 && rawPayload.Data[3] == 0x07) {
+                    }
+                    else if (rawPayload.Data.Length > 5 && rawPayload.Data[1] == 0x27 && rawPayload.Data[3] == 0x07)
+                    {
                         // uri payload
                         var uri = new Uri(Encoding.UTF8.GetString(rawPayload.Data[4..]));
                         link = new UriPayload(uri);
-                    } else if (Equals(rawPayload, RawPayload.LinkTerminator)) {
+                    }
+                    else if (Equals(rawPayload, RawPayload.LinkTerminator))
+                    {
                         link = null;
                     }
-
                     break;
                 default:
-                    if (payload is ITextProvider textProvider) {
+                    if (payload is ITextProvider textProvider)
                         Append(textProvider.Text);
-                    }
-
                     break;
             }
         }
@@ -126,21 +133,18 @@ internal static class ChunkUtil {
         return chunks;
     }
 
-    internal static readonly RawPayload PeriodicRecruitmentLink = new(new byte[] {
-        0x02, 0x27, 0x07, 0x08, 0x01, 0x01, 0x01, 0xFF, 0x01, 0x03,
-    });
+    internal static readonly RawPayload PeriodicRecruitmentLink = new([0x02, 0x27, 0x07, 0x08, 0x01, 0x01, 0x01, 0xFF, 0x01, 0x03]);
 
-    private static uint GetInteger(BinaryReader input) {
+    private static uint GetInteger(BinaryReader input)
+    {
         var num1 = (uint) input.ReadByte();
-        if (num1 < 208U) {
+        if (num1 < 208U)
             return num1 - 1U;
-        }
 
         var num2 = (uint) ((int) num1 + 1 & 15);
         var numArray = new byte[4];
-        for (var index = 3; index >= 0; --index) {
+        for (var index = 3; index >= 0; --index)
             numArray[index] = (num2 & 1 << index) == 0L ? (byte) 0 : input.ReadByte();
-        }
 
         return BitConverter.ToUInt32(numArray, 0);
     }

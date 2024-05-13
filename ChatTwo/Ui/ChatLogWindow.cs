@@ -1513,8 +1513,11 @@ public sealed class ChatLogWindow : Window
             DrawChunk(chunks[i], wrap, handler, lineWidth);
 
             if (i < chunks.Count - 1)
+            {
                 ImGui.SameLine();
-            else if (chunks[i].Link is EmotePayload && Plugin.Config.ShowEmotes) {
+            }
+            else if (chunks[i].Link is EmotePayload && Plugin.Config.ShowEmotes)
+            {
                 // Emote payloads seem to not automatically put newlines, which
                 // is an issue when modern mode is disabled.
                 ImGui.SameLine();
@@ -1554,16 +1557,20 @@ public sealed class ChatLogWindow : Window
             var emoteSize = ImGui.CalcTextSize("W");
             emoteSize = emoteSize with { Y = emoteSize.X } * 1.5f;
 
+            // We only draw a dummy if it is still loading, in the case it failed we draw the actual name
             var image = EmoteCache.GetEmote(emotePayload.Code);
-            if (image is { IsLoaded: true })
-                image.Draw(emoteSize);
-            else
-                ImGui.Dummy(emoteSize);
+            if (image is { Failed: false })
+            {
+                if (image.IsLoaded)
+                    image.Draw(emoteSize);
+                else
+                    ImGui.Dummy(emoteSize);
 
-            if (ImGui.IsItemHovered())
-                ImGui.SetTooltip(emotePayload.Code);
+                if (ImGui.IsItemHovered())
+                    ImGui.SetTooltip(emotePayload.Code);
 
-            return;
+                return;
+            }
         }
 
         var colour = text.Foreground;

@@ -11,6 +11,13 @@ namespace ChatTwo;
 
 public static class EmoteCache
 {
+    private static readonly HttpClient Client = new();
+
+    private const string BetterTTV = "https://api.betterttv.net/3";
+    private const string GlobalEmotes = $"{BetterTTV}/cached/emotes/global";
+    private const string Top100Emotes = "{0}/emotes/shared/top?before={1}&limit=100";
+    private const string EmotePath = "https://cdn.betterttv.net/emote/{0}/1x";
+
     private struct Top100
     {
         [JsonPropertyName("emote")]
@@ -37,18 +44,11 @@ public static class EmoteCache
         Done
     }
 
-    private const string BetterTTV = "https://api.betterttv.net/3";
-    private const string GlobalEmotes = $"{BetterTTV}/cached/emotes/global";
-    private const string Top100Emotes = "{0}/emotes/shared/top?before={1}&limit=100";
-    private const string EmotePath = "https://cdn.betterttv.net/emote/{0}/1x";
-
-    private static readonly HttpClient Client = new();
-
     // All of this data is uninitalized while State is not `LoadingState.Done`
     public static LoadingState State = LoadingState.Unloaded;
-    private static Dictionary<string, IEmote> EmoteImages = new();
 
-    private static Dictionary<string, Emote> Cache = new();
+    private static readonly Dictionary<string, Emote> Cache = new();
+    private static readonly Dictionary<string, IEmote> EmoteImages = new();
 
     public static string[] SortedCodeArray = [];
 
@@ -127,9 +127,9 @@ public static class EmoteCache
 
     public class IEmote
     {
+        public bool Failed;
         public bool IsLoaded;
 
-        public bool IsAnimated = false;
         public IDalamudTextureWrap Texture;
 
         public virtual void Draw(Vector2 size)
@@ -182,6 +182,7 @@ public static class EmoteCache
             }
             catch (Exception ex)
             {
+                Failed = true;
                 Plugin.Log.Error(ex, $"Unable to load {emote.Code} with id {emote.Id}");
             }
         }
@@ -271,6 +272,7 @@ public static class EmoteCache
             }
             catch (Exception ex)
             {
+                Failed = true;
                 Plugin.Log.Error(ex, $"Unable to load {emote.Code} with id {emote.Id}");
             }
         }
