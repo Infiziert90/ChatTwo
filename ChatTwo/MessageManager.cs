@@ -126,9 +126,21 @@ internal class MessageManager : IAsyncDisposable
             foreach (var tab in Plugin.Config.Tabs.Where(tab => tab.Matches(message)))
                 tab.AddMessage(message, unread);
 
-        if (messages.DidError)
-            WrapperUtil.AddNotification(Language.LoadMessages_Error, NotificationType.Error);
+        if (!messages.DidError) return;
+
+        WrapperUtil.AddNotification(Language.LoadMessages_Error, NotificationType.Error);
+
+        // Mark the failed messages as deleted so we don't try to load them
+        // again.
+        var failedIds = messages.FailedMessageIds();
+        Plugin.Log.Info($"Marking {failedIds.Count} messages as deleted due to parse failures");
+        foreach (var msgId in messages.FailedMessageIds())
+        {
+            Plugin.Log.Debug($"Marking message '{msgId}' as deleted due to parse failure");
+            Store.DeleteMessage(msgId);
+        }
     }
+
     internal void FilterAllTabsAsync(bool unread = true)
     {
         Task.Run(() =>

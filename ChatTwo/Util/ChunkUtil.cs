@@ -112,12 +112,8 @@ internal static class ChunkUtil
                         var id = GetInteger(reader);
                         link = new AchievementPayload(id);
                     }
-                    else if (rawPayload.Data.Length > 5 && rawPayload.Data[1] == 0x27 && rawPayload.Data[3] == 0x07)
-                    {
-                        // uri payload
-                        var uri = new Uri(Encoding.UTF8.GetString(rawPayload.Data[4..]));
-                        link = new UriPayload(uri);
-                    }
+                    // NOTE: no URIPayload because it originates solely from
+                    // new Message(). The game doesn't have a URI payload type.
                     else if (Equals(rawPayload, RawPayload.LinkTerminator))
                     {
                         link = null;

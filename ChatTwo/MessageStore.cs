@@ -161,8 +161,26 @@ internal class MessageStore : IDisposable
 
     private void Migrate()
     {
-        // TODO: this should be improved/swapped out for a library at some
-        // point.
+        // Get current user_version.
+        var cmd = Connection.CreateCommand();
+        cmd.CommandText = "PRAGMA user_version;";
+        var userVersion = Convert.ToInt32(cmd.ExecuteScalar());
+
+        var migrationsToDo = new List<Action>();
+        if (userVersion <= 0)
+        {
+            migrationsToDo.Add(Migrate0);
+            // Migration support was only added in version 1. Migrate0 is
+            // idempotent.
+            migrationsToDo.Add(Migrate1);
+        }
+
+        foreach (var migration in migrationsToDo)
+            migration();
+    }
+
+    private void Migrate0()
+    {
         Connection.Execute(@"
             CREATE TABLE IF NOT EXISTS messages (
                 Id BLOB PRIMARY KEY NOT NULL,  -- Guid
@@ -181,13 +199,27 @@ internal class MessageStore : IDisposable
             CREATE INDEX IF NOT EXISTS idx_messages_receiver ON messages (Receiver);
             CREATE INDEX IF NOT EXISTS idx_messages_date ON messages (Date);
         ");
+
+        SetMigrationVersion(0);
     }
 
-    internal void Reconnect()
+    private void Migrate1()
     {
-        Connection.Close();
-        Connection.Dispose();
-        Connection = Connect();
+        Connection.Execute(@"
+            -- Migration 1: Add Deleted column
+            ALTER TABLE messages ADD COLUMN Deleted BOOLEAN NOT NULL DEFAULT false;
+        ");
+
+        SetMigrationVersion(1);
+    }
+
+    private void SetMigrationVersion(int version)
+    {
+        var cmd = Connection.CreateCommand();
+        // Parameters aren't supported for PRAGMA queries, and you can't set the
+        // version with a pragma_ function.
+        cmd.CommandText = $"PRAGMA user_version = {version};";
+        cmd.ExecuteNonQuery();
     }
 
     internal void ClearMessages()
@@ -231,7 +263,8 @@ internal class MessageStore : IDisposable
                 SenderSource,
                 ContentSource,
                 SortCode,
-                ExtraChatChannel
+                ExtraChatChannel,
+                Deleted
             ) VALUES (
                 $Id,
                 $Receiver,
@@ -243,7 +276,8 @@ internal class MessageStore : IDisposable
                 $SenderSource,
                 $ContentSource,
                 $SortCode,
-                $ExtraChatChannel
+                $ExtraChatChannel,
+                false
             )
             ON CONFLICT (id) DO UPDATE SET
                 Receiver = excluded.Receiver,
@@ -255,7 +289,9 @@ internal class MessageStore : IDisposable
                 SenderSource = excluded.SenderSource,
                 ContentSource = excluded.ContentSource,
                 SortCode = excluded.SortCode,
-                ExtraChatChannel = excluded.ExtraChatChannel;
+                ExtraChatChannel = excluded.ExtraChatChannel,
+                Deleted = false
+            ;
         ";
 
         cmd.Parameters.AddWithValue("$Id", message.Id);
@@ -281,13 +317,13 @@ internal class MessageStore : IDisposable
     /// <param name="count">The amount to return. Defaults to 10,000.</param>
     internal MessageEnumerator GetMostRecentMessages(ulong? receiver = null, DateTimeOffset? since = null, int count = MessageQueryLimit)
     {
-        var whereClauses = new List<string>();
+        List<string> whereClauses = ["deleted = false"];
         if (receiver != null)
             whereClauses.Add("Receiver = $Receiver");
         if (since != null)
             whereClauses.Add("Date >= $Since");
 
-        var whereClause = whereClauses.Count > 0 ? "WHERE " + string.Join(" AND ", whereClauses) : "";
+        var whereClause = "WHERE " + string.Join(" AND ", whereClauses);
 
         var cmd = Connection.CreateCommand();
         // Select last N messages by date DESC, but reverse the order to get
@@ -325,14 +361,28 @@ internal class MessageStore : IDisposable
 
         return new MessageEnumerator(cmd.ExecuteReader());
     }
+
+    /// <summary>
+    /// Marks a message as deleted so it won't get returned in queries.
+    /// </summary>
+    internal void DeleteMessage(Guid id)
+    {
+        var cmd = Connection.CreateCommand();
+        cmd.CommandText = "UPDATE messages SET Deleted = true WHERE Id = $Id;";
+        cmd.Parameters.AddWithValue("$Id", id);
+        cmd.ExecuteNonQuery();
+    }
 }
 
 internal class MessageEnumerator(DbDataReader reader) : IEnumerable<Message>
 {
     private const int MaxErrorLogs = 10;
 
-    private int _errorCount;
-    public bool DidError => _errorCount > 0;
+    // FailedIds and FailedCount are separate, because messages might fail to
+    // even parse the ID field.
+    private readonly List<Guid> FailedIds = new();
+    private int FailedCount;
+    public bool DidError => FailedCount > 0;
 
     public IEnumerator<Message> GetEnumerator()
     {
@@ -359,17 +409,15 @@ internal class MessageEnumerator(DbDataReader reader) : IEnumerable<Message>
             }
             catch (Exception e)
             {
-                if (_errorCount < MaxErrorLogs)
+                if (FailedCount < MaxErrorLogs)
                     Plugin.Log.Error($"Exception while reading message '{id}' from database: {e}");
-                _errorCount++;
-                if (_errorCount == MaxErrorLogs)
+                FailedCount++;
+                if (FailedCount == MaxErrorLogs)
                     Plugin.Log.Error("Further parsing errors will not be logged");
+                if (id != Guid.Empty)
+                    FailedIds.Add(id);
 
-                #if DEBUG
-                throw;
-                #else
                 continue;
-                #endif
             }
 
             yield return msg;
@@ -379,5 +427,10 @@ internal class MessageEnumerator(DbDataReader reader) : IEnumerable<Message>
     IEnumerator IEnumerable.GetEnumerator()
     {
         return GetEnumerator();
+    }
+
+    public IReadOnlyList<Guid> FailedMessageIds()
+    {
+        return FailedIds;
     }
 }
