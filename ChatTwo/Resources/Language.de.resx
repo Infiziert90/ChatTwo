@@ -1013,4 +1013,64 @@ Sie wurden gewarnt.</value>
   <data name="Options_AdjustPosition_Warning" xml:space="preserve">
         <value>Achtung, diese Änderung tritt sofort ein und ist nicht verwerfbar!</value>
     </data>
+  <data name="Options_KeepInputFocus_Name" xml:space="preserve">
+        <value>Eingabefokus behalten</value>
+    </data>
+  <data name="Options_KeepInputFocus_Description" xml:space="preserve">
+        <value>Der Eingabefokus wird beibehalten, auch wenn du in den Kampf ziehst oder andere Aktionen ausführst</value>
+    </data>
+  <data name="Options_ShowEmotes_Name" xml:space="preserve">
+        <value>Emotes anzeigen</value>
+    </data>
+  <data name="Options_ShowEmotes_Desc" xml:space="preserve">
+        <value>Tausche Wörter durch ihre Emote-Versionen aus, unterstützt derzeit BetterTTV</value>
+    </data>
+  <data name="Options_Emote_Tab" xml:space="preserve">
+        <value>Emotes</value>
+    </data>
+  <data name="Options_Emote_BlockedEmotes" xml:space="preserve">
+        <value>Blockierte Emotes</value>
+    </data>
+  <data name="Options_Emote_EmoteTable" xml:space="preserve">
+        <value>Emote</value>
+    </data>
+  <data name="Options_HideInBattle_Name" xml:space="preserve">
+        <value>Während des Kampfes ausblenden</value>
+    </data>
+  <data name="Options_HideInBattle_Description" xml:space="preserve">
+        <value>Blende den Chat während der Kämpfe aus.</value>
+    </data>
+  <data name="Options_Emote_EmoteStats" xml:space="preserve">
+        <value>Emote-Statistik</value>
+    </data>
+  <data name="Options_Emote_Ready" xml:space="preserve">
+        <value>Bereit</value>
+    </data>
+  <data name="Options_Emote_NotReady" xml:space="preserve">
+        <value>Nicht bereit</value>
+    </data>
+  <data name="Options_Emote_Loaded" xml:space="preserve">
+        <value>Emotes verfügbar:</value>
+    </data>
+  <data name="Options_Preview_Description" xml:space="preserve">
+        <value>A preview wih all emote, auto-translate encoded as they appear in chat</value>
+    </data>
+  <data name="Options_Preview_Name" xml:space="preserve">
+        <value>Input preview</value>
+    </data>
+  <data name="Options_Preview_None" xml:space="preserve">
+        <value>None</value>
+    </data>
+  <data name="Options_Preview_Inside" xml:space="preserve">
+        <value>Inside</value>
+    </data>
+  <data name="Options_Preview_Top" xml:space="preserve">
+        <value>Top</value>
+    </data>
+  <data name="Options_Preview_Bottom" xml:space="preserve">
+        <value>Bottom</value>
+    </data>
+  <data name="Options_Preview_Header" xml:space="preserve">
+        <value>Text Preview:</value>
+    </data>
 </root>
