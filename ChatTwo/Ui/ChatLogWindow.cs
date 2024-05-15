@@ -68,6 +68,7 @@ public sealed class ChatLogWindow : Window
 
     public int CursorPos;
 
+    public float PosYAboveInput { get; private set; }
     public Vector2 LastWindowPos { get; private set; } = Vector2.Zero;
     public Vector2 LastWindowSize { get; private set; } = Vector2.Zero;
 
@@ -517,6 +518,7 @@ public sealed class ChatLogWindow : Window
         if (currentTab > -1 && currentTab < Plugin.Config.Tabs.Count)
             activeTab = Plugin.Config.Tabs[currentTab];
 
+        PosYAboveInput = ImGui.GetCursorPosY();
         using (ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, Vector2.Zero))
         {
             if (TellTarget != null)
@@ -896,12 +898,6 @@ public sealed class ChatLogWindow : Window
 
     private void DrawMessages(Tab tab, PayloadHandler handler, bool isTable, bool moreCompact = false, float oldCellPaddingY = 0)
     {
-        // TODO Remove when the temp fix is replaced with a perm one
-        Plugin.DebuggerWindow.InvisibleMessages = 0;
-        Plugin.DebuggerWindow.InvisibleAfter = 0;
-        Plugin.DebuggerWindow.HeightNull = 0;
-        Plugin.DebuggerWindow.HeightCalculationsInside = 0;
-
         try
         {
             tab.MessagesMutex.Wait();
@@ -975,7 +971,6 @@ public sealed class ChatLogWindow : Window
                     prevMessage.Height.TryGetValue(tab.Identifier, out var prevHeight);
                     if (prevHeight == null || (prevMessage.IsVisible.TryGetValue(tab.Identifier, out var prevVisible) && prevVisible))
                     {
-                        Plugin.DebuggerWindow.HeightCalculationsInside++;
                         var newHeight = ImGui.GetCursorPosY() - lastPosY;
 
                         // Remove the padding from the bottom of the previous row and the top of the current row.
@@ -991,12 +986,9 @@ public sealed class ChatLogWindow : Window
                 // message has rendered once
                 // message isn't visible, so render dummy
                 message.Height.TryGetValue(tab.Identifier, out var height);
-                if (height == null)
-                    Plugin.DebuggerWindow.HeightNull++;
                 message.IsVisible.TryGetValue(tab.Identifier, out var visible);
                 if (height != null && !visible)
                 {
-                    Plugin.DebuggerWindow.InvisibleMessages++;
                     var beforeDummy = ImGui.GetCursorPos();
 
                     // skip to the message column for vis test
@@ -1057,11 +1049,7 @@ public sealed class ChatLogWindow : Window
                 else
                     DrawChunks(message.Content, true, handler, lineWidth);
 
-                var vis = ImGui.IsItemVisible();
-                if (!vis)
-                    Plugin.DebuggerWindow.InvisibleAfter++;
-
-                message.IsVisible[tab.Identifier] = vis;
+                message.IsVisible[tab.Identifier] = ImGui.IsItemVisible();
             }
         }
         finally

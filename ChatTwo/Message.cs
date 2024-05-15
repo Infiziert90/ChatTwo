@@ -112,6 +112,11 @@ internal class Message
             chunk.Message = this;
     }
 
+    internal static Message FakeMessage(List<Chunk> content, ChatCode code)
+    {
+        return new Message(0, 0, code, [], content, new SeString(), new SeString());
+    }
+
     private int GenerateHash()
     {
         return SortCode.GetHashCode()

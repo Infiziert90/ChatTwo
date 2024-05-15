@@ -45,6 +45,7 @@ public sealed class Plugin : IDalamudPlugin
     public readonly WindowSystem WindowSystem = new(PluginName);
     public SettingsWindow SettingsWindow { get; }
     public ChatLogWindow ChatLogWindow { get; }
+    public InputPreview InputPreview { get; }
     public CommandHelpWindow CommandHelpWindow { get; }
     public SeStringDebugger SeStringDebugger { get; }
     public DebuggerWindow DebuggerWindow { get; }
@@ -88,12 +89,14 @@ public sealed class Plugin : IDalamudPlugin
 
             ChatLogWindow = new ChatLogWindow(this);
             SettingsWindow = new SettingsWindow(this);
+            InputPreview = new InputPreview(ChatLogWindow);
             CommandHelpWindow = new CommandHelpWindow(ChatLogWindow);
             SeStringDebugger = new SeStringDebugger(this);
             DebuggerWindow = new DebuggerWindow(this);
 
             WindowSystem.AddWindow(ChatLogWindow);
             WindowSystem.AddWindow(SettingsWindow);
+            WindowSystem.AddWindow(InputPreview);
             WindowSystem.AddWindow(CommandHelpWindow);
             WindowSystem.AddWindow(SeStringDebugger);
             WindowSystem.AddWindow(DebuggerWindow);
@@ -150,6 +153,7 @@ public sealed class Plugin : IDalamudPlugin
         WindowSystem?.RemoveAllWindows();
         ChatLogWindow?.Dispose();
         SettingsWindow?.Dispose();
+        DebuggerWindow?.Dispose();
         SeStringDebugger?.Dispose();
         LegacyMessageImporterWindow?.Dispose();
 
