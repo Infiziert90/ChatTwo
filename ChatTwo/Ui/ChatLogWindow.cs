@@ -9,6 +9,7 @@ using ChatTwo.Util;
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Keys;
+using Dalamud.Game.Text;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface;
@@ -66,9 +67,10 @@ public sealed class ChatLogWindow : Window
     private int AutoCompleteSelection;
     private bool AutoCompleteShouldScroll;
 
+    private float PreviewHeight;
+
     public int CursorPos;
 
-    public float PosYAboveInput { get; private set; }
     public Vector2 LastWindowPos { get; private set; } = Vector2.Zero;
     public Vector2 LastWindowSize { get; private set; } = Vector2.Zero;
 
@@ -318,10 +320,13 @@ public sealed class ChatLogWindow : Window
         InputBacklog.Add(message);
     }
 
-    private static float GetRemainingHeightForMessageLog()
+    private float GetRemainingHeightForMessageLog()
     {
         var lineHeight = ImGui.CalcTextSize("A").Y;
-        return ImGui.GetContentRegionAvail().Y - lineHeight * 2 - ImGui.GetStyle().ItemSpacing.Y - ImGui.GetStyle().FramePadding.Y * 2;
+        var height = ImGui.GetContentRegionAvail().Y - lineHeight * 2 - ImGui.GetStyle().ItemSpacing.Y - ImGui.GetStyle().FramePadding.Y * 2;
+
+        height -= PreviewHeight;
+        return height;
     }
 
     private void HandleKeybinds(bool modifiersOnly = false)
@@ -512,13 +517,47 @@ public sealed class ChatLogWindow : Window
         LastViewport = ImGui.GetWindowViewport().NativePtr;
         WasDocked = ImGui.IsWindowDocked();
 
+        // We Predraw this once to get the actual height :HideThePain:
+        // TODO: I hate this predraw thing
+        PreviewHeight = 0;
+        Message? predrawnMessage = null;
+        if (!string.IsNullOrEmpty(Chat))
+        {
+            var bytes = Encoding.UTF8.GetBytes(Chat.Trim());
+            AutoTranslate.ReplaceWithPayload(Plugin.DataManager, ref bytes);
+
+            var chunks = ChunkUtil.ToChunks(SeString.Parse(bytes), ChunkSource.Content, ChatType.Say).ToList();
+            predrawnMessage = Message.FakeMessage(chunks, new ChatCode((ushort) XivChatType.Say));
+
+            var pos = ImGui.GetCursorPos();
+            ImGui.SetCursorPos(new Vector2(-500, -500));
+            var before = ImGui.GetCursorPosY();
+            using (ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, Vector2.Zero))
+            {
+                ImGui.TextUnformatted("Text Preview:");
+                DrawChunks(predrawnMessage.Content);
+            }
+            var after = ImGui.GetCursorPosY();
+            ImGui.SetCursorPos(pos);
+
+            PreviewHeight = after - before;
+        }
+
         var currentTab = Plugin.Config.SidebarTabView ? DrawTabSidebar() : DrawTabBar();
 
         Tab? activeTab = null;
         if (currentTab > -1 && currentTab < Plugin.Config.Tabs.Count)
             activeTab = Plugin.Config.Tabs[currentTab];
 
-        PosYAboveInput = ImGui.GetCursorPosY();
+        if (predrawnMessage != null)
+        {
+            using (ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, Vector2.Zero))
+            {
+                ImGui.TextUnformatted("Text Preview:");
+                DrawChunks(predrawnMessage.Content);
+            }
+        }
+
         using (ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, Vector2.Zero))
         {
             if (TellTarget != null)
