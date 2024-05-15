@@ -25,6 +25,7 @@ internal class Configuration : IPluginConfiguration
     public bool HideSameTimestamps;
     public bool ShowNoviceNetwork;
     public bool SidebarTabView;
+    public PreviewPosition PreviewPosition = PreviewPosition.Inside;
     public CommandHelpSide CommandHelpSide = CommandHelpSide.None;
     public KeybindMode KeybindMode = KeybindMode.Strict;
     public LanguageOverride LanguageOverride = LanguageOverride.None;
@@ -78,6 +79,7 @@ internal class Configuration : IPluginConfiguration
         HideSameTimestamps = other.HideSameTimestamps;
         ShowNoviceNetwork = other.ShowNoviceNetwork;
         SidebarTabView = other.SidebarTabView;
+        PreviewPosition = other.PreviewPosition;
         CommandHelpSide = other.CommandHelpSide;
         KeybindMode = other.KeybindMode;
         LanguageOverride = other.LanguageOverride;
@@ -236,6 +238,27 @@ internal class Tab
             InputDisabled = InputDisabled,
         };
     }
+}
+
+[Serializable]
+internal enum PreviewPosition
+{
+    None,
+    Inside,
+    Top,
+    Bottom,
+}
+
+internal static class PreviewPositionExt
+{
+    internal static string Name(this PreviewPosition position) => position switch
+    {
+        PreviewPosition.None => Language.Options_Preview_None,
+        PreviewPosition.Inside => Language.Options_Preview_Inside,
+        PreviewPosition.Top => Language.Options_Preview_Top,
+        PreviewPosition.Bottom => Language.Options_Preview_Bottom,
+        _ => throw new ArgumentOutOfRangeException(nameof(position), position, null),
+    };
 }
 
 [Serializable]

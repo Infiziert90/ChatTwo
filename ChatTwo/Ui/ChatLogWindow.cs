@@ -521,7 +521,7 @@ public sealed class ChatLogWindow : Window
         // TODO: I hate this predraw thing
         PreviewHeight = 0;
         Message? predrawnMessage = null;
-        if (!string.IsNullOrEmpty(Chat))
+        if (Plugin.Config.PreviewPosition is PreviewPosition.Inside && !string.IsNullOrEmpty(Chat))
         {
             var bytes = Encoding.UTF8.GetBytes(Chat.Trim());
             AutoTranslate.ReplaceWithPayload(Plugin.DataManager, ref bytes);
@@ -534,7 +534,7 @@ public sealed class ChatLogWindow : Window
             var before = ImGui.GetCursorPosY();
             using (ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, Vector2.Zero))
             {
-                ImGui.TextUnformatted("Text Preview:");
+                ImGui.TextUnformatted(Language.Options_Preview_Header);
                 DrawChunks(predrawnMessage.Content);
             }
             var after = ImGui.GetCursorPosY();

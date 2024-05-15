@@ -24,6 +24,19 @@ internal sealed class Miscellaneous(Configuration mutable) : ISettingsTab
         ImGuiUtil.HelpText(string.Format(Language.Options_Language_Description, Plugin.PluginName));
         ImGui.Spacing();
 
+        using (var combo = ImGuiUtil.BeginComboVertical(Language.Options_Preview_Name, Mutable.PreviewPosition.Name()))
+        {
+            if (combo)
+            {
+                foreach (var position in Enum.GetValues<PreviewPosition>())
+                    if (ImGui.Selectable(position.Name(), Mutable.PreviewPosition == position))
+                        Mutable.PreviewPosition = position;
+            }
+        }
+
+        ImGuiUtil.HelpText(Language.Options_Preview_Description);
+        ImGui.Spacing();
+
         using (var combo = ImGuiUtil.BeginComboVertical(Language.Options_CommandHelpSide_Name, Mutable.CommandHelpSide.Name()))
         {
             if (combo)

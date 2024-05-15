@@ -1,4 +1,3 @@
-using System.Numerics;
 using System.Text;
 using ChatTwo.Code;
 using ChatTwo.Util;
@@ -14,7 +13,6 @@ public class InputPreview : Window
     private ChatLogWindow LogWindow { get; }
 
     private float Height;
-    private float AppliedHeight;
 
     internal InputPreview(ChatLogWindow logWindow) : base("##chat2-inputpreview")
     {
@@ -31,25 +29,25 @@ public class InputPreview : Window
 
     public override void PreDraw()
     {
-        // ReSharper disable once CompareOfFloatsByEqualityOperator
-        // Sizes don't use much precision
-        if (AppliedHeight == Height)
-            return;
-
-        AppliedHeight = Height;
-
-        var width = LogWindow.LastWindowSize.X;
         var pos = LogWindow.LastWindowPos;
+        var size = LogWindow.LastWindowSize;
 
-        Size = new Vector2(width, Height);
+        Size = size with { Y = Height };
 
-        Position = pos with { Y = pos.Y - Height };
+        var y = Plugin.Config.PreviewPosition switch
+        {
+            PreviewPosition.Top => pos.Y - Height,
+            PreviewPosition.Bottom => pos.Y + size.Y,
+            _ => throw new ArgumentOutOfRangeException(nameof(Plugin.Config.PreviewPosition), Plugin.Config.PreviewPosition, null)
+        };
+
+        Position = pos with { Y = y };
         PositionCondition = ImGuiCond.Always;
     }
 
     public override bool DrawConditions()
     {
-        return !string.IsNullOrEmpty(LogWindow.Chat);
+        return Plugin.Config.PreviewPosition is PreviewPosition.Top or PreviewPosition.Bottom && !string.IsNullOrEmpty(LogWindow.Chat);
     }
 
     public override void Draw()

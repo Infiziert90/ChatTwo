@@ -2391,6 +2391,69 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bottom.
+        /// </summary>
+        internal static string Options_Preview_Bottom {
+            get {
+                return ResourceManager.GetString("Options_Preview_Bottom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A preview wih all emote, auto-translate encoded as they appear in chat.
+        /// </summary>
+        internal static string Options_Preview_Description {
+            get {
+                return ResourceManager.GetString("Options_Preview_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Text Preview:.
+        /// </summary>
+        internal static string Options_Preview_Header {
+            get {
+                return ResourceManager.GetString("Options_Preview_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inside.
+        /// </summary>
+        internal static string Options_Preview_Inside {
+            get {
+                return ResourceManager.GetString("Options_Preview_Inside", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Input preview.
+        /// </summary>
+        internal static string Options_Preview_Name {
+            get {
+                return ResourceManager.GetString("Options_Preview_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to None.
+        /// </summary>
+        internal static string Options_Preview_None {
+            get {
+                return ResourceManager.GetString("Options_Preview_None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Top.
+        /// </summary>
+        internal static string Options_Preview_Top {
+            get {
+                return ResourceManager.GetString("Options_Preview_Top", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Replaces words with their emote version, currently supports BetterTTV.
         /// </summary>
         internal static string Options_ShowEmotes_Desc {
