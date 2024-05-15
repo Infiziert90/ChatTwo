@@ -1,3 +1,4 @@
+using System.Numerics;
 using System.Text;
 using ChatTwo.Code;
 using ChatTwo.Util;
@@ -20,7 +21,8 @@ public class InputPreview : Window
         LogWindow = logWindow;
 
         Flags = ImGuiWindowFlags.NoSavedSettings | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoMove |
-                ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoFocusOnAppearing | ImGuiWindowFlags.AlwaysAutoResize;
+                ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoFocusOnAppearing | ImGuiWindowFlags.NoScrollbar |
+                ImGuiWindowFlags.NoInputs;
 
         RespectCloseHotkey = false;
         DisableWindowSounds = true;
@@ -39,7 +41,7 @@ public class InputPreview : Window
         var width = LogWindow.LastWindowSize.X;
         var pos = LogWindow.LastWindowPos;
 
-        Size = LogWindow.LastWindowSize with { X = width };
+        Size = new Vector2(width, Height);
 
         Position = pos with { Y = pos.Y - Height };
         PositionCondition = ImGuiCond.Always;
@@ -52,18 +54,15 @@ public class InputPreview : Window
 
     public override void Draw()
     {
-        var content = LogWindow.Chat.Trim();
-        var bytes = Encoding.UTF8.GetBytes(content);
+        var bytes = Encoding.UTF8.GetBytes(LogWindow.Chat.Trim());
         AutoTranslate.ReplaceWithPayload(Plugin.DataManager, ref bytes);
 
-        var seString = SeString.Parse(bytes);
-        var chunks = ChunkUtil.ToChunks(seString, ChunkSource.Content, ChatType.Say).ToList();
+        var chunks = ChunkUtil.ToChunks(SeString.Parse(bytes), ChunkSource.Content, ChatType.Say).ToList();
         var encodedChunks = Message.FakeMessage(chunks, new ChatCode((ushort) XivChatType.Say));
 
-        var before = ImGui.GetCursorPosY();
         LogWindow.DrawChunks(encodedChunks.Content);
-        var after = ImGui.GetCursorPosY();
 
-        Height = after - before + ImGui.GetStyle().WindowPadding.Y;
+        // WindowPadding applies to top and bottom, so we take it 2 times
+        Height = ImGui.GetCursorPosY() + ImGui.GetStyle().WindowPadding.Y * 2;
     }
 }
