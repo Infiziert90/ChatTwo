@@ -1584,6 +1584,10 @@ public sealed class ChatLogWindow : Window
             var emoteSize = ImGui.CalcTextSize("W");
             emoteSize = emoteSize with { Y = emoteSize.X } * 1.5f;
 
+            // TextWrap doesn't work for emotes, so we have to wrap them manually
+            if (ImGui.GetContentRegionAvail().X < emoteSize.X)
+                ImGui.NewLine();
+
             // We only draw a dummy if it is still loading, in the case it failed we draw the actual name
             var image = EmoteCache.GetEmote(emotePayload.Code);
             if (image is { Failed: false })
