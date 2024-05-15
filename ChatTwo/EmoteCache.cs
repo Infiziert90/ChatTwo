@@ -16,7 +16,7 @@ public static class EmoteCache
     private const string BetterTTV = "https://api.betterttv.net/3";
     private const string GlobalEmotes = $"{BetterTTV}/cached/emotes/global";
     private const string Top100Emotes = "{0}/emotes/shared/top?before={1}&limit=100";
-    private const string EmotePath = "https://cdn.betterttv.net/emote/{0}/1x";
+    private const string EmotePath = "https://cdn.betterttv.net/emote/{0}/3x";
 
     private struct Top100
     {
@@ -48,7 +48,7 @@ public static class EmoteCache
     public static LoadingState State = LoadingState.Unloaded;
 
     private static readonly Dictionary<string, Emote> Cache = new();
-    private static readonly Dictionary<string, IEmote> EmoteImages = new();
+    private static readonly Dictionary<string, EmoteBase> EmoteImages = new();
 
     public static string[] SortedCodeArray = [];
 
@@ -88,12 +88,18 @@ public static class EmoteCache
         }
     }
 
+    public static void Dispose()
+    {
+        foreach (var emote in EmoteImages.Values)
+            emote.InnerDispose();
+    }
+
     internal static bool Exists(string code)
     {
         return State is LoadingState.Done && SortedCodeArray.Contains(code);
     }
 
-    internal static IEmote? GetEmote(string code)
+    internal static EmoteBase? GetEmote(string code)
     {
         if (State is not LoadingState.Done)
             return null;
@@ -125,21 +131,33 @@ public static class EmoteCache
         }
     }
 
-    public class IEmote
+    public abstract class EmoteBase
     {
         public bool Failed;
         public bool IsLoaded;
 
-        public IDalamudTextureWrap Texture;
+        protected IDalamudTextureWrap? Texture;
 
         public virtual void Draw(Vector2 size)
         {
-            ImGui.Image(Texture.ImGuiHandle, size);
+            ImGui.Image(Texture!.ImGuiHandle, size);
         }
 
         internal static async Task<byte[]> LoadAsync(Emote emote)
         {
-            var dir = Path.Join(Plugin.Interface.ConfigDirectory.FullName, "emotes");
+            try
+            {
+                // TODO: Remove after 01.06.2024
+                var oldDir = Path.Join(Plugin.Interface.ConfigDirectory.FullName, "emotes");
+                if (Directory.Exists(oldDir))
+                    Directory.Delete(oldDir, true);
+            }
+            catch
+            {
+                // Ignore
+            }
+
+            var dir = Path.Join(Plugin.Interface.ConfigDirectory.FullName, "EmoteCacheV1");
             Directory.CreateDirectory(dir);
 
             byte[] image;
@@ -159,9 +177,11 @@ public static class EmoteCache
 
             return image;
         }
+
+        public abstract void InnerDispose();
     }
 
-    public sealed class ImGuiEmote : IEmote
+    public sealed class ImGuiEmote : EmoteBase
     {
         public ImGuiEmote Prepare(Emote emote)
         {
@@ -186,16 +206,19 @@ public static class EmoteCache
                 Plugin.Log.Error(ex, $"Unable to load {emote.Code} with id {emote.Id}");
             }
         }
+
+        public override void InnerDispose()
+        {
+            Texture?.Dispose();
+        }
     }
 
-    public sealed class ImGuiGif : IEmote
+    public sealed class ImGuiGif : EmoteBase
     {
         private List<(IDalamudTextureWrap Texture, float Delay)> Frames = [];
         private float FrameTimer;
         private int CurrentFrame;
         private ulong GlobalFrameCount;
-
-        public bool IsPaused;
 
         public override void Draw(Vector2 size)
         {
@@ -214,20 +237,17 @@ public static class EmoteCache
 
             ImGui.Image(frame.Texture.ImGuiHandle, size);
 
-            if (IsPaused)
+            if (GlobalFrameCount == Plugin.Interface.UiBuilder.FrameCount)
                 return;
 
-            if (GlobalFrameCount != Plugin.Interface.UiBuilder.FrameCount)
-            {
-                GlobalFrameCount = Plugin.Interface.UiBuilder.FrameCount;
+            GlobalFrameCount = Plugin.Interface.UiBuilder.FrameCount;
 
-                FrameTimer -= ImGui.GetIO().DeltaTime;
-                if (FrameTimer <= 0f)
-                    CurrentFrame++;
-            }
+            FrameTimer -= ImGui.GetIO().DeltaTime;
+            if (FrameTimer <= 0f)
+                CurrentFrame++;
         }
 
-        public void Dispose()
+        public override void InnerDispose()
         {
             Frames.ForEach(f => f.Texture.Dispose());
             Frames.Clear();

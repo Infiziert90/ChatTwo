@@ -164,6 +164,8 @@ public sealed class Plugin : IDalamudPlugin
         TextureCache?.Dispose();
         Common?.Dispose();
         Commands?.Dispose();
+
+        EmoteCache.Dispose();
     }
 
     private void Draw()
