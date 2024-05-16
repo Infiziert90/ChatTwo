@@ -300,19 +300,13 @@ internal unsafe class GameFunctions : IDisposable
 
     private nint ResolveTextCommandPlaceholderDetour(nint a1, byte* placeholderText, byte a3, byte a4)
     {
-        if (ReplacementName == null)
-            goto Original;
-
         var placeholder = MemoryHelper.ReadStringNullTerminated((nint) placeholderText);
-        if (placeholder != Placeholder)
-            goto Original;
+        if (ReplacementName == null || placeholder != Placeholder)
+            return ResolveTextCommandPlaceholderHook!.Original(a1, placeholderText, a3, a4);
 
         MemoryHelper.WriteString(PlaceholderNamePtr, ReplacementName);
         ReplacementName = null;
 
         return PlaceholderNamePtr;
-
-        Original:
-        return ResolveTextCommandPlaceholderHook!.Original(a1, placeholderText, a3, a4);
     }
 }

@@ -5,6 +5,7 @@ using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
+
 using DalamudPartyFinderPayload = Dalamud.Game.Text.SeStringHandling.Payloads.PartyFinderPayload;
 
 namespace ChatTwo.Ui;
@@ -64,7 +65,7 @@ public class SeStringDebugger : Window
             ImGui.TextUnformatted("Nothing to show");
     }
 
-    private static void ProcessPayloads(List<Payload> payloads)
+    private void ProcessPayloads(List<Payload> payloads)
     {
         foreach (var payload in payloads)
         {
@@ -152,6 +153,7 @@ public class SeStringDebugger : Window
                     RenderMetadataDictionary("Link AutoTranslatePayload", new Dictionary<string, string?>
                     {
                         { "Text", at.Text },
+                        { "Data", string.Join(" ", at.Encode().Select(b => b.ToString("X2"))) },
                     });
                     break;
                 }
