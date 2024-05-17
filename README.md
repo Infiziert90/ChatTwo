@@ -11,21 +11,22 @@ It supports:
 - Completely variable font size
 - Sidebar tabs
 - Unread counts
+- Emotes
 - Screenshot mode (obfuscate names)
 
 ---
 
 ### Chat Window
-![chatWindow.png](ChatTwo%2Fimages%2FchatWindow.png)
+![chatWindow.png](ChatTwo/images/chatWindow.png)
 
 ### With SimpleTweaks "Chat Name Colors"
-![withSimpleTweaks.png](ChatTwo%2Fimages%2FwithSimpleTweaks.png)
+![withSimpleTweaks.png](ChatTwo/images/withSimpleTweaks.png)
 
 ---
 
 ### IPC Integration
 Other plugins can easily integrate their functionality into the context menu of chat2
-For more infos read [ipc.md](ipc.md)
+For more infos read [IPC Guide](ipc.md)
 
 ---
 
