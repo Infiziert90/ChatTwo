@@ -67,7 +67,9 @@ public sealed class ChatLogWindow : Window
     private int AutoCompleteSelection;
     private bool AutoCompleteShouldScroll;
 
+    private int LastLength;
     private float PreviewHeight;
+    private Message? PreviewMessage;
 
     public int CursorPos;
 
@@ -518,16 +520,19 @@ public sealed class ChatLogWindow : Window
         WasDocked = ImGui.IsWindowDocked();
 
         // We Predraw this once to get the actual height :HideThePain:
-        // TODO: I hate this predraw thing
         PreviewHeight = 0;
-        Message? predrawnMessage = null;
         if (Plugin.Config.PreviewPosition is PreviewPosition.Inside && !string.IsNullOrEmpty(Chat))
         {
-            var bytes = Encoding.UTF8.GetBytes(Chat.Trim());
-            AutoTranslate.ReplaceWithPayload(Plugin.DataManager, ref bytes);
+            if (PreviewMessage == null || LastLength != Chat.Length)
+            {
+                LastLength = Chat.Length;
 
-            var chunks = ChunkUtil.ToChunks(SeString.Parse(bytes), ChunkSource.Content, ChatType.Say).ToList();
-            predrawnMessage = Message.FakeMessage(chunks, new ChatCode((ushort) XivChatType.Say));
+                var bytes = Encoding.UTF8.GetBytes(Chat.Trim());
+                AutoTranslate.ReplaceWithPayload(Plugin.DataManager, ref bytes);
+
+                var chunks = ChunkUtil.ToChunks(SeString.Parse(bytes), ChunkSource.Content, ChatType.Say).ToList();
+                PreviewMessage = Message.FakeMessage(chunks, new ChatCode((ushort)XivChatType.Say));
+            }
 
             var pos = ImGui.GetCursorPos();
             ImGui.SetCursorPos(new Vector2(-500, -500));
@@ -535,12 +540,17 @@ public sealed class ChatLogWindow : Window
             using (ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, Vector2.Zero))
             {
                 ImGui.TextUnformatted(Language.Options_Preview_Header);
-                DrawChunks(predrawnMessage.Content);
+                DrawChunks(PreviewMessage.Content);
             }
             var after = ImGui.GetCursorPosY();
             ImGui.SetCursorPos(pos);
 
             PreviewHeight = after - before;
+        }
+        else
+        {
+            LastLength = 0;
+            PreviewMessage = null;
         }
 
         var currentTab = Plugin.Config.SidebarTabView ? DrawTabSidebar() : DrawTabBar();
@@ -549,12 +559,12 @@ public sealed class ChatLogWindow : Window
         if (currentTab > -1 && currentTab < Plugin.Config.Tabs.Count)
             activeTab = Plugin.Config.Tabs[currentTab];
 
-        if (predrawnMessage != null)
+        if (PreviewMessage != null)
         {
             using (ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, Vector2.Zero))
             {
                 ImGui.TextUnformatted("Text Preview:");
-                DrawChunks(predrawnMessage.Content);
+                DrawChunks(PreviewMessage.Content);
             }
         }
 
