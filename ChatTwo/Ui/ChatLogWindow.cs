@@ -532,6 +532,7 @@ public sealed class ChatLogWindow : Window
 
                 var chunks = ChunkUtil.ToChunks(SeString.Parse(bytes), ChunkSource.Content, ChatType.Say).ToList();
                 PreviewMessage = Message.FakeMessage(chunks, new ChatCode((ushort)XivChatType.Say));
+                PreviewMessage.DecodeTextParam();
             }
 
             var pos = ImGui.GetCursorPos();
@@ -564,7 +565,9 @@ public sealed class ChatLogWindow : Window
             using (ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, Vector2.Zero))
             {
                 ImGui.TextUnformatted("Text Preview:");
-                DrawChunks(PreviewMessage.Content);
+                var handler = HandlerLender.Borrow();
+                DrawChunks(PreviewMessage.Content, true, handler);
+                handler.Draw();
             }
         }
 

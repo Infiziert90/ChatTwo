@@ -1013,4 +1013,64 @@
   <data name="Options_AdjustPosition_Warning" xml:space="preserve">
         <value>Attention, this change applies immediately and is not discardable!</value>
     </data>
+  <data name="Options_KeepInputFocus_Name" xml:space="preserve">
+        <value>Keep input focus</value>
+    </data>
+  <data name="Options_KeepInputFocus_Description" xml:space="preserve">
+        <value>Keeps the input focus, even if you enter battle or do other actions</value>
+    </data>
+  <data name="Options_ShowEmotes_Name" xml:space="preserve">
+        <value>Show emotes</value>
+    </data>
+  <data name="Options_ShowEmotes_Desc" xml:space="preserve">
+        <value>Replaces words with their emote version, currently supports BetterTTV</value>
+    </data>
+  <data name="Options_Emote_Tab" xml:space="preserve">
+        <value>Emotes</value>
+    </data>
+  <data name="Options_Emote_BlockedEmotes" xml:space="preserve">
+        <value>Blocked emotes</value>
+    </data>
+  <data name="Options_Emote_EmoteTable" xml:space="preserve">
+        <value>Emote</value>
+    </data>
+  <data name="Options_HideInBattle_Name" xml:space="preserve">
+        <value>Hide during battle</value>
+    </data>
+  <data name="Options_HideInBattle_Description" xml:space="preserve">
+        <value>Hide the chat during battles.</value>
+    </data>
+  <data name="Options_Emote_EmoteStats" xml:space="preserve">
+        <value>Emote Stats</value>
+    </data>
+  <data name="Options_Emote_Ready" xml:space="preserve">
+        <value>Ready</value>
+    </data>
+  <data name="Options_Emote_NotReady" xml:space="preserve">
+        <value>Not Ready</value>
+    </data>
+  <data name="Options_Emote_Loaded" xml:space="preserve">
+        <value>Emotes available:</value>
+    </data>
+  <data name="Options_Preview_Description" xml:space="preserve">
+        <value>A preview wih all emote, auto-translate encoded as they appear in chat</value>
+    </data>
+  <data name="Options_Preview_Name" xml:space="preserve">
+        <value>Input preview</value>
+    </data>
+  <data name="Options_Preview_None" xml:space="preserve">
+        <value>None</value>
+    </data>
+  <data name="Options_Preview_Inside" xml:space="preserve">
+        <value>Inside</value>
+    </data>
+  <data name="Options_Preview_Top" xml:space="preserve">
+        <value>Top</value>
+    </data>
+  <data name="Options_Preview_Bottom" xml:space="preserve">
+        <value>Bottom</value>
+    </data>
+  <data name="Options_Preview_Header" xml:space="preserve">
+        <value>Text Preview:</value>
+    </data>
 </root>

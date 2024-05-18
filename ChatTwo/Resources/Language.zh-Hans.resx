@@ -1051,4 +1051,25 @@
   <data name="Options_Emote_Loaded" xml:space="preserve">
         <value>Emotes available:</value>
     </data>
+  <data name="Options_Preview_Description" xml:space="preserve">
+        <value>A preview wih all emote, auto-translate encoded as they appear in chat</value>
+    </data>
+  <data name="Options_Preview_Name" xml:space="preserve">
+        <value>Input preview</value>
+    </data>
+  <data name="Options_Preview_None" xml:space="preserve">
+        <value>None</value>
+    </data>
+  <data name="Options_Preview_Inside" xml:space="preserve">
+        <value>Inside</value>
+    </data>
+  <data name="Options_Preview_Top" xml:space="preserve">
+        <value>Top</value>
+    </data>
+  <data name="Options_Preview_Bottom" xml:space="preserve">
+        <value>Bottom</value>
+    </data>
+  <data name="Options_Preview_Header" xml:space="preserve">
+        <value>Text Preview:</value>
+    </data>
 </root>

@@ -4,7 +4,10 @@ using ChatTwo.Util;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using System.Text.RegularExpressions;
+using FFXIVClientStructs.FFXIV.Client.Game;
+using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using LiteDB;
+using Lumina.Excel.GeneratedSheets;
 
 namespace ChatTwo;
 
@@ -59,7 +62,7 @@ internal class Message
     internal DateTimeOffset Date { get; }
     internal ChatCode Code { get; }
     internal List<Chunk> Sender { get; }
-    internal List<Chunk> Content { get; }
+    internal List<Chunk> Content { get; private set; }
 
     internal SeString SenderSource { get; }
     internal SeString ContentSource { get; }
@@ -222,6 +225,90 @@ internal class Message
         }
 
         return newChunks;
+    }
+
+    public unsafe void DecodeTextParam()
+    {
+        var newChunks = new List<Chunk>();
+        void AddChunkWithMessage(TextChunk chunk)
+        {
+            if (string.IsNullOrEmpty(chunk.Content))
+                return;
+
+            chunk.Message = this;
+            newChunks.Add(chunk);
+        }
+
+        foreach (var chunk in Content)
+        {
+            // Use as is if it's not a text chunk or it already has a payload.
+            if (chunk is not TextChunk text || chunk.Link != null)
+            {
+                // No need to call AddChunkWithMessage here since the chunk
+                // already has the Message field set.
+                newChunks.Add(chunk);
+                continue;
+            }
+
+            if (!text.Content.Contains("<item>") && !text.Content.Contains("<flag>"))
+            {
+                newChunks.Add(chunk);
+                continue;
+            }
+
+            var nextIsMatch = false;
+            foreach (var split in Regex.Split(text.Content, "(<item>|<flag>)"))
+            {
+                if (split == "" || !nextIsMatch)
+                {
+                    nextIsMatch = true;
+                    AddChunkWithMessage(text.NewWithStyle(chunk.Source, chunk.Link, split));
+                    continue;
+                }
+
+                nextIsMatch = false;
+                try
+                {
+                    if (split == "<item>")
+                    {
+                        var agentChat = AgentChatLog.Instance();
+                        var item = *(InventoryItem*)((nint)agentChat + 0x8A0);
+
+                        var kind = item.ItemID switch
+                        {
+                            < 500_000 => ItemPayload.ItemKind.Normal,
+                            < 1_000_000 => ItemPayload.ItemKind.Collectible,
+                            < 2_000_000 => ItemPayload.ItemKind.Hq,
+                            _ => ItemPayload.ItemKind.EventItem
+                        };
+
+                        var name = kind != ItemPayload.ItemKind.EventItem
+                            ? Plugin.DataManager.GetExcelSheet<Item>()!.GetRow(item.ItemID)!.Name.ToString()
+                            : Plugin.DataManager.GetExcelSheet<EventItem>()!.GetRow(item.ItemID)!.Name.ToString();
+
+                        var link = new ItemPayload(item.ItemID, kind, name);
+                        AddChunkWithMessage(text.NewWithStyle(chunk.Source, link, link.DisplayName ?? "Unknown"));
+                    }
+                    else
+                    {
+                        var mapCoords = AgentMap.Instance()->FlagMapMarker;
+                        var rawX = (int)(MathF.Round(mapCoords.XFloat, 3, MidpointRounding.AwayFromZero) * 1000);
+                        var rawY = (int)(MathF.Round(mapCoords.YFloat, 3, MidpointRounding.AwayFromZero) * 1000);
+
+                        var link = new MapLinkPayload(mapCoords.TerritoryId, mapCoords.MapId, rawX, rawY);
+                        AddChunkWithMessage(text.NewWithStyle(chunk.Source, link, $"{link.PlaceName} {link.CoordinateString}"));
+                    }
+
+                }
+                catch (UriFormatException)
+                {
+                    AddChunkWithMessage(text.NewWithStyle(chunk.Source, chunk.Link, split));
+                    Plugin.Log.Debug($"Invalid URL accepted by Regex but failed URI parsing: '{split}'");
+                }
+            }
+        }
+
+        Content = newChunks;
     }
 
     /// <summary>
