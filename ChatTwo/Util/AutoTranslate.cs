@@ -18,7 +18,14 @@ namespace ChatTwo.Util;
 internal static class AutoTranslate
 {
     private static readonly Dictionary<ClientLanguage, List<AutoTranslateEntry>> Entries = new();
-    private static readonly HashSet<(uint, uint)> ValidEntries = new();
+    private static readonly HashSet<(uint, uint)> ValidEntries = [];
+
+    private static readonly ExcelSheet<Completion> CompletionSheet;
+
+    static AutoTranslate()
+    {
+        CompletionSheet = Plugin.DataManager.GetExcelSheet<Completion>()!;
+    }
 
     private static Parser<char, (string name, Maybe<IEnumerable<ISelectorPart>> selector)> Parser()
     {
@@ -57,7 +64,7 @@ internal static class AutoTranslate
             .Between(Char('['), Char(']'))
             .Labelled("selector");
         return Map(
-            (name, selector) => (name, selector),
+            (name, sel) => (name, sel),
             sheetName,
             selector.Optional()
         );
@@ -100,26 +107,26 @@ internal static class AutoTranslate
     ///
     /// This spawns a new thread.
     /// </summary>
-    internal static void PreloadCache(IDataManager data)
+    internal static void PreloadCache()
     {
         new Thread(() =>
         {
             var sw = Stopwatch.StartNew();
-            AllEntries(data);
+            AllEntries();
             Plugin.Log.Debug($"Warming up auto-translate took {sw.ElapsedMilliseconds}ms");
         }).Start();
     }
 
-    private static List<AutoTranslateEntry> AllEntries(IDataManager data)
+    private static List<AutoTranslateEntry> AllEntries()
     {
-        if (Entries.TryGetValue(data.Language, out var entries))
+        if (Entries.TryGetValue(Plugin.DataManager.Language, out var entries))
             return entries;
 
         var shouldAdd = ValidEntries.Count == 0;
 
         var parser = Parser();
         var list = new List<AutoTranslateEntry>();
-        foreach (var row in data.GetExcelSheet<Completion>()!)
+        foreach (var row in CompletionSheet)
         {
             var lookup = row.LookupTable.TextValue();
             if (lookup is not ("" or "@"))
@@ -128,11 +135,11 @@ internal static class AutoTranslate
                 var sheetType = typeof(Completion)
                     .Assembly
                     .GetType($"Lumina.Excel.GeneratedSheets.{sheetName}")!;
-                var getSheet = data
+                var getSheet = Plugin.DataManager
                     .GetType()
                     .GetMethod("GetExcelSheet", Type.EmptyTypes)!
                     .MakeGenericMethod(sheetType);
-                var sheet = (ExcelSheetImpl) getSheet.Invoke(data, null)!;
+                var sheet = (ExcelSheetImpl) getSheet.Invoke(Plugin.DataManager, null)!;
                 var rowParsers = sheet.GetRowParsers().ToArray();
 
                 var columns = new List<int>();
@@ -228,16 +235,16 @@ internal static class AutoTranslate
             }
         }
 
-        Entries[data.Language] = list;
+        Entries[Plugin.DataManager.Language] = list;
         return list;
     }
 
-    internal static List<AutoTranslateEntry> Matching(IDataManager data, string prefix, bool sort)
+    internal static List<AutoTranslateEntry> Matching(string prefix, bool sort)
     {
         var wholeMatches = new List<AutoTranslateEntry>();
         var prefixMatches = new List<AutoTranslateEntry>();
         var otherMatches = new List<AutoTranslateEntry>();
-        foreach (var entry in AllEntries(data))
+        foreach (var entry in AllEntries())
         {
             if (entry.String.Equals(prefix, StringComparison.OrdinalIgnoreCase))
                 wholeMatches.Add(entry);
@@ -264,7 +271,7 @@ internal static class AutoTranslate
     [DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
     private static extern int memcmp(byte[] b1, byte[] b2, UIntPtr count);
 
-    internal static void ReplaceWithPayload(IDataManager data, ref byte[] bytes)
+    internal static void ReplaceWithPayload(ref byte[] bytes)
     {
         var search = "<at:"u8.ToArray();
         if (bytes.Length <= search.Length)
@@ -272,7 +279,7 @@ internal static class AutoTranslate
 
         // populate the list of valid entries
         if (ValidEntries.Count == 0)
-            AllEntries(data);
+            AllEntries();
 
         var start = -1;
         for (var i = 0; i < bytes.Length; i++)

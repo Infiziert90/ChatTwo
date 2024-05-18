@@ -9,7 +9,6 @@ using ChatTwo.Util;
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Keys;
-using Dalamud.Game.Text;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface;
@@ -66,10 +65,6 @@ public sealed class ChatLogWindow : Window
     private bool FixCursor;
     private int AutoCompleteSelection;
     private bool AutoCompleteShouldScroll;
-
-    private int LastLength;
-    private float PreviewHeight;
-    private Message? PreviewMessage;
 
     public int CursorPos;
 
@@ -327,7 +322,9 @@ public sealed class ChatLogWindow : Window
         var lineHeight = ImGui.CalcTextSize("A").Y;
         var height = ImGui.GetContentRegionAvail().Y - lineHeight * 2 - ImGui.GetStyle().ItemSpacing.Y - ImGui.GetStyle().FramePadding.Y * 2;
 
-        height -= PreviewHeight;
+        if (Plugin.Config.PreviewPosition is PreviewPosition.Inside)
+            height -= Plugin.InputPreview.PreviewHeight;
+
         return height;
     }
 
@@ -519,40 +516,9 @@ public sealed class ChatLogWindow : Window
         LastViewport = ImGui.GetWindowViewport().NativePtr;
         WasDocked = ImGui.IsWindowDocked();
 
-        // We Predraw this once to get the actual height :HideThePain:
-        PreviewHeight = 0;
-        if (Plugin.Config.PreviewPosition is PreviewPosition.Inside && !string.IsNullOrEmpty(Chat))
-        {
-            if (PreviewMessage == null || LastLength != Chat.Length)
-            {
-                LastLength = Chat.Length;
-
-                var bytes = Encoding.UTF8.GetBytes(Chat.Trim());
-                AutoTranslate.ReplaceWithPayload(Plugin.DataManager, ref bytes);
-
-                var chunks = ChunkUtil.ToChunks(SeString.Parse(bytes), ChunkSource.Content, ChatType.Say).ToList();
-                PreviewMessage = Message.FakeMessage(chunks, new ChatCode((ushort)XivChatType.Say));
-                PreviewMessage.DecodeTextParam();
-            }
-
-            var pos = ImGui.GetCursorPos();
-            ImGui.SetCursorPos(new Vector2(-500, -500));
-            var before = ImGui.GetCursorPosY();
-            using (ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, Vector2.Zero))
-            {
-                ImGui.TextUnformatted(Language.Options_Preview_Header);
-                DrawChunks(PreviewMessage.Content);
-            }
-            var after = ImGui.GetCursorPosY();
-            ImGui.SetCursorPos(pos);
-
-            PreviewHeight = after - before;
-        }
-        else
-        {
-            LastLength = 0;
-            PreviewMessage = null;
-        }
+        var drawPreview = Plugin.Config.PreviewPosition is PreviewPosition.Inside;
+        if (drawPreview)
+            Plugin.InputPreview.CalculatePreview();
 
         var currentTab = Plugin.Config.SidebarTabView ? DrawTabSidebar() : DrawTabBar();
 
@@ -560,16 +526,8 @@ public sealed class ChatLogWindow : Window
         if (currentTab > -1 && currentTab < Plugin.Config.Tabs.Count)
             activeTab = Plugin.Config.Tabs[currentTab];
 
-        if (PreviewMessage != null)
-        {
-            using (ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, Vector2.Zero))
-            {
-                ImGui.TextUnformatted("Text Preview:");
-                var handler = HandlerLender.Borrow();
-                DrawChunks(PreviewMessage.Content, true, handler);
-                handler.Draw();
-            }
-        }
+        if (drawPreview)
+            Plugin.InputPreview.DrawPreview();
 
         using (ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, Vector2.Zero))
         {
@@ -861,7 +819,7 @@ public sealed class ChatLogWindow : Window
                             reason = TellReason.Friend;
 
                         var tellBytes = Encoding.UTF8.GetBytes(trimmed);
-                        AutoTranslate.ReplaceWithPayload(Plugin.DataManager, ref tellBytes);
+                        AutoTranslate.ReplaceWithPayload(ref tellBytes);
 
                         Plugin.Functions.Chat.SendTell(reason, target.ContentId, target.Name, (ushort) world.RowId, tellBytes);
                     }
@@ -881,7 +839,7 @@ public sealed class ChatLogWindow : Window
             }
 
             var bytes = Encoding.UTF8.GetBytes(trimmed);
-            AutoTranslate.ReplaceWithPayload(Plugin.DataManager, ref bytes);
+            AutoTranslate.ReplaceWithPayload(ref bytes);
 
             Plugin.Common.Functions.Chat.SendMessageUnsafe(bytes);
         }
@@ -1286,7 +1244,7 @@ public sealed class ChatLogWindow : Window
         if (AutoCompleteInfo == null)
             return;
 
-        AutoCompleteList ??= AutoTranslate.Matching(Plugin.DataManager, AutoCompleteInfo.ToComplete, Plugin.Config.SortAutoTranslate);
+        AutoCompleteList ??= AutoTranslate.Matching(AutoCompleteInfo.ToComplete, Plugin.Config.SortAutoTranslate);
         if (AutoCompleteOpen)
         {
             ImGui.OpenPopup(AutoCompleteId);
@@ -1309,7 +1267,7 @@ public sealed class ChatLogWindow : Window
         ImGui.SetNextItemWidth(-1);
         if (ImGui.InputTextWithHint("##auto-complete-filter", Language.AutoTranslate_Search_Hint, ref AutoCompleteInfo.ToComplete, 256, ImGuiInputTextFlags.CallbackAlways | ImGuiInputTextFlags.CallbackHistory, AutoCompleteCallback))
         {
-            AutoCompleteList = AutoTranslate.Matching(Plugin.DataManager, AutoCompleteInfo.ToComplete, Plugin.Config.SortAutoTranslate);
+            AutoCompleteList = AutoTranslate.Matching(AutoCompleteInfo.ToComplete, Plugin.Config.SortAutoTranslate);
             AutoCompleteSelection = 0;
             AutoCompleteShouldScroll = true;
         }

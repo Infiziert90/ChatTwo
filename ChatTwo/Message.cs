@@ -53,7 +53,7 @@ internal class SortCode {
     }
 }
 
-internal class Message
+internal partial class Message
 {
     internal Guid Id { get; } = Guid.NewGuid();
     internal ulong Receiver { get; }
@@ -257,7 +257,7 @@ internal class Message
             }
 
             var nextIsMatch = false;
-            foreach (var split in Regex.Split(text.Content, "(<item>|<flag>)"))
+            foreach (var split in TextParamRegex().Split(text.Content))
             {
                 if (split == "" || !nextIsMatch)
                 {
@@ -273,6 +273,12 @@ internal class Message
                     {
                         var agentChat = AgentChatLog.Instance();
                         var item = *(InventoryItem*)((nint)agentChat + 0x8A0);
+
+                        if (item.ItemID == 0)
+                        {
+                            AddChunkWithMessage(text.NewWithStyle(chunk.Source, chunk.Link, split));
+                            continue;
+                        }
 
                         var kind = item.ItemID switch
                         {
@@ -291,7 +297,14 @@ internal class Message
                     }
                     else
                     {
-                        var mapCoords = AgentMap.Instance()->FlagMapMarker;
+                        var agentMap = AgentMap.Instance();
+                        if (agentMap->IsFlagMarkerSet == 0)
+                        {
+                            AddChunkWithMessage(text.NewWithStyle(chunk.Source, chunk.Link, split));
+                            continue;
+                        }
+
+                        var mapCoords = agentMap->FlagMapMarker;
                         var rawX = (int)(MathF.Round(mapCoords.XFloat, 3, MidpointRounding.AwayFromZero) * 1000);
                         var rawY = (int)(MathF.Round(mapCoords.YFloat, 3, MidpointRounding.AwayFromZero) * 1000);
 
@@ -300,10 +313,10 @@ internal class Message
                     }
 
                 }
-                catch (UriFormatException)
+                catch (Exception)
                 {
                     AddChunkWithMessage(text.NewWithStyle(chunk.Source, chunk.Link, split));
-                    Plugin.Log.Debug($"Invalid URL accepted by Regex but failed URI parsing: '{split}'");
+                    Plugin.Log.Debug($"Failed to parse the text param: '{split}'");
                 }
             }
         }
@@ -327,4 +340,7 @@ internal class Message
         @"(?<URL>((https?:\/\/|www\.)[a-z0-9-]+(\.[a-z0-9-]+)*|([a-z0-9-]+(\.[a-z0-9-]+)*\.(com|net|org|co|io|app)))(:[\d]{1,5})?(\/[^\s]+)?)",
         RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture
     );
+
+    [GeneratedRegex("(<item>|<flag>)")]
+    private static partial Regex TextParamRegex();
 }
