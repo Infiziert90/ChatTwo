@@ -50,7 +50,7 @@ internal static class ChunkUtil
                         glow.Pop();
                     break;
                 case PayloadType.AutoTranslateText:
-                    chunks.Add(new IconChunk(source, link, BitmapFontIcon.AutoTranslateBegin));
+                    chunks.Add(new IconChunk(source, payload, BitmapFontIcon.AutoTranslateBegin));
                     var autoText = ((AutoTranslatePayload) payload).Text;
                     Append(autoText.Substring(2, autoText.Length - 4));
                     chunks.Add(new IconChunk(source, link, BitmapFontIcon.AutoTranslateEnd));
@@ -121,7 +121,17 @@ internal static class ChunkUtil
                     break;
                 default:
                     if (payload is ITextProvider textProvider)
-                        Append(textProvider.Text);
+                    {
+                        // We don't want to parse any null string
+                        var str = textProvider.Text;
+                        var nulIndex = str.IndexOf('\0');
+                        if (nulIndex > 0)
+                            str = str[..nulIndex];
+                        if (string.IsNullOrEmpty(str))
+                            break;
+
+                        Append(str);
+                    }
                     break;
             }
         }

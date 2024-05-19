@@ -49,10 +49,11 @@ public sealed class ChatLogWindow : Window
         }
     }
 
+    internal bool KeepFocusedThroughPreview;
     internal bool Activate;
     private int ActivatePos = -1;
     internal string Chat = string.Empty;
-    private readonly IDalamudTextureWrap? FontIcon;
+    internal readonly IDalamudTextureWrap? FontIcon;
     private readonly List<string> InputBacklog = [];
     private int InputBacklogIdx = -1;
     private int LastTab { get; set; }
@@ -685,8 +686,11 @@ public sealed class ChatLogWindow : Window
         var push = inputColour != null;
         using (ImRaii.PushColor(ImGuiCol.Text, push ? ColourUtil.RgbaToAbgr(inputColour!.Value) : 0, push))
         {
-            if (Activate)
+            if (Activate || KeepFocusedThroughPreview)
+            {
+                KeepFocusedThroughPreview = false;
                 ImGui.SetKeyboardFocusHere();
+            }
 
             var chatCopy = Chat;
 
@@ -1397,6 +1401,11 @@ public sealed class ChatLogWindow : Window
 
         var ptr = new ImGuiInputTextCallbackDataPtr(data);
 
+        // Set the cursor pos to the user selected
+        if (Plugin.InputPreview.SelectedCursorPos != -1)
+            ptr.CursorPos = Plugin.InputPreview.SelectedCursorPos;
+        Plugin.InputPreview.SelectedCursorPos = -1;
+
         CursorPos = ptr.CursorPos;
         if (data->EventFlag == ImGuiInputTextFlags.CallbackCompletion)
         {
@@ -1529,21 +1538,7 @@ public sealed class ChatLogWindow : Window
     {
         if (chunk is IconChunk icon && FontIcon != null)
         {
-            var bounds = IconUtil.GfdFileView.TryGetEntry((uint) icon.Icon, out var entry);
-            if (!bounds)
-                return;
-
-            var texSize = new Vector2(FontIcon.Width, FontIcon.Height);
-
-            var sizeRatio = Plugin.Config.FontSize / entry.Height;
-            var size = new Vector2(entry.Width, entry.Height) * sizeRatio * ImGuiHelpers.GlobalScale;
-
-            var uv0 = new Vector2(entry.Left, entry.Top + 170) * 2 / texSize;
-            var uv1 = new Vector2(entry.Left + entry.Width, entry.Top + entry.Height + 170) * 2 / texSize;
-
-            ImGui.Image(FontIcon.ImGuiHandle, size, uv0, uv1);
-            ImGuiUtil.PostPayload(chunk, handler);
-
+            DrawIcon(chunk, icon, handler);
             return;
         }
 
@@ -1619,6 +1614,23 @@ public sealed class ChatLogWindow : Window
 
         if (text.Italic)
             (useCustomItalicFont ? Plugin.FontManager.ItalicFont! : Plugin.FontManager.AxisItalic).Pop();
+    }
+
+    internal void DrawIcon(Chunk chunk, IconChunk icon, PayloadHandler? handler)
+    {
+        if (!IconUtil.GfdFileView.TryGetEntry((uint) icon.Icon, out var entry))
+            return;
+
+        var texSize = new Vector2(FontIcon!.Width, FontIcon.Height);
+
+        var sizeRatio = Plugin.Config.FontSize / entry.Height;
+        var size = new Vector2(entry.Width, entry.Height) * sizeRatio * ImGuiHelpers.GlobalScale;
+
+        var uv0 = new Vector2(entry.Left, entry.Top + 170) * 2 / texSize;
+        var uv1 = new Vector2(entry.Left + entry.Width, entry.Top + entry.Height + 170) * 2 / texSize;
+
+        ImGui.Image(FontIcon.ImGuiHandle, size, uv0, uv1);
+        ImGuiUtil.PostPayload(chunk, handler);
     }
 
     private string HashPlayer(string playerName, uint worldId)
