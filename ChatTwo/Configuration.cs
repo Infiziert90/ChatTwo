@@ -247,6 +247,7 @@ internal enum PreviewPosition
     Inside,
     Top,
     Bottom,
+    Tooltip,
 }
 
 internal static class PreviewPositionExt
@@ -257,6 +258,7 @@ internal static class PreviewPositionExt
         PreviewPosition.Inside => Language.Options_Preview_Inside,
         PreviewPosition.Top => Language.Options_Preview_Top,
         PreviewPosition.Bottom => Language.Options_Preview_Bottom,
+        PreviewPosition.Tooltip => Language.Options_Preview_Tooltip,
         _ => throw new ArgumentOutOfRangeException(nameof(position), position, null),
     };
 }

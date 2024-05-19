@@ -2445,6 +2445,15 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Tooltip.
+        /// </summary>
+        internal static string Options_Preview_Tooltip {
+            get {
+                return ResourceManager.GetString("Options_Preview_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Top.
         /// </summary>
         internal static string Options_Preview_Top {

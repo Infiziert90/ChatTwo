@@ -1072,4 +1072,7 @@
     <data name="Options_Preview_Header" xml:space="preserve">
         <value>Text Preview:</value>
     </data>
+    <data name="Options_Preview_Tooltip" xml:space="preserve">
+        <value>Tooltip</value>
+    </data>
 </root>
