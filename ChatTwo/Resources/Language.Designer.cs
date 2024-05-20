@@ -2490,7 +2490,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Only with parameter.
+        ///   Looks up a localized string similar to Must contain parameter.
         /// </summary>
         internal static string Options_PreviewOnlyIf_Name {
             get {

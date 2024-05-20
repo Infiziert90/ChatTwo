@@ -236,19 +236,30 @@ public class InputPreview : Window
             return;
         }
 
-        foreach (var letter in text.Content)
+        var splits = text.Content.Split(" ");
+        for (var i = 0; i < splits.Length; i++)
         {
-            var letterSize = ImGui.CalcTextSize(letter.ToString());
-            if (ImGui.GetContentRegionAvail().X < letterSize.X)
+            // The last character should never be an empty string
+            // Sorting this out because it leads to double whitespaces
+            if (i + 1 == splits.Length && splits[i] == "")
+                break;
+
+            var wordSize = ImGui.CalcTextSize(splits[i]);
+            if (ImGui.GetContentRegionAvail().X < wordSize.X)
                 ImGui.NewLine();
 
-            CursorPosition++;
-            if (ImGui.Selectable($"{letter}##{CursorPosition + unique}", false, ImGuiSelectableFlags.None, letterSize))
+            foreach (var letter in $"{splits[i]} ")
             {
-                SelectedCursorPos = CursorPosition;
-                LogWindow.KeepFocusedThroughPreview = true;
+                var letterSize = ImGui.CalcTextSize(letter.ToString());
+
+                CursorPosition++;
+                if (ImGui.Selectable($"{letter}##{CursorPosition + unique}", false, ImGuiSelectableFlags.None, letterSize))
+                {
+                    SelectedCursorPos = CursorPosition;
+                    LogWindow.KeepFocusedThroughPreview = true;
+                }
+                ImGui.SameLine();
             }
-            ImGui.SameLine();
         }
         ImGui.NewLine();
     }

@@ -1076,7 +1076,7 @@
         <value>Tooltip</value>
     </data>
     <data name="Options_PreviewOnlyIf_Name" xml:space="preserve">
-        <value>Only with parameter</value>
+        <value>Must contain parameter</value>
     </data>
     <data name="Options_PreviewOnlyIf_Description" xml:space="preserve">
         <value>Show only if the text contains special parameter</value>
