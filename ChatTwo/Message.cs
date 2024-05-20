@@ -217,11 +217,11 @@ internal partial class Message
 
                 if (checkForEmotes && EmoteCache.Exists(word) && !Plugin.Config.BlockedEmotes.Contains(word))
                 {
-                    // Add the previous punctuation, including whitespaces
+                    // Add the previous sentence before the emote
                     AddContentAfterURLCheck(sentenceBuilder.ToString(), text, chunk);
                     AddChunkWithMessage(new TextChunk(chunk.Source, EmotePayload.ResolveEmote(word), word) { FallbackColour = text.FallbackColour });
 
-                    // Append our current match as it is a special split symbol
+                    // Append the current punctuation symbol
                     sentenceBuilder.Clear();
                     sentenceBuilder.Append(token.Value);
                     continue;
