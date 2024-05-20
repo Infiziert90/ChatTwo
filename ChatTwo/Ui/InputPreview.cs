@@ -9,6 +9,7 @@ using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
+using Dalamud.Plugin.Services;
 using ImGuiNET;
 
 namespace ChatTwo.Ui;
@@ -17,14 +18,17 @@ public class InputPreview : Window
 {
     private ChatLogWindow LogWindow { get; }
 
+    private bool Drawing;
+    private bool HasEvaluation;
     internal float PreviewHeight;
 
     private int LastLength;
     private Message? PreviewMessage;
 
-    private bool NextChunkIsAutoTranslate;
     private int CursorPosition;
-    public int SelectedCursorPos = -1;
+    private bool NextChunkIsAutoTranslate;
+
+    internal int SelectedCursorPos = -1;
 
     internal InputPreview(ChatLogWindow logWindow) : base("##chat2-inputpreview")
     {
@@ -36,6 +40,49 @@ public class InputPreview : Window
         RespectCloseHotkey = false;
         DisableWindowSounds = true;
         IsOpen = true;
+
+        Plugin.Framework.Update += UpdateConditionCheck;
+    }
+
+    public void Dispose()
+    {
+        Plugin.Framework.Update -= UpdateConditionCheck;
+    }
+
+    private bool ValidDraw => !string.IsNullOrEmpty(LogWindow.Chat) && LogWindow.Chat.Length >= Plugin.Config.PreviewMinimum;
+    private void UpdateConditionCheck(IFramework framework)
+    {
+        Drawing = ValidDraw;
+        if (!Drawing)
+        {
+            LastLength = 0;
+            PreviewHeight = 0;
+            PreviewMessage = null;
+            HasEvaluation = false;
+
+            return;
+        }
+
+        if (PreviewMessage == null || LastLength != LogWindow.Chat.Length)
+        {
+            LastLength = LogWindow.Chat.Length;
+
+            var bytes = Encoding.UTF8.GetBytes(LogWindow.Chat.Trim());
+            AutoTranslate.ReplaceWithPayload(ref bytes);
+
+            var chunks = ChunkUtil.ToChunks(SeString.Parse(bytes), ChunkSource.Content, ChatType.Say).ToList();
+            PreviewMessage = Message.FakeMessage(chunks, new ChatCode((ushort)XivChatType.Say));
+            PreviewMessage.DecodeTextParam();
+        }
+        HasEvaluation = !Plugin.Config.OnlyPreviewIf || PreviewMessage.Content.Count > 1;
+    }
+
+    internal bool IsDrawable => ValidDraw && HasEvaluation;
+
+    private static bool IsWindowMode => Plugin.Config.PreviewPosition is PreviewPosition.Top or PreviewPosition.Bottom;
+    public override bool DrawConditions()
+    {
+        return IsWindowMode && IsDrawable;
     }
 
     public override void PreDraw()
@@ -56,11 +103,6 @@ public class InputPreview : Window
         PositionCondition = ImGuiCond.Always;
     }
 
-    public override bool DrawConditions()
-    {
-        return Plugin.Config.PreviewPosition is PreviewPosition.Top or PreviewPosition.Bottom && !string.IsNullOrEmpty(LogWindow.Chat);
-    }
-
     public override void Draw()
     {
         CalculatePreview();
@@ -71,54 +113,30 @@ public class InputPreview : Window
     {
         // We Pre-draw this once to get the actual height :HideThePain:
         PreviewHeight = 0;
-        if (!string.IsNullOrEmpty(LogWindow.Chat))
+
+        var pos = ImGui.GetCursorPos();
+        ImGui.SetCursorPos(new Vector2(-500, -500));
+        var before = ImGui.GetCursorPosY();
+        using (ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, Vector2.Zero))
         {
-            if (PreviewMessage == null || LastLength != LogWindow.Chat.Length)
-            {
-                LastLength = LogWindow.Chat.Length;
-
-                var bytes = Encoding.UTF8.GetBytes(LogWindow.Chat.Trim());
-                AutoTranslate.ReplaceWithPayload(ref bytes);
-
-                var chunks = ChunkUtil.ToChunks(SeString.Parse(bytes), ChunkSource.Content, ChatType.Say).ToList();
-                PreviewMessage = Message.FakeMessage(chunks, new ChatCode((ushort)XivChatType.Say));
-                PreviewMessage.DecodeTextParam();
-            }
-
-            var pos = ImGui.GetCursorPos();
-            ImGui.SetCursorPos(new Vector2(-500, -500));
-            var before = ImGui.GetCursorPosY();
-            using (ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, Vector2.Zero))
-            {
-                ImGui.TextUnformatted(Language.Options_Preview_Header);
-                DrawChunksPreview(PreviewMessage.Content);
-            }
-            var after = ImGui.GetCursorPosY();
-            ImGui.SetCursorPos(pos);
-
-            PreviewHeight = after - before;
-            PreviewHeight += Plugin.Config.PreviewPosition is not PreviewPosition.Inside
-                ? ImGui.GetStyle().WindowPadding.Y * 2
-                : 0;
+            ImGui.TextUnformatted(Language.Options_Preview_Header);
+            DrawChunksPreview(PreviewMessage!.Content);
         }
-        else
-        {
-            LastLength = 0;
-            PreviewMessage = null;
-        }
+        var after = ImGui.GetCursorPosY();
+        ImGui.SetCursorPos(pos);
+
+        PreviewHeight = after - before;
+        PreviewHeight += IsWindowMode ? ImGui.GetStyle().WindowPadding.Y * 2 : 0;
     }
 
     internal void DrawPreview()
     {
-        if (PreviewMessage == null)
-            return;
-
         using (ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, Vector2.Zero))
         {
             ImGui.TextUnformatted(Language.Options_Preview_Header);
 
             var handler = LogWindow.HandlerLender.Borrow();
-            DrawChunksPreview(PreviewMessage.Content, handler, unique: 10000);
+            DrawChunksPreview(PreviewMessage!.Content, handler, unique: 10000);
             handler.Draw();
         }
     }

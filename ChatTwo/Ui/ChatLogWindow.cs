@@ -501,6 +501,7 @@ public sealed class ChatLogWindow : Window
         DrawAutoComplete();
     }
 
+    private static bool IsChatMode => Plugin.Config.PreviewPosition is PreviewPosition.Inside or PreviewPosition.Tooltip;
     private unsafe void DrawChatLog()
     {
         // Position change has applied, so we set it to null again
@@ -517,7 +518,7 @@ public sealed class ChatLogWindow : Window
         LastViewport = ImGui.GetWindowViewport().NativePtr;
         WasDocked = ImGui.IsWindowDocked();
 
-        if (Plugin.Config.PreviewPosition is PreviewPosition.Inside or PreviewPosition.Tooltip)
+        if (IsChatMode && Plugin.InputPreview.IsDrawable)
             Plugin.InputPreview.CalculatePreview();
 
         var currentTab = Plugin.Config.SidebarTabView ? DrawTabSidebar() : DrawTabBar();
@@ -526,7 +527,7 @@ public sealed class ChatLogWindow : Window
         if (currentTab > -1 && currentTab < Plugin.Config.Tabs.Count)
             activeTab = Plugin.Config.Tabs[currentTab];
 
-        if (Plugin.Config.PreviewPosition is PreviewPosition.Inside)
+        if (Plugin.Config.PreviewPosition is PreviewPosition.Inside && Plugin.InputPreview.IsDrawable)
             Plugin.InputPreview.DrawPreview();
 
         using (ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, Vector2.Zero))
@@ -701,7 +702,8 @@ public sealed class ChatLogWindow : Window
                 ImGui.InputTextWithHint("##chat2-input", isChatEnabled ? "": Language.ChatLog_DisabledInput, ref Chat, 500, flags, Callback);
             }
 
-            if (Plugin.Config.PreviewPosition is PreviewPosition.Tooltip && !string.IsNullOrEmpty(Chat) && ImGui.IsItemHovered())
+            var tooltipDraw = Plugin.Config.PreviewPosition is PreviewPosition.Tooltip && Plugin.InputPreview.IsDrawable;
+            if (tooltipDraw && ImGui.IsItemHovered())
             {
                 ImGui.SetNextWindowSize(new Vector2(500 * ImGuiHelpers.GlobalScale, -1));
                 using var tooltip = ImRaii.Tooltip();

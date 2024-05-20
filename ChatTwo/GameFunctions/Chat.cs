@@ -461,7 +461,7 @@ internal sealed unsafe class Chat : IDisposable
 
     private byte ChatLogRefreshDetour(IntPtr log, ushort eventId, AtkValue* value)
     {
-        if (Plugin.ChatLogWindow.CurrentTab is { InputDisabled: true })
+        if (Plugin is { ChatLogWindow.CurrentTab.InputDisabled: true })
             return ChatLogRefreshHook!.Original(log, eventId, value);
 
         if (eventId != 0x31 || value == null || value->UInt is not (0x05 or 0x0C))

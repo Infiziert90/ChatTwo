@@ -25,6 +25,8 @@ internal class Configuration : IPluginConfiguration
     public bool HideSameTimestamps;
     public bool ShowNoviceNetwork;
     public bool SidebarTabView;
+    public bool OnlyPreviewIf;
+    public int PreviewMinimum = 1;
     public PreviewPosition PreviewPosition = PreviewPosition.Inside;
     public CommandHelpSide CommandHelpSide = CommandHelpSide.None;
     public KeybindMode KeybindMode = KeybindMode.Strict;
@@ -79,6 +81,8 @@ internal class Configuration : IPluginConfiguration
         HideSameTimestamps = other.HideSameTimestamps;
         ShowNoviceNetwork = other.ShowNoviceNetwork;
         SidebarTabView = other.SidebarTabView;
+        OnlyPreviewIf = other.OnlyPreviewIf;
+        PreviewMinimum = other.PreviewMinimum;
         PreviewPosition = other.PreviewPosition;
         CommandHelpSide = other.CommandHelpSide;
         KeybindMode = other.KeybindMode;

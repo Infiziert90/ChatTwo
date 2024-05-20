@@ -2400,7 +2400,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A preview wih all emote, auto-translate encoded as they appear in chat.
+        ///   Looks up a localized string similar to Displays a preview with special parameter evaluated, like emotes and &lt;item&gt;.
         /// </summary>
         internal static string Options_Preview_Description {
             get {
@@ -2427,7 +2427,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Input preview.
+        ///   Looks up a localized string similar to Text preview.
         /// </summary>
         internal static string Options_Preview_Name {
             get {
@@ -2459,6 +2459,42 @@ namespace ChatTwo.Resources {
         internal static string Options_Preview_Top {
             get {
                 return ResourceManager.GetString("Options_Preview_Top", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show only if the text length is greater-than or equal.
+        /// </summary>
+        internal static string Options_PreviewMinimum_Description {
+            get {
+                return ResourceManager.GetString("Options_PreviewMinimum_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minimum input length.
+        /// </summary>
+        internal static string Options_PreviewMinimum_Name {
+            get {
+                return ResourceManager.GetString("Options_PreviewMinimum_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show only if the text contains special parameter.
+        /// </summary>
+        internal static string Options_PreviewOnlyIf_Description {
+            get {
+                return ResourceManager.GetString("Options_PreviewOnlyIf_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only with parameter.
+        /// </summary>
+        internal static string Options_PreviewOnlyIf_Name {
+            get {
+                return ResourceManager.GetString("Options_PreviewOnlyIf_Name", resourceCulture);
             }
         }
         

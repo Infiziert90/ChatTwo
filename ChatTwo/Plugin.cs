@@ -152,6 +152,7 @@ public sealed class Plugin : IDalamudPlugin
 
         WindowSystem?.RemoveAllWindows();
         ChatLogWindow?.Dispose();
+        InputPreview?.Dispose();
         SettingsWindow?.Dispose();
         DebuggerWindow?.Dispose();
         SeStringDebugger?.Dispose();

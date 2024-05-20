@@ -1052,10 +1052,10 @@
         <value>Emotes available:</value>
     </data>
     <data name="Options_Preview_Description" xml:space="preserve">
-        <value>A preview wih all emote, auto-translate encoded as they appear in chat</value>
+        <value>Displays a preview with special parameter evaluated, like emotes and &lt;item&gt;</value>
     </data>
     <data name="Options_Preview_Name" xml:space="preserve">
-        <value>Input preview</value>
+        <value>Text preview</value>
     </data>
     <data name="Options_Preview_None" xml:space="preserve">
         <value>None</value>
@@ -1074,5 +1074,17 @@
     </data>
     <data name="Options_Preview_Tooltip" xml:space="preserve">
         <value>Tooltip</value>
+    </data>
+    <data name="Options_PreviewOnlyIf_Name" xml:space="preserve">
+        <value>Only with parameter</value>
+    </data>
+    <data name="Options_PreviewOnlyIf_Description" xml:space="preserve">
+        <value>Show only if the text contains special parameter</value>
+    </data>
+    <data name="Options_PreviewMinimum_Name" xml:space="preserve">
+        <value>Minimum input length</value>
+    </data>
+    <data name="Options_PreviewMinimum_Description" xml:space="preserve">
+        <value>Show only if the text length is greater-than or equal</value>
     </data>
 </root>
