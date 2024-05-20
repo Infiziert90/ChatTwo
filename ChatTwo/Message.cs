@@ -202,26 +202,42 @@ internal partial class Message
                 continue;
             }
 
-            var builder = new StringBuilder();
-            foreach (var word in text.Content.Split(" "))
+            var wordBuilder = new StringBuilder();
+            var sentenceBuilder = new StringBuilder();
+            foreach (var token in Tokenizer.PrecedenceBasedRegexTokenizer.Tokenize(text.Content))
             {
-                if (checkForEmotes && EmoteCache.Exists(word) && !Plugin.Config.BlockedEmotes.Contains(word))
+                if (token.TokenType == Tokenizer.TokenType.StringValue)
                 {
-                    // We add all the previous collected text parts
-                    AddContentAfterURLCheck(builder.ToString(), text, chunk);
-                    builder.Clear();
-
-                    AddChunkWithMessage(new TextChunk(chunk.Source, EmotePayload.ResolveEmote(word), word) { FallbackColour = text.FallbackColour });
-                    builder.Append(' ');
+                    wordBuilder.Append(token.Value);
                     continue;
                 }
 
-                builder.Append($"{word} ");
-            }
+                var word = wordBuilder.ToString();
+                wordBuilder.Clear();
 
-            // We add the leftovers
-            // Removing the last whitespace as it is set by us
-            AddContentAfterURLCheck(builder.ToString()[..^1], text, chunk);
+                if (checkForEmotes && EmoteCache.Exists(word) && !Plugin.Config.BlockedEmotes.Contains(word))
+                {
+                    // Add the previous punctuation, including whitespaces
+                    AddContentAfterURLCheck(sentenceBuilder.ToString(), text, chunk);
+                    AddChunkWithMessage(new TextChunk(chunk.Source, EmotePayload.ResolveEmote(word), word) { FallbackColour = text.FallbackColour });
+
+                    // Append our current match as it is a special split symbol
+                    sentenceBuilder.Clear();
+                    sentenceBuilder.Append(token.Value);
+                    continue;
+                }
+
+                // Append match if we haven't reached end of string yet
+                if (token.TokenType != Tokenizer.TokenType.SequenceTerminator)
+                {
+                    sentenceBuilder.Append(word);
+                    sentenceBuilder.Append(token.Value);
+                    continue;
+                }
+
+                // End of string reached, we add our leftover
+                AddContentAfterURLCheck(sentenceBuilder.Append(word).ToString(), text, chunk);
+            }
         }
 
         return newChunks;
