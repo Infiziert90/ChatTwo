@@ -70,6 +70,11 @@ public class TextChunk : Chunk
     [Key(6)]
     public string Content { get; set; }
 
+    private TextChunk(Chunk chunk, string content) : base(chunk.Source, chunk.Link)
+    {
+        Content = content;
+    }
+
     internal TextChunk(ChunkSource source, Payload? link, string content) : base(source, link)
     {
         // This has been null in the past, and it broke rendering code.
@@ -95,6 +100,20 @@ public class TextChunk : Chunk
     public TextChunk NewWithStyle(ChunkSource source, Payload? link, string content)
     {
         return new TextChunk(source, link, content)
+        {
+            FallbackColour = FallbackColour,
+            Foreground = Foreground,
+            Glow = Glow,
+            Italic = Italic,
+        };
+    }
+
+    /// <summary>
+    /// Creates a new TextChunk with identical styling to this one.
+    /// </summary>
+    public TextChunk NewWithStyle(Chunk chunk, string content)
+    {
+        return new TextChunk(chunk, content)
         {
             FallbackColour = FallbackColour,
             Foreground = Foreground,

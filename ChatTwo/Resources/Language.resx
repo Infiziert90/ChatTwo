@@ -1055,7 +1055,7 @@
         <value>Displays a preview with special parameter evaluated, like emotes and &lt;item&gt;</value>
     </data>
     <data name="Options_Preview_Name" xml:space="preserve">
-        <value>Text preview</value>
+        <value>Message preview</value>
     </data>
     <data name="Options_Preview_None" xml:space="preserve">
         <value>None</value>
@@ -1070,7 +1070,7 @@
         <value>Bottom</value>
     </data>
     <data name="Options_Preview_Header" xml:space="preserve">
-        <value>Text Preview:</value>
+        <value>Message Preview:</value>
     </data>
     <data name="Options_Preview_Tooltip" xml:space="preserve">
         <value>Tooltip</value>

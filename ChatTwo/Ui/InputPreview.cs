@@ -1,6 +1,7 @@
 using System.Numerics;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using ChatTwo.Code;
 using ChatTwo.Resources;
 using ChatTwo.Util;
@@ -14,7 +15,7 @@ using ImGuiNET;
 
 namespace ChatTwo.Ui;
 
-public class InputPreview : Window
+public partial class InputPreview : Window
 {
     private ChatLogWindow LogWindow { get; }
 
@@ -231,24 +232,20 @@ public class InputPreview : Window
                 CursorPosition += "<flag>".Length;
             else if (text.Link is EmotePayload emote)
                 CursorPosition += emote.Code.Length;
+            else if (text.Link is UriPayload)
+                CursorPosition += text.Content.Length;
 
             ImGuiUtil.WrapText(text.Content, chunk, handler, LogWindow.DefaultText, lineWidth);
             return;
         }
 
-        var splits = text.Content.Split(" ");
-        for (var i = 0; i < splits.Length; i++)
+        foreach (var word in WhitespaceRegex().Split(text.Content).Where(s => s != string.Empty))
         {
-            // The last character should never be an empty string
-            // Sorting this out because it leads to double whitespaces
-            if (i + 1 == splits.Length && splits[i] == "")
-                break;
-
-            var wordSize = ImGui.CalcTextSize(splits[i]);
+            var wordSize = ImGui.CalcTextSize(word);
             if (ImGui.GetContentRegionAvail().X < wordSize.X)
                 ImGui.NewLine();
 
-            foreach (var letter in $"{splits[i]} ")
+            foreach (var letter in word)
             {
                 var letterSize = ImGui.CalcTextSize(letter.ToString());
 
@@ -256,11 +253,14 @@ public class InputPreview : Window
                 if (ImGui.Selectable($"{letter}##{CursorPosition + unique}", false, ImGuiSelectableFlags.None, letterSize))
                 {
                     SelectedCursorPos = CursorPosition;
-                    LogWindow.KeepFocusedThroughPreview = true;
+                    LogWindow.FocusedPreview = true;
                 }
                 ImGui.SameLine();
             }
         }
         ImGui.NewLine();
     }
+
+    [GeneratedRegex(@"(\s)")]
+    private static partial Regex WhitespaceRegex();
 }

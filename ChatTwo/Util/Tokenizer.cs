@@ -16,6 +16,7 @@ public static class Tokenizer
         Whitespace,
         Equals,
         OpenParenthesis,
+        UrlString,
         StringValue,
         Leftover,
         SequenceTerminator
@@ -46,6 +47,7 @@ public static class Tokenizer
                 new(TokenType.Whitespace, "\\s", 1),
                 new(TokenType.Equals, "=", 1),
                 new(TokenType.OpenParenthesis, "\\(", 1),
+                new(TokenType.UrlString, URLRegex, 1),
                 new(TokenType.StringValue, "\\p{IsBasicLatin}", 2),
                 new(TokenType.Leftover, ".", 3)
             };
@@ -85,9 +87,25 @@ public static class Tokenizer
         }
     }
 
-    private class TokenDefinition(TokenType returnsToken, string regexPattern, int precedence)
+    private class TokenDefinition
     {
-        private readonly Regex Regex = new(regexPattern, RegexOptions.IgnoreCase|RegexOptions.Compiled);
+        private readonly TokenType Type;
+        private readonly int Precedence;
+        private readonly Regex Regex;
+
+        public TokenDefinition(TokenType returnsToken, string regexPattern, int precedence)
+        {
+            Type = returnsToken;
+            Precedence = precedence;
+            Regex = new Regex(regexPattern, RegexOptions.IgnoreCase|RegexOptions.Compiled);
+        }
+
+        public TokenDefinition(TokenType returnsToken, Regex regex, int precedence)
+        {
+            Type = returnsToken;
+            Precedence = precedence;
+            Regex = regex;
+        }
 
         public IEnumerable<TokenMatch> FindMatches(string inputString)
         {
@@ -98,9 +116,9 @@ public static class Tokenizer
                 {
                     StartIndex = matches[i].Index,
                     EndIndex = matches[i].Index + matches[i].Length,
-                    TokenType = returnsToken,
+                    TokenType = Type,
                     Value = matches[i].Value,
-                    Precedence = precedence
+                    Precedence = Precedence
                 };
             }
         }
@@ -114,4 +132,21 @@ public static class Tokenizer
         public int EndIndex { get; set; }
         public int Precedence { get; set; }
     }
+
+    /// <summary>
+    /// URLRegex returns a regex object that matches URLs like:
+    /// - https://example.com
+    /// - http://example.com
+    /// - www.example.com
+    /// - https://sub.example.com
+    /// - example.com
+    /// - sub.example.com
+    ///
+    /// It matches URLs with www. or https:// prefix, and also matches URLs
+    /// without a prefix on specific TLDs.
+    /// </summary>
+    private static Regex URLRegex = new(
+        @"(?<URL>((https?:\/\/|www\.)[a-z0-9-]+(\.[a-z0-9-]+)*|([a-z0-9-]+(\.[a-z0-9-]+)*\.(com|net|org|co|io|app)))(:[\d]{1,5})?(\/[^\s]*)?)",
+        RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture
+    );
 }

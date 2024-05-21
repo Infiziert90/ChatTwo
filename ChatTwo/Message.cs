@@ -153,47 +153,10 @@ internal partial class Message
             newChunks.Add(chunk);
         }
 
-        void AddContentAfterURLCheck(string content, TextChunk text, Chunk chunk)
-        {
-            // This works because c# will split regex string, while keeping named groups as separated splits
-            // If the match is the first content of a string, the array will start with a ""
-            // Same if 2 matches are next to each other, they will be split with a ""
-            var splits = URLRegex.Split(content);
-            if (splits.Length == 1)
-            {
-                AddChunkWithMessage(text.NewWithStyle(chunk.Source, chunk.Link, content));
-                return;
-            }
-
-            var nextIsMatch = false;
-            foreach (var split in splits)
-            {
-                if (split == "" || !nextIsMatch)
-                {
-                    nextIsMatch = true;
-                    AddChunkWithMessage(text.NewWithStyle(chunk.Source, chunk.Link, split));
-                    continue;
-                }
-
-                // Create a new TextChunk with a URIPayload for the URL text.
-                nextIsMatch = false;
-                try
-                {
-                    var link = UriPayload.ResolveURI(split);
-                    AddChunkWithMessage(text.NewWithStyle(chunk.Source, link, split));
-                }
-                catch (UriFormatException)
-                {
-                    AddChunkWithMessage(text.NewWithStyle(chunk.Source, chunk.Link, split));
-                    Plugin.Log.Debug($"Invalid URL accepted by Regex but failed URI parsing: '{split}'");
-                }
-            }
-        }
-
         var checkForEmotes = (Code.IsPlayerMessage() || extraChatChannel != Guid.Empty) && Plugin.Config.ShowEmotes;
         foreach (var chunk in oldChunks)
         {
-            // Use as is if it's not a text chunk or it already has a payload.
+            // Use as is if it's not a text chunk, or it already has a payload.
             if (chunk is not TextChunk text || chunk.Link != null)
             {
                 // No need to call AddChunkWithMessage here since the chunk
@@ -215,28 +178,49 @@ internal partial class Message
                 var word = wordBuilder.ToString();
                 wordBuilder.Clear();
 
+
+                var wordUsed = false;
+                var tokenUsed = false;
+
                 if (checkForEmotes && EmoteCache.Exists(word) && !Plugin.Config.BlockedEmotes.Contains(word))
                 {
-                    // Add the previous sentence before the emote
-                    AddContentAfterURLCheck(sentenceBuilder.ToString(), text, chunk);
+                    // Add the previous sentence before adding the emote
+                    AddChunkWithMessage(text.NewWithStyle(chunk, sentenceBuilder.ToString()));
                     AddChunkWithMessage(new TextChunk(chunk.Source, EmotePayload.ResolveEmote(word), word) { FallbackColour = text.FallbackColour });
 
-                    // Append the current punctuation symbol
+                    wordUsed = true;
                     sentenceBuilder.Clear();
-                    sentenceBuilder.Append(token.Value);
-                    continue;
+                }
+
+                if (token.TokenType == Tokenizer.TokenType.UrlString)
+                {
+                    // Add the previous sentence before adding the url
+                    AddChunkWithMessage(text.NewWithStyle(chunk.Source, chunk.Link, sentenceBuilder.Append(!wordUsed ? word : "").ToString()));
+                    try
+                    {
+                        AddChunkWithMessage(text.NewWithStyle(chunk.Source, UriPayload.ResolveURI(token.Value), token.Value));
+                    }
+                    catch (UriFormatException)
+                    {
+                        AddChunkWithMessage(text.NewWithStyle(chunk.Source, chunk.Link, token.Value));
+                        Plugin.Log.Debug($"Invalid URL accepted by Regex but failed URI parsing: '{token.Value}'");
+                    }
+
+                    wordUsed = true;
+                    tokenUsed = true;
+                    sentenceBuilder.Clear();
                 }
 
                 // Append match if we haven't reached end of string yet
                 if (token.TokenType != Tokenizer.TokenType.SequenceTerminator)
                 {
-                    sentenceBuilder.Append(word);
-                    sentenceBuilder.Append(token.Value);
+                    sentenceBuilder.Append(!wordUsed ? word : "");
+                    sentenceBuilder.Append(!tokenUsed ? token.Value : "");
                     continue;
                 }
 
                 // End of string reached, we add our leftover
-                AddContentAfterURLCheck(sentenceBuilder.Append(word).ToString(), text, chunk);
+                AddChunkWithMessage(text.NewWithStyle(chunk, sentenceBuilder.Append(!wordUsed ? word : "").ToString()));
             }
         }
 
@@ -339,23 +323,6 @@ internal partial class Message
 
         Content = newChunks;
     }
-
-    /// <summary>
-    /// URLRegex returns a regex object that matches URLs like:
-    /// - https://example.com
-    /// - http://example.com
-    /// - www.example.com
-    /// - https://sub.example.com
-    /// - example.com
-    /// - sub.example.com
-    ///
-    /// It matches URLs with www. or https:// prefix, and also matches URLs
-    /// without a prefix on specific TLDs.
-    /// </summary>
-    private static Regex URLRegex = new(
-        @"(?<URL>((https?:\/\/|www\.)[a-z0-9-]+(\.[a-z0-9-]+)*|([a-z0-9-]+(\.[a-z0-9-]+)*\.(com|net|org|co|io|app)))(:[\d]{1,5})?(\/[^\s]+)?)",
-        RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture
-    );
 
     [GeneratedRegex("(<item>|<flag>)")]
     private static partial Regex TextParamRegex();

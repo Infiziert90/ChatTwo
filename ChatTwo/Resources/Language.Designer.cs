@@ -2409,7 +2409,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Text Preview:.
+        ///   Looks up a localized string similar to Message Preview:.
         /// </summary>
         internal static string Options_Preview_Header {
             get {
@@ -2427,7 +2427,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Text preview.
+        ///   Looks up a localized string similar to Message preview.
         /// </summary>
         internal static string Options_Preview_Name {
             get {

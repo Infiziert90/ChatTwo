@@ -49,7 +49,7 @@ public sealed class ChatLogWindow : Window
         }
     }
 
-    internal bool KeepFocusedThroughPreview;
+    internal bool FocusedPreview;
     internal bool Activate;
     private int ActivatePos = -1;
     internal string Chat = string.Empty;
@@ -686,9 +686,9 @@ public sealed class ChatLogWindow : Window
         var push = inputColour != null;
         using (ImRaii.PushColor(ImGuiCol.Text, push ? ColourUtil.RgbaToAbgr(inputColour!.Value) : 0, push))
         {
-            if (Activate || KeepFocusedThroughPreview)
+            if (Activate || FocusedPreview)
             {
-                KeepFocusedThroughPreview = false;
+                FocusedPreview = false;
                 ImGui.SetKeyboardFocusHere();
             }
 
