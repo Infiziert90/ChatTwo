@@ -36,6 +36,7 @@ public sealed class SettingsWindow : Window
             new Display(Mutable),
             new ChatLog(Plugin, Mutable),
             new Emote(Plugin, Mutable),
+            new Preview(Plugin, Mutable),
             new Ui.SettingsTabs.Fonts(Mutable),
             new ChatColours(Plugin, Mutable),
             new Tabs(Plugin, Mutable),

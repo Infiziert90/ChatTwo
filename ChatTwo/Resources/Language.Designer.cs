@@ -1689,7 +1689,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Command help side.
+        ///   Looks up a localized string similar to Command help side (None = off).
         /// </summary>
         internal static string Options_CommandHelpSide_Name {
             get {
@@ -2427,7 +2427,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Message preview.
+        ///   Looks up a localized string similar to Position (None = off).
         /// </summary>
         internal static string Options_Preview_Name {
             get {
@@ -2441,6 +2441,15 @@ namespace ChatTwo.Resources {
         internal static string Options_Preview_None {
             get {
                 return ResourceManager.GetString("Options_Preview_None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Preview.
+        /// </summary>
+        internal static string Options_Preview_Tab {
+            get {
+                return ResourceManager.GetString("Options_Preview_Tab", resourceCulture);
             }
         }
         

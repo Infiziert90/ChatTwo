@@ -389,7 +389,7 @@
         <value>Right</value>
     </data>
     <data name="Options_CommandHelpSide_Name">
-        <value>Command help side</value>
+        <value>Command help side (None = off)</value>
     </data>
     <data name="Options_CommandHelpSide_Description">
         <value>The side of {0} to display help for commands on.</value>
@@ -1055,7 +1055,7 @@
         <value>Displays a preview with special parameter evaluated, like emotes and &lt;item&gt;</value>
     </data>
     <data name="Options_Preview_Name" xml:space="preserve">
-        <value>Message preview</value>
+        <value>Position (None = off)</value>
     </data>
     <data name="Options_Preview_None" xml:space="preserve">
         <value>None</value>
@@ -1086,5 +1086,8 @@
     </data>
     <data name="Options_PreviewMinimum_Description" xml:space="preserve">
         <value>Show only if the text length is greater-than or equal</value>
+    </data>
+    <data name="Options_Preview_Tab" xml:space="preserve">
+        <value>Preview</value>
     </data>
 </root>

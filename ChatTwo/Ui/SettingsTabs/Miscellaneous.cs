@@ -22,33 +22,6 @@ internal sealed class Miscellaneous(Configuration mutable) : ISettingsTab
         }
 
         ImGuiUtil.HelpText(string.Format(Language.Options_Language_Description, Plugin.PluginName));
-
-        ImGui.Spacing();
-        ImGui.Separator();
-        ImGui.Spacing();
-
-        using (var combo = ImGuiUtil.BeginComboVertical(Language.Options_Preview_Name, Mutable.PreviewPosition.Name()))
-        {
-            if (combo)
-            {
-                foreach (var position in Enum.GetValues<PreviewPosition>())
-                    if (ImGui.Selectable(position.Name(), Mutable.PreviewPosition == position))
-                        Mutable.PreviewPosition = position;
-            }
-        }
-        ImGuiUtil.HelpText(Language.Options_Preview_Description);
-        ImGui.Spacing();
-
-        if (Mutable.PreviewPosition is not PreviewPosition.None)
-        {
-            ImGuiUtil.OptionCheckbox(ref Mutable.OnlyPreviewIf, Language.Options_PreviewOnlyIf_Name, Language.Options_PreviewOnlyIf_Description);
-            ImGui.Spacing();
-            if (ImGuiUtil.InputIntVertical(Language.Options_PreviewMinimum_Name, Language.Options_PreviewMinimum_Description, ref Mutable.PreviewMinimum))
-                Mutable.PreviewMinimum = Math.Clamp(Mutable.PreviewMinimum, 1, 250);
-        }
-
-        ImGui.Spacing();
-        ImGui.Separator();
         ImGui.Spacing();
 
         using (var combo = ImGuiUtil.BeginComboVertical(Language.Options_CommandHelpSide_Name, Mutable.CommandHelpSide.Name()))
