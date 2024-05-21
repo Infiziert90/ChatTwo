@@ -1079,13 +1079,13 @@
         <value>Must contain parameter</value>
     </data>
     <data name="Options_PreviewOnlyIf_Description" xml:space="preserve">
-        <value>Show only if the text contains special parameter</value>
+        <value>Only show if the text contains special parameter</value>
     </data>
     <data name="Options_PreviewMinimum_Name" xml:space="preserve">
         <value>Minimum input length</value>
     </data>
     <data name="Options_PreviewMinimum_Description" xml:space="preserve">
-        <value>Show only if the text length is greater-than or equal</value>
+        <value>Only show if the text length is greater-than or equal</value>
     </data>
     <data name="Options_Preview_Tab" xml:space="preserve">
         <value>Preview</value>

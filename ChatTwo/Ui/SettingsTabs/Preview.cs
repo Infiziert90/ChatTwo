@@ -33,10 +33,10 @@ internal sealed class Preview : ISettingsTab
         ImGuiUtil.HelpText(Language.Options_Preview_Description);
         ImGui.Spacing();
 
-        ImGuiUtil.OptionCheckbox(ref Mutable.OnlyPreviewIf, Language.Options_PreviewOnlyIf_Name, Language.Options_PreviewOnlyIf_Description);
-        ImGui.Spacing();
         if (ImGuiUtil.InputIntVertical(Language.Options_PreviewMinimum_Name, Language.Options_PreviewMinimum_Description, ref Mutable.PreviewMinimum))
             Mutable.PreviewMinimum = Math.Clamp(Mutable.PreviewMinimum, 1, 250);
+        ImGui.Spacing();
+        ImGuiUtil.OptionCheckbox(ref Mutable.OnlyPreviewIf, Language.Options_PreviewOnlyIf_Name, Language.Options_PreviewOnlyIf_Description);
 
         ImGui.Spacing();
     }

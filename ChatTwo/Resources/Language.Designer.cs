@@ -2472,7 +2472,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show only if the text length is greater-than or equal.
+        ///   Looks up a localized string similar to Only show if the text length is greater-than or equal.
         /// </summary>
         internal static string Options_PreviewMinimum_Description {
             get {
@@ -2490,7 +2490,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show only if the text contains special parameter.
+        ///   Looks up a localized string similar to Only show if the text contains special parameter.
         /// </summary>
         internal static string Options_PreviewOnlyIf_Description {
             get {
