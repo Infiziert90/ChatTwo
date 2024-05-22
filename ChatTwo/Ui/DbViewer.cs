@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Globalization;
 using System.Numerics;
+using ChatTwo.Resources;
 using ChatTwo.Util;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
@@ -77,7 +78,7 @@ public class DbViewer : Window
             CurrentPage = 1;
 
         ImGui.AlignTextToFramePadding();
-        ImGui.TextColored(ImGuiColors.DalamudViolet, "FromTo:");
+        ImGui.TextColored(ImGuiColors.DalamudViolet, Language.DbViewer_DatePicker_FromTo);
         ImGui.SameLine();
 
         var spacing = 3.0f * ImGuiHelpers.GlobalScale;
@@ -88,7 +89,7 @@ public class DbViewer : Window
             DateReset();
         ImGuiUtil.DrawArrows(ref CurrentPage, 1, totalPages, spacing);
 
-        var skipText = "Only current character";
+        var skipText = Language.DbViewer_CharacterOption;
         var textLength = ImGui.GetTextLineHeight() + ImGui.CalcTextSize(skipText).X + ImGui.GetStyle().ItemInnerSpacing.X + ImGui.GetStyle().FramePadding.X * 2;
         ImGui.SameLine(ImGui.GetContentRegionMax().X - textLength);
         ImGui.Checkbox(skipText, ref OnlyCurrentCharacter);
@@ -97,10 +98,10 @@ public class DbViewer : Window
         var loadingIndicator = IsProcessing && ProcessingStart < Environment.TickCount64;
 
         ImGui.AlignTextToFramePadding();
-        ImGui.TextUnformatted($"Page: {CurrentPage} / {totalPages} ({Count} Rows) {(loadingIndicator ? "[Loading...]" : "")}");
+        ImGui.TextUnformatted(string.Format(Language.DbViewer_Page, CurrentPage, totalPages, Count, loadingIndicator ? Language.DbViewer_LoadingIndicator : ""));
         ImGui.SameLine(ImGui.GetContentRegionMax().X - width);
         ImGui.SetNextItemWidth(width);
-        if (ImGui.InputTextWithHint("##searchbar", "Simple Sender/Content Search", ref SimpleSearchTerm, 30))
+        if (ImGui.InputTextWithHint("##searchbar", Language.DbViewer_SearcHint, ref SimpleSearchTerm, 30))
             Filter();
 
         if (DateWidget.Validate(MinimalDate, ref AfterDate, ref BeforeDate))
@@ -144,7 +145,7 @@ public class DbViewer : Window
 
         if (Filtered.IsEmpty)
         {
-            ImGui.TextUnformatted(SimpleSearchTerm == "" ? "Nothing Found." : "Search had no match on this page.");
+            ImGui.TextUnformatted(SimpleSearchTerm == "" ? Language.DbViewer_Status_NothingFound : Language.DbViewer_Status_NoSearchResult);
             return;
         }
 
@@ -156,9 +157,9 @@ public class DbViewer : Window
         if (!table.Success)
             return;
 
-        ImGui.TableSetupColumn("Date", ImGuiTableColumnFlags.WidthFixed);
-        ImGui.TableSetupColumn("Sender");
-        ImGui.TableSetupColumn("Content");
+        ImGui.TableSetupColumn(Language.DbViewer_TableField_Date, ImGuiTableColumnFlags.WidthFixed);
+        ImGui.TableSetupColumn(Language.DbViewer_TableField_Sender);
+        ImGui.TableSetupColumn(Language.DbViewer_TableField_Content);
 
         ImGui.TableHeadersRow();
         foreach (var message in Filtered)
@@ -184,9 +185,9 @@ public class DbViewer : Window
 
         Filtered = new ConcurrentStack<Message>(
             Messages.Reverse().Where(m =>
-                ChunkUtil.ToRawString(m.Sender).Contains(SimpleSearchTerm) ||
-                ChunkUtil.ToRawString(m.Content).Contains(SimpleSearchTerm))
-            );
+                ChunkUtil.ToRawString(m.Sender).Contains(SimpleSearchTerm, StringComparison.InvariantCultureIgnoreCase) ||
+                ChunkUtil.ToRawString(m.Content).Contains(SimpleSearchTerm, StringComparison.InvariantCultureIgnoreCase)
+                ));
     }
 
     private void DateRefresh()

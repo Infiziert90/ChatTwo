@@ -1365,6 +1365,276 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fri.
+        /// </summary>
+        internal static string DateWidget_Day_Fri {
+            get {
+                return ResourceManager.GetString("DateWidget_Day_Fri", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mon.
+        /// </summary>
+        internal static string DateWidget_Day_Mon {
+            get {
+                return ResourceManager.GetString("DateWidget_Day_Mon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sat.
+        /// </summary>
+        internal static string DateWidget_Day_Sat {
+            get {
+                return ResourceManager.GetString("DateWidget_Day_Sat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sun.
+        /// </summary>
+        internal static string DateWidget_Day_Sun {
+            get {
+                return ResourceManager.GetString("DateWidget_Day_Sun", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thu.
+        /// </summary>
+        internal static string DateWidget_Day_Thu {
+            get {
+                return ResourceManager.GetString("DateWidget_Day_Thu", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tue.
+        /// </summary>
+        internal static string DateWidget_Day_Tue {
+            get {
+                return ResourceManager.GetString("DateWidget_Day_Tue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wed.
+        /// </summary>
+        internal static string DateWidget_Day_Wed {
+            get {
+                return ResourceManager.GetString("DateWidget_Day_Wed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Date before {0} is not possible.
+        /// </summary>
+        internal static string DateWidget_InvalidDate {
+            get {
+                return ResourceManager.GetString("DateWidget_InvalidDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to April.
+        /// </summary>
+        internal static string DateWidget_Month_April {
+            get {
+                return ResourceManager.GetString("DateWidget_Month_April", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to August.
+        /// </summary>
+        internal static string DateWidget_Month_August {
+            get {
+                return ResourceManager.GetString("DateWidget_Month_August", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to December.
+        /// </summary>
+        internal static string DateWidget_Month_December {
+            get {
+                return ResourceManager.GetString("DateWidget_Month_December", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to February.
+        /// </summary>
+        internal static string DateWidget_Month_February {
+            get {
+                return ResourceManager.GetString("DateWidget_Month_February", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to January.
+        /// </summary>
+        internal static string DateWidget_Month_January {
+            get {
+                return ResourceManager.GetString("DateWidget_Month_January", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to July.
+        /// </summary>
+        internal static string DateWidget_Month_July {
+            get {
+                return ResourceManager.GetString("DateWidget_Month_July", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to June.
+        /// </summary>
+        internal static string DateWidget_Month_June {
+            get {
+                return ResourceManager.GetString("DateWidget_Month_June", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to March.
+        /// </summary>
+        internal static string DateWidget_Month_March {
+            get {
+                return ResourceManager.GetString("DateWidget_Month_March", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to May.
+        /// </summary>
+        internal static string DateWidget_Month_May {
+            get {
+                return ResourceManager.GetString("DateWidget_Month_May", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to November.
+        /// </summary>
+        internal static string DateWidget_Month_November {
+            get {
+                return ResourceManager.GetString("DateWidget_Month_November", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to October.
+        /// </summary>
+        internal static string DateWidget_Month_October {
+            get {
+                return ResourceManager.GetString("DateWidget_Month_October", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to September.
+        /// </summary>
+        internal static string DateWidget_Month_September {
+            get {
+                return ResourceManager.GetString("DateWidget_Month_September", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Only current character.
+        /// </summary>
+        internal static string DbViewer_CharacterOption {
+            get {
+                return ResourceManager.GetString("DbViewer_CharacterOption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FromTo:.
+        /// </summary>
+        internal static string DbViewer_DatePicker_FromTo {
+            get {
+                return ResourceManager.GetString("DbViewer_DatePicker_FromTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to [Loading...].
+        /// </summary>
+        internal static string DbViewer_LoadingIndicator {
+            get {
+                return ResourceManager.GetString("DbViewer_LoadingIndicator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Page: {0} / {1} ({2} Rows) {3}.
+        /// </summary>
+        internal static string DbViewer_Page {
+            get {
+                return ResourceManager.GetString("DbViewer_Page", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Simple Sender/Content Search.
+        /// </summary>
+        internal static string DbViewer_SearcHint {
+            get {
+                return ResourceManager.GetString("DbViewer_SearcHint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search had no match on this page..
+        /// </summary>
+        internal static string DbViewer_Status_NoSearchResult {
+            get {
+                return ResourceManager.GetString("DbViewer_Status_NoSearchResult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nothing Found..
+        /// </summary>
+        internal static string DbViewer_Status_NothingFound {
+            get {
+                return ResourceManager.GetString("DbViewer_Status_NothingFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Content.
+        /// </summary>
+        internal static string DbViewer_TableField_Content {
+            get {
+                return ResourceManager.GetString("DbViewer_TableField_Content", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Date.
+        /// </summary>
+        internal static string DbViewer_TableField_Date {
+            get {
+                return ResourceManager.GetString("DbViewer_TableField_Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sender.
+        /// </summary>
+        internal static string DbViewer_TableField_Sender {
+            get {
+                return ResourceManager.GetString("DbViewer_TableField_Sender", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chinese (full).
         /// </summary>
         internal static string ExtraGlyphRanges_ChineseFull_Name {

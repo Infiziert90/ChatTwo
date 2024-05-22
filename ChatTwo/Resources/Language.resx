@@ -1105,4 +1105,94 @@
     <data name="Options_Changelog_Header" xml:space="preserve">
         <value>Changelog:</value>
     </data>
+    <data name="DateWidget_InvalidDate" xml:space="preserve">
+        <value>Date before {0} is not possible</value>
+    </data>
+    <data name="DateWidget_Day_Sun" xml:space="preserve">
+        <value>Sun</value>
+    </data>
+    <data name="DateWidget_Day_Mon" xml:space="preserve">
+        <value>Mon</value>
+    </data>
+    <data name="DateWidget_Day_Tue" xml:space="preserve">
+        <value>Tue</value>
+    </data>
+    <data name="DateWidget_Day_Wed" xml:space="preserve">
+        <value>Wed</value>
+    </data>
+    <data name="DateWidget_Day_Thu" xml:space="preserve">
+        <value>Thu</value>
+    </data>
+    <data name="DateWidget_Day_Fri" xml:space="preserve">
+        <value>Fri</value>
+    </data>
+    <data name="DateWidget_Day_Sat" xml:space="preserve">
+        <value>Sat</value>
+    </data>
+    <data name="DateWidget_Month_January" xml:space="preserve">
+        <value>January</value>
+    </data>
+    <data name="DateWidget_Month_February" xml:space="preserve">
+        <value>February</value>
+    </data>
+    <data name="DateWidget_Month_March" xml:space="preserve">
+        <value>March</value>
+    </data>
+    <data name="DateWidget_Month_April" xml:space="preserve">
+        <value>April</value>
+    </data>
+    <data name="DateWidget_Month_May" xml:space="preserve">
+        <value>May</value>
+    </data>
+    <data name="DateWidget_Month_June" xml:space="preserve">
+        <value>June</value>
+    </data>
+    <data name="DateWidget_Month_July" xml:space="preserve">
+        <value>July</value>
+    </data>
+    <data name="DateWidget_Month_August" xml:space="preserve">
+        <value>August</value>
+    </data>
+    <data name="DateWidget_Month_September" xml:space="preserve">
+        <value>September</value>
+    </data>
+    <data name="DateWidget_Month_October" xml:space="preserve">
+        <value>October</value>
+    </data>
+    <data name="DateWidget_Month_November" xml:space="preserve">
+        <value>November</value>
+    </data>
+    <data name="DateWidget_Month_December" xml:space="preserve">
+        <value>December</value>
+    </data>
+    <data name="DbViewer_TableField_Date" xml:space="preserve">
+        <value>Date</value>
+    </data>
+    <data name="DbViewer_TableField_Sender" xml:space="preserve">
+        <value>Sender</value>
+    </data>
+    <data name="DbViewer_TableField_Content" xml:space="preserve">
+        <value>Content</value>
+    </data>
+    <data name="DbViewer_Status_NothingFound" xml:space="preserve">
+        <value>Nothing Found.</value>
+    </data>
+    <data name="DbViewer_Status_NoSearchResult" xml:space="preserve">
+        <value>Search had no match on this page.</value>
+    </data>
+    <data name="DbViewer_SearcHint" xml:space="preserve">
+        <value>Simple Sender/Content Search</value>
+    </data>
+    <data name="DbViewer_Page" xml:space="preserve">
+        <value>Page: {0} / {1} ({2} Rows) {3}</value>
+    </data>
+    <data name="DbViewer_LoadingIndicator" xml:space="preserve">
+        <value>[Loading...]</value>
+    </data>
+    <data name="DbViewer_CharacterOption" xml:space="preserve">
+        <value>Only current character</value>
+    </data>
+    <data name="DbViewer_DatePicker_FromTo" xml:space="preserve">
+        <value>FromTo:</value>
+    </data>
 </root>

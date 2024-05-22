@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Numerics;
+using ChatTwo.Resources;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.ImGuiNotification;
@@ -16,8 +17,8 @@ public static class DateWidget
     private const int HeightInItems = 1 + 1 + 1 + 4;
 
     private static readonly Vector4 Transparent = new(1, 1, 1, 0);
-    private static readonly string[] DayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    private static readonly string[] MonthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    private static readonly string[] DayNames = [Language.DateWidget_Day_Sun, Language.DateWidget_Day_Mon, Language.DateWidget_Day_Tue, Language.DateWidget_Day_Wed, Language.DateWidget_Day_Thu, Language.DateWidget_Day_Fri, Language.DateWidget_Day_Sat];
+    private static readonly string[] MonthNames = [Language.DateWidget_Month_January, Language.DateWidget_Month_February, Language.DateWidget_Month_March, Language.DateWidget_Month_April, Language.DateWidget_Month_May, Language.DateWidget_Month_June, Language.DateWidget_Month_July, Language.DateWidget_Month_August, Language.DateWidget_Month_September, Language.DateWidget_Month_October, Language.DateWidget_Month_November, Language.DateWidget_Month_December];
     private static readonly int[] NumDaysPerMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
     private static uint LastOpenComboID;
@@ -50,7 +51,7 @@ public static class DateWidget
             currentMin = minimal;
             Plugin.Notification.AddNotification(new Notification
             {
-                Content = "Date before {0} is not possible".Format(minimal.ToShortDateString()),
+                Content = Language.DateWidget_InvalidDate.Format(minimal.ToShortDateString()),
                 Type = NotificationType.Warning,
                 Minimized = false,
             });
@@ -84,7 +85,7 @@ public static class DateWidget
             dateString = date.ToString(format);
     }
 
-    public static bool DatePicker(string label, ref DateTime dateOut, bool closeWhenMouseLeavesIt, string leftArrow = "", string rightArrow = "")
+    private static bool DatePicker(string label, ref DateTime dateOut, bool closeWhenMouseLeavesIt, string leftArrow = "", string rightArrow = "")
     {
         var id = ImGui.GetID(label);
         var style = ImGui.GetStyle();
@@ -253,7 +254,7 @@ public static class DateWidget
         return valueChanged;
     }
 
-    public static string Center(string source, int length)
+    private static string Center(string source, int length)
     {
         var spaces = length - source.Length;
         var padLeft = (spaces / 2) + source.Length;
