@@ -1599,6 +1599,24 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Changelog:.
+        /// </summary>
+        internal static string Options_Changelog_Header {
+            get {
+                return ResourceManager.GetString("Options_Changelog_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Changelog.
+        /// </summary>
+        internal static string Options_Changelog_Tab {
+            get {
+                return ResourceManager.GetString("Options_Changelog_Tab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Import from game.
         /// </summary>
         internal static string Options_ChatColours_Import {
@@ -2175,7 +2193,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Keeps the input focus, even if you enter battle or do other actions.
+        ///   Looks up a localized string similar to Keeps the input focus, even if you enter battle or do other actions..
         /// </summary>
         internal static string Options_KeepInputFocus_Description {
             get {
@@ -2400,7 +2418,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Displays a preview with special parameter evaluated, like emotes and &lt;item&gt;.
+        ///   Looks up a localized string similar to Displays a preview with special parameter evaluated, like emotes and &lt;item&gt;..
         /// </summary>
         internal static string Options_Preview_Description {
             get {
@@ -2472,7 +2490,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Only show if the text length is greater-than or equal.
+        ///   Looks up a localized string similar to Only show if the text length is greater-than or equal..
         /// </summary>
         internal static string Options_PreviewMinimum_Description {
             get {
@@ -2490,7 +2508,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Only show if the text contains special parameter.
+        ///   Looks up a localized string similar to Only show if the text contains special parameter..
         /// </summary>
         internal static string Options_PreviewOnlyIf_Description {
             get {
@@ -2508,7 +2526,25 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Replaces words with their emote version, currently supports BetterTTV.
+        ///   Looks up a localized string similar to Print the changelog to chat after an update..
+        /// </summary>
+        internal static string Options_PrintChangelog_Description {
+            get {
+                return ResourceManager.GetString("Options_PrintChangelog_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Print changelog.
+        /// </summary>
+        internal static string Options_PrintChangelog_Name {
+            get {
+                return ResourceManager.GetString("Options_PrintChangelog_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replaces words with their emote version, currently supports BetterTTV..
         /// </summary>
         internal static string Options_ShowEmotes_Desc {
             get {
@@ -2837,6 +2873,15 @@ namespace ChatTwo.Resources {
         internal static string Options_TooltipOffset_Name {
             get {
                 return ResourceManager.GetString("Options_TooltipOffset_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This feature isn&apos;t implemented yet.
+        /// </summary>
+        internal static string Options_Warning_NotImplemented {
+            get {
+                return ResourceManager.GetString("Options_Warning_NotImplemented", resourceCulture);
             }
         }
         

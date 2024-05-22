@@ -21,3 +21,34 @@ tags:
     - UI
     - Chat
     - Replacement
+changelog:  |-
+  **New**
+  - Changelog tab
+    - Shows the latest changelog
+    - Has an option to disable printing of changelogs to chat
+
+  **Message Preview**
+  - Message preview has now its own config tab
+  - Added a new position: Tooltip
+    - Shows up while hovering the input box
+    - This won't support the letter selection or any of the hover features
+  - Added option to set a minimum length before message preview appears
+  - Added option to only show preview if special parameter are used (<item>, emotes...)
+  - Selectable letters in message preview
+    - Click on any letter and the text cursor will jump to its position
+  - Better word wrapping in message preview
+
+  **Fixes**
+  - Prevent rare null reference on plugin load
+  - Prevent null strings from being parsed
+  - Parsing of emotes works with punctuation and non latin letters surrounding it
+
+  **Future Updates**
+  - Message preview will receive numerous features over the next weeks
+    - More parameter will be supported (<t> ...)
+    - Better customization (Position it anywhere)
+    - Feedback is always welcome
+    - If you want to disable this feature all together, visit the Preview tab in your config
+  - Fix for dalamuds welcome messages getting shuffled
+  - Message history viewer, going above the 10,000 that chat2 can display at once
+

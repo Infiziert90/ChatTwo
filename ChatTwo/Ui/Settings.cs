@@ -42,6 +42,7 @@ public sealed class SettingsWindow : Window
             new Tabs(Plugin, Mutable),
             new Database(Plugin, Mutable),
             new Miscellaneous(Mutable),
+            new Changelog(Mutable),
             new About(),
         };
 

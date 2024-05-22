@@ -4,6 +4,7 @@ using ChatTwo.Util;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using System.Text.RegularExpressions;
+using Dalamud.Game.Text;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using LiteDB;
@@ -292,7 +293,7 @@ internal partial class Message
                             ? Plugin.DataManager.GetExcelSheet<Item>()!.GetRow(item.ItemID)!.Name.ToString()
                             : Plugin.DataManager.GetExcelSheet<EventItem>()!.GetRow(item.ItemID)!.Name.ToString();
 
-                        var link = new ItemPayload(item.ItemID, kind, name);
+                        var link = new ItemPayload(item.ItemID, kind, $"{SeIconChar.LinkMarker.ToIconChar()}{name}");
                         AddChunkWithMessage(text.NewWithStyle(chunk.Source, link, link.DisplayName ?? "Unknown"));
                     }
                     else
@@ -309,7 +310,7 @@ internal partial class Message
                         var rawY = (int)(MathF.Round(mapCoords.YFloat, 3, MidpointRounding.AwayFromZero) * 1000);
 
                         var link = new MapLinkPayload(mapCoords.TerritoryId, mapCoords.MapId, rawX, rawY);
-                        AddChunkWithMessage(text.NewWithStyle(chunk.Source, link, $"{link.PlaceName} {link.CoordinateString}"));
+                        AddChunkWithMessage(text.NewWithStyle(chunk.Source, link, $"{SeIconChar.LinkMarker.ToIconChar()}{link.PlaceName} {link.CoordinateString}"));
                     }
 
                 }

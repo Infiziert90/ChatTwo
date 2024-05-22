@@ -1016,13 +1016,13 @@
         <value>Keep input focus</value>
     </data>
     <data name="Options_KeepInputFocus_Description" xml:space="preserve">
-        <value>Keeps the input focus, even if you enter battle or do other actions</value>
+        <value>Keeps the input focus, even if you enter battle or do other actions.</value>
     </data>
     <data name="Options_ShowEmotes_Name" xml:space="preserve">
         <value>Show emotes</value>
     </data>
     <data name="Options_ShowEmotes_Desc" xml:space="preserve">
-        <value>Replaces words with their emote version, currently supports BetterTTV</value>
+        <value>Replaces words with their emote version, currently supports BetterTTV.</value>
     </data>
     <data name="Options_Emote_Tab" xml:space="preserve">
         <value>Emotes</value>
@@ -1052,7 +1052,7 @@
         <value>Emotes available:</value>
     </data>
     <data name="Options_Preview_Description" xml:space="preserve">
-        <value>Displays a preview with special parameter evaluated, like emotes and &lt;item&gt;</value>
+        <value>Displays a preview with special parameter evaluated, like emotes and &lt;item&gt;.</value>
     </data>
     <data name="Options_Preview_Name" xml:space="preserve">
         <value>Position (None = off)</value>
@@ -1079,15 +1079,30 @@
         <value>Must contain parameter</value>
     </data>
     <data name="Options_PreviewOnlyIf_Description" xml:space="preserve">
-        <value>Only show if the text contains special parameter</value>
+        <value>Only show if the text contains special parameter.</value>
     </data>
     <data name="Options_PreviewMinimum_Name" xml:space="preserve">
         <value>Minimum input length</value>
     </data>
     <data name="Options_PreviewMinimum_Description" xml:space="preserve">
-        <value>Only show if the text length is greater-than or equal</value>
+        <value>Only show if the text length is greater-than or equal.</value>
     </data>
     <data name="Options_Preview_Tab" xml:space="preserve">
         <value>Preview</value>
+    </data>
+    <data name="Options_Changelog_Tab" xml:space="preserve">
+        <value>Changelog</value>
+    </data>
+    <data name="Options_PrintChangelog_Name" xml:space="preserve">
+        <value>Print changelog</value>
+    </data>
+    <data name="Options_PrintChangelog_Description" xml:space="preserve">
+        <value>Print the changelog to chat after an update.</value>
+    </data>
+    <data name="Options_Warning_NotImplemented" xml:space="preserve">
+        <value>This feature isn't implemented yet</value>
+    </data>
+    <data name="Options_Changelog_Header" xml:space="preserve">
+        <value>Changelog:</value>
     </data>
 </root>

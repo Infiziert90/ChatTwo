@@ -25,6 +25,7 @@ internal class Configuration : IPluginConfiguration
     public bool HideSameTimestamps;
     public bool ShowNoviceNetwork;
     public bool SidebarTabView;
+    public bool PrintChangelog = true;
     public bool OnlyPreviewIf;
     public int PreviewMinimum = 1;
     public PreviewPosition PreviewPosition = PreviewPosition.Inside;
@@ -81,6 +82,7 @@ internal class Configuration : IPluginConfiguration
         HideSameTimestamps = other.HideSameTimestamps;
         ShowNoviceNetwork = other.ShowNoviceNetwork;
         SidebarTabView = other.SidebarTabView;
+        PrintChangelog = other.PrintChangelog;
         OnlyPreviewIf = other.OnlyPreviewIf;
         PreviewMinimum = other.PreviewMinimum;
         PreviewPosition = other.PreviewPosition;
