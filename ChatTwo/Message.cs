@@ -12,45 +12,48 @@ using Lumina.Excel.GeneratedSheets;
 
 namespace ChatTwo;
 
-internal class SortCode {
+internal class SortCode
+{
     internal ChatType Type { get; }
     internal ChatSource Source { get; }
 
     [BsonCtor] // Used by LegacyMessageImporter
-    public SortCode(ChatType type, ChatSource source) {
+    public SortCode(ChatType type, ChatSource source)
+    {
         Type = type;
         Source = source;
     }
 
-    internal SortCode(uint raw) {
+    internal SortCode(uint raw)
+    {
         Type = (ChatType)(raw >> 16);
         Source = (ChatSource)(raw & 0xFFFF);
     }
 
-    internal uint Encode() {
+    internal uint Encode()
+    {
         return ((uint) Type << 16) | (uint) Source;
     }
 
-    private bool Equals(SortCode other) {
+    private bool Equals(SortCode other)
+    {
         return Type == other.Type && Source == other.Source;
     }
 
-    public override bool Equals(object? obj) {
-        if (ReferenceEquals(null, obj)) {
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(null, obj))
             return false;
-        }
 
-        if (ReferenceEquals(this, obj)) {
+        if (ReferenceEquals(this, obj))
             return true;
-        }
 
         return obj.GetType() == GetType() && Equals((SortCode) obj);
     }
 
-    public override int GetHashCode() {
-        unchecked {
-            return ((int) Type * 397) ^ (int) Source;
-        }
+    public override int GetHashCode()
+    {
+        unchecked { return ((int) Type * 397) ^ (int) Source; }
     }
 }
 

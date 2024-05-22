@@ -73,4 +73,53 @@ internal static class TabsUtil {
             [ChatType.NpcDialogue] = ChatSourceExt.All,
         },
     };
+
+    internal static Dictionary<ChatType, ChatSource> MostlyPlayer => new()
+    {
+            // Special
+            [ChatType.Debug] = ChatSourceExt.All,
+            [ChatType.Urgent] = ChatSourceExt.All,
+            [ChatType.Notice] = ChatSourceExt.All,
+            // Chat
+            [ChatType.Say] = ChatSourceExt.All,
+            [ChatType.Yell] = ChatSourceExt.All,
+            [ChatType.Shout] = ChatSourceExt.All,
+            [ChatType.TellIncoming] = ChatSourceExt.All,
+            [ChatType.TellOutgoing] = ChatSourceExt.All,
+            [ChatType.Party] = ChatSourceExt.All,
+            [ChatType.CrossParty] = ChatSourceExt.All,
+            [ChatType.Alliance] = ChatSourceExt.All,
+            [ChatType.FreeCompany] = ChatSourceExt.All,
+            [ChatType.PvpTeam] = ChatSourceExt.All,
+            [ChatType.CrossLinkshell1] = ChatSourceExt.All,
+            [ChatType.CrossLinkshell2] = ChatSourceExt.All,
+            [ChatType.CrossLinkshell3] = ChatSourceExt.All,
+            [ChatType.CrossLinkshell4] = ChatSourceExt.All,
+            [ChatType.CrossLinkshell5] = ChatSourceExt.All,
+            [ChatType.CrossLinkshell6] = ChatSourceExt.All,
+            [ChatType.CrossLinkshell7] = ChatSourceExt.All,
+            [ChatType.CrossLinkshell8] = ChatSourceExt.All,
+            [ChatType.Linkshell1] = ChatSourceExt.All,
+            [ChatType.Linkshell2] = ChatSourceExt.All,
+            [ChatType.Linkshell3] = ChatSourceExt.All,
+            [ChatType.Linkshell4] = ChatSourceExt.All,
+            [ChatType.Linkshell5] = ChatSourceExt.All,
+            [ChatType.Linkshell6] = ChatSourceExt.All,
+            [ChatType.Linkshell7] = ChatSourceExt.All,
+            [ChatType.Linkshell8] = ChatSourceExt.All,
+            [ChatType.NoviceNetwork] = ChatSourceExt.All,
+            [ChatType.StandardEmote] = ChatSourceExt.All,
+            [ChatType.CustomEmote] = ChatSourceExt.All,
+            // Announcements
+            [ChatType.System] = ChatSourceExt.All,
+            [ChatType.Error] = ChatSourceExt.All,
+            [ChatType.Echo] = ChatSourceExt.All,
+            [ChatType.NoviceNetworkSystem] = ChatSourceExt.All,
+            [ChatType.FreeCompanyAnnouncement] = ChatSourceExt.All,
+            [ChatType.PvpTeamAnnouncement] = ChatSourceExt.All,
+            [ChatType.FreeCompanyLoginLogout] = ChatSourceExt.All,
+            [ChatType.PvpTeamLoginLogout] = ChatSourceExt.All,
+            [ChatType.RandomNumber] = ChatSourceExt.All,
+            [ChatType.MessageBook] = ChatSourceExt.All,
+    };
 }

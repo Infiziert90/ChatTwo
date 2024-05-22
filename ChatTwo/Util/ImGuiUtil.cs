@@ -317,6 +317,13 @@ internal static class ImGuiUtil
         }
     }
 
+    public static void CenterText(string text, float indent = 0.0f)
+    {
+        indent *= ImGuiHelpers.GlobalScale;
+        ImGui.SameLine(((ImGui.GetContentRegionAvail().X - ImGui.CalcTextSize(text).X) * 0.5f) + indent);
+        ImGui.TextUnformatted(text);
+    }
+
     internal static bool TryToImGui(this VirtualKey key, out ImGuiKey result)
     {
         result = key switch {

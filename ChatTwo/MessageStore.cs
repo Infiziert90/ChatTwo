@@ -167,12 +167,17 @@ internal class MessageStore : IDisposable
         var userVersion = Convert.ToInt32(cmd.ExecuteScalar());
 
         var migrationsToDo = new List<Action>();
-        if (userVersion <= 0)
+        switch (userVersion)
         {
-            migrationsToDo.Add(Migrate0);
-            // Migration support was only added in version 1. Migrate0 is
-            // idempotent.
-            migrationsToDo.Add(Migrate1);
+            case <= 0:
+                migrationsToDo.Add(Migrate0);
+                // Migration support was only added in version 1. Migrate0 is
+                // idempotent.
+                migrationsToDo.Add(Migrate1);
+                break;
+            case 1:
+                migrationsToDo.Add(Migrate2);
+                break;
         }
 
         foreach (var migration in migrationsToDo)
@@ -211,6 +216,17 @@ internal class MessageStore : IDisposable
         ");
 
         SetMigrationVersion(1);
+    }
+
+    private void Migrate2()
+    {
+        Connection.Execute(@"
+            -- Migration 2: Add Channel generated column
+            ALTER TABLE messages ADD COLUMN Channel INTEGER GENERATED ALWAYS AS (Code & 0x7f) VIRTUAL;
+            CREATE INDEX IF NOT EXISTS idx_messages_channel ON messages (Channel);
+        ");
+
+        SetMigrationVersion(2);
     }
 
     private void SetMigrationVersion(int version)
@@ -373,14 +389,14 @@ internal class MessageStore : IDisposable
         cmd.ExecuteNonQuery();
     }
 
-    internal long CountDateRange(DateTime after, DateTime before, ulong? receiver = null)
+    internal long CountDateRange(DateTime after, DateTime before, uint[] channels, ulong? receiver = null)
     {
         List<string> whereClauses = ["deleted = false"];
         if (receiver != null)
             whereClauses.Add("Receiver = $Receiver");
 
         whereClauses.Add("Date BETWEEN $After AND $Before");
-        whereClauses.Add("Code != 72");
+        whereClauses.Add($"Channel IN ({string.Join(", ", channels)})");
 
         var whereClause = "WHERE " + string.Join(" AND ", whereClauses);
 
@@ -402,14 +418,14 @@ internal class MessageStore : IDisposable
         return (long) cmd.ExecuteScalar()!;
     }
 
-    internal MessageEnumerator GetDateRange(DateTime after, DateTime before, ulong? receiver = null, int page = 0)
+    internal MessageEnumerator GetDateRange(DateTime after, DateTime before, uint[] channels, ulong? receiver = null, int page = 0)
     {
         List<string> whereClauses = ["deleted = false"];
         if (receiver != null)
             whereClauses.Add("Receiver = $Receiver");
 
         whereClauses.Add("Date BETWEEN $After AND $Before");
-        whereClauses.Add("Code != 72");
+        whereClauses.Add($"Channel IN ({string.Join(", ", channels)})");
 
         var whereClause = "WHERE " + string.Join(" AND ", whereClauses);
 

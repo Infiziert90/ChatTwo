@@ -1635,6 +1635,15 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chat Type.
+        /// </summary>
+        internal static string DbViewer_TableField_Type {
+            get {
+                return ResourceManager.GetString("DbViewer_TableField_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chinese (full).
         /// </summary>
         internal static string ExtraGlyphRanges_ChineseFull_Name {
