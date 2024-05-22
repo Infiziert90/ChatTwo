@@ -49,6 +49,6 @@ changelog:  |-
     - Better customization (Position it anywhere)
     - Feedback is always welcome
     - If you want to disable this feature all together, visit the Preview tab in your config
-  - Fix for dalamuds welcome messages getting shuffled
+  - Fix welcome messages getting shuffled
   - Message history viewer, going above the 10,000 that chat2 can display at once
 
