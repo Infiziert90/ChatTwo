@@ -372,6 +372,78 @@ internal class MessageStore : IDisposable
         cmd.Parameters.AddWithValue("$Id", id);
         cmd.ExecuteNonQuery();
     }
+
+    internal long CountDateRange(DateTime after, DateTime before, ulong? receiver = null)
+    {
+        List<string> whereClauses = ["deleted = false"];
+        if (receiver != null)
+            whereClauses.Add("Receiver = $Receiver");
+
+        whereClauses.Add("Date BETWEEN $After AND $Before");
+        whereClauses.Add("Code != 72");
+
+        var whereClause = "WHERE " + string.Join(" AND ", whereClauses);
+
+        var cmd = Connection.CreateCommand();
+        // Select last N messages by date DESC, but reverse the order to get
+        // them in ascending order.
+        cmd.CommandText = @"
+            SELECT COUNT(*)
+            FROM messages
+            " + whereClause;
+        cmd.CommandTimeout = 120; // this could take a while on slow computers
+
+        if (receiver != null)
+            cmd.Parameters.AddWithValue("$Receiver", receiver);
+
+        cmd.Parameters.AddWithValue("$After", ((DateTimeOffset) after).ToUnixTimeMilliseconds());
+        cmd.Parameters.AddWithValue("$Before", ((DateTimeOffset) before).ToUnixTimeMilliseconds());
+
+        return (long) cmd.ExecuteScalar()!;
+    }
+
+    internal MessageEnumerator GetDateRange(DateTime after, DateTime before, ulong? receiver = null, int page = 0)
+    {
+        List<string> whereClauses = ["deleted = false"];
+        if (receiver != null)
+            whereClauses.Add("Receiver = $Receiver");
+
+        whereClauses.Add("Date BETWEEN $After AND $Before");
+        whereClauses.Add("Code != 72");
+
+        var whereClause = "WHERE " + string.Join(" AND ", whereClauses);
+
+        var cmd = Connection.CreateCommand();
+        // Select last N messages by date DESC, but reverse the order to get
+        // them in ascending order.
+        cmd.CommandText = @"
+            SELECT
+                Id,
+                Receiver,
+                ContentId,
+                Date,
+                Code,
+                Sender,
+                Content,
+                SenderSource,
+                ContentSource,
+                SortCode,
+                ExtraChatChannel
+            FROM messages
+            " + whereClause + @"
+            LIMIT $Offset, 500;
+        ";
+        cmd.CommandTimeout = 120; // this could take a while on slow computers
+
+        if (receiver != null)
+            cmd.Parameters.AddWithValue("$Receiver", receiver);
+
+        cmd.Parameters.AddWithValue("$After", ((DateTimeOffset) after).ToUnixTimeMilliseconds());
+        cmd.Parameters.AddWithValue("$Before", ((DateTimeOffset) before).ToUnixTimeMilliseconds());
+        cmd.Parameters.AddWithValue("$Offset", 500 * page);
+
+        return new MessageEnumerator(cmd.ExecuteReader());
+    }
 }
 
 internal class MessageEnumerator(DbDataReader reader) : IEnumerable<Message>

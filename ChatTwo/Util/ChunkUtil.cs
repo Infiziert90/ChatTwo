@@ -139,6 +139,19 @@ internal static class ChunkUtil
         return chunks;
     }
 
+    internal static string ToRawString(List<Chunk> chunks)
+    {
+        if (chunks.Count == 0)
+            return string.Empty;
+
+        var builder = new StringBuilder();
+        foreach (var chunk in chunks)
+            if (chunk is TextChunk text)
+                builder.Append(text.Content);
+
+        return builder.ToString();
+    }
+
     internal static readonly RawPayload PeriodicRecruitmentLink = new([0x02, 0x27, 0x07, 0x08, 0x01, 0x01, 0x01, 0xFF, 0x01, 0x03]);
 
     private static uint GetInteger(BinaryReader input)

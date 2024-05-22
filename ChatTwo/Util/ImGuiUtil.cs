@@ -298,6 +298,25 @@ internal static class ImGuiUtil
         }
     }
 
+    public static void DrawArrows(ref int selected, int min, int max, float spacing, int id = 0)
+    {
+        // Prevents changing values from triggering EndDisable
+        var isMin = selected == 1;
+        var isMax = selected == max;
+
+        ImGui.SameLine(0, spacing);
+        using (ImRaii.Disabled(isMin))
+        {
+            if (IconButton(FontAwesomeIcon.ArrowLeft, id.ToString())) selected--;
+        }
+
+        ImGui.SameLine(0, spacing);
+        using (ImRaii.Disabled(isMax))
+        {
+            if (IconButton(FontAwesomeIcon.ArrowRight, id+1.ToString())) selected++;
+        }
+    }
+
     internal static bool TryToImGui(this VirtualKey key, out ImGuiKey result)
     {
         result = key switch {
