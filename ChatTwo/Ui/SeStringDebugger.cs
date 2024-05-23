@@ -28,14 +28,14 @@ public class SeStringDebugger : Window
         DisableWindowSounds = true;
 
         #if DEBUG
-        Plugin.Commands.Register("/chat2SeString").Execute += Toggle;
+        Plugin.Commands.Register("/chat2SeString", showInHelp: false).Execute += Toggle;
         #endif
     }
 
     public void Dispose()
     {
         #if DEBUG
-        Plugin.Commands.Register("/chat2SeString").Execute -= Toggle;
+        Plugin.Commands.Register("/chat2SeString", showInHelp: false).Execute -= Toggle;
         #endif
     }
 

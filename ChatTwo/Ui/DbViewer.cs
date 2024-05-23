@@ -61,12 +61,12 @@ public class DbViewer : Window
         RespectCloseHotkey = false;
         DisableWindowSounds = true;
 
-        Plugin.Commands.Register("/chat2Viewer").Execute += Toggle;
+        Plugin.Commands.Register("/chat2Viewer", "Database Viewer", true).Execute += Toggle;
     }
 
     public void Dispose()
     {
-        Plugin.Commands.Register("/chat2Viewer").Execute -= Toggle;
+        Plugin.Commands.Register("/chat2Viewer", "Database Viewer", true).Execute -= Toggle;
     }
 
     private void Toggle(string _, string __) => Toggle();

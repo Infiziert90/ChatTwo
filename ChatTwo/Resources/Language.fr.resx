@@ -389,7 +389,7 @@
     <value>À droite</value>
   </data>
   <data name="Options_CommandHelpSide_Name">
-    <value>Côté d'affichage de l'aide des commandes</value>
+    <value>Commande d'aide sur le côté (Aucune = désactivé)</value>
   </data>
   <data name="Options_CommandHelpSide_Description">
     <value>Le côté de {0} où afficher l'aide pour les commandes.</value>
@@ -491,10 +491,10 @@
     <value>Si cette option est activée, la liste de Traduction Automatique sera triée par ordre alphabétique.</value>
   </data>
   <data name="Options_OverrideStyle_Name">
-    <value>Override Style</value>
+    <value>Remplacer le style</value>
   </data>
   <data name="Options_OverrideStyleDropdown_Name">
-    <value>Styles</value>
+    <value>Style</value>
   </data>
   <data name="AutoTranslate_Completion_Key">
     <value>Ctrl + {0}</value>
@@ -839,19 +839,19 @@
     <value>Canaux d'ExtraChat</value>
   </data>
   <data name="Options_Tabs_ExtraChatAll">
-    <value>All</value>
+    <value>Tout</value>
   </data>
   <data name="Context_AdventurerPlate">
-    <value>View Adventurer Plate</value>
+    <value>Voir la Carte de Personnage</value>
   </data>
   <data name="Context_AdventurerPlateError">
-    <value>Unable to open adventurer plate at this moment</value>
+    <value>Impossible d'ouvrir la Carte de Personnage pour le moment</value>
   </data>
   <data name="Options_TooltipOffset_Name">
-    <value>Tooltip offset </value>
+    <value>Décalage de l'infobulle </value>
   </data>
   <data name="Options_TooltipOffset_Desc">
-    <value>Use this option if you experience cut-off tooltips.</value>
+    <value>Utilisez cette option si vous rencontrez des infobulles tronquées.</value>
   </data>
   <data name="ChatType_ExtraChatLinkshell1" xml:space="preserve">
         <value>ExtraChat Linkshell [1]</value>
@@ -878,7 +878,7 @@
         <value>ExtraChat Linkshell [8]</value>
     </data>
   <data name="Context_CopyContent">
-    <value>Copy content</value>
+    <value>Copier le contenu</value>
   </data>
   <data name="Context_CopyContentSuccess">
     <value>Le message a été copié dans le presse-papiers</value>
@@ -896,180 +896,303 @@
         <value>Ouvrir le lien dans le navigateur</value>
     </data>
   <data name="Context_OpenInBrowserError" xml:space="preserve">
-        <value>Failed to open the link in the browser, please report this issue</value>
+        <value>Impossible d'ouvrir le lien dans le navigateur, merci de signaler ce problème</value>
     </data>
   <data name="Context_URLDomain" xml:space="preserve">
-        <value>URL at {0}</value>
+        <value>URL vers {0}</value>
     </data>
   <data name="Context_URLWarning" xml:space="preserve">
-        <value>Only open URLs from websites you trust</value>
+        <value>N'ouvrir que les URL des sites auxquels vous faites confiance</value>
     </data>
   <data name="Options_About_Authors" xml:space="preserve">
-        <value>Authors: </value>
+        <value>Auteurs :</value>
     </data>
   <data name="Options_About_Discord" xml:space="preserve">
-        <value>Discord: </value>
+        <value>Discord : </value>
     </data>
   <data name="Options_About_Version" xml:space="preserve">
-        <value>Version: </value>
+        <value>Version : </value>
     </data>
   <data name="Options_About_Github_Issues" xml:space="preserve">
-        <value>Get help through github issues: </value>
+        <value>Obtenez de l'aide pour les problèmes liés à github : </value>
     </data>
   <data name="Options_About_Discord_Thread" xml:space="preserve">
-        <value>Get help in the discord thread: </value>
+        <value>Obtenir de l'aide dans le fil de discussion Discord : </value>
     </data>
   <data name="Options_OverrideStyle_Name_Desc" xml:space="preserve">
-        <value>Override your selected dalamud style with a different one</value>
+        <value>Remplacer votre style Dalamud sélectionné par un autre style</value>
     </data>
   <data name="Options_HideInLoadingScreens_Name" xml:space="preserve">
-        <value>Hide during loading screens</value>
+        <value>Cacher pendant l'écran de chargement</value>
     </data>
   <data name="Options_HideInLoadingScreens_Description" xml:space="preserve">
-        <value>Hide {0} during loading screens.</value>
+        <value>Cacher {0} pendant l'écran de chargement.</value>
     </data>
   <data name="Options_ClearDatabase_Button">
-    <value>Clear the message history database</value>
+    <value>Effacer la base de données de l'historique des messages</value>
   </data>
   <data name="Options_ClearDatabase_Success">
-    <value>Successfully cleared the chat database</value>
+    <value>La base de données de chat a été effacée avec succès</value>
   </data>
   <data name="Options_ClearDatabase_Tooltip">
-    <value>Removes all message history. Cannot be restored. Hold Ctrl+Shift to click.</value>
+    <value>Supprime tout l'historique des messages. Ne peut pas être restauré. Maintenez Ctrl+Shift enfoncé pour cliquer.</value>
   </data>
   <data name="Options_Database_Metadata_CopyConfigPath">
-    <value>Click to copy database directory path</value>
+    <value>Cliquer pour copier le chemin du répertoire de la base de données</value>
   </data>
   <data name="Options_Database_Metadata_CopyConfigPathNotification">
-    <value>Copied database directory path to clipboard</value>
+    <value>Chemin du répertoire de base de données copié dans le presse-papiers</value>
   </data>
   <data name="Options_Database_Metadata_Heading">
-    <value>Database details:</value>
+    <value>Détails de la base de données :</value>
   </data>
   <data name="Options_Database_Metadata_LogSize">
-    <value>Log size: {0}</value>
+    <value>Taille du journal : {0}</value>
   </data>
   <data name="Options_Database_Metadata_MessageCount">
-    <value>Stored messages: {0:N0}</value>
+    <value>Messages stockés : {0:N0}</value>
   </data>
   <data name="Options_Database_Metadata_Path">
-    <value>Path: {0}</value>
+    <value>Chemin : {0}</value>
   </data>
   <data name="Options_Database_Metadata_Size">
-    <value>Size: {0}</value>
+    <value>Taille : {0}</value>
   </data>
   <data name="Options_OverrideStyle_NotSelected" xml:space="preserve">
-        <value>Not selected</value>
+        <value>Non sélectionné</value>
     </data>
   <data name="Options_OverrideStyle_NotAvailable" xml:space="preserve">
-        <value>No dalamud styles available</value>
+        <value>Aucun style Dalamud disponible</value>
     </data>
   <data name="Options_PlaySounds_Name" xml:space="preserve">
-        <value>Play sounds</value>
+        <value>Joue un son</value>
     </data>
   <data name="Options_PlaySounds_Description" xml:space="preserve">
-        <value>Play sounds on interaction.</value>
+        <value>Jouer un son lors de l'interaction.</value>
     </data>
   <data name="Options_MaxLinesToShow_Name" xml:space="preserve">
-        <value>Maximum amount of log lines to display in the chat window</value>
+        <value>Nombre maximum de lignes à afficher dans la fenêtre de chat</value>
     </data>
   <data name="Options_MaxLinesToShow_Description" xml:space="preserve">
-        <value>Limits the amount of log lines to show in the chat window. This may slightly improve performance.</value>
+        <value>Limite le nombre de lignes à afficher dans la fenêtre de chat. Cela peut légèrement améliorer les performances.</value>
     </data>
   <data name="LoadMessages_Error" xml:space="preserve">
-        <value>An error occurred while loading chat history. Please see plugin logs for more information to report this issue.</value>
+        <value>Une erreur s'est produite lors du chargement de l'historique de la conversation. Veuillez consulter les logs du plugin pour plus d'informations pour signaler ce problème.</value>
     </data>
   <data name="Options_Database_Old_Heading" xml:space="preserve">
-        <value>Old database:</value>
+        <value>Ancienne base de données :</value>
     </data>
   <data name="Options_Database_Old_Delete" xml:space="preserve">
-        <value>Delete</value>
+        <value>Supprimer</value>
     </data>
   <data name="Options_Database_Old_Delete_Tooltip" xml:space="preserve">
-        <value>Removes the database from your disk. This is not recoverable! Hold Ctrl+Shift to click.</value>
+        <value>Supprime la base de données de votre disque. Ce n'est pas récupérable ! Maintenez Ctrl+Shift pour cliquer.</value>
     </data>
   <data name="Options_Database_Old_Delete_Error" xml:space="preserve">
-        <value>Unable to remove the old database, more information under /xllog.</value>
+        <value>Impossible de supprimer l'ancienne base de données, plus d'informations dans /xllog.</value>
     </data>
   <data name="Options_Database_Old_Delete_Success" xml:space="preserve">
-        <value>The old database was successfully removed.</value>
+        <value>L'ancienne base de données a été supprimée avec succès.</value>
     </data>
   <data name="Options_Database_Old_Migration" xml:space="preserve">
-        <value>Open migration window</value>
+        <value>Ouvrir la fenêtre de migration</value>
     </data>
   <data name="Options_Tabs_NoInput" xml:space="preserve">
-        <value>Disable input for this channel</value>
+        <value>Désactiver la saisie pour ce canal</value>
     </data>
   <data name="ChatLog_DisabledInput" xml:space="preserve">
-        <value>Input is disabled for this tab</value>
+        <value>La saisie est désactivée pour cet onglet</value>
     </data>
   <data name="Options_ChatLog_Tab" xml:space="preserve">
-        <value>Chat log</value>
+        <value>Journal de chat</value>
     </data>
   <data name="Options_AdjustPosition_Name" xml:space="preserve">
-        <value>Adjust chat log position</value>
+        <value>Ajuster la position du journal du chat</value>
     </data>
   <data name="Options_AdjustPosition_Warning" xml:space="preserve">
-        <value>Attention, this change applies immediately and is not discardable!</value>
+        <value>Attention, ce changement s'applique immédiatement et n'est pas annulable !</value>
     </data>
   <data name="Options_KeepInputFocus_Name" xml:space="preserve">
-        <value>Keep input focus</value>
+        <value>Garder le focus de saisie</value>
     </data>
   <data name="Options_KeepInputFocus_Description" xml:space="preserve">
-        <value>Keeps the input focus, even if you enter battle or do other actions</value>
+        <value>Maintient le focus de saisie, même si vous entrez au combat ou faites d'autres actions.</value>
     </data>
   <data name="Options_ShowEmotes_Name" xml:space="preserve">
-        <value>Show emotes</value>
+        <value>Afficher les emotes</value>
     </data>
   <data name="Options_ShowEmotes_Desc" xml:space="preserve">
-        <value>Replaces words with their emote version, currently supports BetterTTV</value>
+        <value>Remplace les mots par leur version emote, prend actuellement en charge BetterTTV.</value>
     </data>
   <data name="Options_Emote_Tab" xml:space="preserve">
         <value>Emotes</value>
     </data>
   <data name="Options_Emote_BlockedEmotes" xml:space="preserve">
-        <value>Blocked emotes</value>
+        <value>Émotes bloquées</value>
     </data>
   <data name="Options_Emote_EmoteTable" xml:space="preserve">
         <value>Emote</value>
     </data>
   <data name="Options_HideInBattle_Name" xml:space="preserve">
-        <value>Hide during battle</value>
+        <value>Cacher pendant le combat</value>
     </data>
   <data name="Options_HideInBattle_Description" xml:space="preserve">
-        <value>Hide the chat during battles.</value>
+        <value>Cacher le chat pendant les combats.</value>
     </data>
   <data name="Options_Emote_EmoteStats" xml:space="preserve">
-        <value>Emote Stats</value>
+        <value>Statistiques de l'emote</value>
     </data>
   <data name="Options_Emote_Ready" xml:space="preserve">
-        <value>Ready</value>
+        <value>Prêt</value>
     </data>
   <data name="Options_Emote_NotReady" xml:space="preserve">
-        <value>Not Ready</value>
+        <value>Pas prêt</value>
     </data>
   <data name="Options_Emote_Loaded" xml:space="preserve">
-        <value>Emotes available:</value>
+        <value>Emotes disponibles :</value>
     </data>
   <data name="Options_Preview_Description" xml:space="preserve">
-        <value>A preview wih all emote, auto-translate encoded as they appear in chat</value>
+        <value>Affiche un aperçu avec un paramètre spécial estimé, comme les emotes et &lt;item&gt;.</value>
     </data>
   <data name="Options_Preview_Name" xml:space="preserve">
-        <value>Input preview</value>
+        <value>Position (Aucune = désactivée)</value>
     </data>
   <data name="Options_Preview_None" xml:space="preserve">
-        <value>None</value>
+        <value>Aucun</value>
     </data>
   <data name="Options_Preview_Inside" xml:space="preserve">
-        <value>Inside</value>
+        <value>Intérieur</value>
     </data>
   <data name="Options_Preview_Top" xml:space="preserve">
-        <value>Top</value>
+        <value>Haut</value>
     </data>
   <data name="Options_Preview_Bottom" xml:space="preserve">
-        <value>Bottom</value>
+        <value>Bas</value>
     </data>
   <data name="Options_Preview_Header" xml:space="preserve">
-        <value>Text Preview:</value>
+        <value>Aperçu du message :</value>
+    </data>
+  <data name="Options_Preview_Tooltip" xml:space="preserve">
+        <value>Infobulle</value>
+    </data>
+  <data name="Options_PreviewOnlyIf_Name" xml:space="preserve">
+        <value>Doit contenir le paramètre</value>
+    </data>
+  <data name="Options_PreviewOnlyIf_Description" xml:space="preserve">
+        <value>Afficher uniquement si le texte contient un paramètre spécial.</value>
+    </data>
+  <data name="Options_PreviewMinimum_Name" xml:space="preserve">
+        <value>Longueur d'entrée minimale</value>
+    </data>
+  <data name="Options_PreviewMinimum_Description" xml:space="preserve">
+        <value>Ne montrer que si la longueur du texte est supérieure ou égale.</value>
+    </data>
+  <data name="Options_Preview_Tab" xml:space="preserve">
+        <value>Aperçu</value>
+    </data>
+  <data name="Options_Changelog_Tab" xml:space="preserve">
+        <value>Changelog</value>
+    </data>
+  <data name="Options_PrintChangelog_Name" xml:space="preserve">
+        <value>Imprimer le changelog</value>
+    </data>
+  <data name="Options_PrintChangelog_Description" xml:space="preserve">
+        <value>Affiche le changelog pour discuter après une mise à jour.</value>
+    </data>
+  <data name="Options_Warning_NotImplemented" xml:space="preserve">
+        <value>Cette fonctionnalité n'est pas encore disponible</value>
+    </data>
+  <data name="Options_Changelog_Header" xml:space="preserve">
+        <value>Changelog :</value>
+    </data>
+  <data name="DateWidget_InvalidDate" xml:space="preserve">
+        <value>La date antérieure à {0} n'est pas possible</value>
+    </data>
+  <data name="DateWidget_Day_Sun" xml:space="preserve">
+        <value>Dim</value>
+    </data>
+  <data name="DateWidget_Day_Mon" xml:space="preserve">
+        <value>Lun</value>
+    </data>
+  <data name="DateWidget_Day_Tue" xml:space="preserve">
+        <value>Mar</value>
+    </data>
+  <data name="DateWidget_Day_Wed" xml:space="preserve">
+        <value>Merc</value>
+    </data>
+  <data name="DateWidget_Day_Thu" xml:space="preserve">
+        <value>Jeu</value>
+    </data>
+  <data name="DateWidget_Day_Fri" xml:space="preserve">
+        <value>Ven</value>
+    </data>
+  <data name="DateWidget_Day_Sat" xml:space="preserve">
+        <value>Sam</value>
+    </data>
+  <data name="DateWidget_Month_January" xml:space="preserve">
+        <value>Janvier</value>
+    </data>
+  <data name="DateWidget_Month_February" xml:space="preserve">
+        <value>Février</value>
+    </data>
+  <data name="DateWidget_Month_March" xml:space="preserve">
+        <value>Mars</value>
+    </data>
+  <data name="DateWidget_Month_April" xml:space="preserve">
+        <value>Avril</value>
+    </data>
+  <data name="DateWidget_Month_May" xml:space="preserve">
+        <value>Mai</value>
+    </data>
+  <data name="DateWidget_Month_June" xml:space="preserve">
+        <value>Juin</value>
+    </data>
+  <data name="DateWidget_Month_July" xml:space="preserve">
+        <value>Juillet</value>
+    </data>
+  <data name="DateWidget_Month_August" xml:space="preserve">
+        <value>Août</value>
+    </data>
+  <data name="DateWidget_Month_September" xml:space="preserve">
+        <value>Septembre</value>
+    </data>
+  <data name="DateWidget_Month_October" xml:space="preserve">
+        <value>Octobre</value>
+    </data>
+  <data name="DateWidget_Month_November" xml:space="preserve">
+        <value>Novembre</value>
+    </data>
+  <data name="DateWidget_Month_December" xml:space="preserve">
+        <value>Décembre</value>
+    </data>
+  <data name="DbViewer_TableField_Date" xml:space="preserve">
+        <value>Date</value>
+    </data>
+  <data name="DbViewer_TableField_Sender" xml:space="preserve">
+        <value>Expéditeur</value>
+    </data>
+  <data name="DbViewer_TableField_Content" xml:space="preserve">
+        <value>Contenu</value>
+    </data>
+  <data name="DbViewer_Status_NothingFound" xml:space="preserve">
+        <value>Rien n'a été trouvé.</value>
+    </data>
+  <data name="DbViewer_Status_NoSearchResult" xml:space="preserve">
+        <value>La recherche n'a pas eu de correspondance sur cette page.</value>
+    </data>
+  <data name="DbViewer_SearcHint" xml:space="preserve">
+        <value>Expéditeur simple/Recherche de contenu</value>
+    </data>
+  <data name="DbViewer_Page" xml:space="preserve">
+        <value>Page : {0} / {1} ({2} Lignes) {3}</value>
+    </data>
+  <data name="DbViewer_LoadingIndicator" xml:space="preserve">
+        <value>[Chargement...]</value>
+    </data>
+  <data name="DbViewer_CharacterOption" xml:space="preserve">
+        <value>Uniquement le personnage actuel</value>
+    </data>
+  <data name="DbViewer_DatePicker_FromTo" xml:space="preserve">
+        <value>DeVers :</value>
     </data>
 </root>
