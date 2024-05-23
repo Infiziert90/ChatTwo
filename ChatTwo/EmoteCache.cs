@@ -11,6 +11,15 @@ namespace ChatTwo;
 
 public static class EmoteCache
 {
+    private static readonly string[] NotWorking =
+    [
+        ":tf:", "(ditto)", "c!", "h!", "l!", "M&Mjc", "LUL3D", "p!",
+        "POLICE2", "r!", "Pussy", "s!", "v!", "w!", "x0r6ztGiggle",
+        "z!", "xar2EDM", "iron95Pls", "Clap2", "AlienPls3", "Life",
+        "peepoPogClimbingTreeHard4House", "monkaGIGAftRobertDowneyJr",
+        "DogLookingSussyAndCold", "DICKS"
+    ];
+
     private static readonly HttpClient Client = new();
 
     private const string BetterTTV = "https://api.betterttv.net/3";
@@ -64,7 +73,8 @@ public static class EmoteCache
             var globalList = await global.Content.ReadAsStringAsync();
 
             foreach (var emote in JsonSerializer.Deserialize<Emote[]>(globalList)!)
-                Cache.TryAdd(emote.Code, emote);
+                if (!NotWorking.Contains(emote.Code))
+                    Cache.TryAdd(emote.Code, emote);
 
             var lastId = string.Empty;
             for (var i = 0; i < 15; i++)
@@ -74,7 +84,8 @@ public static class EmoteCache
 
                 var jsonList = JsonSerializer.Deserialize<List<Top100>>(topList)!;
                 foreach (var emote in jsonList)
-                    Cache.TryAdd(emote.Emote.Code, emote.Emote);
+                    if (!NotWorking.Contains(emote.Emote.Code))
+                        Cache.TryAdd(emote.Emote.Code, emote.Emote);
 
                 lastId = jsonList.Last().Id;
             }
