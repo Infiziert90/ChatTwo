@@ -22,7 +22,7 @@ internal class MessageManager : IAsyncDisposable
     private ulong LastContentId { get; set; }
 
     private ConcurrentQueue<PendingMessage> Pending { get; } = new();
-    private ulong LastMessageIndex { get; set; }
+    private int LastMessageIndex { get; set; }
 
     private readonly Thread PendingMessageThread;
     private readonly CancellationTokenSource PendingThreadCancellationToken = new();
@@ -181,7 +181,7 @@ internal class MessageManager : IAsyncDisposable
         // index, and we can use that to get the sender's content ID. The
         // content ID is used to show "invite to party" buttons in the context
         // menu.
-        var idx = Plugin.Functions.GetCurrentChatLogEntryIndex() ?? 0;
+        var idx = Plugin.Functions.GetCurrentChatLogEntryIndex();
         var shouldGetContentId = false;
         if (idx > LastMessageIndex)
         {

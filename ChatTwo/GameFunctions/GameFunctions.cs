@@ -1,8 +1,10 @@
 using System.Runtime.InteropServices;
+using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Hooking;
 using Dalamud.Memory;
 using Dalamud.Utility.Signatures;
+using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
@@ -15,42 +17,22 @@ namespace ChatTwo.GameFunctions;
 
 internal unsafe class GameFunctions : IDisposable
 {
-    private static class Signatures
-    {
-        internal const string IsMentorA1 = "48 8D 0D ?? ?? ?? ?? E8 ?? ?? ?? ?? 84 C0 74 71 0F B6 86";
-        internal const string ResolveTextCommandPlaceholder = "E8 ?? ?? ?? ?? 49 8D 4F 18 4C 8B E0";
-
-        internal const string CurrentChatEntryOffset = "8B 77 ?? 8D 46 01 89 47 14 81 FE ?? ?? ?? ?? 72 03 FF 47";
-    }
-
     #region Functions
-    [Signature("E8 ?? ?? ?? ?? 84 C0 74 0D B0 02", Fallibility = Fallibility.Fallible)]
-    private readonly delegate* unmanaged<nint, byte> IsMentorNative = null!;
-
+    // TODO: Can be replaced with CS version soon
     [Signature("48 89 5C 24 ?? 57 48 83 EC 20 48 8B FA 48 8B D9 E8 ?? ?? ?? ?? 48 8B 8B ?? ?? ?? ?? 48 85 C9", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<AgentInterface*, ulong, byte> OpenPartyFinderNative = null!;
 
+    // TODO: Can be replaced with CS version soon
     [Signature("E8 ?? ?? ?? ?? EB 20 48 8B 46 28", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<AgentInterface*, uint, void> OpenAchievementNative = null!;
-
-    [Signature("E8 ?? ?? ?? ?? 41 8D 4F 08 84 C0", Fallibility = Fallibility.Fallible)]
-    private readonly delegate* unmanaged<byte> InInstanceNative = null!;
     #endregion
 
     #region Hooks
     private delegate nint ResolveTextCommandPlaceholderDelegate(nint a1, byte* placeholderText, byte a3, byte a4);
 
-    [Signature(Signatures.ResolveTextCommandPlaceholder, DetourName = nameof(ResolveTextCommandPlaceholderDetour))]
+    [Signature("E8 ?? ?? ?? ?? 49 8D 4F 18 4C 8B E0", DetourName = nameof(ResolveTextCommandPlaceholderDetour))]
     private Hook<ResolveTextCommandPlaceholderDelegate>? ResolveTextCommandPlaceholderHook { get; init; }
     #endregion
-
-    #pragma warning disable 0649
-    [Signature(Signatures.CurrentChatEntryOffset, Offset = 2)]
-    private readonly byte? CurrentChatEntryOffset;
-
-    [Signature(Signatures.IsMentorA1, ScanType = ScanType.StaticAddress)]
-    private readonly nint? IsMentorA1;
-    #pragma warning restore 0649
 
     private Plugin Plugin { get; }
     internal Party Party { get; }
@@ -87,13 +69,9 @@ internal unsafe class GameFunctions : IDisposable
         return (nint) infoModule->GetInfoProxyById(idx);
     }
 
-    internal uint? GetCurrentChatLogEntryIndex()
+    internal int GetCurrentChatLogEntryIndex()
     {
-        if (CurrentChatEntryOffset == null)
-            return null;
-
-        var log = (nint) Framework.Instance()->GetUiModule()->GetRaptureLogModule();
-        return *(uint*) (log + CurrentChatEntryOffset.Value);
+        return Framework.Instance()->GetUiModule()->GetRaptureLogModule()->LogModule.LogMessageCount;
     }
 
     internal void SendFriendRequest(string name, ushort world)
@@ -236,10 +214,7 @@ internal unsafe class GameFunctions : IDisposable
 
     internal bool IsMentor()
     {
-        if (IsMentorNative == null || IsMentorA1 == null || IsMentorA1.Value == nint.Zero)
-            return false;
-
-        return IsMentorNative(IsMentorA1.Value) > 0;
+        return PlayerState.Instance()->IsMentor();
     }
 
     internal void OpenPartyFinder(uint id)
@@ -264,10 +239,7 @@ internal unsafe class GameFunctions : IDisposable
 
     internal bool IsInInstance()
     {
-        if (InInstanceNative == null)
-            return false;
-
-        return InInstanceNative() != 0;
+        return Plugin.Condition[ConditionFlag.BoundByDuty56];
     }
 
     internal bool TryOpenAdventurerPlate(ulong playerId)
