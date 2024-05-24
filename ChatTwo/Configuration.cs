@@ -1,3 +1,4 @@
+using System.Collections;
 using ChatTwo.Code;
 using ChatTwo.Resources;
 using ChatTwo.Ui;
@@ -166,28 +167,13 @@ internal class Tab
     public uint Unread;
 
     [NonSerialized]
-    public SemaphoreSlim MessagesMutex = new(1, 1);
-
-    [NonSerialized]
-    public List<Message> Messages = [];
-    [NonSerialized]
-    public HashSet<Guid> TrackedMessageIds = [];
+    public MessageList Messages = new();
 
     [NonSerialized]
     public InputChannel? PreviousChannel;
 
     [NonSerialized]
     public Guid Identifier = Guid.NewGuid();
-
-    ~Tab()
-    {
-        MessagesMutex.Dispose();
-    }
-
-    internal bool Contains(Message message)
-    {
-        return TrackedMessageIds.Contains(message.Id);
-    }
 
     internal bool Matches(Message message)
     {
@@ -200,30 +186,16 @@ internal class Tab
                    || sources.HasFlag(message.Code.Source));
     }
 
-    internal void AddMessage(Message message, bool unread = true) {
-        if (Contains(message))
-            return;
-
-        MessagesMutex.Wait();
-        TrackedMessageIds.Add(message.Id);
-        Messages.Add(message);
-        while (Messages.Count > MessageManager.MessageDisplayLimit)
-        {
-            TrackedMessageIds.Remove(Messages[0].Id);
-            Messages.RemoveAt(0);
-        }
-        MessagesMutex.Release();
-
+    internal void AddMessage(Message message, bool unread = true)
+    {
+        Messages.AddPrune(message, MessageManager.MessageDisplayLimit);
         if (unread)
             Unread += 1;
     }
 
     internal void Clear()
     {
-        MessagesMutex.Wait();
         Messages.Clear();
-        TrackedMessageIds.Clear();
-        MessagesMutex.Release();
     }
 
     internal Tab Clone()
@@ -243,6 +215,130 @@ internal class Tab
             Identifier = Identifier,
             InputDisabled = InputDisabled,
         };
+    }
+
+    /// <summary>
+    /// MessageList provides an ordered list of messages with duplicate ID
+    /// tracking, sorting and mutex protection.
+    /// </summary>
+    internal class MessageList
+    {
+        private ReaderWriterLock rwl = new();
+
+        private readonly List<Message> messages;
+        private readonly HashSet<Guid> trackedMessageIds;
+
+        public MessageList()
+        {
+            messages = new();
+            trackedMessageIds = new();
+        }
+
+        public MessageList(int initialCapacity)
+        {
+            messages = new(initialCapacity);
+            trackedMessageIds = new(initialCapacity);
+        }
+
+        public void AddPrune(Message message, int max)
+        {
+            rwl.AcquireWriterLock(0);
+            try
+            {
+                AddLocked(message);
+                PruneMaxLocked(max);
+            }
+            finally
+            {
+                rwl.ReleaseWriterLock();
+            }
+        }
+
+        public void AddSortPrune(IEnumerable<Message> messages, int max)
+        {
+            rwl.AcquireWriterLock(0);
+            try
+            {
+                foreach (var message in messages)
+                    AddLocked(message);
+
+                SortLocked();
+                PruneMaxLocked(max);
+            }
+            finally
+            {
+                rwl.ReleaseWriterLock();
+            }
+        }
+
+        private void AddLocked(Message message)
+        {
+            if (trackedMessageIds.Contains(message.Id))
+                return;
+
+            messages.Add(message);
+            trackedMessageIds.Add(message.Id);
+        }
+
+        public void Clear()
+        {
+            rwl.AcquireWriterLock(0);
+            try
+            {
+                messages.Clear();
+                trackedMessageIds.Clear();
+            }
+            finally
+            {
+                rwl.ReleaseWriterLock();
+            }
+        }
+
+        private void SortLocked()
+        {
+            messages.Sort((a, b) => a.Date.CompareTo(b.Date));
+        }
+
+        private void PruneMaxLocked(int max)
+        {
+            while (messages.Count > max)
+            {
+                trackedMessageIds.Remove(messages[0].Id);
+                messages.RemoveAt(0);
+            }
+        }
+
+        /// <summary>
+        /// GetReadOnly returns a read-only list of messages while holding a
+        /// reader lock. The list should be used with a using statement.
+        /// </summary>
+        public RLockedMessageList GetReadOnly(int millisecondsTimeout = 0)
+        {
+            rwl.AcquireReaderLock(millisecondsTimeout);
+            return new RLockedMessageList(rwl, messages);
+        }
+
+        internal class RLockedMessageList(ReaderWriterLock rwl, List<Message> messages) : IReadOnlyList<Message>, IDisposable
+        {
+            public IEnumerator<Message> GetEnumerator()
+            {
+                return messages.GetEnumerator();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return GetEnumerator();
+            }
+
+            public int Count => messages.Count;
+
+            public Message this[int index] => messages[index];
+
+            public void Dispose()
+            {
+                rwl.ReleaseReaderLock();
+            }
+        }
     }
 }
 

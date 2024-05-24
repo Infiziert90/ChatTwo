@@ -118,7 +118,7 @@ public sealed class Plugin : IDalamudPlugin
             Commands.Initialise();
 
             if (Interface.Reason is not PluginLoadReason.Boot)
-                MessageManager.FilterAllTabsAsync(false);
+                MessageManager.FilterAllTabsAsync();
 
             Framework.Update += FrameworkUpdate;
             Interface.UiBuilder.Draw += Draw;
