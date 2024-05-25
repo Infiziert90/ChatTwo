@@ -675,7 +675,7 @@ public sealed class ChatLogWindow : Window
         }
 
         var normalColor = ImGui.GetColorU32(ImGuiCol.Text);
-        var inputColour = Plugin.Config.ChatColours.TryGetValue(inputType, out var inputCol) ? inputCol : inputType.DefaultColour();
+        var inputColour = Plugin.Config.ChatColours.TryGetValue(inputType, out var inputCol) ? inputCol : inputType.DefaultColor();
 
         if (!isCommand && Plugin.ExtraChat.ChannelOverride is var (_, overrideColour))
             inputColour = overrideColour;
@@ -1583,7 +1583,7 @@ public sealed class ChatLogWindow : Window
         if (colour == null && text.FallbackColour != null)
         {
             var type = text.FallbackColour.Value;
-            colour = Plugin.Config.ChatColours.TryGetValue(type, out var col) ? col : type.DefaultColour();
+            colour = Plugin.Config.ChatColours.TryGetValue(type, out var col) ? col : type.DefaultColor();
         }
 
         var push = colour != null;

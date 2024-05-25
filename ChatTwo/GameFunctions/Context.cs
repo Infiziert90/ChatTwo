@@ -2,29 +2,22 @@ using ChatTwo.Util;
 using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
+using FFXIVClientStructs.FFXIV.Client.UI.Info;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace ChatTwo.GameFunctions;
 
 internal sealed unsafe class Context
 {
+    // TODO: Replace with CS version after https://github.com/aers/FFXIVClientStructs/pull/873 got merged
     [Signature("E8 ?? ?? ?? ?? E9 ?? ?? ?? ?? 48 8B CB E8 ?? ?? ?? ?? 45 33 C9", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<IntPtr, ulong, ushort, byte*, byte> InviteToNoviceNetworkNative = null!;
-
-    [Signature("E8 ?? ?? ?? ?? EB 35 BA", Fallibility = Fallibility.Fallible)]
-    private readonly delegate* unmanaged<uint, uint, ulong, uint, byte, byte> TryOnNative = null!;
 
     [Signature("E8 ?? ?? ?? ?? EB 7B 49 8B 06", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<AgentInterface*, uint, void> LinkItemNative = null!;
 
     [Signature("E8 ?? ?? ?? ?? EB 3F 83 F8 FE", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<AgentInterface*, ushort, uint, byte, void> ItemComparisonNative = null!;
-
-    [Signature("48 89 5C 24 ?? 57 48 83 EC ?? 8B FA B8", Fallibility = Fallibility.Fallible)]
-    private readonly delegate* unmanaged<IntPtr, uint, void> SearchForRecipesUsingItemNative = null!;
-
-    [Signature("E8 ?? ?? ?? ?? EB 45 45 33 C9", Fallibility = Fallibility.Fallible)]
-    private readonly delegate* unmanaged<void*, uint, byte, void> SearchForItemNative = null!;
 
     private Plugin Plugin { get; }
 
@@ -40,7 +33,7 @@ internal sealed unsafe class Context
             return;
 
         // 6.3: 221EFD
-        var a1 = Plugin.Functions.GetInfoProxyByIndex(0x14);
+        var a1 = Plugin.Functions.GetInfoProxyByIndex((InfoProxyId) 0x14);
 
         // can specify content id if we have it, but there's no need
         fixed (byte* namePtr = name.ToTerminatedBytes()) {
@@ -58,10 +51,7 @@ internal sealed unsafe class Context
 
     internal void TryOn(uint itemId, byte stainId)
     {
-        if (TryOnNative == null)
-            return;
-
-        TryOnNative(0xFF, itemId, stainId, 0, 0);
+        AgentTryon.TryOn(0xFF, itemId, stainId, 0, 0);
     }
 
     internal void LinkItem(uint itemId)
@@ -84,19 +74,11 @@ internal sealed unsafe class Context
 
     internal void SearchForRecipesUsingItem(uint itemId)
     {
-        if (SearchForRecipesUsingItemNative == null)
-            return;
-
-        var a1 = (nint) AgentModule.Instance()->GetAgentByInternalId(AgentId.RecipeProductList);
-        SearchForRecipesUsingItemNative(a1, itemId);
+        AgentRecipeProductList.Instance()->SearchForRecipesUsingItem(itemId);
     }
 
     internal void SearchForItem(uint itemId)
     {
-        if (SearchForItemNative == null)
-            return;
-
-        var itemFinder = Framework.Instance()->GetUiModule()->GetItemFinderModule();
-        SearchForItemNative(itemFinder, itemId, 1);
+        Framework.Instance()->GetUiModule()->GetItemFinderModule()->SearchForItem(itemId, true);
     }
 }

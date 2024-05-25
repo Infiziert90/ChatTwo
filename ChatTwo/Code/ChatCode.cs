@@ -1,3 +1,4 @@
+using Dalamud.Game.Config;
 using LiteDB;
 
 namespace ChatTwo.Code;

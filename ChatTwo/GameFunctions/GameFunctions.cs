@@ -60,13 +60,13 @@ internal unsafe class GameFunctions : IDisposable
         Marshal.FreeHGlobal(PlaceholderNamePtr);
     }
 
-    internal nint GetInfoProxyByIndex(uint idx)
+    internal nint GetInfoProxyByIndex(InfoProxyId proxyId)
     {
         var infoModule = InfoModule.Instance();
         if (infoModule == null)
             return nint.Zero;
 
-        return (nint) infoModule->GetInfoProxyById(idx);
+        return (nint) infoModule->GetInfoProxyById(proxyId);
     }
 
     internal int GetCurrentChatLogEntryIndex()

@@ -1,5 +1,6 @@
 using ChatTwo.Resources;
 using ChatTwo.Util;
+using Dalamud.Game.Config;
 
 namespace ChatTwo.Code;
 
@@ -187,7 +188,7 @@ internal static class ChatTypeExt
         };
     }
 
-    internal static uint? DefaultColour(this ChatType type)
+    internal static uint? DefaultColor(this ChatType type)
     {
         switch (type)
         {
@@ -368,6 +369,35 @@ internal static class ChatTypeExt
         ChatType.ExtraChatLinkshell7 => true,
         ChatType.ExtraChatLinkshell8 => true,
         _ => false,
+    };
+
+    public static UiConfigOption ToConfigEntry(this ChatType type) => type switch
+    {
+        ChatType.Say => UiConfigOption.ColorSay,
+        ChatType.Shout => UiConfigOption.ColorShout,
+        ChatType.TellOutgoing => UiConfigOption.ColorTell,
+        ChatType.Party => UiConfigOption.ColorParty,
+        ChatType.Linkshell1 => UiConfigOption.ColorLS1,
+        ChatType.Linkshell2 => UiConfigOption.ColorLS2,
+        ChatType.Linkshell3 => UiConfigOption.ColorLS3,
+        ChatType.Linkshell4 => UiConfigOption.ColorLS4,
+        ChatType.Linkshell5 => UiConfigOption.ColorLS5,
+        ChatType.Linkshell6 => UiConfigOption.ColorLS6,
+        ChatType.Linkshell7 => UiConfigOption.ColorLS7,
+        ChatType.Linkshell8 => UiConfigOption.ColorLS8,
+        ChatType.FreeCompany => UiConfigOption.ColorFCompany,
+        ChatType.NoviceNetwork => UiConfigOption.ColorBeginner,
+        ChatType.CustomEmote => UiConfigOption.ColorEmoteUser,
+        ChatType.StandardEmote => UiConfigOption.ColorEmote,
+        ChatType.Yell => UiConfigOption.ColorYell,
+        ChatType.GainBuff => UiConfigOption.ColorBuffGive,
+        ChatType.GainDebuff => UiConfigOption.ColorDebuffGive,
+        ChatType.System => UiConfigOption.ColorSysMsg,
+        ChatType.NpcDialogue => UiConfigOption.ColorNpcSay,
+        ChatType.LootRoll => UiConfigOption.ColorLoot,
+        ChatType.FreeCompanyAnnouncement => UiConfigOption.ColorFCAnnounce,
+        ChatType.PvpTeamAnnouncement => UiConfigOption.ColorPvPGroupAnnounce,
+        _ => UiConfigOption.ColorSay,
     };
 
     internal static bool HasSource(this ChatType type) => type switch

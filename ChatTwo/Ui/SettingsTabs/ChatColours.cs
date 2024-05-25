@@ -50,15 +50,15 @@ internal sealed class ChatColours : ISettingsTab
 
                 if (ImGuiUtil.IconButton(FontAwesomeIcon.LongArrowAltDown, $"{type}", Language.Options_ChatColours_Import))
                 {
-                    var gameColour = Plugin.Functions.Chat.GetChannelColour(type);
-                    Mutable.ChatColours[type] = gameColour ?? type.DefaultColour() ?? 0;
+                    var gameColour = Plugin.Functions.Chat.GetChannelColor(type);
+                    Mutable.ChatColours[type] = gameColour ?? type.DefaultColor() ?? 0;
                 }
 
                 ImGui.SameLine();
 
                 var vec = Mutable.ChatColours.TryGetValue(type, out var colour)
                     ? ColourUtil.RgbaToVector3(colour)
-                    : ColourUtil.RgbaToVector3(type.DefaultColour() ?? 0);
+                    : ColourUtil.RgbaToVector3(type.DefaultColor() ?? 0);
                 if (ImGui.ColorEdit3(type.Name(), ref vec, ImGuiColorEditFlags.NoInputs))
                     Mutable.ChatColours[type] = ColourUtil.Vector3ToRgba(vec);
             }

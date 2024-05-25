@@ -2,12 +2,14 @@ using ChatTwo.Util;
 using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
+using FFXIVClientStructs.FFXIV.Client.UI.Info;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace ChatTwo.GameFunctions;
 
 internal sealed unsafe class Party
 {
+    // TODO: Replace all hooks with CS after https://github.com/aers/FFXIVClientStructs/pull/872 got merged
     [Signature("E8 ?? ?? ?? ?? 33 C0 EB 51", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<IntPtr, ulong, byte*, ushort, byte> InviteToPartyNative = null!;
 
@@ -37,7 +39,7 @@ internal sealed unsafe class Party
             return;
 
         // 6.11: 214A55
-        var a1 = Plugin.Functions.GetInfoProxyByIndex(2);
+        var a1 = Plugin.Functions.GetInfoProxyByIndex(InfoProxyId.PartyInvite);
 
         // this only works if target is on the same world
         fixed (byte* namePtr = name.ToTerminatedBytes()) {
@@ -51,7 +53,7 @@ internal sealed unsafe class Party
             return;
 
         // 6.11: 214A55
-        var a1 = Plugin.Functions.GetInfoProxyByIndex(2);
+        var a1 = Plugin.Functions.GetInfoProxyByIndex(InfoProxyId.PartyInvite);
 
         // third param is world, but it requires a specific world
         // if they're not on that world, it will fail
@@ -67,7 +69,7 @@ internal sealed unsafe class Party
             return;
 
         // 6.11: 214A55
-        var a1 = Plugin.Functions.GetInfoProxyByIndex(2);
+        var a1 = Plugin.Functions.GetInfoProxyByIndex(InfoProxyId.PartyInvite);
 
         // third param is world, but it requires a specific world
         // if they're not on that world, it will fail

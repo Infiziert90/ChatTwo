@@ -178,6 +178,7 @@ public partial class InputPreview : Window
 
             NextChunkIsAutoTranslate = true;
 
+            // TODO: Remove after Key and Group in AutoTranslatePayload became public
             // Skipping: StartByte, PayloadType, PayloadLength
             using var reader = new BinaryReader(new MemoryStream(chunk.Link!.Encode().Skip(3).ToArray()));
             var group = (uint) reader.ReadByte();
@@ -199,7 +200,7 @@ public partial class InputPreview : Window
             if (ImGui.GetContentRegionAvail().X < emoteSize.X)
                 ImGui.NewLine();
 
-            // We only draw a dummy if it is still loading, in the case it failed we draw the actual name
+            // We only draw a dummy if it is still loading, in case it failed, we draw the actual name
             var image = EmoteCache.GetEmote(emotePayload.Code);
             if (image is { Failed: false })
             {
@@ -216,11 +217,15 @@ public partial class InputPreview : Window
             }
         }
 
-
-        if (text.Link != null || NextChunkIsAutoTranslate)
+        if (NextChunkIsAutoTranslate)
         {
             NextChunkIsAutoTranslate = false;
+            ImGuiUtil.WrapText(text.Content, chunk, handler, LogWindow.DefaultText, lineWidth);
+            return;
+        }
 
+        if (text.Link != null)
+        {
             if (text.Link is ItemPayload)
                 CursorPosition += "<item>".Length;
             else if (text.Link is MapLinkPayload)

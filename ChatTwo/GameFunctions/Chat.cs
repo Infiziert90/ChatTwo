@@ -14,6 +14,7 @@ using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
+using FFXIVClientStructs.FFXIV.Client.UI.Info;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Client.UI.Shell;
 using FFXIVClientStructs.FFXIV.Component.GUI;
@@ -26,108 +27,102 @@ internal sealed unsafe class Chat : IDisposable
 {
     // Functions
 
+    // TODO Replace with CS in RaptureShellModule
     [Signature("E8 ?? ?? ?? ?? 0F B7 44 37 ??", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<RaptureShellModule*, int, uint, Utf8String*, byte, void> ChangeChatChannel = null!;
 
+    // TODO Replace with CS in RaptureShellModule
     [Signature("48 89 5C 24 ?? 55 56 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B 02", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<RaptureShellModule*, Utf8String*, Utf8String*, ushort, ulong, ushort, byte, bool> SetChannelTargetTell = null!;
 
     [Signature("E8 ?? ?? ?? ?? 48 8D 4D A0 8B F8")]
-    private readonly delegate* unmanaged<IntPtr, Utf8String*, IntPtr, uint> GetKeybindNative = null!;
+    private readonly delegate* unmanaged<nint, Utf8String*, IntPtr, uint> GetKeybindNative = null!;
 
+    // TODO Replace with CS in AcquaintanceModule
     [Signature("44 8B 89 ?? ?? ?? ?? 4C 8B C1 45 85 C9")]
-    private readonly delegate* unmanaged<void*, int, IntPtr> GetTellHistory = null!;
+    private readonly delegate* unmanaged<void*, int, nint> GetTellHistory = null!;
 
     [Signature("E8 ?? ?? ?? ?? 48 8D 4D 50 E8 ?? ?? ?? ?? 48 8B 17")]
     private readonly delegate* unmanaged<RaptureLogModule*, ushort, Utf8String*, Utf8String*, ulong, ushort, byte, int, byte, void> PrintTellNative = null!;
 
     [Signature("E8 ?? ?? ?? ?? 48 8D 4C 24 ?? E8 ?? ?? ?? ?? 48 8D 8C 24 ?? ?? ?? ?? E8 ?? ?? ?? ?? B0 01")]
-    private readonly delegate* unmanaged<IntPtr, ulong, ushort, Utf8String*, Utf8String*, byte, ulong, byte> SendTellNative = null!;
+    private readonly delegate* unmanaged<nint, ulong, ushort, Utf8String*, Utf8String*, byte, ulong, byte> SendTellNative = null!;
 
     [Signature("E8 ?? ?? ?? ?? F6 43 0A 40")]
-    private readonly delegate* unmanaged<Framework*, IntPtr> GetNetworkModule = null!;
+    private readonly delegate* unmanaged<Framework*, nint> GetNetworkModule = null!;
 
+    // TODO Replace with CS in InfoProxyCrossworldLinkshell
     [Signature("E8 ?? ?? ?? ?? 48 8B C8 E8 ?? ?? ?? ?? 45 8D 46 FB")]
-    private readonly delegate* unmanaged<IntPtr, uint, Utf8String*> GetCrossLinkshellNameNative = null!;
+    private readonly delegate* unmanaged<nint, uint, Utf8String*> GetCrossLinkshellNameNative = null!;
 
+    // TODO Replace with CS in InfoProxyLinkshell
     [Signature("3B 51 10 73 0F 8B C2 48 83 C0 0B")]
-    private readonly delegate* unmanaged<IntPtr, uint, ulong*> GetLinkshellInfo = null!;
+    private readonly delegate* unmanaged<nint, uint, ulong*> GetLinkshellInfo = null!;
 
+    // TODO Replace with CS in InfoProxyLinkshell
     [Signature("E8 ?? ?? ?? ?? 4C 8B C8 44 8D 47 01")]
-    private readonly delegate* unmanaged<IntPtr, ulong, byte*> GetLinkshellNameNative = null!;
+    private readonly delegate* unmanaged<nint, ulong, byte*> GetLinkshellNameNative = null!;
 
+    // TODO Replace with CS virtual function
     [Signature("40 56 41 54 41 55 41 57 48 83 EC 28 48 8B 01", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<UIModule*, int, ulong> RotateLinkshellHistoryNative;
 
+    // TODO Replace with CS virtual function
     [Signature("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 41 56 41 57 48 83 EC 20 48 8B 01 44 8B F2", Fallibility = Fallibility.Fallible)]
     private readonly delegate* unmanaged<UIModule*, int, ulong> RotateCrossLinkshellHistoryNative;
 
-    [Signature("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 48 83 EC 20 8B F2 48 8D B9")]
-    private readonly delegate* unmanaged<IntPtr, uint, IntPtr> GetColourInfo = null!;
-
+    // TODO Replace with CS version on Utf8String
     [Signature("E8 ?? ?? ?? ?? EB 0A 48 8D 4C 24 ?? E8 ?? ?? ?? ?? 48 8D 8D")]
-    private readonly delegate* unmanaged<Utf8String*, int, IntPtr, void> SanitiseString = null!;
+    private readonly delegate* unmanaged<Utf8String*, int, nint, void> SanitiseString = null!;
 
     // Hooks
 
-    private delegate byte ChatLogRefreshDelegate(IntPtr log, ushort eventId, AtkValue* value);
+    private delegate byte ChatLogRefreshDelegate(nint log, ushort eventId, AtkValue* value);
 
-    private delegate IntPtr ChangeChannelNameDelegate(IntPtr agent);
+    private delegate nint ChangeChannelNameDelegate(nint agent);
 
     private delegate void ReplyInSelectedChatModeDelegate(AgentInterface* agent);
 
-    private delegate byte SetChatLogTellTarget(IntPtr a1, Utf8String* name, Utf8String* a3, ushort world, ulong contentId, ushort a6, byte a7);
+    private delegate byte SetChatLogTellTarget(nint a1, Utf8String* name, Utf8String* a3, ushort world, ulong contentId, ushort a6, byte a7);
 
     private delegate void EurekaContextMenuTellDelegate(RaptureShellModule* param1, Utf8String* playerName, Utf8String* worldName, ushort world, ulong contentId, ushort param6);
 
-    [Signature(
-        "40 53 56 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 8B F0 8B FA",
-        DetourName = nameof(ChatLogRefreshDetour)
-    )]
+
+    // Client::UI::AddonChatLog.OnRefresh
+    [Signature("40 53 56 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 8B F0 8B FA", DetourName = nameof(ChatLogRefreshDetour))]
     private Hook<ChatLogRefreshDelegate>? ChatLogRefreshHook { get; init; }
 
-    [Signature(
-        "E8 ?? ?? ?? ?? BA ?? ?? ?? ?? 48 8D 4D B0 48 8B F8 E8 ?? ?? ?? ?? 41 8B D6",
-        DetourName = nameof(ChangeChannelNameDetour)
-    )]
+    // TODO Replace with CS version
+    [Signature("E8 ?? ?? ?? ?? BA ?? ?? ?? ?? 48 8D 4D B0 48 8B F8 E8 ?? ?? ?? ?? 41 8B D6", DetourName = nameof(ChangeChannelNameDetour))]
     private Hook<ChangeChannelNameDelegate>? ChangeChannelNameHook { get; init; }
 
-    [Signature(
-        "48 89 5C 24 ?? 57 48 83 EC 30 8B B9 ?? ?? ?? ?? 48 8B D9 83 FF FE",
-        DetourName = nameof(ReplyInSelectedChatModeDetour)
-    )]
+    // TODO Replace with CS version
+    [Signature("48 89 5C 24 ?? 57 48 83 EC 30 8B B9 ?? ?? ?? ?? 48 8B D9 83 FF FE", DetourName = nameof(ReplyInSelectedChatModeDetour))]
     private Hook<ReplyInSelectedChatModeDelegate>? ReplyInSelectedChatModeHook { get; init; }
 
-    [Signature(
-        "E8 ?? ?? ?? ?? 4C 8B 7C 24 ?? EB 34",
-        DetourName = nameof(SetChatLogTellTargetDetour)
-    )]
+    // TODO Replace with CS version
+    [Signature("E8 ?? ?? ?? ?? 4C 8B 7C 24 ?? EB 34", DetourName = nameof(SetChatLogTellTargetDetour))]
     private Hook<SetChatLogTellTarget>? SetChatLogTellTargetHook { get; init; }
 
-    [Signature(
-        "E8 ?? ?? ?? ?? EB 8A 48 8B 1D",
-        DetourName = nameof(EurekaContextMenuTell)
-    )]
+    // TODO Replace with CS version
+    [Signature("E8 ?? ?? ?? ?? EB 8A 48 8B 1D", DetourName = nameof(EurekaContextMenuTell))]
     private Hook<EurekaContextMenuTellDelegate>? EurekaContextMenuTellHook { get; init; }
 
     // Offsets
 
     #pragma warning disable 0649
 
+    // TODO: Replace with CS version under AgentChatLog
     [Signature("8B B9 ?? ?? ?? ?? 48 8B D9 83 FF FE 0F 84", Offset = 2)]
     private readonly int? ReplyChannelOffset;
 
+    // TODO: Replace with CS version under RaptureShellModule
     [Signature("89 83 ?? ?? ?? ?? 48 8B 01 83 FE 13 7C 05 41 8B D4 EB 03 83 CA FF FF 90", Offset = 2)]
     private readonly int? ShellChannelOffset;
 
+    // TODO: Replace with CS version under UiModule
     [Signature("4C 8D B6 ?? ?? ?? ?? 41 8B 1E 45 85 E4 74 7A 33 FF 8B EF 66 0F 1F 44 00", Offset = 3)]
     private readonly int? LinkshellCycleOffset;
-
-    [Signature("BA ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 8B F0 48 85 C0 0F 84 ?? ?? ?? ?? 48 8B 10 33", Offset = 1)]
-    private readonly uint? LinkshellInfoProxyIdx;
-
-    [Signature("BA ?? ?? ?? ?? E8 ?? ?? ?? ?? 48 89 6C 24 ?? 4C 8B E0 48 89 74 24", Offset = 1)]
-    private readonly uint? CrossLinkshellInfoProxyIdx;
 
     #pragma warning restore 0649
 
@@ -135,9 +130,6 @@ internal sealed unsafe class Chat : IDisposable
 
     [Signature("48 8D 15 ?? ?? ?? ?? 0F B6 C8 48 8D 05", ScanType = ScanType.StaticAddress)]
     private readonly char* CurrentCharacter = null!;
-
-    [Signature("48 8D 0D ?? ?? ?? ?? 8B 14 ?? 85 D2 7E ?? 48 8B 0D ?? ?? ?? ?? 48 83 C1 10 E8 ?? ?? ?? ?? 8B 70 ?? 41 8D 4D", ScanType = ScanType.StaticAddress)]
-    private IntPtr ColourLookup { get; init; }
 
     // Events
 
@@ -190,10 +182,7 @@ internal sealed unsafe class Chat : IDisposable
 
     internal string? GetLinkshellName(uint idx)
     {
-        if (LinkshellInfoProxyIdx is not { } proxyIdx)
-            return null;
-
-        var infoProxy = Plugin.Functions.GetInfoProxyByIndex(proxyIdx);
+        var infoProxy = Plugin.Functions.GetInfoProxyByIndex(InfoProxyId.LinkShell);
         if (infoProxy == IntPtr.Zero)
             return null;
 
@@ -207,10 +196,7 @@ internal sealed unsafe class Chat : IDisposable
 
     internal string? GetCrossLinkshellName(uint idx)
     {
-        if (CrossLinkshellInfoProxyIdx is not { } proxyIdx)
-            return null;
-
-        var infoProxy = Plugin.Functions.GetInfoProxyByIndex(proxyIdx);
+        var infoProxy = Plugin.Functions.GetInfoProxyByIndex(InfoProxyId.CrossWorldLinkShell);
         if (infoProxy == IntPtr.Zero)
             return null;
 
@@ -249,35 +235,22 @@ internal sealed unsafe class Chat : IDisposable
         return func(uiModule, idx);
     }
 
-    // This function looks up a channel's user-defined colour.
-    //
-    // If this function would ever return 0, it returns null instead.
-    internal uint? GetChannelColour(ChatType type)
+    // This function looks up a channel's user-defined color.
+    // If this function ever returns 0, it returns null instead.
+    internal uint? GetChannelColor(ChatType type)
     {
-        if (GetColourInfo == null || ColourLookup == IntPtr.Zero)
-            return null;
-
-        // Colours are retrieved by looking up their code in a lookup table. Some codes share a colour, so they're lumped into a parent code here.
-        // Only codes >= 10 (say) have configurable colours.
-        // After getting the lookup value for the code, it is passed into a function with a handler which returns a pointer.
-        // This pointer + 32 is the RGB value. This functions returns RGBA with A always max.
-
         var parent = new ChatCode((ushort) type).Parent();
-
         switch (parent)
         {
             case ChatType.Debug:
             case ChatType.Urgent:
             case ChatType.Notice:
-                return type.DefaultColour();
+                return type.DefaultColor();
         }
 
-        var framework = (IntPtr) Framework.Instance();
+        Plugin.GameConfig.TryGet(parent.ToConfigEntry(), out uint color);
 
-        var lookupResult = *(uint*) (ColourLookup + (int) parent * 4);
-        var info = GetColourInfo(framework + 16, lookupResult);
-        var rgb = *(uint*) (info + 32) & 0xFFFFFF;
-
+        var rgb = color & 0xFFFFFF;
         if (rgb == 0)
             return null;
 
@@ -750,7 +723,7 @@ internal sealed unsafe class Chat : IDisposable
     {
         var uC = Utf8String.FromString(c.ToString());
 
-        SanitiseString(uC, 0x27F, IntPtr.Zero);
+        SanitiseString(uC, 0x27F, nint.Zero);
         var wasValid = uC->ToString().Length > 0;
 
         uC->Dtor(true);
