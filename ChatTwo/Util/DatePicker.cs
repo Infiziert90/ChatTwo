@@ -7,7 +7,6 @@ using Dalamud.Interface.ImGuiNotification;
 using Dalamud.Interface.Internal.Notifications;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
-using Dalamud.Memory.Exceptions;
 using Dalamud.Utility;
 using ImGuiNET;
 
@@ -268,12 +267,5 @@ public static class DateWidget
         var textColor = ImGuiColors.DalamudGrey;
         var l = (textColor.X + textColor.Y + textColor.Z) * 0.33334f;
         return new Vector4(l * 2.0f > 1 ? 1 : l * 2.0f, l * .5f, l * .5f, textColor.W);
-    }
-
-    private static string Center(string source, int length)
-    {
-        var spaces = length - source.Length;
-        var padLeft = spaces / 2 + source.Length;
-        return source.PadLeft(padLeft).PadRight(length);
     }
 }
