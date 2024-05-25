@@ -7,6 +7,7 @@ using Dalamud.Interface.ImGuiNotification;
 using Dalamud.Interface.Internal.Notifications;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
+using Dalamud.Memory.Exceptions;
 using Dalamud.Utility;
 using ImGuiNET;
 
@@ -16,33 +17,17 @@ namespace ChatTwo.Util;
 public static class DateWidget
 {
     private const int HeightInItems = 1 + 1 + 1 + 4;
+    private static readonly DateTime Sample = DateTime.UnixEpoch;
 
     private static readonly Vector4 Transparent = new(1, 1, 1, 0);
     private static readonly string[] DayNames = [Language.DateWidget_Day_Sun, Language.DateWidget_Day_Mon, Language.DateWidget_Day_Tue, Language.DateWidget_Day_Wed, Language.DateWidget_Day_Thu, Language.DateWidget_Day_Fri, Language.DateWidget_Day_Sat];
     private static readonly string[] MonthNames = [Language.DateWidget_Month_January, Language.DateWidget_Month_February, Language.DateWidget_Month_March, Language.DateWidget_Month_April, Language.DateWidget_Month_May, Language.DateWidget_Month_June, Language.DateWidget_Month_July, Language.DateWidget_Month_August, Language.DateWidget_Month_September, Language.DateWidget_Month_October, Language.DateWidget_Month_November, Language.DateWidget_Month_December];
     private static readonly int[] NumDaysPerMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
+    private static float LongestMonthWidth;
+    private static readonly float[] MonthWidths = new float[12];
+
     private static uint LastOpenComboID;
-    private static readonly int MaxMonthWidthIndex = -1;
-
-    private static readonly DateTime Sample = DateTime.UnixEpoch;
-
-    static DateWidget()
-    {
-        if (MaxMonthWidthIndex != -1)
-            return;
-
-        float maxMonthWidth = 0;
-        for (var i = 0; i < 12; i++)
-        {
-            var mw = ImGui.CalcTextSize(MonthNames[i]).X;
-            if (maxMonthWidth < mw)
-            {
-                maxMonthWidth = mw;
-                MaxMonthWidthIndex = i;
-            }
-        }
-    }
 
     public static bool Validate(DateTime minimal, ref DateTime currentMin, ref DateTime currentMax)
     {
@@ -88,6 +73,18 @@ public static class DateWidget
 
     private static bool DatePicker(string label, ref DateTime dateOut, bool closeWhenMouseLeavesIt, string leftArrow = "", string rightArrow = "")
     {
+        using var mono = ImRaii.PushFont(UiBuilder.MonoFont);
+        if (LongestMonthWidth == 0.0f)
+        {
+            for (var i = 0; i < 12; i++)
+            {
+                var mw = ImGui.CalcTextSize(MonthNames[i]).X;
+
+                MonthWidths[i] = mw;
+                LongestMonthWidth = Math.Max(LongestMonthWidth, mw);
+            }
+        }
+
         var id = ImGui.GetID(label);
         var style = ImGui.GetStyle();
 
@@ -98,8 +95,7 @@ public static class DateWidget
 
         var labelSize = ImGui.CalcTextSize(label, 0, true);
 
-        var requiredMonthWidth = ImGui.CalcTextSize(MonthNames[MaxMonthWidthIndex]).X;
-        var widthRequiredByCalendar = (2.0f * arrowLeftWidth) + (2.0f * arrowRightWidth) + requiredMonthWidth + ImGui.CalcTextSize("9999").X + (120.0f * ImGuiHelpers.GlobalScale);
+        var widthRequiredByCalendar = (2.0f * arrowLeftWidth) + (2.0f * arrowRightWidth) + LongestMonthWidth + ImGui.CalcTextSize("9999").X + (120.0f * ImGuiHelpers.GlobalScale);
         var popupHeight = ((labelSize.Y + (2 * style.ItemSpacing.Y)) * HeightInItems) + (style.FramePadding.Y * 3);
 
         var valueChanged = false;
@@ -122,7 +118,6 @@ public static class DateWidget
                 dateOut = DateTime.Now;
         }
 
-        using var mono = ImRaii.PushFont(UiBuilder.MonoFont);
         using var windowPadding = ImRaii.PushStyle(ImGuiStyleVar.WindowPadding, style.FramePadding);
         using var buttonColor = ImRaii.PushColor(ImGuiCol.Button, Transparent);
 
@@ -137,14 +132,27 @@ public static class DateWidget
         using (ImRaii.PushId(1234))
         {
             if (ImGui.SmallButton(arrowLeft))
+            {
+                valueChanged = true;
                 dateOut = dateOut.AddMonths(-1);
-            ImGui.SameLine();
-
-            ImGui.TextUnformatted($"{Center(MonthNames[dateOut.Month - 1], 9)}");
+            }
 
             ImGui.SameLine();
+
+            var color = ImGui.GetColorU32(style.Colors[(int)ImGuiCol.Text]);
+            var monthWidth = MonthWidths[dateOut.Month - 1];
+            var pos = ImGui.GetCursorScreenPos();
+            pos = pos with { X = pos.X + ((LongestMonthWidth - monthWidth) * 0.5f) };
+
+            ImGui.GetForegroundDrawList().AddText(pos, color, MonthNames[dateOut.Month - 1]);
+
+            ImGui.SameLine(0, LongestMonthWidth + style.ItemSpacing.X * 2);
+
             if (ImGui.SmallButton(arrowRight))
+            {
+                valueChanged = true;
                 dateOut = dateOut.AddMonths(1);
+            }
         }
 
         ImGui.SameLine(ImGui.GetWindowWidth() - yearPartWidth - style.WindowPadding.X - style.ItemSpacing.X * 4.0f);
@@ -152,14 +160,20 @@ public static class DateWidget
         using (ImRaii.PushId(1235))
         {
             if (ImGui.SmallButton(arrowLeft))
+            {
+                valueChanged = true;
                 dateOut = dateOut.AddYears(-1);
-            ImGui.SameLine();
+            }
 
+            ImGui.SameLine();
             ImGui.Text($"{dateOut.Year}");
-
             ImGui.SameLine();
+
             if (ImGui.SmallButton(arrowRight))
+            {
+                valueChanged = true;
                 dateOut = dateOut.AddYears(1);
+            }
         }
 
         ImGui.Spacing();
@@ -180,6 +194,7 @@ public static class DateWidget
         ImGui.Separator();
 
         // Display items
+        var dayClicked = false;
         var dayOfWeek = (int)new DateTime(dateOut.Year, dateOut.Month, 1).DayOfWeek;
         for (var dw = 0; dw < 7; dw++)
         {
@@ -205,6 +220,7 @@ public static class DateWidget
                         {
                             ImGui.SetItemDefaultFocus();
 
+                            dayClicked = true;
                             valueChanged = true;
                             dateOut = new DateTime(dateOut.Year, dateOut.Month, cday + 1);
                         }
@@ -225,7 +241,7 @@ public static class DateWidget
 
         style.WindowRounding = oldWindowRounding;
 
-        var mustCloseCombo = valueChanged;
+        var mustCloseCombo = dayClicked;
         if (closeWhenMouseLeavesIt && !mustCloseCombo)
         {
             var distance = ImGui.GetFontSize() * 1.75f; //1.3334f; //24;
