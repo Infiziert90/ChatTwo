@@ -6,6 +6,7 @@ using Dalamud.Interface.Colors;
 using Dalamud.Interface.ImGuiNotification;
 using Dalamud.Interface.Internal.Notifications;
 using Dalamud.Interface.Utility;
+using Dalamud.Interface.Utility.Raii;
 using Dalamud.Utility;
 using ImGuiNET;
 
@@ -28,17 +29,17 @@ public static class DateWidget
 
     static DateWidget()
     {
-        if (MaxMonthWidthIndex == -1)
+        if (MaxMonthWidthIndex != -1)
+            return;
+
+        float maxMonthWidth = 0;
+        for (var i = 0; i < 12; i++)
         {
-            float maxMonthWidth = 0;
-            for (var i = 0; i < 12; i++)
+            var mw = ImGui.CalcTextSize(MonthNames[i]).X;
+            if (maxMonthWidth < mw)
             {
-                var mw = ImGui.CalcTextSize(MonthNames[i]).X;
-                if (maxMonthWidth < mw)
-                {
-                    maxMonthWidth = mw;
-                    MaxMonthWidthIndex = i;
-                }
+                maxMonthWidth = mw;
+                MaxMonthWidthIndex = i;
             }
         }
     }
@@ -105,12 +106,13 @@ public static class DateWidget
         ImGui.SetNextWindowSize(new Vector2(widthRequiredByCalendar, widthRequiredByCalendar));
         ImGui.SetNextWindowSizeConstraints(new Vector2(widthRequiredByCalendar, popupHeight + 40), new Vector2(widthRequiredByCalendar, popupHeight + 40));
 
-        if (!ImGui.BeginPopupContextItem(label, ImGuiPopupFlags.None))
+        using var popupItem = ImRaii.ContextPopupItem(label, ImGuiPopupFlags.None);
+        if (!popupItem.Success)
             return valueChanged;
 
         if (ImGui.GetIO().MouseClicked[1])
         {
-            // reset date when user right clicks the date chooser header when the dialog is open
+            // reset date when user right-clicks the date chooser header when the dialog is open
             dateOut = DateTime.Now;
         }
         else if (LastOpenComboID != id)
@@ -120,10 +122,11 @@ public static class DateWidget
                 dateOut = DateTime.Now;
         }
 
-        ImGui.PushFont(UiBuilder.MonoFont);
-        ImGui.PushStyleVar(ImGuiStyleVar.WindowPadding, style.FramePadding);
+        using var mono = ImRaii.PushFont(UiBuilder.MonoFont);
+        using var windowPadding = ImRaii.PushStyle(ImGuiStyleVar.WindowPadding, style.FramePadding);
+        using var buttonColor = ImRaii.PushColor(ImGuiCol.Button, Transparent);
+
         ImGui.Spacing();
-        ImGui.PushStyleColor(ImGuiCol.Button, Transparent);
 
         var yearString = $"{dateOut.Year}";
         var yearPartWidth = arrowLeftWidth + arrowRightWidth + ImGui.CalcTextSize(yearString).X;
@@ -131,35 +134,38 @@ public static class DateWidget
         var oldWindowRounding = style.WindowRounding;
         style.WindowRounding = 0;
 
-        ImGui.PushID(1234);
-        if (ImGui.SmallButton(arrowLeft))
-            dateOut = dateOut.AddMonths(-1);
-        ImGui.SameLine();
+        using (ImRaii.PushId(1234))
+        {
+            if (ImGui.SmallButton(arrowLeft))
+                dateOut = dateOut.AddMonths(-1);
+            ImGui.SameLine();
 
-        ImGui.TextUnformatted($"{Center(MonthNames[dateOut.Month - 1], 9)}");
+            ImGui.TextUnformatted($"{Center(MonthNames[dateOut.Month - 1], 9)}");
 
-        ImGui.SameLine();
-        if (ImGui.SmallButton(arrowRight))
-            dateOut = dateOut.AddMonths(1);
-        ImGui.PopID();
+            ImGui.SameLine();
+            if (ImGui.SmallButton(arrowRight))
+                dateOut = dateOut.AddMonths(1);
+        }
 
         ImGui.SameLine(ImGui.GetWindowWidth() - yearPartWidth - style.WindowPadding.X - style.ItemSpacing.X * 4.0f);
 
-        ImGui.PushID(1235);
-        if (ImGui.SmallButton(arrowLeft))
-            dateOut = dateOut.AddYears(-1);
-        ImGui.SameLine();
+        using (ImRaii.PushId(1235))
+        {
+            if (ImGui.SmallButton(arrowLeft))
+                dateOut = dateOut.AddYears(-1);
+            ImGui.SameLine();
 
-        ImGui.Text($"{dateOut.Year}");
+            ImGui.Text($"{dateOut.Year}");
 
-        ImGui.SameLine();
-        if (ImGui.SmallButton(arrowRight))
-            dateOut = dateOut.AddYears(1);
-        ImGui.PopID();
+            ImGui.SameLine();
+            if (ImGui.SmallButton(arrowRight))
+                dateOut = dateOut.AddYears(1);
+        }
 
         ImGui.Spacing();
 
-        var maxDayOfCurMonth = NumDaysPerMonth[dateOut.Month - 1]; // This could be calculated only when needed (but I guess it's fast in any case...)
+        // This could be calculated only when needed (but I guess it's fast in any case...)
+        var maxDayOfCurMonth = NumDaysPerMonth[dateOut.Month - 1];
         if (maxDayOfCurMonth == 28)
         {
             var year = dateOut.Year;
@@ -168,8 +174,8 @@ public static class DateWidget
                 maxDayOfCurMonth = 29;
         }
 
-        ImGui.PushStyleColor(ImGuiCol.ButtonHovered, ImGuiColors.DalamudOrange);
-        ImGui.PushStyleColor(ImGuiCol.ButtonActive, ImGuiColors.DalamudYellow);
+        using var buttonHovered = ImRaii.PushColor(ImGuiCol.ButtonHovered, ImGuiColors.DalamudOrange);
+        using var buttonActive = ImRaii.PushColor(ImGuiCol.ButtonActive, ImGuiColors.DalamudYellow);
 
         ImGui.Separator();
 
@@ -177,58 +183,47 @@ public static class DateWidget
         var dayOfWeek = (int)new DateTime(dateOut.Year, dateOut.Month, 1).DayOfWeek;
         for (var dw = 0; dw < 7; dw++)
         {
-            ImGui.BeginGroup();
-            if (dw == 0)
+            using (ImRaii.Group())
             {
-                var textColor = ImGuiColors.DalamudGrey;
-                var l = (textColor.X + textColor.Y + textColor.Z) * 0.33334f;
-                ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(l * 2.0f > 1 ? 1 : l * 2.0f, l * .5f, l * .5f, textColor.W));
-            }
+                using var textColor = ImRaii.PushColor(ImGuiCol.Text, CalculateTextColor(), dw == 0);
 
-            ImGui.Text($"{(dw == 0 ? "" : " ")}{DayNames[dw]}");
-            if (dw == 0)
-                ImGui.Separator();
-            else
-                ImGui.Spacing();
-
-            var curDay = dw - dayOfWeek; // Use dayOfWeek for spacing
-            for (var row = 0; row < 7; row++)
-            {
-                var cday = curDay + (7 * row);
-                if (cday >= 0 && cday < maxDayOfCurMonth)
-                {
-                    ImGui.PushID(row * 10 + dw);
-                    if (ImGui.SmallButton(string.Format(cday < 9 ? " {0}" : "{0}", cday + 1)))
-                    {
-                        valueChanged = true;
-                        ImGui.SetItemDefaultFocus();
-                        dateOut = new DateTime(dateOut.Year, dateOut.Month, cday + 1);
-                    }
-
-                    ImGui.PopID();
-                }
+                ImGui.Text($"{(dw == 0 ? "" : " ")}{DayNames[dw]}");
+                if (dw == 0)
+                    ImGui.Separator();
                 else
+                    ImGui.Spacing();
+
+                // Use dayOfWeek for spacing
+                var curDay = dw - dayOfWeek;
+                for (var row = 0; row < 7; row++)
                 {
-                    ImGui.TextUnformatted(" ");
+                    var cday = curDay + (7 * row);
+                    if (cday >= 0 && cday < maxDayOfCurMonth)
+                    {
+                        using var rowId = ImRaii.PushId(row * 10 + dw);
+                        if (ImGui.SmallButton(string.Format(cday < 9 ? " {0}" : "{0}", cday + 1)))
+                        {
+                            ImGui.SetItemDefaultFocus();
+
+                            valueChanged = true;
+                            dateOut = new DateTime(dateOut.Year, dateOut.Month, cday + 1);
+                        }
+                    }
+                    else
+                    {
+                        ImGui.TextUnformatted(" ");
+                    }
                 }
-            }
 
-            if (dw == 0)
-            {
-                ImGui.Separator();
-                ImGui.PopStyleColor();
+                if (dw == 0)
+                    ImGui.Separator();
             }
-
-            ImGui.EndGroup();
 
             if (dw != 6)
-                ImGui.SameLine(ImGui.GetWindowWidth() - ((6 - dw) * (ImGui.GetWindowWidth() / 7.0f)));
+                ImGui.SameLine(ImGui.GetWindowWidth() - (6 - dw) * (ImGui.GetWindowWidth() / 7.0f));
         }
 
         style.WindowRounding = oldWindowRounding;
-        ImGui.PopStyleColor(2);
-        ImGui.PopStyleColor();
-        ImGui.PopStyleVar();
 
         var mustCloseCombo = valueChanged;
         if (closeWhenMouseLeavesIt && !mustCloseCombo)
@@ -245,19 +240,24 @@ public static class DateWidget
                 mustCloseCombo = true;
         }
 
-        ImGui.PopFont();
         // ImGui issue #273849, children keep popups from closing automatically
         if (mustCloseCombo)
             ImGui.CloseCurrentPopup();
-        ImGui.EndPopup();
 
         return valueChanged;
+    }
+
+    private static Vector4 CalculateTextColor()
+    {
+        var textColor = ImGuiColors.DalamudGrey;
+        var l = (textColor.X + textColor.Y + textColor.Z) * 0.33334f;
+        return new Vector4(l * 2.0f > 1 ? 1 : l * 2.0f, l * .5f, l * .5f, textColor.W);
     }
 
     private static string Center(string source, int length)
     {
         var spaces = length - source.Length;
-        var padLeft = (spaces / 2) + source.Length;
+        var padLeft = spaces / 2 + source.Length;
         return source.PadLeft(padLeft).PadRight(length);
     }
 }
