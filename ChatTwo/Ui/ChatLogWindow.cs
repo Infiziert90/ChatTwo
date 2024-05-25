@@ -141,7 +141,7 @@ public sealed class ChatLogWindow : Window
 
     private void Login()
     {
-        Plugin.MessageManager.FilterAllTabsAsync(false);
+        Plugin.MessageManager.FilterAllTabsAsync();
     }
 
     private void Activated(ChatActivatedArgs args)
@@ -923,7 +923,8 @@ public sealed class ChatLogWindow : Window
     {
         try
         {
-            tab.MessagesMutex.Wait();
+            // This may produce ApplicationException which is catched below.
+            using var messages = tab.Messages.GetReadOnly(3);
 
             var reset = false;
             if (LastResize is { IsRunning: true, Elapsed.TotalSeconds: > 0.25 })
@@ -939,10 +940,10 @@ public sealed class ChatLogWindow : Window
             var sameCount = 0;
 
             var maxLines = Plugin.Config.MaxLinesToRender;
-            var startLine = tab.Messages.Count > maxLines ? tab.Messages.Count - maxLines : 0;
-            for (var i = startLine; i < tab.Messages.Count; i++)
+            var startLine = messages.Count > maxLines ? messages.Count - maxLines : 0;
+            for (var i = startLine; i < messages.Count; i++)
             {
-                var message = tab.Messages[i];
+                var message = messages[i];
                 if (reset)
                 {
                     message.Height[tab.Identifier] = null;
@@ -957,7 +958,7 @@ public sealed class ChatLogWindow : Window
                     {
                         sameCount += 1;
                         message.IsVisible[tab.Identifier] = false;
-                        if (i != tab.Messages.Count - 1)
+                        if (i != messages.Count - 1)
                             continue;
                     }
 
@@ -974,7 +975,7 @@ public sealed class ChatLogWindow : Window
                     }
 
                     lastMessageHash = messageHash;
-                    if (same && i == tab.Messages.Count - 1)
+                    if (same && i == messages.Count - 1)
                         continue;
                 }
 
@@ -987,7 +988,7 @@ public sealed class ChatLogWindow : Window
                 // the top of the current message.
                 if (i > 0)
                 {
-                    var prevMessage = tab.Messages[i - 1];
+                    var prevMessage = messages[i - 1];
 
                     // TODO: TryGetValue isn't always true for some strange reason
                     // This should be looked into, because default will be null for the prevHeight in that case
@@ -1041,13 +1042,21 @@ public sealed class ChatLogWindow : Window
                     {
                         if (!Plugin.Config.HideSameTimestamps || timestamp != lastTimestamp)
                         {
-                            ImGui.TextUnformatted(timestamp);
                             lastTimestamp = timestamp;
+                            ImGui.TextUnformatted(timestamp);
+                            // We use an IsItemHovered() check here instead of
+                            // just calling SetTooltip() to avoid computing the
+                            // tooltip string for all visible items on every
+                            // frame.
+                            if (ImGui.IsItemHovered())
+                                ImGui.SetTooltip(message.Date.ToLocalTime().ToString("F"));
                         }
                         else
+                        {
                             // Avoids rendering issues caused by emojis in
                             // message content.
                             ImGui.TextUnformatted("");
+                        }
                     }
                     else
                     {
@@ -1075,9 +1084,14 @@ public sealed class ChatLogWindow : Window
                 message.IsVisible[tab.Identifier] = ImGui.IsItemVisible();
             }
         }
-        finally
+        catch (ApplicationException)
         {
-            tab.MessagesMutex.Release();
+            // We couldn't get a reader lock on messages within 3ms, so
+            // don't draw anything (and don't log a warning either).
+        }
+        catch (Exception ex)
+        {
+            Plugin.Log.Warning(ex, "Error drawing chat log");
         }
     }
 

@@ -153,10 +153,10 @@ internal sealed class Database : ISettingsTab
         if (ImGuiUtil.CtrlShiftButton("Perform maintenance", "Ctrl+Shift: MessageManager.Store.PerformMaintenance()"))
             Plugin.MessageManager.Store.PerformMaintenance();
 
-        if (ImGuiUtil.CtrlShiftButton("Reload messages from database", "Ctrl+Shift: MessageManager.FilterAllTabs(false)"))
+        if (ImGuiUtil.CtrlShiftButton("Reload messages from database", "Ctrl+Shift: MessageManager.FilterAllTabs()"))
         {
             Plugin.MessageManager.ClearAllTabs();
-            Plugin.MessageManager.FilterAllTabsAsync(false);
+            Plugin.MessageManager.FilterAllTabsAsync();
         }
 
         if (ImGuiUtil.CtrlShiftButton("Inject 10,000 messages", "Ctrl+Shift: creates 10,000 unique messages (async)"))
@@ -232,7 +232,7 @@ internal sealed class Database : ISettingsTab
         {
             stopwatch = Stopwatch.StartNew();
             // Intentionally synchronous
-            Plugin.MessageManager.FilterAllTabs(false);
+            Plugin.MessageManager.FilterAllTabs();
             elapsedTicks = stopwatch.ElapsedTicks;
             stopwatch.Stop();
             Plugin.Log.Info($"Fetched and filtered all tabs in {elapsedTicks} ticks ({elapsedTicks / TimeSpan.TicksPerMillisecond}ms)");

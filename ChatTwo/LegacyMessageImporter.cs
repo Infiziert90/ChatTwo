@@ -334,7 +334,7 @@ internal class LegacyMessageImporter : IAsyncDisposable
         _database.Dispose();
         _database = null;
 
-        Plugin?.MessageManager.FilterAllTabsAsync(false);
+        Plugin?.MessageManager.FilterAllTabsAsync();
     }
 
     private static Message BsonDocumentToMessage(BsonDocument doc)

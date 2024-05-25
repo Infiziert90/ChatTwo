@@ -5,8 +5,11 @@ using ChatTwo.Resources;
 using ChatTwo.Util;
 using Dalamud.Game.Text;
 using Dalamud.Game.Text.SeStringHandling;
+using Dalamud.Hooking;
 using Dalamud.Interface.Internal.Notifications;
 using Dalamud.Plugin.Services;
+using Dalamud.Utility.Signatures;
+using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using Lumina.Excel.GeneratedSheets;
 
 namespace ChatTwo;
@@ -21,11 +24,23 @@ internal class MessageManager : IAsyncDisposable
     private Dictionary<ChatType, NameFormatting> Formats { get; } = new();
     private ulong LastContentId { get; set; }
 
-    private ConcurrentQueue<PendingMessage> Pending { get; } = new();
-    private int LastMessageIndex { get; set; }
-
+    // Messages go into the PendingSync queue first, which will be consumed one
+    // at a time in the main thread. This is to delay the async processing until
+    // after we've received the content ID from the ContentIdResolver hook.
+    //
+    // After that, the message is enqueued in the PendingAsync queue, which will
+    // be consumed in a separate thread and perform more processing (emotes,
+    // URLs) as well as inserting the message into the database.
+    private Queue<PendingMessage> PendingSync { get; } = new();
+    private ConcurrentQueue<PendingMessage> PendingAsync { get; } = new();
     private readonly Thread PendingMessageThread;
     private readonly CancellationTokenSource PendingThreadCancellationToken = new();
+
+    // TODO: replace with CS version
+    private unsafe delegate void ContentIdResolverDelegate(RaptureLogModule* param1, ulong param2, int param3, short param4, short param5);
+
+    [Signature("4C 8B D1 48 8B 89 ?? ?? ?? ?? 48 85 C9", DetourName = nameof(ContentIdResolver))]
+    private Hook<ContentIdResolverDelegate>? ContentIdResolverHook { get; init; }
 
     internal ulong CurrentContentId
     {
@@ -44,15 +59,17 @@ internal class MessageManager : IAsyncDisposable
         PendingMessageThread = new Thread(() => ProcessPendingMessages(PendingThreadCancellationToken.Token));
         PendingMessageThread.Start();
 
+        ContentIdResolverHook?.Enable();
         Plugin.ChatGui.ChatMessageUnhandled += ChatMessage;
-        Plugin.Framework.Update += UpdateReceiver;
+        Plugin.Framework.Update += OnFrameworkUpdate;
         Plugin.ClientState.Logout += Logout;
     }
 
     public async ValueTask DisposeAsync()
     {
+        ContentIdResolverHook?.Dispose();
         Plugin.ClientState.Logout -= Logout;
-        Plugin.Framework.Update -= UpdateReceiver;
+        Plugin.Framework.Update -= OnFrameworkUpdate;
         Plugin.ChatGui.ChatMessageUnhandled -= ChatMessage;
 
         await PendingThreadCancellationToken.CancelAsync();
@@ -80,18 +97,26 @@ internal class MessageManager : IAsyncDisposable
         LastContentId = 0;
     }
 
-    private void UpdateReceiver(IFramework framework)
+    private void OnFrameworkUpdate(IFramework framework)
     {
         var contentId = Plugin.ClientState.LocalContentId;
         if (contentId != 0)
             LastContentId = contentId;
+
+        // Drain the PendingSync queue into the PendingAsync queue.
+        while (true)
+        {
+            if (!PendingSync.TryDequeue(out var pending))
+                return;
+            PendingAsync.Enqueue(pending);
+        }
     }
 
     private void ProcessPendingMessages(CancellationToken token)
     {
         while (!token.IsCancellationRequested)
         {
-            if (Pending.TryDequeue(out var pendingMessage))
+            if (PendingAsync.TryDequeue(out var pendingMessage))
             {
                 try
                 {
@@ -115,16 +140,24 @@ internal class MessageManager : IAsyncDisposable
             tab.Clear();
     }
 
-    internal void FilterAllTabs(bool unread = true)
+    internal void FilterAllTabs()
     {
         DateTimeOffset? since = null;
         if (!Plugin.Config.FilterIncludePreviousSessions)
             since = Plugin.GameStarted;
 
         var messages = Store.GetMostRecentMessages(CurrentContentId, since);
+
+        // We store the pending messages to be added to the chat log in a
+        // temporary list, and apply them all at once after filtering.
+        var pendingTabs = Plugin.Config.Tabs.Select(tab => (tab, new List<Message>())).ToList();
         foreach (var message in messages)
-            foreach (var tab in Plugin.Config.Tabs.Where(tab => tab.Matches(message)))
-                tab.AddMessage(message, unread);
+            foreach (var (_, pendingMessages) in pendingTabs.Where(ptab => ptab.Item1.Matches(message)))
+                pendingMessages.Add(message);
+
+        // Apply the messages to the chat log in one go.
+        foreach (var (tab, pendingMessages) in pendingTabs)
+            tab.Messages.AddSortPrune(pendingMessages, MessageDisplayLimit);
 
         if (!messages.DidError) return;
 
@@ -141,14 +174,14 @@ internal class MessageManager : IAsyncDisposable
         }
     }
 
-    internal void FilterAllTabsAsync(bool unread = true)
+    internal void FilterAllTabsAsync()
     {
         Task.Run(() =>
         {
             var stopwatch = Stopwatch.StartNew();
             try
             {
-                FilterAllTabs(unread);
+                FilterAllTabs();
             }
             catch (Exception ex)
             {
@@ -177,31 +210,20 @@ internal class MessageManager : IAsyncDisposable
         // Update colour codes.
         GlobalParametersCache.Refresh();
 
-        // If the message was rendered in the vanilla chat log window it has an
-        // index, and we can use that to get the sender's content ID. The
-        // content ID is used to show "invite to party" buttons in the context
-        // menu.
-        var idx = Plugin.Functions.GetCurrentChatLogEntryIndex();
-        var shouldGetContentId = false;
-        if (idx > LastMessageIndex)
-        {
-            LastMessageIndex = idx;
-            shouldGetContentId = true;
-        }
+        // We delay messages to be handed off to the async processing thread
+        // in the next tick, otherwise we can't get the content ID from the hook
+        // below.
+        PendingSync.Enqueue(pendingMessage);
+    }
 
-        // You can't call GetContentIdForEntry in the same framework tick
-        // that you received the message, or you just get null.
-        //
-        // We delay all messages to be enqueued in the next framework tick
-        // because of this. We used to only delay messages that we wanted to
-        // fetch a content ID for, but this results in out-of-order messages
-        // occasionally.
-        Plugin.Framework.RunOnTick(() =>
-        {
-            if (shouldGetContentId)
-                pendingMessage.ContentId = Plugin.Functions.Chat.GetContentIdForEntry(idx - 1);
-            Pending.Enqueue(pendingMessage);
-        });
+    // This hook is called immediately after receiving a message with the
+    // message's content ID. If multiple messages are received in the same tick,
+    // this will be called for each message immediately after ChatMessage is
+    // called for each message.
+    private unsafe void ContentIdResolver(RaptureLogModule* param1, ulong param2, int param3, short param4, short param5)
+    {
+        PendingSync.Last().ContentId = param2;
+        ContentIdResolverHook?.Original(param1, param2, param3, param4, param5);
     }
 
     private void ProcessMessage(PendingMessage pendingMessage)

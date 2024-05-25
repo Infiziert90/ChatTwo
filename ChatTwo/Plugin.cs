@@ -5,8 +5,10 @@ using ChatTwo.Ipc;
 using ChatTwo.Resources;
 using ChatTwo.Ui;
 using ChatTwo.Util;
+using Dalamud.Game;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects;
+using Dalamud.Hooking;
 using Dalamud.Interface.Windowing;
 using Dalamud.IoC;
 using Dalamud.Plugin;
@@ -118,7 +120,7 @@ public sealed class Plugin : IDalamudPlugin
             Commands.Initialise();
 
             if (Interface.Reason is not PluginLoadReason.Boot)
-                MessageManager.FilterAllTabsAsync(false);
+                MessageManager.FilterAllTabsAsync();
 
             Framework.Update += FrameworkUpdate;
             Interface.UiBuilder.Draw += Draw;

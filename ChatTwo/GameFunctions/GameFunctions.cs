@@ -69,11 +69,6 @@ internal unsafe class GameFunctions : IDisposable
         return (nint) infoModule->GetInfoProxyById(proxyId);
     }
 
-    internal int GetCurrentChatLogEntryIndex()
-    {
-        return Framework.Instance()->GetUiModule()->GetRaptureLogModule()->LogModule.LogMessageCount;
-    }
-
     internal void SendFriendRequest(string name, ushort world)
     {
         ListCommand(name, world, "friendlist");

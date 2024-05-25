@@ -163,7 +163,7 @@ public sealed class SettingsWindow : Window
         // commit any changes that cause a crash
         Plugin.DeferredSaveFrames = 60;
         Plugin.MessageManager.ClearAllTabs();
-        Plugin.MessageManager.FilterAllTabsAsync(false);
+        Plugin.MessageManager.FilterAllTabsAsync();
 
         if (fontChanged || fontSizeChanged)
             Plugin.FontManager.BuildFonts();
