@@ -54,6 +54,8 @@ internal class MessageManager : IAsyncDisposable
     internal MessageManager(Plugin plugin)
     {
         Plugin = plugin;
+        Plugin.GameInteropProvider.InitializeFromAttributes(this);
+
         Store = new MessageStore(DatabasePath());
 
         PendingMessageThread = new Thread(() => ProcessPendingMessages(PendingThreadCancellationToken.Token));
