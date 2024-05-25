@@ -37,7 +37,7 @@ internal class MessageManager : IAsyncDisposable
     private readonly CancellationTokenSource PendingThreadCancellationToken = new();
 
     // TODO: replace with CS version
-    private unsafe delegate void ContentIdResolverDelegate(RaptureLogModule* param1, ulong param2, int param3, short param4, short param5);
+    private unsafe delegate void ContentIdResolverDelegate(RaptureLogModule* agent, ulong contentId, int messageIndex, ushort worldId, ushort chatType);
 
     [Signature("4C 8B D1 48 8B 89 ?? ?? ?? ?? 48 85 C9", DetourName = nameof(ContentIdResolver))]
     private Hook<ContentIdResolverDelegate>? ContentIdResolverHook { get; init; }
@@ -222,10 +222,13 @@ internal class MessageManager : IAsyncDisposable
     // message's content ID. If multiple messages are received in the same tick,
     // this will be called for each message immediately after ChatMessage is
     // called for each message.
-    private unsafe void ContentIdResolver(RaptureLogModule* param1, ulong param2, int param3, short param4, short param5)
+    private unsafe void ContentIdResolver(RaptureLogModule* agent, ulong contentId, int messageIndex, ushort worldId, ushort chatType)
     {
-        PendingSync.Last().ContentId = param2;
-        ContentIdResolverHook?.Original(param1, param2, param3, param4, param5);
+        ContentIdResolverHook?.Original(agent, contentId, messageIndex, worldId, chatType);
+        if (PendingSync.Count == 0)
+            return;
+
+        PendingSync.Last().ContentId = contentId;
     }
 
     private void ProcessMessage(PendingMessage pendingMessage)
