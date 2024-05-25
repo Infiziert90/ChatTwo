@@ -34,5 +34,11 @@ changelog:  |-
 
   **Updates**
   - Some emotes have been blocked from being parsed
+  - Replaced some internal functions with their CS version
   - French localisation update
+
+  **Fixes**
+  - AutoTranslate missing entries, like Viera
+  - Fix for shuffled messages on startup [thanks `@dean`]
+  - Fix for adventurer plate button not working after character switch [thanks `@dean`]
 
