@@ -2,6 +2,33 @@ using Dalamud.Game.Text.SeStringHandling;
 
 namespace ChatTwo.Util;
 
+internal static class PayloadExt
+{
+    // TODO: Remove after Key and Group in AutoTranslatePayload became public
+    // From: https://github.com/goatcorp/Dalamud/blob/master/Dalamud/Game/Text/SeStringHandling/Payload.cs#L366
+    /// <summary>
+    /// Retrieve the packed integer from SE's native data format.
+    /// </summary>
+    /// <param name="input">The BinaryReader instance.</param>
+    /// <returns>An integer.</returns>
+    internal static uint GetInteger(BinaryReader input)
+    {
+        uint marker = input.ReadByte();
+        if (marker < 0xD0)
+            return marker - 1;
+
+        marker = (marker + 1) & 0b1111;
+
+        var ret = new byte[4];
+        for (var i = 3; i >= 0; i--)
+        {
+            ret[i] = (marker & (1 << i)) == 0 ? (byte)0 : input.ReadByte();
+        }
+
+        return BitConverter.ToUInt32(ret, 0);
+    }
+}
+
 internal class PartyFinderPayload : Payload {
     public override PayloadType Type => (PayloadType) 0x50;
 

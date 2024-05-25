@@ -1,5 +1,4 @@
 using System.Numerics;
-using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using ChatTwo.Code;
@@ -177,17 +176,13 @@ public partial class InputPreview : Window
             if (icon.Icon != BitmapFontIcon.AutoTranslateBegin)
                 return;
 
-            try
-            {
-                NextChunkIsAutoTranslate = true;
-                var key = (uint)typeof(AutoTranslatePayload).GetField("key", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(chunk.Link)!;
-                var group = (uint)typeof(AutoTranslatePayload).GetField("group", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(chunk.Link)!;
-                CursorPosition += $"<at:{key},{group}>".Length;
-            }
-            catch
-            {
-                // Ignore
-            }
+            NextChunkIsAutoTranslate = true;
+
+            // Skipping: StartByte, PayloadType, PayloadLength
+            using var reader = new BinaryReader(new MemoryStream(chunk.Link!.Encode().Skip(3).ToArray()));
+            var group = (uint) reader.ReadByte();
+            var key = PayloadExt.GetInteger(reader);
+            CursorPosition += $"<at:{group},{key}>".Length;
 
             return;
         }
