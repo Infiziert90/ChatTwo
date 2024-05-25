@@ -242,7 +242,7 @@ internal class Tab
 
         public void AddPrune(Message message, int max)
         {
-            rwl.AcquireWriterLock(0);
+            rwl.AcquireWriterLock(-1);
             try
             {
                 AddLocked(message);
@@ -256,7 +256,7 @@ internal class Tab
 
         public void AddSortPrune(IEnumerable<Message> messages, int max)
         {
-            rwl.AcquireWriterLock(0);
+            rwl.AcquireWriterLock(-1);
             try
             {
                 foreach (var message in messages)
@@ -282,7 +282,7 @@ internal class Tab
 
         public void Clear()
         {
-            rwl.AcquireWriterLock(0);
+            rwl.AcquireWriterLock(-1);
             try
             {
                 messages.Clear();
@@ -312,7 +312,7 @@ internal class Tab
         /// GetReadOnly returns a read-only list of messages while holding a
         /// reader lock. The list should be used with a using statement.
         /// </summary>
-        public RLockedMessageList GetReadOnly(int millisecondsTimeout = 0)
+        public RLockedMessageList GetReadOnly(int millisecondsTimeout = -1)
         {
             rwl.AcquireReaderLock(millisecondsTimeout);
             return new RLockedMessageList(rwl, messages);
