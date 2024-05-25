@@ -182,7 +182,7 @@ internal static class AutoTranslate
                     // Previously, we were setting `0..^0` which caused these
                     // sheets to be completely skipped due to this bug.
                     // See below.
-                    rows.Add(..Index.FromStart((int)validRows.Max()));
+                    rows.Add(..Index.FromStart((int)validRows.Max() + 1));
 
                 foreach (var range in rows)
                 {
