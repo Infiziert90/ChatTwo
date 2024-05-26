@@ -493,6 +493,12 @@ public sealed class ChatLogWindow : Window
             StyleModel.GetConfiguredStyles()?.FirstOrDefault(style => style.Name == Plugin.Config.ChosenStyle)?.Pop();
     }
 
+    public override void OnClose()
+    {
+        // We force the main log to be always open
+        IsOpen = true;
+    }
+
     public override void Draw()
     {
         DrawChatLog();
