@@ -389,7 +389,7 @@
     <value>Right</value>
   </data>
   <data name="Options_CommandHelpSide_Name">
-    <value>Command help side</value>
+    <value>Command help side (None = off)</value>
   </data>
   <data name="Options_CommandHelpSide_Description">
     <value>The side of {0} to display help for commands on.</value>
@@ -1016,13 +1016,13 @@
         <value>Keep input focus</value>
     </data>
   <data name="Options_KeepInputFocus_Description" xml:space="preserve">
-        <value>Keeps the input focus, even if you enter battle or do other actions</value>
+        <value>Keeps the input focus, even if you enter battle or do other actions.</value>
     </data>
   <data name="Options_ShowEmotes_Name" xml:space="preserve">
         <value>Show emotes</value>
     </data>
   <data name="Options_ShowEmotes_Desc" xml:space="preserve">
-        <value>Replaces words with their emote version, currently supports BetterTTV</value>
+        <value>Replaces words with their emote version, currently supports BetterTTV.</value>
     </data>
   <data name="Options_Emote_Tab" xml:space="preserve">
         <value>Emotes</value>
@@ -1052,10 +1052,10 @@
         <value>Emotes available:</value>
     </data>
   <data name="Options_Preview_Description" xml:space="preserve">
-        <value>A preview wih all emote, auto-translate encoded as they appear in chat</value>
+        <value>Displays a preview with special parameter evaluated, like emotes and &lt;item&gt;.</value>
     </data>
   <data name="Options_Preview_Name" xml:space="preserve">
-        <value>Input preview</value>
+        <value>Position (None = off)</value>
     </data>
   <data name="Options_Preview_None" xml:space="preserve">
         <value>None</value>
@@ -1070,6 +1070,129 @@
         <value>Bottom</value>
     </data>
   <data name="Options_Preview_Header" xml:space="preserve">
-        <value>Text Preview:</value>
+        <value>Message Preview:</value>
+    </data>
+  <data name="Options_Preview_Tooltip" xml:space="preserve">
+        <value>Tooltip</value>
+    </data>
+  <data name="Options_PreviewOnlyIf_Name" xml:space="preserve">
+        <value>Must contain parameter</value>
+    </data>
+  <data name="Options_PreviewOnlyIf_Description" xml:space="preserve">
+        <value>Only show if the text contains special parameter.</value>
+    </data>
+  <data name="Options_PreviewMinimum_Name" xml:space="preserve">
+        <value>Minimum input length</value>
+    </data>
+  <data name="Options_PreviewMinimum_Description" xml:space="preserve">
+        <value>Only show if the text length is greater-than or equal.</value>
+    </data>
+  <data name="Options_Preview_Tab" xml:space="preserve">
+        <value>Preview</value>
+    </data>
+  <data name="Options_Changelog_Tab" xml:space="preserve">
+        <value>Changelog</value>
+    </data>
+  <data name="Options_PrintChangelog_Name" xml:space="preserve">
+        <value>Print changelog</value>
+    </data>
+  <data name="Options_PrintChangelog_Description" xml:space="preserve">
+        <value>Print the changelog to chat after an update.</value>
+    </data>
+  <data name="Options_Warning_NotImplemented" xml:space="preserve">
+        <value>This feature isn't implemented yet</value>
+    </data>
+  <data name="Options_Changelog_Header" xml:space="preserve">
+        <value>Changelog:</value>
+    </data>
+  <data name="DateWidget_InvalidDate" xml:space="preserve">
+        <value>Date before {0} is not possible</value>
+    </data>
+  <data name="DateWidget_Day_Sun" xml:space="preserve">
+        <value>Sun</value>
+    </data>
+  <data name="DateWidget_Day_Mon" xml:space="preserve">
+        <value>Mon</value>
+    </data>
+  <data name="DateWidget_Day_Tue" xml:space="preserve">
+        <value>Tue</value>
+    </data>
+  <data name="DateWidget_Day_Wed" xml:space="preserve">
+        <value>Wed</value>
+    </data>
+  <data name="DateWidget_Day_Thu" xml:space="preserve">
+        <value>Thu</value>
+    </data>
+  <data name="DateWidget_Day_Fri" xml:space="preserve">
+        <value>Fri</value>
+    </data>
+  <data name="DateWidget_Day_Sat" xml:space="preserve">
+        <value>Sat</value>
+    </data>
+  <data name="DateWidget_Month_January" xml:space="preserve">
+        <value>January</value>
+    </data>
+  <data name="DateWidget_Month_February" xml:space="preserve">
+        <value>February</value>
+    </data>
+  <data name="DateWidget_Month_March" xml:space="preserve">
+        <value>March</value>
+    </data>
+  <data name="DateWidget_Month_April" xml:space="preserve">
+        <value>April</value>
+    </data>
+  <data name="DateWidget_Month_May" xml:space="preserve">
+        <value>May</value>
+    </data>
+  <data name="DateWidget_Month_June" xml:space="preserve">
+        <value>June</value>
+    </data>
+  <data name="DateWidget_Month_July" xml:space="preserve">
+        <value>July</value>
+    </data>
+  <data name="DateWidget_Month_August" xml:space="preserve">
+        <value>August</value>
+    </data>
+  <data name="DateWidget_Month_September" xml:space="preserve">
+        <value>September</value>
+    </data>
+  <data name="DateWidget_Month_October" xml:space="preserve">
+        <value>October</value>
+    </data>
+  <data name="DateWidget_Month_November" xml:space="preserve">
+        <value>November</value>
+    </data>
+  <data name="DateWidget_Month_December" xml:space="preserve">
+        <value>December</value>
+    </data>
+  <data name="DbViewer_TableField_Date" xml:space="preserve">
+        <value>Date</value>
+    </data>
+  <data name="DbViewer_TableField_Sender" xml:space="preserve">
+        <value>Sender</value>
+    </data>
+  <data name="DbViewer_TableField_Content" xml:space="preserve">
+        <value>Content</value>
+    </data>
+  <data name="DbViewer_Status_NothingFound" xml:space="preserve">
+        <value>Nothing Found.</value>
+    </data>
+  <data name="DbViewer_Status_NoSearchResult" xml:space="preserve">
+        <value>Search had no match on this page.</value>
+    </data>
+  <data name="DbViewer_SearcHint" xml:space="preserve">
+        <value>Simple Sender/Content Search</value>
+    </data>
+  <data name="DbViewer_Page" xml:space="preserve">
+        <value>Page: {0} / {1} ({2} Rows) {3}</value>
+    </data>
+  <data name="DbViewer_LoadingIndicator" xml:space="preserve">
+        <value>[Loading...]</value>
+    </data>
+  <data name="DbViewer_CharacterOption" xml:space="preserve">
+        <value>Only current character</value>
+    </data>
+  <data name="DbViewer_DatePicker_FromTo" xml:space="preserve">
+        <value>FromTo:</value>
     </data>
 </root>
