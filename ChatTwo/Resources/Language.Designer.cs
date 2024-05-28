@@ -78,6 +78,15 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occured while sending this tell message.
+        /// </summary>
+        internal static string Chat_SendTell_Error {
+            get {
+                return ResourceManager.GetString("Chat_SendTell_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Input is disabled for this tab.
         /// </summary>
         internal static string ChatLog_DisabledInput {

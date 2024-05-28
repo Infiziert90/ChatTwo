@@ -4,7 +4,6 @@ using System.Text;
 using Dalamud;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
-using Dalamud.Plugin.Services;
 using Dalamud.Utility;
 using Lumina.Excel;
 using Lumina.Excel.GeneratedSheets;
@@ -293,7 +292,7 @@ internal static class AutoTranslate
                     {
                         var payload = ValidEntries.Contains((group, key))
                             ? new AutoTranslatePayload(group, key).Encode()
-                            : Array.Empty<byte>();
+                            : [];
 
                         var oldBytes = bytes.ToArray();
                         var lengthDiff = payload.Length - (i - start);

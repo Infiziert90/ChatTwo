@@ -2,6 +2,7 @@ using System.Numerics;
 using System.Text;
 using ChatTwo.Code;
 using ChatTwo.GameFunctions.Types;
+using ChatTwo.Resources;
 using ChatTwo.Util;
 using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.Config;
@@ -10,6 +11,7 @@ using Dalamud.Hooking;
 using Dalamud.Memory;
 using Dalamud.Plugin.Services;
 using Dalamud.Utility.Signatures;
+using FFXIVClientStructs.FFXIV.Client.Network;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Client.UI;
@@ -46,10 +48,7 @@ internal sealed unsafe class Chat : IDisposable
     private readonly delegate* unmanaged<RaptureLogModule*, ushort, Utf8String*, Utf8String*, ulong, ushort, byte, int, byte, void> PrintTellNative = null!;
 
     [Signature("E8 ?? ?? ?? ?? 48 8D 4C 24 ?? E8 ?? ?? ?? ?? 48 8D 8C 24 ?? ?? ?? ?? E8 ?? ?? ?? ?? B0 01")]
-    private readonly delegate* unmanaged<nint, ulong, ushort, Utf8String*, Utf8String*, byte, ulong, byte> SendTellNative = null!;
-
-    [Signature("E8 ?? ?? ?? ?? F6 43 0A 40")]
-    private readonly delegate* unmanaged<Framework*, nint> GetNetworkModule = null!;
+    private readonly delegate* unmanaged<NetworkModule*, ulong, ushort, Utf8String*, Utf8String*, byte, ulong, bool> SendTellNative = null!;
 
     // TODO Replace with CS in InfoProxyCrossworldLinkshell
     [Signature("E8 ?? ?? ?? ?? 48 8B C8 E8 ?? ?? ?? ?? 45 8D 46 FB")]
@@ -703,20 +702,37 @@ internal sealed unsafe class Chat : IDisposable
         return new TellHistoryInfo(name, world, contentId);
     }
 
-    internal void SendTell(TellReason reason, ulong contentId, string name, ushort homeWorld, byte[] message)
+    internal void SendTell(TellReason reason, ulong contentId, string name, ushort homeWorld, byte[] message, string rawText)
     {
         var uName = Utf8String.FromString(name);
         var uMessage = Utf8String.FromSequence(message);
 
-        var networkModule = GetNetworkModule(Framework.Instance());
-        var a1 = *(IntPtr*) (networkModule + 8);
+        var encoded = Utf8String.FromUtf8String(PronounModule.Instance()->ProcessString(uMessage, true));
+        var decoded = EncodeMessage(rawText);
+        AutoTranslate.ReplaceWithPayload(ref decoded);
+        using var decodedUtf8String = new Utf8String(decoded);
+
+        var networkModule = Framework.Instance()->GetNetworkModuleProxy()->NetworkModule;
         var logModule = Framework.Instance()->GetUiModule()->GetRaptureLogModule();
 
-        SendTellNative(a1, contentId, homeWorld, uName, uMessage, (byte) reason, homeWorld);
-        PrintTellNative(logModule, 33, uName, uMessage, contentId, homeWorld, 255, 0, 0);
+        var ok = SendTellNative(networkModule, contentId, homeWorld, uName, encoded, (byte) reason, homeWorld);
+        if (ok)
+            PrintTellNative(logModule, 33, uName, &decodedUtf8String, contentId, homeWorld, 255, 0, 0);
+        else
+            Plugin.ChatGui.PrintError(Language.Chat_SendTell_Error);
 
+        encoded->Dtor(true);
         uName->Dtor(true);
         uMessage->Dtor(true);
+    }
+
+    internal byte[] EncodeMessage(string str) {
+        using var input = new Utf8String(str);
+        using var ouput = new Utf8String();
+
+        input.Copy(PronounModule.Instance()->ProcessString(&input, true));
+        ouput.Copy(PronounModule.Instance()->ProcessString(&input, false));
+        return ouput.AsSpan().ToArray();
     }
 
     internal bool IsCharValid(char c)

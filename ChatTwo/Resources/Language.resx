@@ -1198,4 +1198,7 @@
     <data name="DbViewer_DatePicker_FromTo" xml:space="preserve">
         <value>FromTo:</value>
     </data>
+    <data name="Chat_SendTell_Error" xml:space="preserve">
+        <value>An error occured while sending this tell message</value>
+    </data>
 </root>

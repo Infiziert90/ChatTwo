@@ -301,7 +301,7 @@ internal static class ImGuiUtil
     public static void DrawArrows(ref int selected, int min, int max, float spacing, int id = 0)
     {
         // Prevents changing values from triggering EndDisable
-        var isMin = selected == 1;
+        var isMin = selected == min;
         var isMax = selected == max;
 
         ImGui.SameLine(0, spacing);
