@@ -164,7 +164,7 @@ internal partial class Message
             // Use as is if it's not a text chunk, it already has a payload, or is auto translate
             if (chunk is not TextChunk text || chunk.Link != null || nextIsAutoTranslate)
             {
-                nextIsAutoTranslate = ((IconChunk)chunk).Icon == BitmapFontIcon.AutoTranslateBegin;
+                nextIsAutoTranslate = chunk is IconChunk { Icon: BitmapFontIcon.AutoTranslateBegin };
 
                 // No need to call AddChunkWithMessage here since the chunk
                 // already has the Message field set.
