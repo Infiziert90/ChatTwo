@@ -268,7 +268,7 @@ internal static class AutoTranslate
     }
 
     [DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
-    private static extern int memcmp(byte[] b1, byte[] b2, UIntPtr count);
+    private static extern int memcmp(byte[] b1, byte[] b2, nuint count);
 
     internal static void ReplaceWithPayload(ref byte[] bytes)
     {
@@ -312,7 +312,7 @@ internal static class AutoTranslate
                 }
             }
 
-            if (i + search.Length < bytes.Length && memcmp(bytes[i..], search, (UIntPtr) search.Length) == 0)
+            if (i + search.Length < bytes.Length && memcmp(bytes[i..], search, (nuint) search.Length) == 0)
                 start = i;
         }
     }

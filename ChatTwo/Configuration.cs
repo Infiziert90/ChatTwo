@@ -506,7 +506,7 @@ internal static class ExtraGlyphRangesExt
         _ => throw new ArgumentOutOfRangeException(nameof(ranges), ranges, null),
     };
 
-    internal static IntPtr Range(this ExtraGlyphRanges ranges) => ranges switch
+    internal static nint Range(this ExtraGlyphRanges ranges) => ranges switch
     {
         ExtraGlyphRanges.ChineseFull => ImGui.GetIO().Fonts.GetGlyphRangesChineseFull(),
         ExtraGlyphRanges.ChineseSimplifiedCommon => ImGui.GetIO().Fonts.GetGlyphRangesChineseSimplifiedCommon(),

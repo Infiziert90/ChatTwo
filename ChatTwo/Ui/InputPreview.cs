@@ -177,13 +177,8 @@ public partial class InputPreview : Window
                 return;
 
             NextChunkIsAutoTranslate = true;
-
-            // TODO: Remove after Key and Group in AutoTranslatePayload became public
-            // Skipping: StartByte, PayloadType, PayloadLength
-            using var reader = new BinaryReader(new MemoryStream(chunk.Link!.Encode().Skip(3).ToArray()));
-            var group = (uint) reader.ReadByte();
-            var key = PayloadExt.GetInteger(reader);
-            CursorPosition += $"<at:{group},{key}>".Length;
+            var payload = (AutoTranslatePayload) chunk.Link!;
+            CursorPosition += $"<at:{payload.Group},{payload.Key}>".Length;
 
             return;
         }

@@ -12,7 +12,7 @@ internal static class StringUtil {
     }
 
     // Taken from https://stackoverflow.com/a/4975942
-    internal static String BytesToString(long byteCount) {
+    internal static string BytesToString(long byteCount) {
         string[] suf = ["B", "KB", "MB", "GB", "TB", "PB", "EB"]; // Longs run out around EB
         if (byteCount == 0)
             return "0" + suf[0];

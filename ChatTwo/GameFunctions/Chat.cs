@@ -38,7 +38,7 @@ internal sealed unsafe class Chat : IDisposable
     private readonly delegate* unmanaged<RaptureShellModule*, Utf8String*, Utf8String*, ushort, ulong, ushort, byte, bool> SetChannelTargetTell = null!;
 
     [Signature("E8 ?? ?? ?? ?? 48 8D 4D A0 8B F8")]
-    private readonly delegate* unmanaged<nint, Utf8String*, IntPtr, uint> GetKeybindNative = null!;
+    private readonly delegate* unmanaged<nint, Utf8String*, nint, uint> GetKeybindNative = null!;
 
     // TODO Replace with CS in AcquaintanceModule
     [Signature("44 8B 89 ?? ?? ?? ?? 4C 8B C1 45 85 C9")]
@@ -182,7 +182,7 @@ internal sealed unsafe class Chat : IDisposable
     internal string? GetLinkshellName(uint idx)
     {
         var infoProxy = Plugin.Functions.GetInfoProxyByIndex(InfoProxyId.LinkShell);
-        if (infoProxy == IntPtr.Zero)
+        if (infoProxy == nint.Zero)
             return null;
 
         var lsInfo = GetLinkshellInfo(infoProxy, idx);
@@ -190,13 +190,13 @@ internal sealed unsafe class Chat : IDisposable
             return null;
 
         var utf = GetLinkshellNameNative(infoProxy, *lsInfo);
-        return utf == null ? null : MemoryHelper.ReadStringNullTerminated((IntPtr) utf);
+        return utf == null ? null : MemoryHelper.ReadStringNullTerminated((nint) utf);
     }
 
     internal string? GetCrossLinkshellName(uint idx)
     {
         var infoProxy = Plugin.Functions.GetInfoProxyByIndex(InfoProxyId.CrossWorldLinkShell);
-        if (infoProxy == IntPtr.Zero)
+        if (infoProxy == nint.Zero)
             return null;
 
         var utf = GetCrossLinkshellNameNative(infoProxy, idx);
@@ -208,7 +208,7 @@ internal sealed unsafe class Chat : IDisposable
         if (mode == RotateMode.None && LinkshellCycleOffset != null)
         {
             // for the branch at 6.08: 5E1680
-            var uiModule = (IntPtr) Framework.Instance()->GetUiModule();
+            var uiModule = (nint) Framework.Instance()->GetUiModule();
             *(int*) (uiModule + LinkshellCycleOffset.Value) = -1;
         }
 
@@ -428,10 +428,10 @@ internal sealed unsafe class Chat : IDisposable
         if (agent == null)
             return;
 
-        ChangeChannelNameDetour((IntPtr) agent);
+        ChangeChannelNameDetour((nint) agent);
     }
 
-    private byte ChatLogRefreshDetour(IntPtr log, ushort eventId, AtkValue* value)
+    private byte ChatLogRefreshDetour(nint log, ushort eventId, AtkValue* value)
     {
         if (Plugin is { ChatLogWindow.CurrentTab.InputDisabled: true })
             return ChatLogRefreshHook!.Original(log, eventId, value);
@@ -472,7 +472,7 @@ internal sealed unsafe class Chat : IDisposable
         var str = value + 2;
         if (str != null && ((int) str->Type & 0xF) == (int) ValueType.String && str->String != null)
         {
-            var add = MemoryHelper.ReadStringNullTerminated((IntPtr) str->String);
+            var add = MemoryHelper.ReadStringNullTerminated((nint) str->String);
             if (add.Length > 0)
                 addIfNotPresent = add;
         }
@@ -490,7 +490,7 @@ internal sealed unsafe class Chat : IDisposable
         return 1;
     }
 
-    private IntPtr ChangeChannelNameDetour(IntPtr agent)
+    private nint ChangeChannelNameDetour(nint agent)
     {
         // Last ShB patch
         // +0x40  = chat channel (byte or uint?)
@@ -499,13 +499,13 @@ internal sealed unsafe class Chat : IDisposable
         // +0xDA  = player name string for tells
         // +0x120 = player world id for tells
         var ret = ChangeChannelNameHook!.Original(agent);
-        if (agent == IntPtr.Zero)
+        if (agent == nint.Zero)
             return ret;
 
         // E8 ?? ?? ?? ?? 8D 48 F7
         // RaptureShellModule + 0xFD0
-        var shellModule = (IntPtr) Framework.Instance()->GetUiModule()->GetRaptureShellModule();
-        if (shellModule == IntPtr.Zero)
+        var shellModule = (nint) Framework.Instance()->GetUiModule()->GetRaptureShellModule();
+        if (shellModule == nint.Zero)
             return ret;
 
         var channel = (uint) InputChannel.Say;
@@ -521,7 +521,7 @@ internal sealed unsafe class Chat : IDisposable
         if (namePtrPtr != null)
         {
             var namePtr = *namePtrPtr;
-            name = MemoryHelper.ReadSeStringNullTerminated((IntPtr) namePtr);
+            name = MemoryHelper.ReadSeStringNullTerminated((nint) namePtr);
             if (name.Payloads.Count == 0)
                 name = null;
         }
@@ -552,7 +552,7 @@ internal sealed unsafe class Chat : IDisposable
         if (ReplyChannelOffset == null)
             goto Original;
 
-        var replyMode = *(int*) ((IntPtr) agent + ReplyChannelOffset.Value);
+        var replyMode = *(int*) ((nint) agent + ReplyChannelOffset.Value);
         if (replyMode == -2)
             goto Original;
 
@@ -562,7 +562,7 @@ internal sealed unsafe class Chat : IDisposable
         ReplyInSelectedChatModeHook!.Original(agent);
     }
 
-    private byte SetChatLogTellTargetDetour(IntPtr a1, Utf8String* name, Utf8String* a3, ushort world, ulong contentId, ushort reason, byte a7)
+    private byte SetChatLogTellTargetDetour(nint a1, Utf8String* name, Utf8String* a3, ushort world, ulong contentId, ushort reason, byte a7)
     {
         if (name != null)
         {
@@ -655,8 +655,8 @@ internal sealed unsafe class Chat : IDisposable
 
     private Keybind? GetKeybind(string id)
     {
-        var agent = (IntPtr) Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.Configkey);
-        if (agent == IntPtr.Zero)
+        var agent = (nint) Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.Configkey);
+        if (agent == nint.Zero)
             return null;
 
         var a1 = *(void**) (agent + 0x78);
@@ -665,7 +665,7 @@ internal sealed unsafe class Chat : IDisposable
 
         var outData = stackalloc byte[32];
         var idString = Utf8String.FromString(id);
-        GetKeybindNative((IntPtr) a1, idString, (IntPtr) outData);
+        GetKeybindNative((nint) a1, idString, (nint) outData);
         idString->Dtor(true);
 
         var key1 = (VirtualKey) outData[0];
@@ -692,10 +692,10 @@ internal sealed unsafe class Chat : IDisposable
             return null;
 
         var ptr = GetTellHistory(acquaintanceModule, index);
-        if (ptr == IntPtr.Zero)
+        if (ptr == nint.Zero)
             return null;
 
-        var name = MemoryHelper.ReadStringNullTerminated(*(IntPtr*) ptr);
+        var name = MemoryHelper.ReadStringNullTerminated(*(nint*) ptr);
         var world = *(ushort*) (ptr + 0xD0);
         var contentId = *(ulong*) (ptr + 0xD8);
 

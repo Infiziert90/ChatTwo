@@ -50,7 +50,7 @@ public class FontManager
 
     private unsafe void SetUpRanges()
     {
-        ushort[] BuildRange(IReadOnlyList<ushort>? chars, params IntPtr[] ranges)
+        ushort[] BuildRange(IReadOnlyList<ushort>? chars, params nint[] ranges)
         {
             var builder = new ImFontGlyphRangesBuilderPtr(ImGuiNative.ImFontGlyphRangesBuilder_ImFontGlyphRangesBuilder());
             // text
@@ -85,7 +85,7 @@ public class FontManager
             return builder.BuildRangesToArray();
         }
 
-        var ranges = new List<IntPtr> { ImGui.GetIO().Fonts.GetGlyphRangesDefault() };
+        var ranges = new List<nint> { ImGui.GetIO().Fonts.GetGlyphRangesDefault() };
         foreach (var extraRange in Enum.GetValues<ExtraGlyphRanges>())
             if (Plugin.Config.ExtraGlyphRanges.HasFlag(extraRange))
                 ranges.Add(extraRange.Range());

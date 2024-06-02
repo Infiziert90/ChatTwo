@@ -157,12 +157,15 @@ internal partial class Message
             newChunks.Add(chunk);
         }
 
+        var nextIsAutoTranslate = false;
         var checkForEmotes = (Code.IsPlayerMessage() || extraChatChannel != Guid.Empty) && Plugin.Config.ShowEmotes;
         foreach (var chunk in oldChunks)
         {
-            // Use as is if it's not a text chunk, or it already has a payload.
-            if (chunk is not TextChunk text || chunk.Link != null)
+            // Use as is if it's not a text chunk, it already has a payload, or is auto translate
+            if (chunk is not TextChunk text || chunk.Link != null || nextIsAutoTranslate)
             {
+                nextIsAutoTranslate = ((IconChunk)chunk).Icon == BitmapFontIcon.AutoTranslateBegin;
+
                 // No need to call AddChunkWithMessage here since the chunk
                 // already has the Message field set.
                 newChunks.Add(chunk);

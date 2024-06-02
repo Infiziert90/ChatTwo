@@ -1483,7 +1483,7 @@ public sealed class ChatLogWindow : Window
         }
 
         Plugin.CommandHelpWindow.IsOpen = false;
-        var text = MemoryHelper.ReadString((IntPtr) data->Buf, data->BufTextLen);
+        var text = MemoryHelper.ReadString((nint) data->Buf, data->BufTextLen);
         if (text.StartsWith('/'))
         {
             var command = text.Split(' ')[0];
