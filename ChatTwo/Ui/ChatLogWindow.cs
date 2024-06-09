@@ -191,12 +191,12 @@ public sealed class ChatLogWindow : Window
 
             if (info.Channel is InputChannel.Linkshell1 && info.Rotate != RotateMode.None)
             {
-                var idx = Plugin.Functions.Chat.RotateLinkshellHistory(mode);
+                var idx = GameFunctions.Chat.RotateLinkshellHistory(mode);
                 TempChannel = info.Channel.Value + (uint) idx;
             }
             else if (info.Channel is InputChannel.CrossLinkshell1 && info.Rotate != RotateMode.None)
             {
-                var idx = Plugin.Functions.Chat.RotateCrossLinkshellHistory(mode);
+                var idx = GameFunctions.Chat.RotateCrossLinkshellHistory(mode);
                 TempChannel = info.Channel.Value + (uint) idx;
             }
         }
@@ -665,7 +665,7 @@ public sealed class ChatLogWindow : Window
         var afterIcon = ImGui.GetCursorPos();
 
         var buttonWidth = afterIcon.X - beforeIcon.X;
-        var showNovice = Plugin.Config.ShowNoviceNetwork && Plugin.Functions.IsMentor();
+        var showNovice = Plugin.Config.ShowNoviceNetwork && GameFunctions.GameFunctions.IsMentor();
         var inputWidth = ImGui.GetContentRegionAvail().X - buttonWidth * (showNovice ? 2 : 1);
 
         var inputType = TempChannel?.ToChatType() ?? activeTab?.Channel?.ToChatType() ?? Plugin.Functions.Chat.Channel.Channel.ToChatType();
@@ -788,7 +788,7 @@ public sealed class ChatLogWindow : Window
         ImGui.SameLine();
 
         if (ImGuiUtil.IconButton(FontAwesomeIcon.Leaf))
-            Plugin.Functions.ClickNoviceNetworkButton();
+            GameFunctions.GameFunctions.ClickNoviceNetworkButton();
     }
 
     internal void SetChannel(InputChannel? channel)
@@ -814,7 +814,7 @@ public sealed class ChatLogWindow : Window
             return;
         }
 
-        Plugin.Functions.Chat.SetChannel(channel.Value);
+        GameFunctions.Chat.SetChannel(channel.Value);
     }
 
     private void SendChatBox(Tab? activeTab)

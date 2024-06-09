@@ -8,7 +8,6 @@ using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Hooking;
 using Dalamud.Interface.Internal.Notifications;
 using Dalamud.Plugin.Services;
-using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using Lumina.Excel.GeneratedSheets;
 
@@ -36,11 +35,9 @@ internal class MessageManager : IAsyncDisposable
     private readonly Thread PendingMessageThread;
     private readonly CancellationTokenSource PendingThreadCancellationToken = new();
 
-    // TODO: replace with CS version
-    private unsafe delegate void ContentIdResolverDelegate(RaptureLogModule* agent, ulong contentId, int messageIndex, ushort worldId, ushort chatType);
-
-    [Signature("4C 8B D1 48 8B 89 ?? ?? ?? ?? 48 85 C9", DetourName = nameof(ContentIdResolver))]
+    // TODO Replace with delegate in API X
     private Hook<ContentIdResolverDelegate>? ContentIdResolverHook { get; init; }
+    private unsafe delegate void ContentIdResolverDelegate(RaptureLogModule* agent, ulong contentId, int messageIndex, ushort worldId, ushort chatType);
 
     internal ulong CurrentContentId
     {
@@ -51,17 +48,18 @@ internal class MessageManager : IAsyncDisposable
         }
     }
 
-    internal MessageManager(Plugin plugin)
+    internal unsafe MessageManager(Plugin plugin)
     {
         Plugin = plugin;
-        Plugin.GameInteropProvider.InitializeFromAttributes(this);
 
         Store = new MessageStore(DatabasePath());
 
         PendingMessageThread = new Thread(() => ProcessPendingMessages(PendingThreadCancellationToken.Token));
         PendingMessageThread.Start();
 
-        ContentIdResolverHook?.Enable();
+        ContentIdResolverHook = Plugin.GameInteropProvider.HookFromAddress<ContentIdResolverDelegate>(RaptureLogModule.Addresses.AddMsgSourceEntry.Value, ContentIdResolver);
+        ContentIdResolverHook.Enable();
+
         Plugin.ChatGui.ChatMessageUnhandled += ChatMessage;
         Plugin.Framework.Update += OnFrameworkUpdate;
         Plugin.ClientState.Logout += Logout;

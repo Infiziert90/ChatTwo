@@ -388,13 +388,13 @@ public sealed class PayloadHandler {
                 if (pf.LinkType == DalamudPartyFinderPayload.PartyFinderLinkType.PartyFinderNotification)
                     GameFunctions.GameFunctions.OpenPartyFinder();
                 else
-                    LogWindow.Plugin.Functions.OpenPartyFinder(pf.ListingId);
+                    GameFunctions.GameFunctions.OpenPartyFinder(pf.ListingId);
                 break;
             case ChatTwoPartyFinderPayload pf:
-                LogWindow.Plugin.Functions.OpenPartyFinder(pf.Id);
+                GameFunctions.GameFunctions.OpenPartyFinder(pf.Id);
                 break;
             case AchievementPayload achievement:
-                LogWindow.Plugin.Functions.OpenAchievement(achievement.Id);
+                GameFunctions.GameFunctions.OpenAchievement(achievement.Id);
                 break;
             case RawPayload raw:
                 if (Equals(raw, ChunkUtil.PeriodicRecruitmentLink))
@@ -473,21 +473,21 @@ public sealed class PayloadHandler {
         if (item.EquipSlotCategory.Row != 0)
         {
             if (ImGui.Selectable(Language.Context_TryOn))
-                LogWindow.Plugin.Functions.Context.TryOn(realItemId, 0);
+                GameFunctions.Context.TryOn(realItemId, 0);
 
             if (ImGui.Selectable(Language.Context_ItemComparison))
-                LogWindow.Plugin.Functions.Context.OpenItemComparison(realItemId);
+                GameFunctions.Context.OpenItemComparison(realItemId);
         }
 
         if (item.ItemSearchCategory.Value?.Category == 3)
             if (ImGui.Selectable(Language.Context_SearchRecipes))
-                LogWindow.Plugin.Functions.Context.SearchForRecipesUsingItem(payload.ItemId);
+                GameFunctions.Context.SearchForRecipesUsingItem(payload.ItemId);
 
         if (ImGui.Selectable(Language.Context_SearchForItem))
-            LogWindow.Plugin.Functions.Context.SearchForItem(realItemId);
+            GameFunctions.Context.SearchForItem(realItemId);
 
         if (ImGui.Selectable(Language.Context_Link))
-            LogWindow.Plugin.Functions.Context.LinkItem(realItemId);
+            GameFunctions.Context.LinkItem(realItemId);
 
         if (ImGui.Selectable(Language.Context_CopyItemName))
             ImGui.SetClipboardText(name.TextValue);
@@ -511,7 +511,7 @@ public sealed class PayloadHandler {
 
         var realItemId = payload.RawItemId;
         if (ImGui.Selectable(Language.Context_Link))
-            LogWindow.Plugin.Functions.Context.LinkItem(realItemId);
+            GameFunctions.Context.LinkItem(realItemId);
 
         if (ImGui.Selectable(Language.Context_CopyItemName))
             ImGui.SetClipboardText(name.TextValue);
@@ -555,7 +555,7 @@ public sealed class PayloadHandler {
             }
             else if (validContentId)
             {
-                LogWindow.Plugin.Functions.Chat.SetEurekaTellChannel(player.PlayerName, world.Name.ToString(), (ushort) world.RowId, chunk.Message!.ContentId, 0, 0);
+                LogWindow.Plugin.Functions.Chat.SetEurekaTellChannel(player.PlayerName, world.Name.ToString(), (ushort) world.RowId, chunk.Message!.ContentId, 0, false);
             }
 
             LogWindow.Activate = true;
@@ -568,7 +568,7 @@ public sealed class PayloadHandler {
             var isLeader = party.Length == 0 || Plugin.ClientState.LocalContentId == leader;
             var member = party.FirstOrDefault(member => member.Name.TextValue == player.PlayerName && member.World.Id == world.RowId);
             var isInParty = member != default;
-            var inInstance = LogWindow.Plugin.Functions.IsInInstance();
+            var inInstance = GameFunctions.GameFunctions.IsInInstance();
             var inPartyInstance = TerritorySheet.GetRow(Plugin.ClientState.TerritoryType)?.TerritoryIntendedUse is (41 or 47 or 48 or 52 or 53);
             if (isLeader)
             {
@@ -577,15 +577,15 @@ public sealed class PayloadHandler {
                     if (inInstance && inPartyInstance)
                     {
                         if (validContentId && ImGui.Selectable(Language.Context_InviteToParty))
-                            LogWindow.Plugin.Functions.Party.InviteInInstance(chunk.Message!.ContentId);
+                            GameFunctions.Party.InviteInInstance(chunk.Message!.ContentId);
                     }
                     else if (!inInstance && ImGui.BeginMenu(Language.Context_InviteToParty))
                     {
                         if (ImGui.Selectable(Language.Context_InviteToParty_SameWorld))
-                            LogWindow.Plugin.Functions.Party.InviteSameWorld(player.PlayerName, (ushort) world.RowId, chunk.Message?.ContentId ?? 0);
+                            GameFunctions.Party.InviteSameWorld(player.PlayerName, (ushort) world.RowId, chunk.Message?.ContentId ?? 0);
 
                         if (validContentId && ImGui.Selectable(Language.Context_InviteToParty_DifferentWorld))
-                            LogWindow.Plugin.Functions.Party.InviteOtherWorld(chunk.Message!.ContentId);
+                            GameFunctions.Party.InviteOtherWorld(chunk.Message!.ContentId);
 
                         ImGui.EndMenu();
                     }
@@ -594,10 +594,10 @@ public sealed class PayloadHandler {
                 if (isInParty && member != null && (!inInstance || (inInstance && inPartyInstance)))
                 {
                     if (ImGui.Selectable(Language.Context_Promote))
-                        LogWindow.Plugin.Functions.Party.Promote(player.PlayerName, (ulong) member.ContentId);
+                        GameFunctions.Party.Promote(player.PlayerName, (ulong) member.ContentId);
 
                     if (ImGui.Selectable(Language.Context_KickFromParty))
-                        LogWindow.Plugin.Functions.Party.Kick(player.PlayerName, (ulong) member.ContentId);
+                        GameFunctions.Party.Kick(player.PlayerName, (ulong) member.ContentId);
                 }
             }
 
@@ -608,8 +608,8 @@ public sealed class PayloadHandler {
             if (ImGui.Selectable(Language.Context_AddToBlacklist))
                 LogWindow.Plugin.Functions.AddToBlacklist(player.PlayerName, (ushort) world.RowId);
 
-            if (LogWindow.Plugin.Functions.IsMentor() && ImGui.Selectable(Language.Context_InviteToNoviceNetwork))
-                LogWindow.Plugin.Functions.Context.InviteToNoviceNetwork(player.PlayerName, (ushort) world.RowId);
+            if (GameFunctions.GameFunctions.IsMentor() && ImGui.Selectable(Language.Context_InviteToNoviceNetwork))
+                GameFunctions.Context.InviteToNoviceNetwork(player.PlayerName, (ushort) world.RowId);
         }
 
         var inputChannel = chunk.Message?.Code.Type.ToInputChannel();
@@ -623,7 +623,7 @@ public sealed class PayloadHandler {
             Plugin.TargetManager.Target = obj;
 
         if (validContentId && ImGui.Selectable(Language.Context_AdventurerPlate))
-            if (!LogWindow.Plugin.Functions.TryOpenAdventurerPlate(chunk.Message!.ContentId))
+            if (!GameFunctions.GameFunctions.TryOpenAdventurerPlate(chunk.Message!.ContentId))
                 WrapperUtil.AddNotification(Language.Context_AdventurerPlateError, NotificationType.Warning);
 
         // View Party Finder 0x2E

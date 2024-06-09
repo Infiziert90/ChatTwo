@@ -28,21 +28,8 @@ namespace ChatTwo.GameFunctions;
 internal sealed unsafe class Chat : IDisposable
 {
     // Functions
-
-    // TODO Replace with CS in RaptureShellModule
-    [Signature("E8 ?? ?? ?? ?? 0F B7 44 37 ??", Fallibility = Fallibility.Fallible)]
-    private readonly delegate* unmanaged<RaptureShellModule*, int, uint, Utf8String*, byte, void> ChangeChatChannel = null!;
-
-    // TODO Replace with CS in RaptureShellModule
-    [Signature("48 89 5C 24 ?? 55 56 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 48 8B 02", Fallibility = Fallibility.Fallible)]
-    private readonly delegate* unmanaged<RaptureShellModule*, Utf8String*, Utf8String*, ushort, ulong, ushort, byte, bool> SetChannelTargetTell = null!;
-
     [Signature("E8 ?? ?? ?? ?? 48 8D 4D A0 8B F8")]
     private readonly delegate* unmanaged<nint, Utf8String*, nint, uint> GetKeybindNative = null!;
-
-    // TODO Replace with CS in AcquaintanceModule
-    [Signature("44 8B 89 ?? ?? ?? ?? 4C 8B C1 45 85 C9")]
-    private readonly delegate* unmanaged<void*, int, nint> GetTellHistory = null!;
 
     [Signature("E8 ?? ?? ?? ?? 48 8D 4D 50 E8 ?? ?? ?? ?? 48 8B 17")]
     private readonly delegate* unmanaged<RaptureLogModule*, ushort, Utf8String*, Utf8String*, ulong, ushort, byte, int, byte, void> PrintTellNative = null!;
@@ -50,80 +37,27 @@ internal sealed unsafe class Chat : IDisposable
     [Signature("E8 ?? ?? ?? ?? 48 8D 4C 24 ?? E8 ?? ?? ?? ?? 48 8D 8C 24 ?? ?? ?? ?? E8 ?? ?? ?? ?? B0 01")]
     private readonly delegate* unmanaged<NetworkModule*, ulong, ushort, Utf8String*, Utf8String*, byte, ulong, bool> SendTellNative = null!;
 
-    // TODO Replace with CS in InfoProxyCrossworldLinkshell
-    [Signature("E8 ?? ?? ?? ?? 48 8B C8 E8 ?? ?? ?? ?? 45 8D 46 FB")]
-    private readonly delegate* unmanaged<nint, uint, Utf8String*> GetCrossLinkshellNameNative = null!;
-
-    // TODO Replace with CS in InfoProxyLinkshell
-    [Signature("3B 51 10 73 0F 8B C2 48 83 C0 0B")]
-    private readonly delegate* unmanaged<nint, uint, ulong*> GetLinkshellInfo = null!;
-
-    // TODO Replace with CS in InfoProxyLinkshell
-    [Signature("E8 ?? ?? ?? ?? 4C 8B C8 44 8D 47 01")]
-    private readonly delegate* unmanaged<nint, ulong, byte*> GetLinkshellNameNative = null!;
-
-    // TODO Replace with CS virtual function
-    [Signature("40 56 41 54 41 55 41 57 48 83 EC 28 48 8B 01", Fallibility = Fallibility.Fallible)]
-    private readonly delegate* unmanaged<UIModule*, int, ulong> RotateLinkshellHistoryNative;
-
-    // TODO Replace with CS virtual function
-    [Signature("48 89 5C 24 ?? 48 89 6C 24 ?? 48 89 74 24 ?? 57 41 56 41 57 48 83 EC 20 48 8B 01 44 8B F2", Fallibility = Fallibility.Fallible)]
-    private readonly delegate* unmanaged<UIModule*, int, ulong> RotateCrossLinkshellHistoryNative;
-
-    // TODO Replace with CS version on Utf8String
+    // TODO Replace with CS version after https://github.com/aers/FFXIVClientStructs/pull/911
     [Signature("E8 ?? ?? ?? ?? EB 0A 48 8D 4C 24 ?? E8 ?? ?? ?? ?? 48 8D 8D")]
     private readonly delegate* unmanaged<Utf8String*, int, nint, void> SanitiseString = null!;
-
-    // Hooks
-
-    private delegate byte ChatLogRefreshDelegate(nint log, ushort eventId, AtkValue* value);
-
-    private delegate nint ChangeChannelNameDelegate(nint agent);
-
-    private delegate void ReplyInSelectedChatModeDelegate(AgentInterface* agent);
-
-    private delegate byte SetChatLogTellTarget(nint a1, Utf8String* name, Utf8String* a3, ushort world, ulong contentId, ushort a6, byte a7);
-
-    private delegate void EurekaContextMenuTellDelegate(RaptureShellModule* param1, Utf8String* playerName, Utf8String* worldName, ushort world, ulong contentId, ushort param6);
-
 
     // Client::UI::AddonChatLog.OnRefresh
     [Signature("40 53 56 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 8B F0 8B FA", DetourName = nameof(ChatLogRefreshDetour))]
     private Hook<ChatLogRefreshDelegate>? ChatLogRefreshHook { get; init; }
+    private delegate byte ChatLogRefreshDelegate(nint log, ushort eventId, AtkValue* value);
 
-    // TODO Replace with CS version
-    [Signature("E8 ?? ?? ?? ?? BA ?? ?? ?? ?? 48 8D 4D B0 48 8B F8 E8 ?? ?? ?? ?? 41 8B D6", DetourName = nameof(ChangeChannelNameDetour))]
+    // TODO Replace all with delegate hooks in API X
     private Hook<ChangeChannelNameDelegate>? ChangeChannelNameHook { get; init; }
+    private delegate nint ChangeChannelNameDelegate(nint agent);
 
-    // TODO Replace with CS version
-    [Signature("48 89 5C 24 ?? 57 48 83 EC 30 8B B9 ?? ?? ?? ?? 48 8B D9 83 FF FE", DetourName = nameof(ReplyInSelectedChatModeDetour))]
     private Hook<ReplyInSelectedChatModeDelegate>? ReplyInSelectedChatModeHook { get; init; }
+    private delegate void ReplyInSelectedChatModeDelegate(AgentInterface* agent);
 
-    // TODO Replace with CS version
-    [Signature("E8 ?? ?? ?? ?? 4C 8B 7C 24 ?? EB 34", DetourName = nameof(SetChatLogTellTargetDetour))]
     private Hook<SetChatLogTellTarget>? SetChatLogTellTargetHook { get; init; }
+    private delegate byte SetChatLogTellTarget(nint a1, Utf8String* name, Utf8String* a3, ushort world, ulong contentId, ushort a6, byte a7);
 
-    // TODO Replace with CS version
-    [Signature("E8 ?? ?? ?? ?? EB 8A 48 8B 1D", DetourName = nameof(EurekaContextMenuTell))]
     private Hook<EurekaContextMenuTellDelegate>? EurekaContextMenuTellHook { get; init; }
-
-    // Offsets
-
-    #pragma warning disable 0649
-
-    // TODO: Replace with CS version under AgentChatLog
-    [Signature("8B B9 ?? ?? ?? ?? 48 8B D9 83 FF FE 0F 84", Offset = 2)]
-    private readonly int? ReplyChannelOffset;
-
-    // TODO: Replace with CS version under RaptureShellModule
-    [Signature("89 83 ?? ?? ?? ?? 48 8B 01 83 FE 13 7C 05 41 8B D4 EB 03 83 CA FF FF 90", Offset = 2)]
-    private readonly int? ShellChannelOffset;
-
-    // TODO: Replace with CS version under UiModule
-    [Signature("4C 8D B6 ?? ?? ?? ?? 41 8B 1E 45 85 E4 74 7A 33 FF 8B EF 66 0F 1F 44 00", Offset = 3)]
-    private readonly int? LinkshellCycleOffset;
-
-    #pragma warning restore 0649
+    private delegate void EurekaContextMenuTellDelegate(RaptureShellModule* param1, Utf8String* playerName, Utf8String* worldName, ushort world, ulong contentId, ushort param6);
 
     // Pointers
 
@@ -132,11 +66,11 @@ internal sealed unsafe class Chat : IDisposable
 
     // Events
 
+    internal event ChatActivatedEventDelegate? Activated;
     internal delegate void ChatActivatedEventDelegate(ChatActivatedArgs args);
 
-    internal event ChatActivatedEventDelegate? Activated;
-
     private Plugin Plugin { get; }
+
     /// <summary>
     /// Holds the current game channel details.
     /// `TellPlayerName` and `TellWorldId` are only set when the channel is `InputChannel.Tell`.
@@ -155,10 +89,18 @@ internal sealed unsafe class Chat : IDisposable
         Plugin.GameInteropProvider.InitializeFromAttributes(this);
 
         ChatLogRefreshHook?.Enable();
-        ChangeChannelNameHook?.Enable();
-        ReplyInSelectedChatModeHook?.Enable();
-        SetChatLogTellTargetHook?.Enable();
-        EurekaContextMenuTellHook?.Enable();
+
+        ChangeChannelNameHook = Plugin.GameInteropProvider.HookFromAddress<ChangeChannelNameDelegate>(AgentChatLog.Addresses.ChangeChannelName.Value, ChangeChannelNameDetour);
+        ChangeChannelNameHook.Enable();
+
+        ReplyInSelectedChatModeHook = Plugin.GameInteropProvider.HookFromAddress<ReplyInSelectedChatModeDelegate>(RaptureShellModule.Addresses.ReplyInSelectedChatMode.Value, ReplyInSelectedChatModeDetour);
+        ReplyInSelectedChatModeHook.Enable();
+
+        SetChatLogTellTargetHook = Plugin.GameInteropProvider.HookFromAddress<SetChatLogTellTarget>(RaptureShellModule.Addresses.SetContextTellTarget.Value, SetChatLogTellTargetDetour);
+        SetChatLogTellTargetHook.Enable();
+
+        EurekaContextMenuTellHook = Plugin.GameInteropProvider.HookFromAddress<EurekaContextMenuTellDelegate>(RaptureShellModule.Addresses.SetContextTellTargetInForay.Value, EurekaContextMenuTell);
+        EurekaContextMenuTellHook.Enable();
 
         Plugin.Framework.Update += InterceptKeybinds;
         Plugin.ClientState.Login += Login;
@@ -181,48 +123,35 @@ internal sealed unsafe class Chat : IDisposable
 
     internal string? GetLinkshellName(uint idx)
     {
-        var infoProxy = Plugin.Functions.GetInfoProxyByIndex(InfoProxyId.LinkShell);
-        if (infoProxy == nint.Zero)
-            return null;
-
-        var lsInfo = GetLinkshellInfo(infoProxy, idx);
+        var instance = InfoProxyLinkShell.Instance();
+        var lsInfo = instance->GetLinkshellInfo(idx);
         if (lsInfo == null)
             return null;
 
-        var utf = GetLinkshellNameNative(infoProxy, *lsInfo);
+        var utf = instance->GetLinkshellName(lsInfo);
         return utf == null ? null : MemoryHelper.ReadStringNullTerminated((nint) utf);
     }
 
     internal string? GetCrossLinkshellName(uint idx)
     {
-        var infoProxy = Plugin.Functions.GetInfoProxyByIndex(InfoProxyId.CrossWorldLinkShell);
-        if (infoProxy == nint.Zero)
-            return null;
-
-        var utf = GetCrossLinkshellNameNative(infoProxy, idx);
+        var utf = InfoProxyCrossWorldLinkShell.Instance()->GetCrossworldLinkshellName(idx);
         return utf == null ? null : utf->ToString();
     }
 
-    internal ulong RotateLinkshellHistory(RotateMode mode)
+    internal static int RotateLinkshellHistory(RotateMode mode)
     {
-        if (mode == RotateMode.None && LinkshellCycleOffset != null)
-        {
-            // for the branch at 6.08: 5E1680
-            var uiModule = (nint) Framework.Instance()->GetUiModule();
-            *(int*) (uiModule + LinkshellCycleOffset.Value) = -1;
-        }
+        var uiModule = UIModule.Instance();
+        if (mode == RotateMode.None)
+            uiModule->LinkshellCycle = -1;
 
-        return RotateLinkshellHistoryInternal(RotateLinkshellHistoryNative, mode);
+        return RotateLinkshellHistoryInternal(uiModule->RotateLinkshellHistory, mode);
     }
 
-    internal ulong RotateCrossLinkshellHistory(RotateMode mode) => RotateLinkshellHistoryInternal(RotateCrossLinkshellHistoryNative, mode);
+    internal static int RotateCrossLinkshellHistory(RotateMode mode) =>
+        RotateLinkshellHistoryInternal(UIModule.Instance()->RotateCrossLinkshellHistory, mode);
 
-    private static ulong RotateLinkshellHistoryInternal(delegate* unmanaged<UIModule*, int, ulong> func, RotateMode mode)
+    private static int RotateLinkshellHistoryInternal(Func<int, int> func, RotateMode mode)
     {
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-        if (func == null)
-            return 0;
-
         var idx = mode switch
         {
             RotateMode.Forward => 1,
@@ -230,8 +159,7 @@ internal sealed unsafe class Chat : IDisposable
             _ => 0,
         };
 
-        var uiModule = Framework.Instance()->GetUiModule();
-        return func(uiModule, idx);
+        return func(idx);
     }
 
     // This function looks up a channel's user-defined color.
@@ -502,17 +430,7 @@ internal sealed unsafe class Chat : IDisposable
         if (agent == nint.Zero)
             return ret;
 
-        // E8 ?? ?? ?? ?? 8D 48 F7
-        // RaptureShellModule + 0xFD0
-        var shellModule = (nint) Framework.Instance()->GetUiModule()->GetRaptureShellModule();
-        if (shellModule == nint.Zero)
-            return ret;
-
-        var channel = (uint) InputChannel.Say;
-        if (ShellChannelOffset != null)
-            channel = *(uint*) (shellModule + ShellChannelOffset.Value);
-
-        // var channel = *(uint*) (agent + 0x40);
+        var channel = (uint) RaptureShellModule.Instance()->ChatType;
         if (channel is 17 or 18)
             channel = (uint) InputChannel.Tell;
 
@@ -549,16 +467,14 @@ internal sealed unsafe class Chat : IDisposable
 
     private void ReplyInSelectedChatModeDetour(AgentInterface* agent)
     {
-        if (ReplyChannelOffset == null)
-            goto Original;
-
-        var replyMode = *(int*) ((nint) agent + ReplyChannelOffset.Value);
+        var replyMode = AgentChatLog.Instance()->ReplyChannel;
         if (replyMode == -2)
-            goto Original;
+        {
+            ReplyInSelectedChatModeHook!.Original(agent);
+            return;
+        }
 
         SetChannel((InputChannel) replyMode);
-
-        Original:
         ReplyInSelectedChatModeHook!.Original(agent);
     }
 
@@ -592,25 +508,18 @@ internal sealed unsafe class Chat : IDisposable
             PreviousChannel = Channel.Channel;
         }
 
-        if (SetChannelTargetTell != null)
-            SetChannelTargetTell(param1, playerName, worldName, world, id, param6, 0);
-
+        RaptureShellModule.Instance()->SetTellTargetInForay(playerName, worldName, world, id, param6, false);
         EurekaContextMenuTellHook!.Original(param1, playerName, worldName, world, id, param6);
     }
 
-    internal ulong GetContentIdForEntry(int index)
-    {
-        return Framework.Instance()->GetUiModule()->GetRaptureLogModule()->GetContentIdForLogMessage(index);
-    }
-
-    internal void SetChannel(InputChannel channel, string? tellTarget = null)
+    internal static void SetChannel(InputChannel channel, string? tellTarget = null)
     {
         // ExtraChat linkshells aren't supported in game so we never want to
         // call the ChangeChatChannel function with them.
         //
         // Callers should call ChatLogWindow.SetChannel() which handles
         // ExtraChat channels
-        if (ChangeChatChannel == null || channel.IsExtraChatLinkshell())
+        if (channel.IsExtraChatLinkshell())
             return;
 
         var target = Utf8String.FromString(tellTarget ?? "");
@@ -618,17 +527,14 @@ internal sealed unsafe class Chat : IDisposable
         if (idx == uint.MaxValue)
             idx = 0;
 
-        ChangeChatChannel(RaptureShellModule.Instance(), (int) channel, idx, target, 1);
+        RaptureShellModule.Instance()->ChangeChatChannel((int) channel, idx, target, true);
         target->Dtor(true);
     }
 
-    internal void SetEurekaTellChannel(string name, string worldName, ushort worldId, ulong objectId, ushort param6, byte param7)
+    internal void SetEurekaTellChannel(string name, string worldName, ushort worldId, ulong objectId, ushort param6, bool param7)
     {
         // param6 is 0 for contentId and 1 for objectId
         // param7 is always 0 ?
-
-        if (SetChannelTargetTell == null)
-            return;
 
         if (!UsesTellTempChannel)
         {
@@ -639,7 +545,7 @@ internal sealed unsafe class Chat : IDisposable
         var utfName = Utf8String.FromString(name);
         var utfWorld = Utf8String.FromString(worldName);
 
-        SetChannelTargetTell(RaptureShellModule.Instance(), utfName, utfWorld, worldId, objectId, param6, param7);
+        RaptureShellModule.Instance()->SetTellTargetInForay(utfName, utfWorld, worldId, objectId, param6, param7);
 
         utfName->Dtor(true);
         utfWorld->Dtor(true);
@@ -687,12 +593,10 @@ internal sealed unsafe class Chat : IDisposable
 
     internal TellHistoryInfo? GetTellHistoryInfo(int index)
     {
-        var acquaintanceModule = Framework.Instance()->GetUiModule()->GetAcquaintanceModule();
-        if (acquaintanceModule == null)
-            return null;
+        var ptr = AcquaintanceModule.Instance()->GetTellHistory(index);
 
-        var ptr = GetTellHistory(acquaintanceModule, index);
-        if (ptr == nint.Zero)
+        // TODO does this check work?
+        if (ptr->ContentId == 0)
             return null;
 
         var name = MemoryHelper.ReadStringNullTerminated(*(nint*) ptr);

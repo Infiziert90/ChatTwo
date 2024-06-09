@@ -17,16 +17,6 @@ namespace ChatTwo.GameFunctions;
 
 internal unsafe class GameFunctions : IDisposable
 {
-    #region Functions
-    // TODO: Can be replaced with CS version soon
-    [Signature("48 89 5C 24 ?? 57 48 83 EC 20 48 8B FA 48 8B D9 E8 ?? ?? ?? ?? 48 8B 8B ?? ?? ?? ?? 48 85 C9", Fallibility = Fallibility.Fallible)]
-    private readonly delegate* unmanaged<AgentInterface*, ulong, byte> OpenPartyFinderNative = null!;
-
-    // TODO: Can be replaced with CS version soon
-    [Signature("E8 ?? ?? ?? ?? EB 20 48 8B 46 28", Fallibility = Fallibility.Fallible)]
-    private readonly delegate* unmanaged<AgentInterface*, uint, void> OpenAchievementNative = null!;
-    #endregion
-
     #region Hooks
     private delegate nint ResolveTextCommandPlaceholderDelegate(nint a1, byte* placeholderText, byte a3, byte a4);
 
@@ -35,16 +25,12 @@ internal unsafe class GameFunctions : IDisposable
     #endregion
 
     private Plugin Plugin { get; }
-    internal Party Party { get; }
     internal Chat Chat { get; }
-    internal Context Context { get; }
 
     internal GameFunctions(Plugin plugin)
     {
         Plugin = plugin;
-        Party = new Party(Plugin);
         Chat = new Chat(Plugin);
-        Context = new Context(Plugin);
 
         Plugin.GameInteropProvider.InitializeFromAttributes(this);
 
@@ -207,37 +193,27 @@ internal unsafe class GameFunctions : IDisposable
         }
     }
 
-    internal bool IsMentor()
+    internal static bool IsMentor()
     {
         return PlayerState.Instance()->IsMentor();
     }
 
-    internal void OpenPartyFinder(uint id)
+    internal static void OpenPartyFinder(uint id)
     {
-        if (OpenPartyFinderNative == null)
-            return;
-
-        var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.LookingForGroup);
-        if (agent != null)
-            OpenPartyFinderNative(agent, id);
+        AgentLookingForGroup.Instance()->OpenListing(id);
     }
 
-    internal void OpenAchievement(uint id)
+    internal static void OpenAchievement(uint id)
     {
-        if (OpenAchievementNative == null)
-            return;
-
-        var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.Achievement);
-        if (agent != null)
-            OpenAchievementNative(agent, id);
+        AgentAchievement.Instance()->OpenById(id);
     }
 
-    internal bool IsInInstance()
+    internal static bool IsInInstance()
     {
         return Plugin.Condition[ConditionFlag.BoundByDuty56];
     }
 
-    internal bool TryOpenAdventurerPlate(ulong playerId)
+    internal static bool TryOpenAdventurerPlate(ulong playerId)
     {
         try
         {
@@ -251,7 +227,7 @@ internal unsafe class GameFunctions : IDisposable
         }
     }
 
-    internal void ClickNoviceNetworkButton()
+    internal static void ClickNoviceNetworkButton()
     {
         var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.ChatLog);
         // case 3
