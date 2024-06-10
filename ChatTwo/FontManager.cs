@@ -32,11 +32,23 @@ public class FontManager
     {
         Plugin = plugin;
 
-        var gameSym = new HttpClient().GetAsync("https://img.finalfantasyxiv.com/lds/pc/global/fonts/FFXIV_Lodestone_SSF.ttf")
-            .Result
-            .Content
-            .ReadAsByteArrayAsync()
-            .Result;
+        byte[] gameSym;
+        var filePath = Path.Combine(Plugin.Interface.ConfigDirectory.FullName, "FFXIV_Lodestone_SSF.ttf");
+        if (File.Exists(filePath))
+        {
+            gameSym = File.ReadAllBytes(filePath);
+        }
+        else
+        {
+            gameSym = new HttpClient().GetAsync("https://img.finalfantasyxiv.com/lds/pc/global/fonts/FFXIV_Lodestone_SSF.ttf")
+                .Result
+                .Content
+                .ReadAsByteArrayAsync()
+                .Result;
+
+            File.WriteAllBytes(filePath, gameSym);
+        }
+
         _gameSymFont = new FaceData(gameSym);
     }
 

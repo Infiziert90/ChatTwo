@@ -5,10 +5,8 @@ using ChatTwo.Ipc;
 using ChatTwo.Resources;
 using ChatTwo.Ui;
 using ChatTwo.Util;
-using Dalamud.Game;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects;
-using Dalamud.Hooking;
 using Dalamud.Interface.Windowing;
 using Dalamud.IoC;
 using Dalamud.Plugin;
@@ -67,7 +65,6 @@ public sealed class Plugin : IDalamudPlugin
 
     internal DateTime GameStarted { get; }
 
-    #pragma warning disable CS8618
     public Plugin()
     {
         try
@@ -143,7 +140,6 @@ public sealed class Plugin : IDalamudPlugin
             throw;
         }
     }
-    #pragma warning restore CS8618
 
     // Suppressing this warning because Dispose() is called in Plugin() if the
     // load fails, so some values may not be initialized.
