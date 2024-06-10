@@ -20,6 +20,7 @@ using FFXIVClientStructs.FFXIV.Client.UI.Info;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Client.UI.Shell;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using Lumina.Text.ReadOnly;
 
 using ValueType = FFXIVClientStructs.FFXIV.Component.GUI.ValueType;
 
@@ -593,15 +594,13 @@ internal sealed unsafe class Chat : IDisposable
 
     internal TellHistoryInfo? GetTellHistoryInfo(int index)
     {
-        var ptr = AcquaintanceModule.Instance()->GetTellHistory(index);
-
-        // TODO does this check work?
-        if (ptr->ContentId == 0)
+        var acquaintance = AcquaintanceModule.Instance()->GetTellHistory(index);
+        if (acquaintance->ContentId == 0)
             return null;
 
-        var name = MemoryHelper.ReadStringNullTerminated(*(nint*) ptr);
-        var world = *(ushort*) (ptr + 0xD0);
-        var contentId = *(ulong*) (ptr + 0xD8);
+        var name = new ReadOnlySeStringSpan(acquaintance->Name.AsSpan()).ExtractText();
+        var world = acquaintance->WorldId;
+        var contentId = acquaintance->ContentId;
 
         return new TellHistoryInfo(name, world, contentId);
     }
@@ -630,7 +629,7 @@ internal sealed unsafe class Chat : IDisposable
         uMessage->Dtor(true);
     }
 
-    internal byte[] EncodeMessage(string str) {
+    private byte[] EncodeMessage(string str) {
         using var input = new Utf8String(str);
         using var ouput = new Utf8String();
 
