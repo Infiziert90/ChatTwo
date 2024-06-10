@@ -46,7 +46,7 @@ public class FontManager
                 .ReadAsByteArrayAsync()
                 .Result;
 
-            File.WriteAllBytes(filePath, gameSym);
+            Dalamud.Utility.Util.WriteAllBytesSafe(filePath, gameSym);
         }
 
         _gameSymFont = new FaceData(gameSym);
