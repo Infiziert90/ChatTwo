@@ -22,23 +22,11 @@ tags:
     - Chat
     - Replacement
 changelog:  |-
-  **New**
-  - Database Viewer (/chat2Viewer)
-    - View your previous message history in a standard chat format
-    - Search for sender or specified text content
-    - Ability to specify a date range
-    - Select specific chat channels you want displayed
-    - Only show your current characters history, or combined across your account
-    - Quickly page through hundreds of messages in quick succession
-    - Tip: You can resize the sender column
-
   **Updates**
-  - Some emotes have been blocked from being parsed
-  - Replaced some internal functions with their CS version
-  - French localisation update
-
-  **Fixes**
-  - AutoTranslate missing entries, like Viera
-  - Fix for shuffled messages on startup [thanks `@dean`]
-  - Fix for adventurer plate button not working after character switch [thanks `@dean`]
-
+  - Fix tell reply hotkey not working
+  - Save the FFXIV font to disk instead of redownloading it on every startup
+    - This should prevent errors if your DNS is giving up
+  - Replace all sigs with CS version
+  - Fix flags not working in reply mode
+  - Force the main chat log to be always open
+  - Prevent emotes inside auto translation
