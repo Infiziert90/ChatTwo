@@ -129,7 +129,8 @@ internal sealed unsafe class Chat : IDisposable
         if (lsInfo == null)
             return null;
 
-        var utf = instance->GetLinkshellName(lsInfo);
+        // TODO APIX: lsInfo type changed to Entry
+        var utf = instance->GetLinkshellName(*(ulong**)lsInfo);
         return utf == null ? null : MemoryHelper.ReadStringNullTerminated((nint) utf);
     }
 
