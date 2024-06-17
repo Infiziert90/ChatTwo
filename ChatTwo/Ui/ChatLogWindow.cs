@@ -188,7 +188,6 @@ public sealed class ChatLogWindow : Window
             }
 
             var mode = prevTemp == null ? RotateMode.None : info.Rotate;
-
             if (info.Channel is InputChannel.Linkshell1 && info.Rotate != RotateMode.None)
             {
                 var idx = GameFunctions.Chat.RotateLinkshellHistory(mode);
@@ -692,15 +691,14 @@ public sealed class ChatLogWindow : Window
         var push = inputColour != null;
         using (ImRaii.PushColor(ImGuiCol.Text, push ? ColourUtil.RgbaToAbgr(inputColour!.Value) : 0, push))
         {
-            if (Activate || FocusedPreview)
+            var isChatEnabled = activeTab is { InputDisabled: false };
+            if (isChatEnabled && (Activate || FocusedPreview))
             {
                 FocusedPreview = false;
                 ImGui.SetKeyboardFocusHere();
             }
 
             var chatCopy = Chat;
-
-            var isChatEnabled = activeTab is { InputDisabled: false };
             using (ImRaii.Disabled(!isChatEnabled))
             {
                 var flags = InputFlags | (!isChatEnabled ? ImGuiInputTextFlags.ReadOnly : ImGuiInputTextFlags.None);

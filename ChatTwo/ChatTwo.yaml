@@ -30,4 +30,5 @@ changelog:  |-
   - Fix flags not working in reply mode
   - Force the main chat log to be always open
   - Prevent emotes inside auto translation
-  - Make Linkshells appear in selection again
+  - Linkshells appear in selection again
+  - Fix rotate mode not working for CW and Normal Linkshells

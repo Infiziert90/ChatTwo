@@ -129,7 +129,7 @@ internal sealed unsafe class Chat : IDisposable
         if (lsInfo == null)
             return null;
 
-        // TODO APIX: lsInfo type changed to Entry
+        // TODO APIX: use infoproxychat
         var utf = instance->GetLinkshellName(*(ulong**)lsInfo);
         return utf == null ? null : MemoryHelper.ReadStringNullTerminated((nint) utf);
     }
@@ -140,29 +140,24 @@ internal sealed unsafe class Chat : IDisposable
         return utf == null ? null : utf->ToString();
     }
 
+    private static int GetRotateIdx(RotateMode mode) => mode switch
+    {
+        RotateMode.Forward => 1,
+        RotateMode.Reverse => -1,
+        _ => 0,
+    };
+
     internal static int RotateLinkshellHistory(RotateMode mode)
     {
         var uiModule = UIModule.Instance();
         if (mode == RotateMode.None)
             uiModule->LinkshellCycle = -1;
 
-        return RotateLinkshellHistoryInternal(uiModule->RotateLinkshellHistory, mode);
+        return uiModule->RotateLinkshellHistory(GetRotateIdx(mode));
     }
 
     internal static int RotateCrossLinkshellHistory(RotateMode mode) =>
-        RotateLinkshellHistoryInternal(UIModule.Instance()->RotateCrossLinkshellHistory, mode);
-
-    private static int RotateLinkshellHistoryInternal(Func<int, int> func, RotateMode mode)
-    {
-        var idx = mode switch
-        {
-            RotateMode.Forward => 1,
-            RotateMode.Reverse => -1,
-            _ => 0,
-        };
-
-        return func(idx);
-    }
+        UIModule.Instance()->RotateCrossLinkshellHistory(GetRotateIdx(mode));
 
     // This function looks up a channel's user-defined color.
     // If this function ever returns 0, it returns null instead.
