@@ -232,13 +232,9 @@ public sealed class ChatLogWindow : Window
         }
     }
 
-    private void ToggleChat(string command, string arguments)
+    private void ToggleChat(string _, string arguments)
     {
-        var parts = arguments.Split(' ');
-        if (parts.Length < 2 || parts[0] != "chat")
-            return;
-
-        switch (parts[1])
+        switch (arguments)
         {
             case "hide":
                 CurrentHideState = HideState.User;
