@@ -1,7 +1,7 @@
 using ChatTwo.Util;
-using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Client.UI.Info;
+using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 
 namespace ChatTwo.GameFunctions;
 
@@ -27,7 +27,7 @@ internal sealed unsafe class Context
 
     internal static void OpenItemComparison(uint itemId)
     {
-        AgentItemComp.Instance()->CompareItem(0x4D, itemId, 0);
+        AgentItemComp.Instance()->CompareItem(0x4D, itemId, 0, 0);
     }
 
     internal static void SearchForRecipesUsingItem(uint itemId)
@@ -37,6 +37,6 @@ internal sealed unsafe class Context
 
     internal static void SearchForItem(uint itemId)
     {
-        Framework.Instance()->GetUiModule()->GetItemFinderModule()->SearchForItem(itemId, true);
+        ItemFinderModule.Instance()->SearchForItem(itemId, true);
     }
 }

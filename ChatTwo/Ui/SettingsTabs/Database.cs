@@ -4,7 +4,7 @@ using ChatTwo.Resources;
 using ChatTwo.Util;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
-using Dalamud.Interface.Internal.Notifications;
+using Dalamud.Interface.ImGuiNotification;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 

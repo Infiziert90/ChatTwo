@@ -1,5 +1,4 @@
 ﻿using Dalamud.Interface.ImGuiNotification;
-using Dalamud.Interface.Internal.Notifications;
 
 namespace ChatTwo.Util;
 

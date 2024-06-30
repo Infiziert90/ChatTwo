@@ -279,15 +279,15 @@ internal partial class Message
                     if (split == "<item>")
                     {
                         var agentChat = AgentChatLog.Instance();
-                        var item = *(InventoryItem*)((nint)agentChat + 0x8A0);
+                        var item = agentChat->LinkedItem;
 
-                        if (item.ItemID == 0)
+                        if (item.ItemId == 0)
                         {
                             AddChunkWithMessage(text.NewWithStyle(chunk.Source, chunk.Link, split));
                             continue;
                         }
 
-                        var kind = item.ItemID switch
+                        var kind = item.ItemId switch
                         {
                             < 500_000 => ItemPayload.ItemKind.Normal,
                             < 1_000_000 => ItemPayload.ItemKind.Collectible,
@@ -296,10 +296,10 @@ internal partial class Message
                         };
 
                         var name = kind != ItemPayload.ItemKind.EventItem
-                            ? Plugin.DataManager.GetExcelSheet<Item>()!.GetRow(item.ItemID)!.Name.ToString()
-                            : Plugin.DataManager.GetExcelSheet<EventItem>()!.GetRow(item.ItemID)!.Name.ToString();
+                            ? Plugin.DataManager.GetExcelSheet<Item>()!.GetRow(item.ItemId)!.Name.ToString()
+                            : Plugin.DataManager.GetExcelSheet<EventItem>()!.GetRow(item.ItemId)!.Name.ToString();
 
-                        var link = new ItemPayload(item.ItemID, kind, $"{SeIconChar.LinkMarker.ToIconChar()}{name}");
+                        var link = new ItemPayload(item.ItemId, kind, $"{SeIconChar.LinkMarker.ToIconChar()}{name}");
                         AddChunkWithMessage(text.NewWithStyle(chunk.Source, link, link.DisplayName ?? "Unknown"));
                     }
                     else

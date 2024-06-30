@@ -7,7 +7,6 @@ namespace ChatTwo;
 
 internal sealed class IpcManager : IDisposable
 {
-    private DalamudPluginInterface Interface { get; }
     private ICallGateProvider<string> RegisterGate { get; }
     private ICallGateProvider<string, object?> UnregisterGate { get; }
     private ICallGateProvider<object?> AvailableGate { get; }
@@ -15,19 +14,17 @@ internal sealed class IpcManager : IDisposable
 
     internal List<string> Registered { get; } = [];
 
-    public IpcManager(DalamudPluginInterface pluginInterface)
+    public IpcManager()
     {
-        Interface = pluginInterface;
-
-        RegisterGate = Interface.GetIpcProvider<string>("ChatTwo.Register");
+        RegisterGate = Plugin.Interface.GetIpcProvider<string>("ChatTwo.Register");
         RegisterGate.RegisterFunc(Register);
 
-        AvailableGate = Interface.GetIpcProvider<object?>("ChatTwo.Available");
+        AvailableGate = Plugin.Interface.GetIpcProvider<object?>("ChatTwo.Available");
 
-        UnregisterGate = Interface.GetIpcProvider<string, object?>("ChatTwo.Unregister");
+        UnregisterGate = Plugin.Interface.GetIpcProvider<string, object?>("ChatTwo.Unregister");
         UnregisterGate.RegisterAction(Unregister);
 
-        InvokeGate = Interface.GetIpcProvider<string, PlayerPayload?, ulong, Payload?, SeString?, SeString?, object?>("ChatTwo.Invoke");
+        InvokeGate = Plugin.Interface.GetIpcProvider<string, PlayerPayload?, ulong, Payload?, SeString?, SeString?, object?>("ChatTwo.Invoke");
 
         AvailableGate.SendMessage();
     }

@@ -11,7 +11,7 @@ using Dalamud.Hooking;
 using Dalamud.Memory;
 using Dalamud.Plugin.Services;
 using Dalamud.Utility.Signatures;
-using FFXIVClientStructs.FFXIV.Client.Network;
+using FFXIVClientStructs.FFXIV.Application.Network;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Client.UI;
@@ -32,37 +32,25 @@ internal sealed unsafe class Chat : IDisposable
     [Signature("E8 ?? ?? ?? ?? 48 8D 4D A0 8B F8")]
     private readonly delegate* unmanaged<nint, Utf8String*, nint, uint> GetKeybindNative = null!;
 
-    [Signature("E8 ?? ?? ?? ?? 48 8D 4D 50 E8 ?? ?? ?? ?? 48 8B 17")]
+    [Signature("48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8D B9 ?? ?? ?? ?? 33 C0")]
     private readonly delegate* unmanaged<RaptureLogModule*, ushort, Utf8String*, Utf8String*, ulong, ushort, byte, int, byte, void> PrintTellNative = null!;
 
     [Signature("E8 ?? ?? ?? ?? 48 8D 4C 24 ?? E8 ?? ?? ?? ?? 48 8D 8C 24 ?? ?? ?? ?? E8 ?? ?? ?? ?? B0 01")]
     private readonly delegate* unmanaged<NetworkModule*, ulong, ushort, Utf8String*, Utf8String*, byte, ulong, bool> SendTellNative = null!;
-
-    // TODO Replace with CS version after https://github.com/aers/FFXIVClientStructs/pull/911
-    [Signature("E8 ?? ?? ?? ?? EB 0A 48 8D 4C 24 ?? E8 ?? ?? ?? ?? 48 8D 8D")]
-    private readonly delegate* unmanaged<Utf8String*, int, nint, void> SanitiseString = null!;
 
     // Client::UI::AddonChatLog.OnRefresh
     [Signature("40 53 56 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 8B F0 8B FA", DetourName = nameof(ChatLogRefreshDetour))]
     private Hook<ChatLogRefreshDelegate>? ChatLogRefreshHook { get; init; }
     private delegate byte ChatLogRefreshDelegate(nint log, ushort eventId, AtkValue* value);
 
-    // TODO Replace all with delegate hooks in API X
-    private Hook<ChangeChannelNameDelegate>? ChangeChannelNameHook { get; init; }
-    private delegate nint ChangeChannelNameDelegate(nint agent);
-
-    private Hook<ReplyInSelectedChatModeDelegate>? ReplyInSelectedChatModeHook { get; init; }
-    private delegate void ReplyInSelectedChatModeDelegate(AgentInterface* agent);
-
-    private Hook<SetChatLogTellTarget>? SetChatLogTellTargetHook { get; init; }
-    private delegate byte SetChatLogTellTarget(nint a1, Utf8String* name, Utf8String* a3, ushort world, ulong contentId, ushort a6, byte a7);
-
-    private Hook<EurekaContextMenuTellDelegate>? EurekaContextMenuTellHook { get; init; }
-    private delegate void EurekaContextMenuTellDelegate(RaptureShellModule* param1, Utf8String* playerName, Utf8String* worldName, ushort world, ulong contentId, ushort param6);
+    private Hook<AgentChatLog.Delegates.ChangeChannelName> ChangeChannelNameHook { get; init; }
+    private Hook<RaptureShellModule.Delegates.ReplyInSelectedChatMode>? ReplyInSelectedChatModeHook { get; init; }
+    private Hook<RaptureShellModule.Delegates.SetContextTellTarget>? SetChatLogTellTargetHook { get; init; }
+    private Hook<RaptureShellModule.Delegates.SetContextTellTargetInForay>? EurekaContextMenuTellHook { get; init; }
 
     // Pointers
 
-    [Signature("48 8D 15 ?? ?? ?? ?? 0F B6 C8 48 8D 05", ScanType = ScanType.StaticAddress)]
+    [Signature("48 8D 35 ?? ?? ?? ?? 8B 05", ScanType = ScanType.StaticAddress)]
     private readonly char* CurrentCharacter = null!;
 
     // Events
@@ -91,16 +79,16 @@ internal sealed unsafe class Chat : IDisposable
 
         ChatLogRefreshHook?.Enable();
 
-        ChangeChannelNameHook = Plugin.GameInteropProvider.HookFromAddress<ChangeChannelNameDelegate>(AgentChatLog.Addresses.ChangeChannelName.Value, ChangeChannelNameDetour);
+        ChangeChannelNameHook = Plugin.GameInteropProvider.HookFromAddress<AgentChatLog.Delegates.ChangeChannelName>(AgentChatLog.MemberFunctionPointers.ChangeChannelName, ChangeChannelNameDetour);
         ChangeChannelNameHook.Enable();
 
-        ReplyInSelectedChatModeHook = Plugin.GameInteropProvider.HookFromAddress<ReplyInSelectedChatModeDelegate>(RaptureShellModule.Addresses.ReplyInSelectedChatMode.Value, ReplyInSelectedChatModeDetour);
+        ReplyInSelectedChatModeHook = Plugin.GameInteropProvider.HookFromAddress<RaptureShellModule.Delegates.ReplyInSelectedChatMode>(RaptureShellModule.MemberFunctionPointers.ReplyInSelectedChatMode, ReplyInSelectedChatModeDetour);
         ReplyInSelectedChatModeHook.Enable();
 
-        SetChatLogTellTargetHook = Plugin.GameInteropProvider.HookFromAddress<SetChatLogTellTarget>(RaptureShellModule.Addresses.SetContextTellTarget.Value, SetChatLogTellTargetDetour);
+        SetChatLogTellTargetHook = Plugin.GameInteropProvider.HookFromAddress<RaptureShellModule.Delegates.SetContextTellTarget>(RaptureShellModule.MemberFunctionPointers.SetContextTellTarget, SetChatLogTellTargetDetour);
         SetChatLogTellTargetHook.Enable();
 
-        EurekaContextMenuTellHook = Plugin.GameInteropProvider.HookFromAddress<EurekaContextMenuTellDelegate>(RaptureShellModule.Addresses.SetContextTellTargetInForay.Value, EurekaContextMenuTell);
+        EurekaContextMenuTellHook = Plugin.GameInteropProvider.HookFromAddress<RaptureShellModule.Delegates.SetContextTellTargetInForay>(RaptureShellModule.MemberFunctionPointers.SetContextTellTargetInForay, EurekaContextMenuTell);
         EurekaContextMenuTellHook.Enable();
 
         Plugin.Framework.Update += InterceptKeybinds;
@@ -124,19 +112,13 @@ internal sealed unsafe class Chat : IDisposable
 
     internal string? GetLinkshellName(uint idx)
     {
-        var instance = InfoProxyLinkShell.Instance();
-        var lsInfo = instance->GetLinkshellInfo(idx);
-        if (lsInfo == null)
-            return null;
-
-        // TODO APIX: use infoproxychat
-        var utf = instance->GetLinkshellName(*(ulong**)lsInfo);
+        var utf = InfoProxyChat.Instance()->GetLinkShellName(idx);
         return utf == null ? null : MemoryHelper.ReadStringNullTerminated((nint) utf);
     }
 
     internal string? GetCrossLinkshellName(uint idx)
     {
-        var utf = InfoProxyCrossWorldLinkShell.Instance()->GetCrossworldLinkshellName(idx);
+        var utf = InfoProxyCrossWorldLinkshell.Instance()->GetCrossworldLinkshellName(idx);
         return utf == null ? null : utf->ToString();
     }
 
@@ -346,14 +328,11 @@ internal sealed unsafe class Chat : IDisposable
 
     private void Login()
     {
-        if (ChangeChannelNameHook == null)
-            return;
-
-        var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.ChatLog);
+        var agent = AgentChatLog.Instance();
         if (agent == null)
             return;
 
-        ChangeChannelNameDetour((nint) agent);
+        ChangeChannelNameDetour(agent);
     }
 
     private byte ChatLogRefreshDetour(nint log, ushort eventId, AtkValue* value)
@@ -368,11 +347,12 @@ internal sealed unsafe class Chat : IDisposable
         {
             // FIXME: this whole system sucks
             // FIXME v2: I hate everything about this, but it works
+
             Plugin.Framework.RunOnTick(() =>
             {
                 string? input = null;
 
-                var utf8Bytes = MemoryHelper.ReadRaw((nint) CurrentCharacter, 2);
+                var utf8Bytes = MemoryHelper.ReadRaw((nint)CurrentCharacter+0x4, 2);
                 var chars = Encoding.UTF8.GetString(utf8Bytes).ToCharArray();
                 if (chars.Length == 0)
                     return;
@@ -380,6 +360,8 @@ internal sealed unsafe class Chat : IDisposable
                 var c = chars[0];
                 if (c != '\0' && !char.IsControl(c))
                     input = c.ToString();
+
+                Plugin.Log.Information($"Input was {c}");
 
                 try
                 {
@@ -415,7 +397,7 @@ internal sealed unsafe class Chat : IDisposable
         return 1;
     }
 
-    private nint ChangeChannelNameDetour(nint agent)
+    private byte* ChangeChannelNameDetour(AgentChatLog* agent)
     {
         // Last ShB patch
         // +0x40  = chat channel (byte or uint?)
@@ -423,23 +405,17 @@ internal sealed unsafe class Chat : IDisposable
         // +0x48  = pointer to channel name string
         // +0xDA  = player name string for tells
         // +0x120 = player world id for tells
-        var ret = ChangeChannelNameHook!.Original(agent);
-        if (agent == nint.Zero)
+        var ret = ChangeChannelNameHook.Original(agent);
+        if ((nint) agent == nint.Zero)
             return ret;
 
         var channel = (uint) RaptureShellModule.Instance()->ChatType;
         if (channel is 17 or 18)
             channel = (uint) InputChannel.Tell;
 
-        SeString? name = null;
-        var namePtrPtr = (byte**) (agent + 0x48);
-        if (namePtrPtr != null)
-        {
-            var namePtr = *namePtrPtr;
-            name = MemoryHelper.ReadSeStringNullTerminated((nint) namePtr);
-            if (name.Payloads.Count == 0)
-                name = null;
-        }
+        var name = SeString.Parse(agent->ChannelLabel);
+        if (name.Payloads.Count == 0)
+            name = null;
 
         if (name == null)
             return ret;
@@ -452,7 +428,7 @@ internal sealed unsafe class Chat : IDisposable
         ushort worldId = 0;
         if (channel == (uint) InputChannel.Tell)
         {
-            playerName = MemoryHelper.ReadStringNullTerminated(agent + 0xDA);
+            playerName = MemoryHelper.ReadStringNullTerminated((nint) agent + 0xDA);
             worldId = *(ushort*) (agent + 0x120);
             Plugin.Log.Debug($"Detected tell target '{playerName}'@{worldId}");
         }
@@ -462,7 +438,7 @@ internal sealed unsafe class Chat : IDisposable
         return ret;
     }
 
-    private void ReplyInSelectedChatModeDetour(AgentInterface* agent)
+    private void ReplyInSelectedChatModeDetour(RaptureShellModule* agent)
     {
         var replyMode = AgentChatLog.Instance()->ReplyChannel;
         if (replyMode == -2)
@@ -475,7 +451,7 @@ internal sealed unsafe class Chat : IDisposable
         ReplyInSelectedChatModeHook!.Original(agent);
     }
 
-    private byte SetChatLogTellTargetDetour(nint a1, Utf8String* name, Utf8String* a3, ushort world, ulong contentId, ushort reason, byte a7)
+    private bool SetChatLogTellTargetDetour(RaptureShellModule* a1, Utf8String* name, Utf8String* a3, ushort world, ulong contentId, ushort reason, bool a7)
     {
         if (name != null)
         {
@@ -558,9 +534,7 @@ internal sealed unsafe class Chat : IDisposable
 
     private Keybind? GetKeybind(string id)
     {
-        var agent = (nint) Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.Configkey);
-        if (agent == nint.Zero)
-            return null;
+        var agent = (nint) AgentModule.Instance()->GetAgentByInternalId(AgentId.Configkey);
 
         var a1 = *(void**) (agent + 0x78);
         if (a1 == null)
@@ -611,8 +585,8 @@ internal sealed unsafe class Chat : IDisposable
         AutoTranslate.ReplaceWithPayload(ref decoded);
         using var decodedUtf8String = new Utf8String(decoded);
 
+        var logModule = RaptureLogModule.Instance();
         var networkModule = Framework.Instance()->GetNetworkModuleProxy()->NetworkModule;
-        var logModule = Framework.Instance()->GetUiModule()->GetRaptureLogModule();
 
         var ok = SendTellNative(networkModule, contentId, homeWorld, uName, encoded, (byte) reason, homeWorld);
         if (ok)
@@ -638,7 +612,7 @@ internal sealed unsafe class Chat : IDisposable
     {
         var uC = Utf8String.FromString(c.ToString());
 
-        SanitiseString(uC, 0x27F, nint.Zero);
+        uC->SanitizeString(0x27F, Utf8String.CreateEmpty());
         var wasValid = uC->ToString().Length > 0;
 
         uC->Dtor(true);

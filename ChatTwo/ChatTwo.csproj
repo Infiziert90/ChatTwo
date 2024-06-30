@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>1.26.4</Version>
+        <Version>1.27.0</Version>
         <TargetFramework>net8.0-windows</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
@@ -49,14 +49,13 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="DalamudPackager" Version="2.1.12"/>
+        <PackageReference Include="DalamudPackager" Version="2.1.13" />
         <PackageReference Include="LiteDB" Version="5.0.19" />
         <PackageReference Include="MessagePack" Version="2.5.140" />
         <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.4" />
         <PackageReference Include="Pidgin" Version="3.2.2"/>
         <PackageReference Include="SharpDX.Direct2D1" Version="4.2.0"/>
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.4" />
-        <PackageReference Include="XivCommon" Version="9.0.0"/>
     </ItemGroup>
 
     <ItemGroup>

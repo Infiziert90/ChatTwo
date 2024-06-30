@@ -41,7 +41,7 @@ public class DebuggerWindow : Window
 
     public override unsafe void Draw()
     {
-        var agent = (nint) Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.ItemDetail);
+        var agent = (nint) AgentItemDetail.Instance();
         ImGui.TextUnformatted($"Current Cursor Pos: {ChatLogWindow.CursorPos}");
         if (ImGui.Selectable($"Agent Address: {agent:X}"))
             ImGui.SetClipboardText(agent.ToString("X"));

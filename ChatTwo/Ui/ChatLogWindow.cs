@@ -12,14 +12,15 @@ using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface;
-using Dalamud.Interface.Internal;
 using Dalamud.Interface.Style;
+using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
 using Dalamud.Memory;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using ImGuiNET;
+using Lumina.Data.Files;
 using Lumina.Excel;
 using Lumina.Excel.GeneratedSheets;
 
@@ -114,7 +115,7 @@ public sealed class ChatLogWindow : Window
         WorldSheet = Plugin.DataManager.GetExcelSheet<World>()!;
         LogFilterSheet = Plugin.DataManager.GetExcelSheet<LogFilter>()!;
         TextCommandSheet = Plugin.DataManager.GetExcelSheet<TextCommand>()!;
-        FontIcon = Plugin.TextureProvider.GetTextureFromGame("common/font/fonticon_ps5.tex");
+        FontIcon = Plugin.TextureProvider.CreateFromTexFile(Plugin.DataManager.GetFile<TexFile>("common/font/fonticon_ps5.tex")!);
 
         Plugin.Functions.Chat.Activated += Activated;
         Plugin.ClientState.Login += Login;
@@ -804,7 +805,7 @@ public sealed class ChatLogWindow : Window
             // registers stub handlers and actually processes its commands in a
             // SendMessage detour.
             var bytes = Encoding.UTF8.GetBytes(channel.Value.Prefix());
-            Plugin.Common.Functions.Chat.SendMessageUnsafe(bytes);
+            Plugin.Common.SendMessageUnsafe(bytes);
             return;
         }
 
@@ -828,7 +829,7 @@ public sealed class ChatLogWindow : Window
                     var world = WorldSheet.GetRow(target.World);
                     if (world is { IsPublic: true })
                     {
-                        if (reason == TellReason.Reply && Plugin.Common.Functions.FriendList.List.Any(friend => friend.ContentId == target.ContentId))
+                        if (reason == TellReason.Reply && GameFunctions.GameFunctions.GetFriends().Any(friend => friend.ContentId == target.ContentId))
                             reason = TellReason.Friend;
 
                         var tellBytes = Encoding.UTF8.GetBytes(trimmed);
@@ -854,7 +855,7 @@ public sealed class ChatLogWindow : Window
             var bytes = Encoding.UTF8.GetBytes(trimmed);
             AutoTranslate.ReplaceWithPayload(ref bytes);
 
-            Plugin.Common.Functions.Chat.SendMessageUnsafe(bytes);
+            Plugin.Common.SendMessageUnsafe(bytes);
         }
 
         Chat = string.Empty;
@@ -989,9 +990,6 @@ public sealed class ChatLogWindow : Window
                 if (i > 0)
                 {
                     var prevMessage = messages[i - 1];
-
-                    // TODO: TryGetValue isn't always true for some strange reason
-                    // This should be looked into, because default will be null for the prevHeight in that case
                     prevMessage.Height.TryGetValue(tab.Identifier, out var prevHeight);
                     if (prevHeight == null || (prevMessage.IsVisible.TryGetValue(tab.Identifier, out var prevVisible) && prevVisible))
                     {

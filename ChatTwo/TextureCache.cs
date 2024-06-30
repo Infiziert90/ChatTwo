@@ -1,5 +1,5 @@
-using Dalamud.Interface.Internal;
-using Dalamud.Plugin.Services;
+using Dalamud.Interface.Textures;
+using Dalamud.Interface.Textures.TextureWraps;
 using Lumina.Excel.GeneratedSheets;
 
 namespace ChatTwo;
@@ -24,9 +24,7 @@ internal class TextureCache : IDisposable
         if (dict.ContainsKey((icon, hq)))
             return;
 
-        var tex = hq
-            ? Plugin.TextureProvider.GetIcon(icon, ITextureProvider.IconFlags.ItemHighQuality)
-            : Plugin.TextureProvider.GetIcon(icon);
+        var tex = Plugin.TextureProvider.GetFromGameIcon(new GameIconLookup(icon, hq)).GetWrapOrDefault();
         if (tex != null)
             dict[(icon, hq)] = tex;
     }

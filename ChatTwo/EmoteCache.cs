@@ -1,7 +1,8 @@
 ﻿using System.Numerics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Dalamud.Interface.Internal;
+using Dalamud.Interface.Textures;
+using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Utility;
 using ImGuiNET;
 using SixLabors.ImageSharp;
@@ -208,7 +209,7 @@ public static class EmoteCache
                 if (image.Length <= 0)
                     return;
 
-                Texture = await Plugin.Interface.UiBuilder.LoadImageAsync(image);
+                Texture = await Plugin.TextureProvider.CreateFromImageAsync(image);
                 IsLoaded = true;
             }
             catch (Exception ex)
@@ -294,7 +295,7 @@ public static class EmoteCache
 
                     var buffer = new byte[4 * frame.Width * frame.Height];
                     frame.CopyPixelDataTo(buffer);
-                    var tex = await Plugin.Interface.UiBuilder.LoadImageRawAsync(buffer, frame.Width, frame.Height, 4);
+                    var tex = await Plugin.TextureProvider.CreateFromRawAsync(RawImageSpecification.Rgba32(frame.Width, frame.Height), buffer);
                     frames.Add((tex, delay));
                 }
 

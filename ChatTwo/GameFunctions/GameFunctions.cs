@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Runtime.InteropServices;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
@@ -5,7 +6,6 @@ using Dalamud.Hooking;
 using Dalamud.Memory;
 using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
-using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Client.UI.Info;
@@ -73,12 +73,12 @@ internal unsafe class GameFunctions : IDisposable
 
         var worldName = row.Name.RawString;
         ReplacementName = $"{name}@{worldName}";
-        Plugin.Common.Functions.Chat.SendMessage($"/{commandName} add {Placeholder}");
+        Plugin.Common.SendMessage($"/{commandName} add {Placeholder}");
     }
 
     internal static void SetAddonInteractable(string name, bool interactable)
     {
-        var unitManager = AtkStage.GetSingleton()->RaptureAtkUnitManager;
+        var unitManager = AtkStage.Instance()->RaptureAtkUnitManager;
 
         var addon = (nint) unitManager->GetAddonByName(name);
         if (addon == nint.Zero)
@@ -101,7 +101,7 @@ internal unsafe class GameFunctions : IDisposable
 
     internal static bool IsAddonInteractable(string name)
     {
-        var unitManager = AtkStage.GetSingleton()->RaptureAtkUnitManager;
+        var unitManager = AtkStage.Instance()->RaptureAtkUnitManager;
 
         var addon = (nint) unitManager->GetAddonByName(name);
         if (addon == nint.Zero)
@@ -113,8 +113,8 @@ internal unsafe class GameFunctions : IDisposable
 
     internal static void OpenItemTooltip(uint id, ItemPayload.ItemKind itemKind)
     {
-        var atkStage = AtkStage.GetSingleton();
-        var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.ItemDetail);
+        var atkStage = AtkStage.Instance();
+        var agent = AgentItemDetail.Instance();
         var addon = atkStage->RaptureAtkUnitManager->GetAddonByName("ItemDetail");
 
         // atkStage ain't gonna be null or we have bigger problems
@@ -144,10 +144,10 @@ internal unsafe class GameFunctions : IDisposable
         *(byte*) (agentPtr + 0x14E) = 0;
 
         // this just probably needs to be set
-        agent->AddonId = addon->ID;
+        agent->AddonId = addon->Id;
 
         // vcall from E8 ?? ?? ?? ?? 0F B7 C0 48 83 C4 60 (FF 50 28 48 8B D3 48 8B CF)
-        var vf5 = (delegate* unmanaged<AtkUnitBase*, byte, uint, void>*) ((nint) addon->VTable + 40);
+        var vf5 = (delegate* unmanaged<AtkUnitBase*, byte, uint, void>*) ((nint) addon->VirtualTable + 40);
         // EA8BED: lets vf5 actually run
         *(byte*) ((nint) atkStage + 0x2B4) |= 2;
         (*vf5)(addon, 0, 15);
@@ -156,11 +156,11 @@ internal unsafe class GameFunctions : IDisposable
     internal static void CloseItemTooltip()
     {
         // hide addon first to prevent the "addon close" sound
-        var addon = AtkStage.GetSingleton()->RaptureAtkUnitManager->GetAddonByName("ItemDetail");
+        var addon = AtkStage.Instance()->RaptureAtkUnitManager->GetAddonByName("ItemDetail");
         if (addon != null)
             addon->Hide(true, false, 0);
 
-        var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.ItemDetail);
+        var agent = AgentItemDetail.Instance();
         if (agent != null)
         {
             var eventData = stackalloc AtkValue[1];
@@ -174,12 +174,12 @@ internal unsafe class GameFunctions : IDisposable
     internal static void OpenPartyFinder()
     {
         // this whole method: 6.05: 84433A (FF 97 ?? ?? ?? ?? 41 B4 01)
-        var lfg = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.LookingForGroup);
+        var lfg = AgentLookingForGroup.Instance();
         if (lfg->IsAgentActive())
         {
-            var addonId = lfg->GetAddonID();
-            var atkModule = Framework.Instance()->GetUiModule()->GetRaptureAtkModule();
-            var atkModuleVtbl = (void**) atkModule->AtkModule.vtbl;
+            var addonId = lfg->GetAddonId();
+            var atkModule = RaptureAtkModule.Instance();
+            var atkModuleVtbl = (void**) atkModule->AtkModule.VirtualTable;
             var vf27 = (delegate* unmanaged<RaptureAtkModule*, ulong, ulong, byte>) atkModuleVtbl[27];
             vf27(atkModule, addonId, 1);
         }
@@ -196,6 +196,36 @@ internal unsafe class GameFunctions : IDisposable
     internal static bool IsMentor()
     {
         return PlayerState.Instance()->IsMentor();
+    }
+
+    internal static InfoProxyCommonList.CharacterData[] GetFriends()
+    {
+        ChatTwo.Plugin.Log.Information($"Address {(nint)InfoProxyFriendList.Instance():X}");
+        ChatTwo.Plugin.Log.Information($"Address CharaData {(nint)InfoProxyFriendList.Instance()->CharData:X}");
+        var list = InfoProxyFriendList.Instance()->CharDataSpan.ToArray();
+        foreach (var data in list)
+        {
+            ChatTwo.Plugin.Log.Information($"Data was: {data.NameString} {data.HomeWorld} {data.ContentId}");
+        }
+        return list;
+    }
+
+    internal static void OpenQuestLog(Quest quest)
+    {
+        var splits = quest.Id.RawString.Split("_");
+        if (splits.Length != 2)
+        {
+            Plugin.ChatGui.Print("QuestId is wrongly formatted");
+            return;
+        }
+
+        if (!uint.TryParse(splits[1], NumberStyles.Any, CultureInfo.InvariantCulture,  out var questId))
+        {
+            Plugin.ChatGui.Print("Unable to parse quest id");
+            return;
+        }
+
+        AgentQuestJournal.Instance()->OpenForQuest(questId, 1);
     }
 
     internal static void OpenPartyFinder(uint id)
@@ -229,11 +259,11 @@ internal unsafe class GameFunctions : IDisposable
 
     internal static void ClickNoviceNetworkButton()
     {
-        var agent = Framework.Instance()->GetUiModule()->GetAgentModule()->GetAgentByInternalId(AgentId.ChatLog);
+        var agent = AgentChatLog.Instance();
         // case 3
         var value = new AtkValue { Type = ValueType.Int, Int = 3, };
         var result = 0;
-        var vf0 = *(delegate* unmanaged<AgentInterface*, int*, AtkValue*, ulong, ulong, int*>*) agent->VTable;
+        var vf0 = *(delegate* unmanaged<AgentChatLog*, int*, AtkValue*, ulong, ulong, int*>*) agent->VirtualTable;
         vf0(agent, &result, &value, 0, 0);
     }
 

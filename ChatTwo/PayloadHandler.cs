@@ -9,8 +9,8 @@ using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.Config;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
-using Dalamud.Interface.Internal;
-using Dalamud.Interface.Internal.Notifications;
+using Dalamud.Interface.ImGuiNotification;
+using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Utility;
@@ -379,7 +379,7 @@ public sealed class PayloadHandler {
                 Plugin.GameGui.OpenMapWithMapLink(map);
                 break;
             case QuestPayload quest:
-                LogWindow.Plugin.Common.Functions.Journal.OpenQuest(quest.Quest);
+                GameFunctions.GameFunctions.OpenQuestLog(quest.Quest);
                 break;
             case DalamudLinkPayload link:
                 ClickLinkPayload(chunk, payload, link);
@@ -601,7 +601,8 @@ public sealed class PayloadHandler {
                 }
             }
 
-            var isFriend = LogWindow.Plugin.Common.Functions.FriendList.List.Any(friend => friend.Name.TextValue == player.PlayerName && friend.HomeWorld == world.RowId);
+            var isFriend = GameFunctions.GameFunctions.GetFriends().Any(friend => friend.NameString == player.PlayerName && friend.HomeWorld == world.RowId);
+            Plugin.Log.Information($"Is Friend? {isFriend}");
             if (!isFriend && ImGui.Selectable(Language.Context_SendFriendRequest))
                 LogWindow.Plugin.Functions.SendFriendRequest(player.PlayerName, (ushort) world.RowId);
 
@@ -629,11 +630,11 @@ public sealed class PayloadHandler {
         // View Party Finder 0x2E
     }
 
-    private PlayerCharacter? FindCharacterForPayload(PlayerPayload payload)
+    private IPlayerCharacter? FindCharacterForPayload(PlayerPayload payload)
     {
         foreach (var obj in Plugin.ObjectTable)
         {
-            if (obj is not PlayerCharacter character)
+            if (obj is not IPlayerCharacter character)
                 continue;
 
             if (character.Name.TextValue != payload.PlayerName)

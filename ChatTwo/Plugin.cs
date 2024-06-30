@@ -1,10 +1,12 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using ChatTwo.GameFunctions;
 using ChatTwo.Ipc;
 using ChatTwo.Resources;
 using ChatTwo.Ui;
 using ChatTwo.Util;
+using Dalamud.Game;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects;
 using Dalamud.Interface.Windowing;
@@ -12,7 +14,6 @@ using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using ImGuiNET;
-using XivCommon;
 
 namespace ChatTwo;
 
@@ -22,7 +23,7 @@ public sealed class Plugin : IDalamudPlugin
     internal const string PluginName = "Chat 2";
 
     [PluginService] internal static IPluginLog Log { get; private set; } = null!;
-    [PluginService] internal static DalamudPluginInterface Interface { get; private set; } = null!;
+    [PluginService] internal static IDalamudPluginInterface Interface { get; private set; } = null!;
     [PluginService] internal static IChatGui ChatGui { get; private set; } = null!;
     [PluginService] internal static IClientState ClientState { get; private set; } = null!;
     [PluginService] internal static ICommandManager CommandManager { get; private set; } = null!;
@@ -39,6 +40,7 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IGameConfig GameConfig { get; private set; } = null!;
     [PluginService] internal static INotificationManager Notification { get; private set; } = null!;
     [PluginService] internal static IAddonLifecycle AddonLifecycle { get; private set; } = null!;
+    [PluginService] internal static ISigScanner Scanner { get; private set; } = null!;
 
     internal static Configuration Config = null!;
 
@@ -53,7 +55,7 @@ public sealed class Plugin : IDalamudPlugin
     internal LegacyMessageImporterWindow LegacyMessageImporterWindow { get; }
 
     internal Commands Commands { get; }
-    internal XivCommonBase Common { get; }
+    internal ChatCommon Common { get; }
     internal TextureCache TextureCache { get; }
     internal GameFunctions.GameFunctions Functions { get; }
     internal MessageManager MessageManager { get; }
@@ -80,10 +82,10 @@ public sealed class Plugin : IDalamudPlugin
             ImGuiUtil.Initialize(this);
 
             Commands = new Commands(this);
-            Common = new XivCommonBase(Interface);
+            Common = new ChatCommon(Scanner);
             TextureCache = new TextureCache();
             Functions = new GameFunctions.GameFunctions(this);
-            Ipc = new IpcManager(Interface);
+            Ipc = new IpcManager();
             ExtraChat = new ExtraChat(this);
             FontManager = new FontManager(this);
 
@@ -165,7 +167,6 @@ public sealed class Plugin : IDalamudPlugin
         MessageManager?.DisposeAsync().AsTask().Wait();
         Functions?.Dispose();
         TextureCache?.Dispose();
-        Common?.Dispose();
         Commands?.Dispose();
 
         EmoteCache.Dispose();

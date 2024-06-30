@@ -6,7 +6,7 @@ using ChatTwo.Util;
 using Dalamud.Game.Text;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Hooking;
-using Dalamud.Interface.Internal.Notifications;
+using Dalamud.Interface.ImGuiNotification;
 using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using Lumina.Excel.GeneratedSheets;
@@ -35,9 +35,7 @@ internal class MessageManager : IAsyncDisposable
     private readonly Thread PendingMessageThread;
     private readonly CancellationTokenSource PendingThreadCancellationToken = new();
 
-    // TODO Replace with delegate in API X
-    private Hook<ContentIdResolverDelegate>? ContentIdResolverHook { get; init; }
-    private unsafe delegate void ContentIdResolverDelegate(RaptureLogModule* agent, ulong contentId, int messageIndex, ushort worldId, ushort chatType);
+    private Hook<RaptureLogModule.Delegates.AddMsgSourceEntry>? ContentIdResolverHook { get; init; }
 
     internal ulong CurrentContentId
     {
@@ -57,7 +55,7 @@ internal class MessageManager : IAsyncDisposable
         PendingMessageThread = new Thread(() => ProcessPendingMessages(PendingThreadCancellationToken.Token));
         PendingMessageThread.Start();
 
-        ContentIdResolverHook = Plugin.GameInteropProvider.HookFromAddress<ContentIdResolverDelegate>(RaptureLogModule.Addresses.AddMsgSourceEntry.Value, ContentIdResolver);
+        ContentIdResolverHook = Plugin.GameInteropProvider.HookFromAddress<RaptureLogModule.Delegates.AddMsgSourceEntry>(RaptureLogModule.MemberFunctionPointers.AddMsgSourceEntry, ContentIdResolver);
         ContentIdResolverHook.Enable();
 
         Plugin.ChatGui.ChatMessageUnhandled += ChatMessage;
@@ -193,7 +191,7 @@ internal class MessageManager : IAsyncDisposable
     }
 
     public (SeString? Sender, SeString? Message) LastMessage = (null, null);
-    private void ChatMessage(XivChatType type, uint senderId, SeString sender, SeString message)
+    private void ChatMessage(XivChatType type, int timestamp, SeString sender, SeString message)
     {
         LastMessage = (sender, message);
 
@@ -202,7 +200,7 @@ internal class MessageManager : IAsyncDisposable
             ReceiverId = CurrentContentId,
             ContentId = 0,
             Type = type,
-            SenderId = senderId,
+            Timestamp = timestamp,
             Sender = sender,
             Content = message,
         };
@@ -220,9 +218,9 @@ internal class MessageManager : IAsyncDisposable
     // message's content ID. If multiple messages are received in the same tick,
     // this will be called for each message immediately after ChatMessage is
     // called for each message.
-    private unsafe void ContentIdResolver(RaptureLogModule* agent, ulong contentId, int messageIndex, ushort worldId, ushort chatType)
+    private unsafe void ContentIdResolver(RaptureLogModule* agent, ulong contentId, ulong accountId, int messageIndex, ushort worldId, ushort chatType)
     {
-        ContentIdResolverHook?.Original(agent, contentId, messageIndex, worldId, chatType);
+        ContentIdResolverHook?.Original(agent, contentId, accountId, messageIndex, worldId, chatType);
         if (PendingSync.Count == 0)
             return;
 
@@ -333,7 +331,7 @@ internal class MessageManager : IAsyncDisposable
         internal ulong ReceiverId { get; set; }
         internal ulong ContentId { get; set; } // 0 if unknown
         internal XivChatType Type { get; set; }
-        internal uint SenderId { get; set; }
+        internal int Timestamp { get; set; }
         internal SeString Sender { get; set; }
         internal SeString Content { get; set; }
     }
