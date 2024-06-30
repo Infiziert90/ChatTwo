@@ -347,7 +347,6 @@ internal sealed unsafe class Chat : IDisposable
         {
             // FIXME: this whole system sucks
             // FIXME v2: I hate everything about this, but it works
-
             Plugin.Framework.RunOnTick(() =>
             {
                 string? input = null;
@@ -360,8 +359,6 @@ internal sealed unsafe class Chat : IDisposable
                 var c = chars[0];
                 if (c != '\0' && !char.IsControl(c))
                     input = c.ToString();
-
-                Plugin.Log.Information($"Input was {c}");
 
                 try
                 {

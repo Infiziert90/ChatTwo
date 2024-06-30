@@ -200,14 +200,7 @@ internal unsafe class GameFunctions : IDisposable
 
     internal static InfoProxyCommonList.CharacterData[] GetFriends()
     {
-        ChatTwo.Plugin.Log.Information($"Address {(nint)InfoProxyFriendList.Instance():X}");
-        ChatTwo.Plugin.Log.Information($"Address CharaData {(nint)InfoProxyFriendList.Instance()->CharData:X}");
-        var list = InfoProxyFriendList.Instance()->CharDataSpan.ToArray();
-        foreach (var data in list)
-        {
-            ChatTwo.Plugin.Log.Information($"Data was: {data.NameString} {data.HomeWorld} {data.ContentId}");
-        }
-        return list;
+        return InfoProxyFriendList.Instance()->CharDataSpan.ToArray();
     }
 
     internal static void OpenQuestLog(Quest quest)

@@ -174,7 +174,6 @@ public sealed class Plugin : IDalamudPlugin
 
     private void Draw()
     {
-
         if (Config.HideInLoadingScreens && Condition[ConditionFlag.BetweenAreas])
             return;
 
