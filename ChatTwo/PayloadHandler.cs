@@ -602,7 +602,6 @@ public sealed class PayloadHandler {
             }
 
             var isFriend = GameFunctions.GameFunctions.GetFriends().Any(friend => friend.NameString == player.PlayerName && friend.HomeWorld == world.RowId);
-            Plugin.Log.Information($"Is Friend? {isFriend}");
             if (!isFriend && ImGui.Selectable(Language.Context_SendFriendRequest))
                 LogWindow.Plugin.Functions.SendFriendRequest(player.PlayerName, (ushort) world.RowId);
 

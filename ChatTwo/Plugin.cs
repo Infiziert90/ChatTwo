@@ -6,7 +6,6 @@ using ChatTwo.Ipc;
 using ChatTwo.Resources;
 using ChatTwo.Ui;
 using ChatTwo.Util;
-using Dalamud.Game;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.ClientState.Objects;
 using Dalamud.Interface.Windowing;
@@ -40,7 +39,6 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static IGameConfig GameConfig { get; private set; } = null!;
     [PluginService] internal static INotificationManager Notification { get; private set; } = null!;
     [PluginService] internal static IAddonLifecycle AddonLifecycle { get; private set; } = null!;
-    [PluginService] internal static ISigScanner Scanner { get; private set; } = null!;
 
     internal static Configuration Config = null!;
 
@@ -82,7 +80,7 @@ public sealed class Plugin : IDalamudPlugin
             ImGuiUtil.Initialize(this);
 
             Commands = new Commands(this);
-            Common = new ChatCommon(Scanner);
+            Common = new ChatCommon();
             TextureCache = new TextureCache();
             Functions = new GameFunctions.GameFunctions(this);
             Ipc = new IpcManager();
