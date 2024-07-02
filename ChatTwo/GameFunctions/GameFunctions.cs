@@ -76,19 +76,18 @@ internal unsafe class GameFunctions : IDisposable
         Plugin.Common.SendMessage($"/{commandName} add {Placeholder}");
     }
 
+    internal static T* GetAddon<T>(string name) where T : unmanaged
+    {
+        var addon = RaptureAtkModule.Instance()->RaptureAtkUnitManager.GetAddonByName(name);
+        return addon != null && addon->IsReady ? (T*)addon : null;
+    }
+
     internal static void SetAddonInteractable(string name, bool interactable)
     {
-        var unitManager = AtkStage.Instance()->RaptureAtkUnitManager;
-
-        var addon = (nint) unitManager->GetAddonByName(name);
-        if (addon == nint.Zero)
+        var addon = GetAddon<AtkUnitBase>(name);
+        if (addon == null)
             return;
-
-        var flags = (uint*) (addon + 0x180);
-        if (interactable)
-            *flags &= ~(1u << 22);
-        else
-            *flags |= 1 << 22;
+        addon->IsVisible = interactable;
     }
 
     internal static void SetChatInteractable(bool interactable)
@@ -101,62 +100,52 @@ internal unsafe class GameFunctions : IDisposable
 
     internal static bool IsAddonInteractable(string name)
     {
-        var unitManager = AtkStage.Instance()->RaptureAtkUnitManager;
-
-        var addon = (nint) unitManager->GetAddonByName(name);
-        if (addon == nint.Zero)
-            return false;
-
-        var flags = (uint*) (addon + 0x180);
-        return (*flags & (1 << 22)) == 0;
+        var addon = GetAddon<AtkUnitBase>(name);
+        return addon != null && addon->IsVisible;
     }
 
     internal static void OpenItemTooltip(uint id, ItemPayload.ItemKind itemKind)
     {
         var atkStage = AtkStage.Instance();
         var agent = AgentItemDetail.Instance();
-        var addon = atkStage->RaptureAtkUnitManager->GetAddonByName("ItemDetail");
+        var addon = GetAddon<AtkUnitBase>("ItemDetail");
 
         // atkStage ain't gonna be null or we have bigger problems
         if (agent == null || addon == null)
             return;
 
         var agentPtr = (nint) agent;
-        // addresses mentioned here are 6.11
+        // addresses mentioned here are 7.0
         // see the call near the end of AgentItemDetail.Update
-        // offsets valid as of 6.11
+        // offsets valid as of 7.0
 
-        // A54B19: sets some shit
-        *(uint*) (agentPtr + 0x20) = 22;
-        // A55218: switch goes down to default, which is what we want
+        // Switch goes down to default, which is what we want
         *(byte*) (agentPtr + 0x118) = itemKind == ItemPayload.ItemKind.EventItem ? (byte)8 : (byte)1;
-        // A54BE0: item id when hovering over item in chat
+        // Item id when hovering over item in chat
         *(uint*) (agentPtr + 0x11C) = id;
-        // A54BCC: always 0 when hovering over item in chat
+        // Always 0 when hovering over item in chat
         *(uint*) (agentPtr + 0x120) = 0;
-        // A558A5: skips a check to do with inventory
+        // Skips a check to do with inventory
         *(byte*) (agentPtr + 0x128) &= 0xEF;
         // Is also set to the ID of the item when in chat
-        *(uint*) (agentPtr + 0x138) = id;
-        // A54B3F: when set to 1, lets everything continue (one frame)
-        *(byte*) (agentPtr + 0x14A) = 1;
-        // A54B59: skips early return
-        *(byte*) (agentPtr + 0x14E) = 0;
+        agent->ItemId = id;
+        // When set to 1, lets everything continue (one frame)
+        *(byte*) (agentPtr + 0x1B2) = 1;
+        // Skips early return
+        *(byte*) (agentPtr + 0x1B6) = 0;
 
-        // this just probably needs to be set
+        // This just probably needs to be set
         agent->AddonId = addon->Id;
 
-        // vcall from E8 ?? ?? ?? ?? 0F B7 C0 48 83 C4 60 (FF 50 28 48 8B D3 48 8B CF)
-        var vf5 = (delegate* unmanaged<AtkUnitBase*, byte, uint, void>*) ((nint) addon->VirtualTable + 40);
-        // EA8BED: lets vf5 actually run
+        // Skips early return
         *(byte*) ((nint) atkStage + 0x2B4) |= 2;
-        (*vf5)(addon, 0, 15);
+        addon->Show(false, 15);
     }
 
     internal static void CloseItemTooltip()
     {
         // hide addon first to prevent the "addon close" sound
-        var addon = AtkStage.Instance()->RaptureAtkUnitManager->GetAddonByName("ItemDetail");
+        var addon = GetAddon<AtkUnitBase>("ItemDetail");
         if (addon != null)
             addon->Hide(true, false, 0);
 
