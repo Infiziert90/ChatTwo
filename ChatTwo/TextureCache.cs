@@ -24,7 +24,7 @@ internal class TextureCache : IDisposable
         if (dict.ContainsKey((icon, hq)))
             return;
 
-        var tex = Plugin.TextureProvider.GetFromGameIcon(new GameIconLookup(icon, hq)).GetWrapOrDefault();
+        var tex = Plugin.TextureProvider.GetFromGameIcon(new GameIconLookup(icon, hq)).RentAsync().Result;
         if (tex != null)
             dict[(icon, hq)] = tex;
     }
