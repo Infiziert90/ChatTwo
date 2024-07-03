@@ -555,7 +555,7 @@ public sealed class PayloadHandler {
             }
             else if (validContentId)
             {
-                LogWindow.Plugin.Functions.Chat.SetEurekaTellChannel(player.PlayerName, world.Name.ToString(), (ushort) world.RowId, chunk.Message!.ContentId, 0, false);
+                LogWindow.Plugin.Functions.Chat.SetEurekaTellChannel(player.PlayerName, world.Name.ToString(), (ushort) world.RowId, 0, chunk.Message!.ContentId, 0, false);
             }
 
             LogWindow.Activate = true;

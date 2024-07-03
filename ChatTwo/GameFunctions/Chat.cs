@@ -36,7 +36,7 @@ internal sealed unsafe class Chat : IDisposable
     private readonly delegate* unmanaged<RaptureLogModule*, ushort, Utf8String*, Utf8String*, ulong, ushort, byte, int, byte, void> PrintTellNative = null!;
 
     [Signature("E8 ?? ?? ?? ?? 48 8D 4C 24 ?? E8 ?? ?? ?? ?? 48 8D 8C 24 ?? ?? ?? ?? E8 ?? ?? ?? ?? B0 01")]
-    private readonly delegate* unmanaged<NetworkModule*, ulong, ushort, Utf8String*, Utf8String*, byte, ulong, bool> SendTellNative = null!;
+    private readonly delegate* unmanaged<NetworkModule*, ulong, ushort, Utf8String*, Utf8String*, ushort, ushort, bool> SendTellNative = null!;
 
     // Client::UI::AddonChatLog.OnRefresh
     [Signature("40 53 56 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 8B F0 8B FA", DetourName = nameof(ChatLogRefreshDetour))]
@@ -396,14 +396,8 @@ internal sealed unsafe class Chat : IDisposable
 
     private byte* ChangeChannelNameDetour(AgentChatLog* agent)
     {
-        // Last ShB patch
-        // +0x40  = chat channel (byte or uint?)
-        //          channel is 17 (maybe 18?) for tells
-        // +0x48  = pointer to channel name string
-        // +0xDA  = player name string for tells
-        // +0x120 = player world id for tells
         var ret = ChangeChannelNameHook.Original(agent);
-        if ((nint) agent == nint.Zero)
+        if (agent == null)
             return ret;
 
         var channel = (uint) RaptureShellModule.Instance()->ChatType;
@@ -425,8 +419,8 @@ internal sealed unsafe class Chat : IDisposable
         ushort worldId = 0;
         if (channel == (uint) InputChannel.Tell)
         {
-            playerName = MemoryHelper.ReadStringNullTerminated((nint) agent + 0xDA);
-            worldId = *(ushort*) (agent + 0x120);
+            playerName = SeString.Parse(agent->TellPlayerName).TextValue;
+            worldId = agent->TellWorldId;
             Plugin.Log.Debug($"Detected tell target '{playerName}'@{worldId}");
         }
 
@@ -448,13 +442,13 @@ internal sealed unsafe class Chat : IDisposable
         ReplyInSelectedChatModeHook!.Original(agent);
     }
 
-    private bool SetChatLogTellTargetDetour(RaptureShellModule* a1, Utf8String* name, Utf8String* a3, ushort world, ulong contentId, ushort reason, bool a7)
+    private bool SetChatLogTellTargetDetour(RaptureShellModule* a1, Utf8String* playerName, Utf8String* worldName, ushort worldId, ulong accountId, ulong contentId, ushort reason, bool setChatType)
     {
-        if (name != null)
+        if (playerName != null)
         {
             try
             {
-                var target = new TellTarget(name->ToString(), world, contentId, (TellReason) reason);
+                var target = new TellTarget(playerName->ToString(), worldId, contentId, (TellReason) reason);
                 Activated?.Invoke(new ChatActivatedArgs(new ChannelSwitchInfo(InputChannel.Tell))
                 {
                     TellReason = (TellReason) reason,
@@ -467,10 +461,10 @@ internal sealed unsafe class Chat : IDisposable
             }
         }
 
-        return SetChatLogTellTargetHook!.Original(a1, name, a3, world, contentId, reason, a7);
+        return SetChatLogTellTargetHook!.Original(a1, playerName, worldName, worldId, accountId, contentId, reason, setChatType);
     }
 
-    private void EurekaContextMenuTell(RaptureShellModule* param1, Utf8String* playerName, Utf8String* worldName, ushort world, ulong id, ushort param6)
+    private void EurekaContextMenuTell(RaptureShellModule* param1, Utf8String* playerName, Utf8String* worldName, ushort worldId, ulong accountId, ulong contentId, ushort reason)
     {
         if (!UsesTellTempChannel)
         {
@@ -478,8 +472,8 @@ internal sealed unsafe class Chat : IDisposable
             PreviousChannel = Channel.Channel;
         }
 
-        RaptureShellModule.Instance()->SetTellTargetInForay(playerName, worldName, world, id, param6, false);
-        EurekaContextMenuTellHook!.Original(param1, playerName, worldName, world, id, param6);
+        RaptureShellModule.Instance()->SetTellTargetInForay(playerName, worldName, worldId, accountId, contentId, reason, false);
+        EurekaContextMenuTellHook!.Original(param1, playerName, worldName, worldId, accountId, contentId, reason);
     }
 
     internal static void SetChannel(InputChannel channel, string? tellTarget = null)
@@ -501,7 +495,7 @@ internal sealed unsafe class Chat : IDisposable
         target->Dtor(true);
     }
 
-    internal void SetEurekaTellChannel(string name, string worldName, ushort worldId, ulong objectId, ushort param6, bool param7)
+    internal void SetEurekaTellChannel(string name, string worldName, ushort worldId, ulong accountId, ulong objectId, ushort reason, bool setChatType)
     {
         // param6 is 0 for contentId and 1 for objectId
         // param7 is always 0 ?
@@ -515,7 +509,7 @@ internal sealed unsafe class Chat : IDisposable
         var utfName = Utf8String.FromString(name);
         var utfWorld = Utf8String.FromString(worldName);
 
-        RaptureShellModule.Instance()->SetTellTargetInForay(utfName, utfWorld, worldId, objectId, param6, param7);
+        RaptureShellModule.Instance()->SetTellTargetInForay(utfName, utfWorld, worldId, accountId, objectId, reason, setChatType);
 
         utfName->Dtor(true);
         utfWorld->Dtor(true);
@@ -532,7 +526,6 @@ internal sealed unsafe class Chat : IDisposable
     private Keybind? GetKeybind(string id)
     {
         var agent = (nint) AgentModule.Instance()->GetAgentByInternalId(AgentId.Configkey);
-
         var a1 = *(void**) (agent + 0x78);
         if (a1 == null)
             return null;
@@ -585,7 +578,7 @@ internal sealed unsafe class Chat : IDisposable
         var logModule = RaptureLogModule.Instance();
         var networkModule = Framework.Instance()->GetNetworkModuleProxy()->NetworkModule;
 
-        var ok = SendTellNative(networkModule, contentId, homeWorld, uName, encoded, (byte) reason, homeWorld);
+        var ok = SendTellNative(networkModule, contentId, homeWorld, uName, encoded, (ushort) reason, homeWorld);
         if (ok)
             PrintTellNative(logModule, 33, uName, &decodedUtf8String, contentId, homeWorld, 255, 0, 0);
         else
@@ -596,7 +589,7 @@ internal sealed unsafe class Chat : IDisposable
         uMessage->Dtor(true);
     }
 
-    private byte[] EncodeMessage(string str) {
+    private static byte[] EncodeMessage(string str) {
         using var input = new Utf8String(str);
         using var ouput = new Utf8String();
 
