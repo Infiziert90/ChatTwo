@@ -85,11 +85,11 @@ internal sealed unsafe class Chat : IDisposable
         ReplyInSelectedChatModeHook = Plugin.GameInteropProvider.HookFromAddress<RaptureShellModule.Delegates.ReplyInSelectedChatMode>(RaptureShellModule.MemberFunctionPointers.ReplyInSelectedChatMode, ReplyInSelectedChatModeDetour);
         ReplyInSelectedChatModeHook.Enable();
 
-        SetChatLogTellTargetHook = Plugin.GameInteropProvider.HookFromAddress<RaptureShellModule.Delegates.SetContextTellTarget>(RaptureShellModule.MemberFunctionPointers.SetContextTellTarget, SetChatLogTellTargetDetour);
+        SetChatLogTellTargetHook = Plugin.GameInteropProvider.HookFromAddress<RaptureShellModule.Delegates.SetContextTellTarget>(RaptureShellModule.MemberFunctionPointers.SetContextTellTarget, SetContextTellTarget);
         SetChatLogTellTargetHook.Enable();
 
-        EurekaContextMenuTellHook = Plugin.GameInteropProvider.HookFromAddress<RaptureShellModule.Delegates.SetContextTellTargetInForay>(RaptureShellModule.MemberFunctionPointers.SetContextTellTargetInForay, EurekaContextMenuTell);
-        EurekaContextMenuTellHook.Enable();
+        // EurekaContextMenuTellHook = Plugin.GameInteropProvider.HookFromAddress<RaptureShellModule.Delegates.SetContextTellTargetInForay>(RaptureShellModule.MemberFunctionPointers.SetContextTellTargetInForay, SetContextTellTargetInForay);
+        // EurekaContextMenuTellHook.Enable();
 
         Plugin.Framework.Update += InterceptKeybinds;
         Plugin.ClientState.Login += Login;
@@ -442,7 +442,7 @@ internal sealed unsafe class Chat : IDisposable
         ReplyInSelectedChatModeHook!.Original(agent);
     }
 
-    private bool SetChatLogTellTargetDetour(RaptureShellModule* a1, Utf8String* playerName, Utf8String* worldName, ushort worldId, ulong accountId, ulong contentId, ushort reason, bool setChatType)
+    private bool SetContextTellTarget(RaptureShellModule* a1, Utf8String* playerName, Utf8String* worldName, ushort worldId, ulong accountId, ulong contentId, ushort reason, bool setChatType)
     {
         if (playerName != null)
         {
@@ -464,17 +464,35 @@ internal sealed unsafe class Chat : IDisposable
         return SetChatLogTellTargetHook!.Original(a1, playerName, worldName, worldId, accountId, contentId, reason, setChatType);
     }
 
-    private void EurekaContextMenuTell(RaptureShellModule* param1, Utf8String* playerName, Utf8String* worldName, ushort worldId, ulong accountId, ulong contentId, ushort reason)
-    {
-        if (!UsesTellTempChannel)
-        {
-            UsesTellTempChannel = true;
-            PreviousChannel = Channel.Channel;
-        }
-
-        RaptureShellModule.Instance()->SetTellTargetInForay(playerName, worldName, worldId, accountId, contentId, reason, false);
-        EurekaContextMenuTellHook!.Original(param1, playerName, worldName, worldId, accountId, contentId, reason);
-    }
+    // private void SetContextTellTargetInForay(RaptureShellModule* a1, Utf8String* playerName, Utf8String* worldName, ushort worldId, ulong accountId, ulong contentId, ushort reason)
+    // {
+    //     Plugin.Log.Information($"SetContextTellTargetInForay");
+    //     if (!UsesTellTempChannel)
+    //     {
+    //         UsesTellTempChannel = true;
+    //         PreviousChannel = Channel.Channel;
+    //     }
+    //
+    //     if (playerName != null)
+    //     {
+    //         try
+    //         {
+    //             Plugin.Log.Information($"Name {playerName->ToString()} World {worldName->ToString()} WorldId {worldId} accountId {accountId} ContentId {contentId} Reason {reason} rapture reason {a1->TellReason}");
+    //             var target = new TellTarget(playerName->ToString(), worldId, contentId, (TellReason) reason);
+    //             Activated?.Invoke(new ChatActivatedArgs(new ChannelSwitchInfo(InputChannel.Tell))
+    //             {
+    //                 TellReason = (TellReason) reason,
+    //                 TellTarget = target,
+    //             });
+    //         }
+    //         catch (Exception ex)
+    //         {
+    //             Plugin.Log.Error(ex, "Error in chat Activated event");
+    //         }
+    //     }
+    //
+    //     EurekaContextMenuTellHook!.Original(a1, playerName, worldName, worldId, accountId, contentId, reason);
+    // }
 
     internal static void SetChannel(InputChannel channel, string? tellTarget = null)
     {
@@ -577,6 +595,10 @@ internal sealed unsafe class Chat : IDisposable
 
         var logModule = RaptureLogModule.Instance();
         var networkModule = Framework.Instance()->GetNetworkModuleProxy()->NetworkModule;
+
+        // TODO: Remap TellReasons
+        if (reason == TellReason.Direct)
+            reason = TellReason.Friend;
 
         var ok = SendTellNative(networkModule, contentId, homeWorld, uName, encoded, (ushort) reason, homeWorld);
         if (ok)
