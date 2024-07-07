@@ -1,4 +1,4 @@
-using System.Numerics;
+﻿using System.Numerics;
 using System.Text;
 using ChatTwo.Code;
 using ChatTwo.GameFunctions.Types;
@@ -33,7 +33,7 @@ internal sealed unsafe class Chat : IDisposable
     private readonly delegate* unmanaged<nint, Utf8String*, nint, uint> GetKeybindNative = null!;
 
     [Signature("48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8D B9 ?? ?? ?? ?? 33 C0")]
-    private readonly delegate* unmanaged<RaptureLogModule*, ushort, Utf8String*, Utf8String*, ulong, ushort, byte, int, byte, void> PrintTellNative = null!;
+    private readonly delegate* unmanaged<RaptureLogModule*, ushort, Utf8String*, Utf8String*, ulong, ulong, ushort, byte, int, byte, void> PrintTellNative = null!;
 
     [Signature("E8 ?? ?? ?? ?? 48 8D 4C 24 ?? E8 ?? ?? ?? ?? 48 8D 8C 24 ?? ?? ?? ?? E8 ?? ?? ?? ?? B0 01")]
     private readonly delegate* unmanaged<NetworkModule*, ulong, ushort, Utf8String*, Utf8String*, ushort, ushort, bool> SendTellNative = null!;
@@ -602,7 +602,7 @@ internal sealed unsafe class Chat : IDisposable
 
         var ok = SendTellNative(networkModule, contentId, homeWorld, uName, encoded, (ushort) reason, homeWorld);
         if (ok)
-            PrintTellNative(logModule, 33, uName, &decodedUtf8String, contentId, homeWorld, 255, 0, 0);
+            PrintTellNative(logModule, 33, uName, &decodedUtf8String, 0, contentId, homeWorld, 255, 0, 0);
         else
             Plugin.ChatGui.PrintError(Language.Chat_SendTell_Error);
 
