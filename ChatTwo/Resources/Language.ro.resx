@@ -163,6 +163,12 @@
   <data name="Options_ShowNoviceNetwork_Description">
     <value>Afișează butonul de alăturare la Novice Network lângă butonul de setări daca ești conectat ca un mentor.</value>
   </data>
+  <data name="Options_ShowHideButton_Name" xml:space="preserve">
+        <value>Show hide button</value>
+    </data>
+  <data name="Options_ShowHideButton_Description" xml:space="preserve">
+        <value>Show a hide button next to the settings button. The chat window can be returned by pressing return or slash to focus it.</value>
+    </data>
   <data name="Options_FontSize_Name">
     <value>Dimensiunea textului</value>
   </data>
@@ -1168,6 +1174,9 @@
   <data name="DbViewer_TableField_Date" xml:space="preserve">
         <value>Date</value>
     </data>
+  <data name="DbViewer_TableField_Type" xml:space="preserve">
+        <value>Chat Type</value>
+    </data>
   <data name="DbViewer_TableField_Sender" xml:space="preserve">
         <value>Sender</value>
     </data>
@@ -1194,5 +1203,8 @@
     </data>
   <data name="DbViewer_DatePicker_FromTo" xml:space="preserve">
         <value>FromTo:</value>
+    </data>
+  <data name="Chat_SendTell_Error" xml:space="preserve">
+        <value>An error occured while sending this tell message</value>
     </data>
 </root>

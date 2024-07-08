@@ -163,6 +163,12 @@
   <data name="Options_ShowNoviceNetwork_Description">
     <value>以指导者身份登录时，在设置按钮旁边显示新人频道加入按钮。</value>
   </data>
+  <data name="Options_ShowHideButton_Name" xml:space="preserve">
+        <value>Show hide button</value>
+    </data>
+  <data name="Options_ShowHideButton_Description" xml:space="preserve">
+        <value>Show a hide button next to the settings button. The chat window can be returned by pressing return or slash to focus it.</value>
+    </data>
   <data name="Options_FontSize_Name">
     <value>字体大小</value>
   </data>
@@ -374,7 +380,7 @@
     <value>{0} 是一个完全重新创建游戏内聊天并使其变得更好的项目。</value>
   </data>
   <data name="Options_About_CrowdIn">
-    <value>点击左边的按钮来帮助翻译 {0}。</value>
+    <value>点击左边的按钮帮助翻译: </value>
   </data>
   <data name="Options_About_Translators">
     <value>翻译者</value>
@@ -389,7 +395,7 @@
     <value>右侧</value>
   </data>
   <data name="Options_CommandHelpSide_Name">
-    <value>Command help side (None = off)</value>
+    <value>命令帮助方向 (无 = 关闭)</value>
   </data>
   <data name="Options_CommandHelpSide_Description">
     <value>{0} 的一侧显示命令帮助。</value>
@@ -854,28 +860,28 @@
     <value>如果提示窗口被截断, 请启用本项</value>
   </data>
   <data name="ChatType_ExtraChatLinkshell1" xml:space="preserve">
-        <value>ExtraChat Linkshell [1]</value>
+        <value>ExtraChat 通讯贝 [1]</value>
     </data>
   <data name="ChatType_ExtraChatLinkshell2" xml:space="preserve">
-        <value>ExtraChat Linkshell [2]</value>
+        <value>ExtraChat 通讯贝 [2]</value>
     </data>
   <data name="ChatType_ExtraChatLinkshell3" xml:space="preserve">
-        <value>ExtraChat Linkshell [3]</value>
+        <value>ExtraChat 通讯贝 [3]</value>
     </data>
   <data name="ChatType_ExtraChatLinkshell4" xml:space="preserve">
-        <value>ExtraChat Linkshell [4]</value>
+        <value>ExtraChat 通讯贝 [4]</value>
     </data>
   <data name="ChatType_ExtraChatLinkshell5" xml:space="preserve">
-        <value>ExtraChat Linkshell [5]</value>
+        <value>ExtraChat 通讯贝 [5]</value>
     </data>
   <data name="ChatType_ExtraChatLinkshell6" xml:space="preserve">
-        <value>ExtraChat Linkshell [6]</value>
+        <value>ExtraChat 通讯贝 [6]</value>
     </data>
   <data name="ChatType_ExtraChatLinkshell7" xml:space="preserve">
-        <value>ExtraChat Linkshell [7]</value>
+        <value>ExtraChat 通讯贝 [7]</value>
     </data>
   <data name="ChatType_ExtraChatLinkshell8" xml:space="preserve">
-        <value>ExtraChat Linkshell [8]</value>
+        <value>ExtraChat 通讯贝 [8]</value>
     </data>
   <data name="Context_CopyContent">
     <value>复制内容</value>
@@ -1013,186 +1019,192 @@
         <value>注意，此更改将立即适用且无法取消！</value>
     </data>
   <data name="Options_KeepInputFocus_Name" xml:space="preserve">
-        <value>Keep input focus</value>
+        <value>保持输入焦点</value>
     </data>
   <data name="Options_KeepInputFocus_Description" xml:space="preserve">
-        <value>Keeps the input focus, even if you enter battle or do other actions.</value>
+        <value>保持输入焦点，即使你进入战斗或执行其他操作。</value>
     </data>
   <data name="Options_ShowEmotes_Name" xml:space="preserve">
-        <value>Show emotes</value>
+        <value>显示表情</value>
     </data>
   <data name="Options_ShowEmotes_Desc" xml:space="preserve">
-        <value>Replaces words with their emote version, currently supports BetterTTV.</value>
+        <value>用表情替换单词，目前支持 BetterTTV。</value>
     </data>
   <data name="Options_Emote_Tab" xml:space="preserve">
-        <value>Emotes</value>
+        <value>表情</value>
     </data>
   <data name="Options_Emote_BlockedEmotes" xml:space="preserve">
-        <value>Blocked emotes</value>
+        <value>已屏蔽的表情</value>
     </data>
   <data name="Options_Emote_EmoteTable" xml:space="preserve">
-        <value>Emote</value>
+        <value>表情</value>
     </data>
   <data name="Options_HideInBattle_Name" xml:space="preserve">
-        <value>Hide during battle</value>
+        <value>在战斗中隐藏</value>
     </data>
   <data name="Options_HideInBattle_Description" xml:space="preserve">
-        <value>Hide the chat during battles.</value>
+        <value>在战斗中隐藏聊天窗</value>
     </data>
   <data name="Options_Emote_EmoteStats" xml:space="preserve">
-        <value>Emote Stats</value>
+        <value>表情状态</value>
     </data>
   <data name="Options_Emote_Ready" xml:space="preserve">
-        <value>Ready</value>
+        <value>准备就绪</value>
     </data>
   <data name="Options_Emote_NotReady" xml:space="preserve">
-        <value>Not Ready</value>
+        <value>尚未准备好</value>
     </data>
   <data name="Options_Emote_Loaded" xml:space="preserve">
-        <value>Emotes available:</value>
+        <value>可用表情: </value>
     </data>
   <data name="Options_Preview_Description" xml:space="preserve">
-        <value>Displays a preview with special parameter evaluated, like emotes and &lt;item&gt;.</value>
+        <value>显示特殊参数预览，如表情和 &lt;item&gt;。</value>
     </data>
   <data name="Options_Preview_Name" xml:space="preserve">
-        <value>Position (None = off)</value>
+        <value>位置 (无 = 关闭)</value>
     </data>
   <data name="Options_Preview_None" xml:space="preserve">
-        <value>None</value>
+        <value>无</value>
     </data>
   <data name="Options_Preview_Inside" xml:space="preserve">
-        <value>Inside</value>
+        <value>内部</value>
     </data>
   <data name="Options_Preview_Top" xml:space="preserve">
-        <value>Top</value>
+        <value>顶部</value>
     </data>
   <data name="Options_Preview_Bottom" xml:space="preserve">
-        <value>Bottom</value>
+        <value>底部</value>
     </data>
   <data name="Options_Preview_Header" xml:space="preserve">
-        <value>Message Preview:</value>
+        <value>消息预览: </value>
     </data>
   <data name="Options_Preview_Tooltip" xml:space="preserve">
-        <value>Tooltip</value>
+        <value>提示框</value>
     </data>
   <data name="Options_PreviewOnlyIf_Name" xml:space="preserve">
-        <value>Must contain parameter</value>
+        <value>必须包含参数</value>
     </data>
   <data name="Options_PreviewOnlyIf_Description" xml:space="preserve">
-        <value>Only show if the text contains special parameter.</value>
+        <value>只显示包含特殊参数的文本。</value>
     </data>
   <data name="Options_PreviewMinimum_Name" xml:space="preserve">
-        <value>Minimum input length</value>
+        <value>最小输入长度</value>
     </data>
   <data name="Options_PreviewMinimum_Description" xml:space="preserve">
-        <value>Only show if the text length is greater-than or equal.</value>
+        <value>仅显示长度大于或等于此值的文本。</value>
     </data>
   <data name="Options_Preview_Tab" xml:space="preserve">
-        <value>Preview</value>
+        <value>预览</value>
     </data>
   <data name="Options_Changelog_Tab" xml:space="preserve">
-        <value>Changelog</value>
+        <value>更新日志</value>
     </data>
   <data name="Options_PrintChangelog_Name" xml:space="preserve">
-        <value>Print changelog</value>
+        <value>发送更新日志</value>
     </data>
   <data name="Options_PrintChangelog_Description" xml:space="preserve">
-        <value>Print the changelog to chat after an update.</value>
+        <value>在更新后向聊天框发送更新日志。</value>
     </data>
   <data name="Options_Warning_NotImplemented" xml:space="preserve">
-        <value>This feature isn't implemented yet</value>
+        <value>此功能尚未实现。</value>
     </data>
   <data name="Options_Changelog_Header" xml:space="preserve">
-        <value>Changelog:</value>
+        <value>更新日志: </value>
     </data>
   <data name="DateWidget_InvalidDate" xml:space="preserve">
-        <value>Date before {0} is not possible</value>
+        <value>{0} 日期前不可用</value>
     </data>
   <data name="DateWidget_Day_Sun" xml:space="preserve">
-        <value>Sun</value>
+        <value>星期日</value>
     </data>
   <data name="DateWidget_Day_Mon" xml:space="preserve">
-        <value>Mon</value>
+        <value>星期一</value>
     </data>
   <data name="DateWidget_Day_Tue" xml:space="preserve">
-        <value>Tue</value>
+        <value>星期二</value>
     </data>
   <data name="DateWidget_Day_Wed" xml:space="preserve">
-        <value>Wed</value>
+        <value>星期三</value>
     </data>
   <data name="DateWidget_Day_Thu" xml:space="preserve">
-        <value>Thu</value>
+        <value>星期四</value>
     </data>
   <data name="DateWidget_Day_Fri" xml:space="preserve">
-        <value>Fri</value>
+        <value>星期五</value>
     </data>
   <data name="DateWidget_Day_Sat" xml:space="preserve">
-        <value>Sat</value>
+        <value>星期六</value>
     </data>
   <data name="DateWidget_Month_January" xml:space="preserve">
-        <value>January</value>
+        <value>一月</value>
     </data>
   <data name="DateWidget_Month_February" xml:space="preserve">
-        <value>February</value>
+        <value>二月</value>
     </data>
   <data name="DateWidget_Month_March" xml:space="preserve">
-        <value>March</value>
+        <value>三月</value>
     </data>
   <data name="DateWidget_Month_April" xml:space="preserve">
-        <value>April</value>
+        <value>四月</value>
     </data>
   <data name="DateWidget_Month_May" xml:space="preserve">
-        <value>May</value>
+        <value>五月</value>
     </data>
   <data name="DateWidget_Month_June" xml:space="preserve">
-        <value>June</value>
+        <value>六月</value>
     </data>
   <data name="DateWidget_Month_July" xml:space="preserve">
-        <value>July</value>
+        <value>七月</value>
     </data>
   <data name="DateWidget_Month_August" xml:space="preserve">
-        <value>August</value>
+        <value>八月</value>
     </data>
   <data name="DateWidget_Month_September" xml:space="preserve">
-        <value>September</value>
+        <value>九月</value>
     </data>
   <data name="DateWidget_Month_October" xml:space="preserve">
-        <value>October</value>
+        <value>十月</value>
     </data>
   <data name="DateWidget_Month_November" xml:space="preserve">
-        <value>November</value>
+        <value>十一月</value>
     </data>
   <data name="DateWidget_Month_December" xml:space="preserve">
-        <value>December</value>
+        <value>十二月</value>
     </data>
   <data name="DbViewer_TableField_Date" xml:space="preserve">
-        <value>Date</value>
+        <value>日期</value>
+    </data>
+  <data name="DbViewer_TableField_Type" xml:space="preserve">
+        <value>Chat Type</value>
     </data>
   <data name="DbViewer_TableField_Sender" xml:space="preserve">
-        <value>Sender</value>
+        <value>发送人</value>
     </data>
   <data name="DbViewer_TableField_Content" xml:space="preserve">
-        <value>Content</value>
+        <value>内容</value>
     </data>
   <data name="DbViewer_Status_NothingFound" xml:space="preserve">
-        <value>Nothing Found.</value>
+        <value>未找到。</value>
     </data>
   <data name="DbViewer_Status_NoSearchResult" xml:space="preserve">
-        <value>Search had no match on this page.</value>
+        <value>在此页面上没有匹配的搜索。</value>
     </data>
   <data name="DbViewer_SearcHint" xml:space="preserve">
-        <value>Simple Sender/Content Search</value>
+        <value>简易发送人/内容搜索</value>
     </data>
   <data name="DbViewer_Page" xml:space="preserve">
-        <value>Page: {0} / {1} ({2} Rows) {3}</value>
+        <value>页: {0} / {1} ({2} 行) {3}</value>
     </data>
   <data name="DbViewer_LoadingIndicator" xml:space="preserve">
-        <value>[Loading...]</value>
+        <value>[加载中...]</value>
     </data>
   <data name="DbViewer_CharacterOption" xml:space="preserve">
-        <value>Only current character</value>
+        <value>只显示当前角色</value>
     </data>
   <data name="DbViewer_DatePicker_FromTo" xml:space="preserve">
-        <value>FromTo:</value>
+        <value>来自：</value>
+    </data>
+  <data name="Chat_SendTell_Error" xml:space="preserve">
+        <value>An error occured while sending this tell message</value>
     </data>
 </root>

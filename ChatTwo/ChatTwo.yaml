@@ -23,12 +23,7 @@ tags:
     - Replacement
 changelog:  |-
   **Updates**
-  - Fix tell reply hotkey not working
-  - Save the FFXIV font to disk instead of redownloading it on every startup
-    - This should prevent errors if your DNS is giving up
-  - Replace all sigs with CS version
-  - Fix flags not working in reply mode
-  - Force the main chat log to be always open
-  - Prevent emotes inside auto translation
-  - Linkshells appear in selection again
-  - Fix rotate mode not working for CW and Normal Linkshells
+  - Add hide button to chat [thanks dean]
+  - Fix incorrect parameter for print function [thanks Limiana]
+  - Improve keybind handling, maybe
+  - Loc updates

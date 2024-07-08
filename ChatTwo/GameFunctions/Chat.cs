@@ -256,6 +256,10 @@ internal sealed unsafe class Chat : IDisposable
         if (Plugin.ChatLogWindow is { CurrentTab.InputDisabled: true, IsHidden: false })
             return;
 
+        // Vanilla text input has focus
+        if (RaptureAtkModule.Instance()->AtkModule.IsTextInputActive())
+            return;
+
         var modifierState = (ModifierFlag) 0;
         foreach (var modifier in Enum.GetValues<ModifierFlag>())
         {
@@ -270,13 +274,8 @@ internal sealed unsafe class Chat : IDisposable
             if (!Keybinds.TryGetValue(toIntercept, out var keybind))
                 continue;
 
-            // Vanilla input has focus, so we ignore Ready Chat and Ready Command keybind
             if (toIntercept is "CMD_CHAT" or "CMD_COMMAND")
             {
-                // Vanilla text input has focus
-                if (RaptureAtkModule.Instance()->AtkModule.IsTextInputActive())
-                    continue;
-
                 // Direct chat option is selected
                 if (DirectChat)
                     continue;
