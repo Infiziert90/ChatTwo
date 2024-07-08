@@ -172,14 +172,20 @@ internal static class ImGuiUtil
         return textEnd;
     }
 
-    internal static bool IconButton(FontAwesomeIcon icon, string? id = null, string? tooltip = null)
+    internal static bool IconButton(FontAwesomeIcon icon, string? id = null, string? tooltip = null, int width = 0)
     {
         var label = icon.ToIconString();
         if (id != null)
             label += $"##{id}";
 
         Plugin.FontManager.FontAwesome.Push();
-        var ret = ImGui.Button(label);
+        var size = new Vector2(0, 0);
+        if (width > 0)
+        {
+            var style = ImGui.GetStyle();
+            size.X = width - 2 * style.CellPadding.X;
+        }
+        var ret = ImGui.Button(label, size);
         Plugin.FontManager.FontAwesome.Pop();
 
         if (tooltip != null && ImGui.IsItemHovered())

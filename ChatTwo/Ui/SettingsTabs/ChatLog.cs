@@ -35,6 +35,9 @@ internal sealed class ChatLog : ISettingsTab
             ImGuiUtil.OptionCheckbox(ref Mutable.ShowNoviceNetwork, Language.Options_ShowNoviceNetwork_Name, Language.Options_ShowNoviceNetwork_Description);
             ImGui.Spacing();
 
+            ImGuiUtil.OptionCheckbox(ref Mutable.ShowCloseButton, Language.Options_ShowCloseButton_Name, Language.Options_ShowCloseButton_Description);
+            ImGui.Spacing();
+
             ImGuiUtil.OptionCheckbox(ref Mutable.NativeItemTooltips, Language.Options_NativeItemTooltips_Name, string.Format(Language.Options_NativeItemTooltips_Description, Plugin.PluginName));
             ImGui.Spacing();
 
