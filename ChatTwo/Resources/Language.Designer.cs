@@ -2832,24 +2832,6 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show a close button next to the settings button. The chat window can be returned by pressing return or slash to focus it..
-        /// </summary>
-        internal static string Options_ShowCloseButton_Description {
-            get {
-                return ResourceManager.GetString("Options_ShowCloseButton_Description", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Show close button.
-        /// </summary>
-        internal static string Options_ShowCloseButton_Name {
-            get {
-                return ResourceManager.GetString("Options_ShowCloseButton_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Replaces words with their emote version, currently supports BetterTTV..
         /// </summary>
         internal static string Options_ShowEmotes_Desc {
@@ -2864,6 +2846,24 @@ namespace ChatTwo.Resources {
         internal static string Options_ShowEmotes_Name {
             get {
                 return ResourceManager.GetString("Options_ShowEmotes_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show a hide button next to the settings button. The chat window can be returned by pressing return or slash to focus it..
+        /// </summary>
+        internal static string Options_ShowHideButton_Description {
+            get {
+                return ResourceManager.GetString("Options_ShowHideButton_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show hide button.
+        /// </summary>
+        internal static string Options_ShowHideButton_Name {
+            get {
+                return ResourceManager.GetString("Options_ShowHideButton_Name", resourceCulture);
             }
         }
         

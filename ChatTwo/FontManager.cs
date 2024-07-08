@@ -174,8 +174,10 @@ public class FontManager
         });
 
         FontAwesome = Plugin.Interface.UiBuilder.FontAtlas.NewDelegateFontHandle(e =>
-            e.OnPreBuild(tk => tk.AddFontAwesomeIconFont(new SafeFontConfig { SizePx = Plugin.Config.FontSize })
-            ));
+        {
+            e.OnPreBuild(tk => tk.AddFontAwesomeIconFont(new SafeFontConfig { SizePx = Plugin.Config.FontSize }));
+            e.OnPostBuild(tk => tk.FitRatio(tk.Font));
+        });
 
         RegularFont = Plugin.Interface.UiBuilder.FontAtlas.NewDelegateFontHandle(
             e => e.OnPreBuild(

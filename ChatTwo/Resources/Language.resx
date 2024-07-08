@@ -163,11 +163,11 @@
     <data name="Options_ShowNoviceNetwork_Description">
         <value>Show the Novice Network join button next to the settings button if logged in as a mentor.</value>
     </data>
-    <data name="Options_ShowCloseButton_Name" xml:space="preserve">
-        <value>Show close button</value>
+    <data name="Options_ShowHideButton_Name" xml:space="preserve">
+        <value>Show hide button</value>
     </data>
-    <data name="Options_ShowCloseButton_Description" xml:space="preserve">
-        <value>Show a close button next to the settings button. The chat window can be returned by pressing return or slash to focus it.</value>
+    <data name="Options_ShowHideButton_Description" xml:space="preserve">
+        <value>Show a hide button next to the settings button. The chat window can be returned by pressing return or slash to focus it.</value>
     </data>
     <data name="Options_FontSize_Name">
         <value>Font size</value>
