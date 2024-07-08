@@ -20,6 +20,7 @@ internal class Configuration : IPluginConfiguration
     public bool HideWhenUiHidden = true;
     public bool HideInLoadingScreens;
     public bool HideInBattle;
+    public bool ShowCloseButton = true;
     public bool NativeItemTooltips = true;
     public bool PrettierTimestamps = true;
     public bool MoreCompactPretty;

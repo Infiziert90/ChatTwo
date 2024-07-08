@@ -662,7 +662,8 @@ public sealed class ChatLogWindow : Window
 
         var buttonWidth = afterIcon.X - beforeIcon.X;
         var showNovice = Plugin.Config.ShowNoviceNetwork && GameFunctions.GameFunctions.IsMentor();
-        var inputWidth = ImGui.GetContentRegionAvail().X - buttonWidth * (showNovice ? 2 : 1);
+        var buttonsRight = (showNovice ? 1 : 0) + (Plugin.Config.ShowCloseButton ? 1 : 0);
+        var inputWidth = ImGui.GetContentRegionAvail().X - buttonWidth * (1 + buttonsRight);
 
         var inputType = TempChannel?.ToChatType() ?? activeTab?.Channel?.ToChatType() ?? Plugin.Functions.Chat.Channel.Channel.ToChatType();
         var isCommand = Chat.Trim().StartsWith('/');
@@ -774,8 +775,15 @@ public sealed class ChatLogWindow : Window
 
         ImGui.SameLine();
 
-        if (ImGuiUtil.IconButton(FontAwesomeIcon.Cog))
+        if (ImGuiUtil.IconButton(FontAwesomeIcon.Cog, width: (int)buttonWidth))
             Plugin.SettingsWindow.Toggle();
+
+        if (Plugin.Config.ShowCloseButton)
+        {
+            ImGui.SameLine();
+            if (ImGuiUtil.IconButton(FontAwesomeIcon.Times, width: (int)buttonWidth))
+                UserHide();
+        }
 
         if (!showNovice)
             return;

@@ -2832,6 +2832,24 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show a close button next to the settings button. The chat window can be returned by pressing return or slash to focus it..
+        /// </summary>
+        internal static string Options_ShowCloseButton_Description {
+            get {
+                return ResourceManager.GetString("Options_ShowCloseButton_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show close button.
+        /// </summary>
+        internal static string Options_ShowCloseButton_Name {
+            get {
+                return ResourceManager.GetString("Options_ShowCloseButton_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Replaces words with their emote version, currently supports BetterTTV..
         /// </summary>
         internal static string Options_ShowEmotes_Desc {
