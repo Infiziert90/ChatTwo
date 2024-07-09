@@ -78,6 +78,7 @@ internal class Configuration : IPluginConfiguration
         HideWhenUiHidden = other.HideWhenUiHidden;
         HideInLoadingScreens = other.HideInLoadingScreens;
         HideInBattle = other.HideInBattle;
+        ShowHideButton = other.ShowHideButton;
         NativeItemTooltips = other.NativeItemTooltips;
         PrettierTimestamps = other.PrettierTimestamps;
         MoreCompactPretty = other.MoreCompactPretty;
