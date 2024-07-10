@@ -514,6 +514,27 @@
     <data name="Options_OverrideStyleDropdown_Name">
         <value>Styles</value>
     </data>
+    <data name="Options_ChatTabForwardKeybind_Name">
+        <value>Cycle chat tab forwards keybind</value>
+    </data>
+    <data name="Options_ChatTabBackwardKeybind_Name">
+        <value>Cycle chat tab backwards keybind</value>
+    </data>
+    <data name="Keybind_None">
+        <value>none set</value>
+    </data>
+    <data name="Keybind_EscToClear">
+        <value>ESC to clear</value>
+    </data>
+    <data name="Keybind_Modifier_Ctrl">
+        <value>Ctrl</value>
+    </data>
+    <data name="Keybind_Modifier_Alt">
+        <value>Alt</value>
+    </data>
+    <data name="Keybind_Modifier_Shift">
+        <value>Shift</value>
+    </data>
     <data name="AutoTranslate_Completion_Key">
         <value>Ctrl + {0}</value>
     </data>

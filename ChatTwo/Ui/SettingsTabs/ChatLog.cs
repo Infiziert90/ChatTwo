@@ -72,6 +72,18 @@ internal sealed class ChatLog : ISettingsTab
             ImGui.Separator();
             ImGui.Spacing();
 
+            ImGui.TextUnformatted(Language.Options_ChatTabForwardKeybind_Name);
+            ImGui.SetNextItemWidth(-1);
+            ImGuiUtil.KeybindInput("ChatTabForwardKeybind", ref Mutable.ChatTabForward);
+
+            ImGui.TextUnformatted(Language.Options_ChatTabBackwardKeybind_Name);
+            ImGui.SetNextItemWidth(-1);
+            ImGuiUtil.KeybindInput("ChatTabBackwardKeybind", ref Mutable.ChatTabBackward);
+
+            ImGui.Spacing();
+            ImGui.Separator();
+            ImGui.Spacing();
+
             ImGui.TextUnformatted(Language.Options_AdjustPosition_Name);
             var pos = Plugin.ChatLogWindow.LastWindowPos;
             ImGui.SetNextItemWidth(-1);

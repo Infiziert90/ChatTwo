@@ -1716,6 +1716,51 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ESC to clear.
+        /// </summary>
+        internal static string Keybind_EscToClear {
+            get {
+                return ResourceManager.GetString("Keybind_EscToClear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alt.
+        /// </summary>
+        internal static string Keybind_Modifier_Alt {
+            get {
+                return ResourceManager.GetString("Keybind_Modifier_Alt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ctrl.
+        /// </summary>
+        internal static string Keybind_Modifier_Ctrl {
+            get {
+                return ResourceManager.GetString("Keybind_Modifier_Ctrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Shift.
+        /// </summary>
+        internal static string Keybind_Modifier_Shift {
+            get {
+                return ResourceManager.GetString("Keybind_Modifier_Shift", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to none set.
+        /// </summary>
+        internal static string Keybind_None {
+            get {
+                return ResourceManager.GetString("Keybind_None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Flexible.
         /// </summary>
         internal static string KeybindMode_Flexible_Name {
@@ -1937,6 +1982,24 @@ namespace ChatTwo.Resources {
         internal static string Options_ChatLog_Tab {
             get {
                 return ResourceManager.GetString("Options_ChatLog_Tab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cycle chat tab backwards keybind.
+        /// </summary>
+        internal static string Options_ChatTabBackwardKeybind_Name {
+            get {
+                return ResourceManager.GetString("Options_ChatTabBackwardKeybind_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cycle chat tab forwards keybind.
+        /// </summary>
+        internal static string Options_ChatTabForwardKeybind_Name {
+            get {
+                return ResourceManager.GetString("Options_ChatTabForwardKeybind_Name", resourceCulture);
             }
         }
         

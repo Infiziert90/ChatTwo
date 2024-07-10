@@ -1,5 +1,7 @@
 using System.Numerics;
 using System.Text;
+using ChatTwo.GameFunctions.Types;
+using ChatTwo.Resources;
 using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Interface;
@@ -302,6 +304,74 @@ internal static class ImGuiUtil
 
             return ret;
         }
+    }
+
+    internal static bool KeybindInput(string id, ref ConfigKeyBind? keybind)
+    {
+        var idUint = ImGui.GetID(id);
+        using var pushedId = ImRaii.PushId(id);
+        if (ImGui.GetStateStorage().GetBool(idUint))
+        {
+            var io = ImGui.GetIO();
+            var currentMods = ModifierFlag.None;
+            var modString = "";
+            if (io.KeyCtrl)
+            {
+                currentMods |= ModifierFlag.Ctrl;
+                modString += Language.Keybind_Modifier_Ctrl + " + ";
+            }
+            if (io.KeyShift)
+            {
+                currentMods |= ModifierFlag.Shift;
+                modString += Language.Keybind_Modifier_Shift + " + ";
+            }
+            if (io.KeyAlt)
+            {
+                currentMods |= ModifierFlag.Alt;
+                modString += Language.Keybind_Modifier_Alt + " + ";
+            }
+
+            var text = $"{modString}... ({Language.Keybind_EscToClear})";
+            using (ImRaii.PushColor(ImGuiCol.TextSelectedBg, Vector4.Zero))
+            {
+                ImGui.SetKeyboardFocusHere();
+                ImGui.InputText(id + "##keybind", ref text, 0, ImGuiInputTextFlags.ReadOnly);
+            }
+
+            if (ImGui.IsKeyPressed(ImGuiKey.Escape))
+            {
+                keybind = null;
+                ImGui.GetStateStorage().SetBool(idUint, false);
+                return false;
+            }
+
+            foreach (var vk in Enum.GetValues(typeof(VirtualKey)).Cast<VirtualKey>())
+            {
+                if (vk is VirtualKey.NO_KEY or VirtualKey.CONTROL or VirtualKey.LCONTROL or VirtualKey.RCONTROL or VirtualKey.SHIFT or VirtualKey.LSHIFT or VirtualKey.RSHIFT or VirtualKey.MENU or VirtualKey.LMENU or VirtualKey.RMENU)
+                    continue;
+
+                if (!TryToImGui(vk, out var imKey) || !ImGui.IsKeyPressed(imKey))
+                    continue;
+
+                keybind = new ConfigKeyBind
+                {
+                    Modifier = currentMods,
+                    Key = vk
+                };
+                ImGui.GetStateStorage().SetBool(idUint, false);
+                return true;
+            }
+        }
+        else
+        {
+            var text = $"({Language.Keybind_None})";
+            if (keybind != null)
+                text = keybind.ToString();
+            if (ImGui.Button(text, new Vector2(-1, 0)))
+                ImGui.GetStateStorage().SetBool(idUint, true);
+        }
+
+        return false;
     }
 
     public static void DrawArrows(ref int selected, int min, int max, float spacing, int id = 0)

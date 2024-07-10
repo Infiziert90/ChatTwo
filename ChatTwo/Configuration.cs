@@ -1,11 +1,32 @@
 using System.Collections;
 using ChatTwo.Code;
+using ChatTwo.GameFunctions.Types;
 using ChatTwo.Resources;
 using ChatTwo.Ui;
 using Dalamud.Configuration;
+using Dalamud.Game.ClientState.Keys;
 using ImGuiNET;
 
 namespace ChatTwo;
+
+[Serializable]
+internal class ConfigKeyBind
+{
+    public ModifierFlag Modifier;
+    public VirtualKey Key;
+
+    public override string ToString()
+    {
+        var modString = "";
+        if (Modifier.HasFlag(ModifierFlag.Ctrl))
+            modString += Language.Keybind_Modifier_Ctrl + " + ";
+        if (Modifier.HasFlag(ModifierFlag.Shift))
+            modString += Language.Keybind_Modifier_Shift + " + ";
+        if (Modifier.HasFlag(ModifierFlag.Alt))
+            modString += Language.Keybind_Modifier_Alt + " + ";
+        return modString+Key.GetFancyName();
+    }
+}
 
 [Serializable]
 internal class Configuration : IPluginConfiguration
@@ -68,6 +89,9 @@ internal class Configuration : IPluginConfiguration
     public bool OverrideStyle;
     public string? ChosenStyle;
 
+    public ConfigKeyBind? ChatTabForward = null;
+    public ConfigKeyBind? ChatTabBackward = null;
+
     internal void UpdateFrom(Configuration other, bool backToOriginal)
     {
         if (backToOriginal)
@@ -123,6 +147,8 @@ internal class Configuration : IPluginConfiguration
         Tabs = other.Tabs.Select(t => t.Clone()).ToList();
         OverrideStyle = other.OverrideStyle;
         ChosenStyle = other.ChosenStyle;
+        ChatTabForward = other.ChatTabForward;
+        ChatTabBackward = other.ChatTabBackward;
     }
 }
 

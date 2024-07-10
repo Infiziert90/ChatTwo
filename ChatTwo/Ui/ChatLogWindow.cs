@@ -41,6 +41,7 @@ public sealed class ChatLogWindow : Window
 
     internal Vector4 DefaultText { get; set; }
 
+    internal int? WantedTab { get; set; }
     internal Tab? CurrentTab
     {
         get
@@ -348,6 +349,34 @@ public sealed class ChatLogWindow : Window
         if (ImGui.GetIO().KeyShift)
             modifierState |= ModifierFlag.Shift;
 
+        bool KeyPressed(VirtualKey vk, ModifierFlag modifier)
+        {
+            if (!vk.TryToImGui(out var key))
+                return false;
+
+            var modifierPressed = Plugin.Config.KeybindMode switch
+            {
+                KeybindMode.Strict => modifier == modifierState,
+                KeybindMode.Flexible => modifierState.HasFlag(modifier),
+                _ => false,
+            };
+
+            return ImGui.IsKeyPressed(key) && modifierPressed && (modifier != 0 || !modifiersOnly);
+        }
+
+        // Test for custom keybinds for changing chat tabs before checking
+        // vanilla keybinds.
+        if (Plugin.Config.ChatTabBackward != null && KeyPressed(Plugin.Config.ChatTabBackward.Key, Plugin.Config.ChatTabBackward.Modifier))
+        {
+            Plugin.ChatLogWindow.ChangeTabDelta(-1);
+            return;
+        }
+        if (Plugin.Config.ChatTabForward != null && KeyPressed(Plugin.Config.ChatTabForward.Key, Plugin.Config.ChatTabForward.Modifier))
+        {
+            Plugin.ChatLogWindow.ChangeTabDelta(1);
+            return;
+        }
+
         var turnedOff = new Dictionary<VirtualKey, (uint, string)>();
         foreach (var (toIntercept, keybind) in Plugin.Functions.Chat.Keybinds)
         {
@@ -356,17 +385,7 @@ public sealed class ChatLogWindow : Window
 
             void Intercept(VirtualKey vk, ModifierFlag modifier)
             {
-                if (!vk.TryToImGui(out var key))
-                    return;
-
-                var modifierPressed = Plugin.Config.KeybindMode switch
-                {
-                    KeybindMode.Strict => modifier == modifierState,
-                    KeybindMode.Flexible => modifierState.HasFlag(modifier),
-                    _ => false,
-                };
-
-                if (!ImGui.IsKeyPressed(key) || !modifierPressed || modifier == 0 && modifiersOnly)
+                if (!KeyPressed(vk, modifier))
                     return;
 
                 var bits = BitOperations.PopCount((uint) modifier);
@@ -393,6 +412,16 @@ public sealed class ChatLogWindow : Window
                 Plugin.Log.Error(ex, "Error in chat Activated event");
             }
         }
+    }
+
+    internal void ChangeTab(int index) => WantedTab = index;
+
+    internal void ChangeTabDelta(int offset)
+    {
+        var newIndex = (LastTab + offset) % Plugin.Config.Tabs.Count;
+        while (newIndex < 0)
+            newIndex += Plugin.Config.Tabs.Count;
+        ChangeTab(newIndex);
     }
 
     private void TabChannelSwitch(Tab tab)
@@ -1158,7 +1187,10 @@ public sealed class ChatLogWindow : Window
                 continue;
 
             var unread = tabI == LastTab || tab.UnreadMode == UnreadMode.None || tab.Unread == 0 ? "" : $" ({tab.Unread})";
-            using var tabItem = ImRaii.TabItem($"{tab.Name}{unread}###log-tab-{tabI}");
+            var flags = ImGuiTabItemFlags.None;
+            if (WantedTab == tabI)
+                flags |= ImGuiTabItemFlags.SetSelected;
+            using var tabItem = ImRaii.TabItem($"{tab.Name}{unread}###log-tab-{tabI}", flags);
             DrawTabContextMenu(tab, tabI);
 
             if (!tabItem.Success)
@@ -1174,6 +1206,7 @@ public sealed class ChatLogWindow : Window
             DrawMessageLog(tab, PayloadHandler, GetRemainingHeightForMessageLog(), switchedTab);
         }
 
+        WantedTab = null;
         return currentTab;
     }
 
@@ -1203,10 +1236,10 @@ public sealed class ChatLogWindow : Window
                         continue;
 
                     var unread = tabI == LastTab || tab.UnreadMode == UnreadMode.None || tab.Unread == 0 ? "" : $" ({tab.Unread})";
-                    var clicked = ImGui.Selectable($"{tab.Name}{unread}###log-tab-{tabI}", LastTab == tabI);
+                    var clicked = ImGui.Selectable($"{tab.Name}{unread}###log-tab-{tabI}", LastTab == tabI || WantedTab == tabI);
                     DrawTabContextMenu(tab, tabI);
 
-                    if (!clicked)
+                    if (!clicked && WantedTab != tabI)
                         continue;
 
                     currentTab = tabI;
@@ -1229,6 +1262,7 @@ public sealed class ChatLogWindow : Window
         if (currentTab > -1)
             DrawMessageLog(Plugin.Config.Tabs[currentTab], PayloadHandler, childHeight, switchedTab);
 
+        WantedTab = null;
         return currentTab;
     }
 

@@ -266,6 +266,36 @@ internal sealed unsafe class Chat : IDisposable
                 modifierState |= modifier;
         }
 
+        bool KeyPressed(VirtualKey key, ModifierFlag modifier)
+        {
+            if (!Plugin.KeyState.IsVirtualKeyValid(key))
+                return false;
+
+            var modifierPressed = Plugin.Config.KeybindMode switch
+            {
+                KeybindMode.Strict => modifier == modifierState,
+                KeybindMode.Flexible => modifierState.HasFlag(modifier),
+                _ => false,
+            };
+
+            return modifierPressed && Plugin.KeyState[key];
+        }
+
+        // Test for custom keybinds for changing chat tabs before checking
+        // vanilla keybinds.
+        if (Plugin.Config.ChatTabBackward != null && KeyPressed(Plugin.Config.ChatTabBackward.Key, Plugin.Config.ChatTabBackward.Modifier))
+        {
+            Plugin.KeyState[Plugin.Config.ChatTabBackward.Key] = false;
+            Plugin.ChatLogWindow.ChangeTabDelta(-1);
+            return;
+        }
+        if (Plugin.Config.ChatTabForward != null && KeyPressed(Plugin.Config.ChatTabForward.Key, Plugin.Config.ChatTabForward.Modifier))
+        {
+            Plugin.KeyState[Plugin.Config.ChatTabForward.Key] = false;
+            Plugin.ChatLogWindow.ChangeTabDelta(1);
+            return;
+        }
+
         var turnedOff = new Dictionary<VirtualKey, (uint, string)>();
         foreach (var toIntercept in KeybindsToIntercept.Keys)
         {
@@ -281,20 +311,7 @@ internal sealed unsafe class Chat : IDisposable
 
             void Intercept(VirtualKey key, ModifierFlag modifier)
             {
-                if (!Plugin.KeyState.IsVirtualKeyValid(key))
-                    return;
-
-                var modifierPressed = Plugin.Config.KeybindMode switch
-                {
-                    KeybindMode.Strict => modifier == modifierState,
-                    KeybindMode.Flexible => modifierState.HasFlag(modifier),
-                    _ => false,
-                };
-
-                if (!modifierPressed)
-                    return;
-
-                if (!Plugin.KeyState[key])
+                if (!KeyPressed(key, modifier))
                     return;
 
                 var bits = BitOperations.PopCount((uint) modifier);
