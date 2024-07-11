@@ -85,6 +85,9 @@ public sealed class ChatLogWindow : Window
     private const uint ChatCloseSfx = 3u;
     private bool PlayedClosingSound = true;
 
+    private long FrameTime; // set every frame
+    private long LastActivityTime = Environment.TickCount64;
+
     private readonly ExcelSheet<World> WorldSheet;
     private readonly ExcelSheet<LogFilter> LogFilterSheet;
     private readonly ExcelSheet<TextCommand> TextCommandSheet;
@@ -148,6 +151,18 @@ public sealed class ChatLogWindow : Window
     private void Activated(ChatActivatedArgs args)
     {
         Activate = true;
+        PlayedClosingSound = false;
+        if (Plugin.Config.PlaySounds)
+            UIModule.PlaySound(ChatOpenSfx);
+
+        // Don't set the channel or text content when activating a disabled tab.
+        if (CurrentTab?.InputDisabled == true)
+        {
+            // The closing sound would've been immediately played in this case.
+            PlayedClosingSound = true;
+            return;
+        }
+
         if (args.AddIfNotPresent != null && !Chat.Contains(args.AddIfNotPresent))
             Chat += args.AddIfNotPresent;
 
@@ -203,10 +218,6 @@ public sealed class ChatLogWindow : Window
 
         if (info.Text != null && Chat.Length == 0)
             Chat = info.Text;
-
-        PlayedClosingSound = false;
-        if (Plugin.Config.PlaySounds)
-            UIModule.PlaySound(ChatOpenSfx);
     }
 
     private bool IsValidCommand(string command)
@@ -471,7 +482,23 @@ public sealed class ChatLogWindow : Window
 
     public override bool DrawConditions()
     {
-        return !IsHidden;
+        FrameTime = Environment.TickCount64;
+        if (IsHidden)
+            return false;
+        if (!Plugin.Config.HideWhenInactive || Activate)
+        {
+            LastActivityTime = FrameTime;
+            return true;
+        }
+
+        var currentTab = CurrentTab; // local to avoid calling the getter repeatedly
+        var lastActivityTime = Plugin.Config.Tabs
+            .Where(tab => tab.UnreadMode is not UnreadMode.None || tab == currentTab)
+            .Select(tab => tab.LastMessageTime)
+            .DefaultIfEmpty(0)
+            .Max();
+        lastActivityTime = Math.Max(lastActivityTime, LastActivityTime);
+        return FrameTime - lastActivityTime <= 1000 * Plugin.Config.InactivityHideTimeout;
     }
 
     public override void PreDraw()
@@ -485,6 +512,12 @@ public sealed class ChatLogWindow : Window
 
     public override void PostDraw()
     {
+        // Set Activate to false after draw to avoid repeatedly trying to focus
+        // the text input in a tab with input disabled. The usual way that
+        // Activate gets disabled is via the text input callback, but that
+        // doesn't get called if the input is disabled.
+        if (CurrentTab?.InputDisabled == true)
+            Activate = false;
         if (Plugin.Config is { OverrideStyle: true, ChosenStyle: not null })
             StyleModel.GetConfiguredStyles()?.FirstOrDefault(style => style.Name == Plugin.Config.ChosenStyle)?.Pop();
     }
@@ -740,7 +773,10 @@ public sealed class ChatLogWindow : Window
             }
 
             if (ImGui.IsItemActive())
+            {
                 HandleKeybinds(true);
+                LastActivityTime = FrameTime;
+            }
 
             // Only trigger unfocused if we are currently not calling the auto complete
             if (!Activate && !ImGui.IsItemActive() && AutoCompleteInfo == null)
@@ -784,6 +820,9 @@ public sealed class ChatLogWindow : Window
             if (ImGuiUtil.IconButton(FontAwesomeIcon.EyeSlash, width: (int)buttonWidth))
                 UserHide();
         }
+
+        if (ImGui.IsWindowHovered(ImGuiHoveredFlags.ChildWindows))
+            LastActivityTime = FrameTime;
 
         if (!showNovice)
             return;

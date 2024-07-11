@@ -406,6 +406,18 @@
     <data name="Options_HideWhenUiHidden_Description">
         <value>Hide {0} when the game UI is hidden.</value>
     </data>
+    <data name="Options_HideWhenInactive_Name">
+        <value>Hide when inactive</value>
+    </data>
+    <data name="Options_HideWhenInactive_Description">
+        <value>Hide the chat after a configurable period of inactivity. The current tab and any tabs with unread indicators enabled are considered for activity.</value>
+    </data>
+    <data name="Options_InactivityHideTimeout_Name">
+        <value>Inactivity timeout</value>
+    </data>
+    <data name="Options_InactivityHideTimeout_Description">
+        <value>How long to wait (in seconds) before considering the chat log inactive.</value>
+    </data>
     <data name="Options_KeybindMode_Name">
         <value>Keybind mode</value>
     </data>

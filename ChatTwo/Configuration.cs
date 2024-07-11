@@ -20,6 +20,8 @@ internal class Configuration : IPluginConfiguration
     public bool HideWhenUiHidden = true;
     public bool HideInLoadingScreens;
     public bool HideInBattle;
+    public bool HideWhenInactive;
+    public int InactivityHideTimeout = 10;
     public bool ShowHideButton = true;
     public bool NativeItemTooltips = true;
     public bool PrettierTimestamps = true;
@@ -78,6 +80,8 @@ internal class Configuration : IPluginConfiguration
         HideWhenUiHidden = other.HideWhenUiHidden;
         HideInLoadingScreens = other.HideInLoadingScreens;
         HideInBattle = other.HideInBattle;
+        HideWhenInactive = other.HideWhenInactive;
+        InactivityHideTimeout = other.InactivityHideTimeout;
         ShowHideButton = other.ShowHideButton;
         NativeItemTooltips = other.NativeItemTooltips;
         PrettierTimestamps = other.PrettierTimestamps;
@@ -169,6 +173,9 @@ internal class Tab
     public uint Unread;
 
     [NonSerialized]
+    public long LastMessageTime;
+
+    [NonSerialized]
     public MessageList Messages = new();
 
     [NonSerialized]
@@ -192,7 +199,10 @@ internal class Tab
     {
         Messages.AddPrune(message, MessageManager.MessageDisplayLimit);
         if (unread)
+        {
             Unread += 1;
+            LastMessageTime = Environment.TickCount64;
+        }
     }
 
     internal void Clear()
