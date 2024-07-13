@@ -902,11 +902,12 @@ public sealed class ChatLogWindow : Window
 
     private void DrawLogTableStyle(Tab tab, PayloadHandler handler, bool switchedTab)
     {
+        var compact = Plugin.Config.MoreCompactPretty;
         var oldItemSpacing = ImGui.GetStyle().ItemSpacing;
         var oldCellPadding = ImGui.GetStyle().CellPadding;
 
         using (ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, Vector2.Zero))
-        using (ImRaii.PushStyle(ImGuiStyleVar.CellPadding, oldCellPadding with { Y = 0 }, Plugin.Config.MoreCompactPretty))
+        using (ImRaii.PushStyle(ImGuiStyleVar.CellPadding, oldCellPadding with { Y = 0 }, compact))
         {
             using var table = ImRaii.Table("timestamp-table", 2, ImGuiTableFlags.PreciseWidths);
             if (!table.Success)
@@ -915,12 +916,14 @@ public sealed class ChatLogWindow : Window
             ImGui.TableSetupColumn("timestamps", ImGuiTableColumnFlags.WidthFixed);
             ImGui.TableSetupColumn("messages", ImGuiTableColumnFlags.WidthStretch);
 
-            DrawMessages(tab, handler, true, Plugin.Config.MoreCompactPretty, oldCellPadding.Y);
+            DrawMessages(tab, handler, true, compact, oldCellPadding.Y);
 
             using (ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, oldItemSpacing))
             using (ImRaii.PushStyle(ImGuiStyleVar.CellPadding, oldCellPadding))
             {
-                if (switchedTab || ImGui.GetScrollY() >= ImGui.GetScrollMaxY())
+                // Custom styles can have cellPadding that go above 4, which GetScrollY isn't respecting
+                var cellPaddingOffset = !compact && oldCellPadding.Y > 4f ? oldCellPadding.Y - 4f : 0f;
+                if (switchedTab || ImGui.GetScrollY() + cellPaddingOffset >= ImGui.GetScrollMaxY())
                     ImGui.SetScrollHereY(1f);
 
                 handler.Draw();
