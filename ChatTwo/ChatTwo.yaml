@@ -23,7 +23,7 @@ tags:
     - Replacement
 changelog:  |-
   **Updates**
-  - Add hide button to chat [thanks dean]
-  - Fix incorrect parameter for print function [thanks Limiana]
-  - Improve keybind handling, maybe
-  - Loc updates
+  - More keybind handling improvements
+  - Add keybinds for switching tabs [thanks dean]
+  - Add auto hide after inactivity [default false, thanks dean]
+  - Fix auto scroll failing if custom cell padding is used [thanks zbee]

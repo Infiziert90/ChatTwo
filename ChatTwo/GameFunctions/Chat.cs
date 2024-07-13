@@ -29,8 +29,9 @@ namespace ChatTwo.GameFunctions;
 internal sealed unsafe class Chat : IDisposable
 {
     // Functions
+    // Replace with <https://github.com/aers/FFXIVClientStructs/pull/1036>
     [Signature("E8 ?? ?? ?? ?? 48 8D 4D A0 8B F8")]
-    private readonly delegate* unmanaged<nint, Utf8String*, nint, uint> GetKeybindNative = null!;
+    private readonly delegate* unmanaged<UIInputData*, Utf8String*, nint, uint> GetKeybindNative = null!;
 
     [Signature("48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8D B9 ?? ?? ?? ?? 33 C0")]
     private readonly delegate* unmanaged<RaptureLogModule*, ushort, Utf8String*, Utf8String*, ulong, ulong, ushort, byte, int, byte, void> PrintTellNative = null!;
@@ -537,16 +538,11 @@ internal sealed unsafe class Chat : IDisposable
         _ => VirtualKey.NO_KEY,
     };
 
-    private Keybind? GetKeybind(string id)
+    private Keybind GetKeybind(string id)
     {
-        var agent = (nint) AgentModule.Instance()->GetAgentByInternalId(AgentId.Configkey);
-        var a1 = *(void**) (agent + 0x78);
-        if (a1 == null)
-            return null;
-
-        var outData = stackalloc byte[32];
+        var outData = stackalloc byte[11];
         var idString = Utf8String.FromString(id);
-        GetKeybindNative((nint) a1, idString, (nint) outData);
+        GetKeybindNative(UIInputData.Instance(), idString, (nint) outData);
         idString->Dtor(true);
 
         var key1 = (VirtualKey) outData[0];
