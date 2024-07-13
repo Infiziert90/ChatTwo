@@ -2418,6 +2418,24 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hide the chat after a configurable period of inactivity. The current tab and any tabs with unread indicators enabled are considered for activity..
+        /// </summary>
+        internal static string Options_HideWhenInactive_Description {
+            get {
+                return ResourceManager.GetString("Options_HideWhenInactive_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hide when inactive.
+        /// </summary>
+        internal static string Options_HideWhenInactive_Name {
+            get {
+                return ResourceManager.GetString("Options_HideWhenInactive_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hide {0} when you are not logged in to a character..
         /// </summary>
         internal static string Options_HideWhenNotLoggedIn_Description {
@@ -2450,6 +2468,24 @@ namespace ChatTwo.Resources {
         internal static string Options_HideWhenUiHidden_Name {
             get {
                 return ResourceManager.GetString("Options_HideWhenUiHidden_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to How long to wait (in seconds) before considering the chat log inactive..
+        /// </summary>
+        internal static string Options_InactivityHideTimeout_Description {
+            get {
+                return ResourceManager.GetString("Options_InactivityHideTimeout_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inactivity timeout.
+        /// </summary>
+        internal static string Options_InactivityHideTimeout_Name {
+            get {
+                return ResourceManager.GetString("Options_InactivityHideTimeout_Name", resourceCulture);
             }
         }
         

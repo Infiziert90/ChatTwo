@@ -1,7 +1,5 @@
 using ChatTwo.Resources;
 using ChatTwo.Util;
-using Dalamud.Interface.Style;
-using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 
 namespace ChatTwo.Ui.SettingsTabs;
@@ -38,6 +36,19 @@ internal sealed class Display : ISettingsTab
 
         ImGuiUtil.OptionCheckbox(ref Mutable.HideInBattle, Language.Options_HideInBattle_Name, Language.Options_HideInBattle_Description);
         ImGui.Spacing();
+
+        ImGuiUtil.OptionCheckbox(ref Mutable.HideWhenInactive, Language.Options_HideWhenInactive_Name, Language.Options_HideWhenInactive_Description);
+        ImGui.Spacing();
+
+        if (Mutable.HideWhenInactive)
+        {
+            ImGuiUtil.InputIntVertical(Language.Options_InactivityHideTimeout_Name,
+                Language.Options_InactivityHideTimeout_Description, ref Mutable.InactivityHideTimeout, 1, 10);
+            // Enforce a minimum of 2 seconds to avoid people soft locking
+            // themselves.
+            Mutable.InactivityHideTimeout = Math.Max(2, Mutable.InactivityHideTimeout);
+            ImGui.Spacing();
+        }
 
         ImGuiUtil.OptionCheckbox(ref Mutable.PrettierTimestamps, Language.Options_PrettierTimestamps_Name, Language.Options_PrettierTimestamps_Description);
 

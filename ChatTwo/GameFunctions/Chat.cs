@@ -253,9 +253,6 @@ internal sealed unsafe class Chat : IDisposable
             LastRefresh = Environment.TickCount64;
         }
 
-        if (Plugin.ChatLogWindow is { CurrentTab.InputDisabled: true, IsHidden: false })
-            return;
-
         // Vanilla text input has focus
         if (RaptureAtkModule.Instance()->AtkModule.IsTextInputActive())
             return;
