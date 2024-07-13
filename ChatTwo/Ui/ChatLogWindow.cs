@@ -920,7 +920,7 @@ public sealed class ChatLogWindow : Window
             using (ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, oldItemSpacing))
             using (ImRaii.PushStyle(ImGuiStyleVar.CellPadding, oldCellPadding))
             {
-                if (switchedTab || ImGui.GetScrollY() >= ImGui.GetScrollMaxY())
+                if (switchedTab || ImGui.GetScrollY() >= ImGui.GetScrollMaxY()-16)
                     ImGui.SetScrollHereY(1f);
 
                 handler.Draw();
