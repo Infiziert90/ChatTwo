@@ -315,9 +315,7 @@ internal unsafe class KeybindManager : IDisposable {
     private void UpdateKeybinds()
     {
         foreach (var name in KeybindsToIntercept.Keys)
-        {
             Keybinds[name] = GetKeybind(name);
-        }
     }
 
     private static ModifierFlag GetModifiers(KeyboardSource source)
@@ -348,6 +346,10 @@ internal unsafe class KeybindManager : IDisposable {
     {
         if (key == VirtualKey.NO_KEY)
             return false;
+
+        if (!Plugin.KeyState.IsVirtualKeyValid(key))
+            return false;
+
         if (source == KeyboardSource.Game)
             return Plugin.KeyState[key];
 

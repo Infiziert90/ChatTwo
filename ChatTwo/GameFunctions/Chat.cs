@@ -394,11 +394,11 @@ internal sealed unsafe class Chat : IDisposable
 
     private static byte[] EncodeMessage(string str) {
         using var input = new Utf8String(str);
-        using var ouput = new Utf8String();
+        using var output = new Utf8String();
 
         input.Copy(PronounModule.Instance()->ProcessString(&input, true));
-        ouput.Copy(PronounModule.Instance()->ProcessString(&input, false));
-        return ouput.AsSpan().ToArray();
+        output.Copy(PronounModule.Instance()->ProcessString(&input, false));
+        return output.AsSpan().ToArray();
     }
 
     internal bool IsCharValid(char c)
