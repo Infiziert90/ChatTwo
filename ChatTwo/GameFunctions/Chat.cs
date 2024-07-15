@@ -1,15 +1,11 @@
-﻿using System.Numerics;
-using System.Text;
+﻿using System.Text;
 using ChatTwo.Code;
 using ChatTwo.GameFunctions.Types;
 using ChatTwo.Resources;
 using ChatTwo.Util;
-using Dalamud.Game.ClientState.Keys;
-using Dalamud.Game.Config;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Hooking;
 using Dalamud.Memory;
-using Dalamud.Plugin.Services;
 using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Application.Network;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
@@ -29,10 +25,6 @@ namespace ChatTwo.GameFunctions;
 internal sealed unsafe class Chat : IDisposable
 {
     // Functions
-    // Replace with <https://github.com/aers/FFXIVClientStructs/pull/1036>
-    [Signature("E8 ?? ?? ?? ?? 48 8D 4D A0 8B F8")]
-    private readonly delegate* unmanaged<UIInputData*, Utf8String*, nint, uint> GetKeybindNative = null!;
-
     [Signature("48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8D B9 ?? ?? ?? ?? 33 C0")]
     private readonly delegate* unmanaged<RaptureLogModule*, ushort, Utf8String*, Utf8String*, ulong, ulong, ushort, byte, int, byte, void> PrintTellNative = null!;
 
@@ -54,11 +46,6 @@ internal sealed unsafe class Chat : IDisposable
     [Signature("48 8D 35 ?? ?? ?? ?? 8B 05", ScanType = ScanType.StaticAddress)]
     private readonly char* CurrentCharacter = null!;
 
-    // Events
-
-    internal event ChatActivatedEventDelegate? Activated;
-    internal delegate void ChatActivatedEventDelegate(ChatActivatedArgs args);
-
     private Plugin Plugin { get; }
 
     /// <summary>
@@ -69,9 +56,6 @@ internal sealed unsafe class Chat : IDisposable
 
     internal bool UsesTellTempChannel { get; set; }
     internal InputChannel? PreviousChannel { get; private set; }
-
-    private bool DirectChat;
-    private long LastRefresh;
 
     internal Chat(Plugin plugin)
     {
@@ -92,7 +76,6 @@ internal sealed unsafe class Chat : IDisposable
         // EurekaContextMenuTellHook = Plugin.GameInteropProvider.HookFromAddress<RaptureShellModule.Delegates.SetContextTellTargetInForay>(RaptureShellModule.MemberFunctionPointers.SetContextTellTargetInForay, SetContextTellTargetInForay);
         // EurekaContextMenuTellHook.Enable();
 
-        Plugin.Framework.Update += InterceptKeybinds;
         Plugin.ClientState.Login += Login;
         Login();
     }
@@ -100,15 +83,12 @@ internal sealed unsafe class Chat : IDisposable
     public void Dispose()
     {
         Plugin.ClientState.Login -= Login;
-        Plugin.Framework.Update -= InterceptKeybinds;
 
         SetChatLogTellTargetHook?.Dispose();
         ReplyInSelectedChatModeHook?.Dispose();
         ChangeChannelNameHook?.Dispose();
         ChatLogRefreshHook?.Dispose();
         EurekaContextMenuTellHook?.Dispose();
-
-        Activated = null;
     }
 
     internal string? GetLinkshellName(uint idx)
@@ -164,182 +144,6 @@ internal sealed unsafe class Chat : IDisposable
         return 0xFF | (rgb << 8);
     }
 
-    private readonly Dictionary<string, Keybind> _keybinds = new();
-    internal IReadOnlyDictionary<string, Keybind> Keybinds => _keybinds;
-
-    internal static readonly IReadOnlyDictionary<string, ChannelSwitchInfo> KeybindsToIntercept = new Dictionary<string, ChannelSwitchInfo>
-    {
-        ["CMD_CHAT"] = new(null),
-        ["CMD_COMMAND"] = new(null, text: "/"),
-        ["CMD_REPLY"] = new(InputChannel.Tell, rotate: RotateMode.Forward),
-        ["CMD_REPLY_REV"] = new(InputChannel.Tell, rotate: RotateMode.Reverse),
-        ["CMD_SAY"] = new(InputChannel.Say),
-        ["CMD_YELL"] = new(InputChannel.Yell),
-        ["CMD_SHOUT"] = new(InputChannel.Shout),
-        ["CMD_PARTY"] = new(InputChannel.Party),
-        ["CMD_ALLIANCE"] = new(InputChannel.Alliance),
-        ["CMD_FREECOM"] = new(InputChannel.FreeCompany),
-        ["PVPTEAM_CHAT"] = new(InputChannel.PvpTeam),
-        ["CMD_CWLINKSHELL"] = new(InputChannel.CrossLinkshell1, rotate: RotateMode.Forward),
-        ["CMD_CWLINKSHELL_REV"] = new(InputChannel.CrossLinkshell1, rotate: RotateMode.Reverse),
-        ["CMD_CWLINKSHELL_1"] = new(InputChannel.CrossLinkshell1),
-        ["CMD_CWLINKSHELL_2"] = new(InputChannel.CrossLinkshell2),
-        ["CMD_CWLINKSHELL_3"] = new(InputChannel.CrossLinkshell3),
-        ["CMD_CWLINKSHELL_4"] = new(InputChannel.CrossLinkshell4),
-        ["CMD_CWLINKSHELL_5"] = new(InputChannel.CrossLinkshell5),
-        ["CMD_CWLINKSHELL_6"] = new(InputChannel.CrossLinkshell6),
-        ["CMD_CWLINKSHELL_7"] = new(InputChannel.CrossLinkshell7),
-        ["CMD_CWLINKSHELL_8"] = new(InputChannel.CrossLinkshell8),
-        ["CMD_LINKSHELL"] = new(InputChannel.Linkshell1, rotate: RotateMode.Forward),
-        ["CMD_LINKSHELL_REV"] = new(InputChannel.Linkshell1, rotate: RotateMode.Reverse),
-        ["CMD_LINKSHELL_1"] = new(InputChannel.Linkshell1),
-        ["CMD_LINKSHELL_2"] = new(InputChannel.Linkshell2),
-        ["CMD_LINKSHELL_3"] = new(InputChannel.Linkshell3),
-        ["CMD_LINKSHELL_4"] = new(InputChannel.Linkshell4),
-        ["CMD_LINKSHELL_5"] = new(InputChannel.Linkshell5),
-        ["CMD_LINKSHELL_6"] = new(InputChannel.Linkshell6),
-        ["CMD_LINKSHELL_7"] = new(InputChannel.Linkshell7),
-        ["CMD_LINKSHELL_8"] = new(InputChannel.Linkshell8),
-        ["CMD_BEGINNER"] = new(InputChannel.NoviceNetwork),
-        ["CMD_REPLY_ALWAYS"] = new(InputChannel.Tell, true, RotateMode.Forward),
-        ["CMD_REPLY_REV_ALWAYS"] = new(InputChannel.Tell, true, RotateMode.Reverse),
-        ["CMD_SAY_ALWAYS"] = new(InputChannel.Say, true),
-        ["CMD_YELL_ALWAYS"] = new(InputChannel.Yell, true),
-        ["CMD_PARTY_ALWAYS"] = new(InputChannel.Party, true),
-        ["CMD_ALLIANCE_ALWAYS"] = new(InputChannel.Alliance, true),
-        ["CMD_FREECOM_ALWAYS"] = new(InputChannel.FreeCompany, true),
-        ["PVPTEAM_CHAT_ALWAYS"] = new(InputChannel.PvpTeam, true),
-        ["CMD_CWLINKSHELL_ALWAYS"] = new(InputChannel.CrossLinkshell1, true, RotateMode.Forward),
-        ["CMD_CWLINKSHELL_ALWAYS_REV"] = new(InputChannel.CrossLinkshell1, true, RotateMode.Reverse),
-        ["CMD_CWLINKSHELL_1_ALWAYS"] = new(InputChannel.CrossLinkshell1, true),
-        ["CMD_CWLINKSHELL_2_ALWAYS"] = new(InputChannel.CrossLinkshell2, true),
-        ["CMD_CWLINKSHELL_3_ALWAYS"] = new(InputChannel.CrossLinkshell3, true),
-        ["CMD_CWLINKSHELL_4_ALWAYS"] = new(InputChannel.CrossLinkshell4, true),
-        ["CMD_CWLINKSHELL_5_ALWAYS"] = new(InputChannel.CrossLinkshell5, true),
-        ["CMD_CWLINKSHELL_6_ALWAYS"] = new(InputChannel.CrossLinkshell6, true),
-        ["CMD_CWLINKSHELL_7_ALWAYS"] = new(InputChannel.CrossLinkshell7, true),
-        ["CMD_CWLINKSHELL_8_ALWAYS"] = new(InputChannel.CrossLinkshell8, true),
-        ["CMD_LINKSHELL_ALWAYS"] = new(InputChannel.Linkshell1, true, RotateMode.Forward),
-        ["CMD_LINKSHELL_REV_ALWAYS"] = new(InputChannel.Linkshell1, true, RotateMode.Reverse),
-        ["CMD_LINKSHELL_1_ALWAYS"] = new(InputChannel.Linkshell1, true),
-        ["CMD_LINKSHELL_2_ALWAYS"] = new(InputChannel.Linkshell2, true),
-        ["CMD_LINKSHELL_3_ALWAYS"] = new(InputChannel.Linkshell3, true),
-        ["CMD_LINKSHELL_4_ALWAYS"] = new(InputChannel.Linkshell4, true),
-        ["CMD_LINKSHELL_5_ALWAYS"] = new(InputChannel.Linkshell5, true),
-        ["CMD_LINKSHELL_6_ALWAYS"] = new(InputChannel.Linkshell6, true),
-        ["CMD_LINKSHELL_7_ALWAYS"] = new(InputChannel.Linkshell7, true),
-        ["CMD_LINKSHELL_8_ALWAYS"] = new(InputChannel.Linkshell8, true),
-        ["CMD_BEGINNER_ALWAYS"] = new(InputChannel.NoviceNetwork, true),
-    };
-
-    private void UpdateKeybinds()
-    {
-        foreach (var name in KeybindsToIntercept.Keys)
-        {
-            var keybind = GetKeybind(name);
-            if (keybind is null)
-                continue;
-
-            _keybinds[name] = keybind;
-        }
-    }
-
-    private void InterceptKeybinds(IFramework framework1)
-    {
-        // Refresh current keybinds every 5s
-        if (LastRefresh + 5 * 1000 < Environment.TickCount64)
-        {
-            UpdateKeybinds();
-            DirectChat = Plugin.GameConfig.TryGet(UiControlOption.DirectChat, out bool option) && option;
-            LastRefresh = Environment.TickCount64;
-        }
-
-        // Vanilla text input has focus
-        if (RaptureAtkModule.Instance()->AtkModule.IsTextInputActive())
-            return;
-
-        var modifierState = (ModifierFlag) 0;
-        foreach (var modifier in Enum.GetValues<ModifierFlag>())
-        {
-            var modifierKey = GetKeyForModifier(modifier);
-            if (modifierKey != VirtualKey.NO_KEY && Plugin.KeyState[modifierKey])
-                modifierState |= modifier;
-        }
-
-        bool KeyPressed(VirtualKey key, ModifierFlag modifier)
-        {
-            if (!Plugin.KeyState.IsVirtualKeyValid(key))
-                return false;
-
-            var modifierPressed = Plugin.Config.KeybindMode switch
-            {
-                KeybindMode.Strict => modifier == modifierState,
-                KeybindMode.Flexible => modifierState.HasFlag(modifier),
-                _ => false,
-            };
-
-            return modifierPressed && Plugin.KeyState[key];
-        }
-
-        // Test for custom keybinds for changing chat tabs before checking
-        // vanilla keybinds.
-        if (Plugin.Config.ChatTabBackward != null && KeyPressed(Plugin.Config.ChatTabBackward.Key, Plugin.Config.ChatTabBackward.Modifier))
-        {
-            Plugin.KeyState[Plugin.Config.ChatTabBackward.Key] = false;
-            Plugin.ChatLogWindow.ChangeTabDelta(-1);
-            return;
-        }
-        if (Plugin.Config.ChatTabForward != null && KeyPressed(Plugin.Config.ChatTabForward.Key, Plugin.Config.ChatTabForward.Modifier))
-        {
-            Plugin.KeyState[Plugin.Config.ChatTabForward.Key] = false;
-            Plugin.ChatLogWindow.ChangeTabDelta(1);
-            return;
-        }
-
-        var turnedOff = new Dictionary<VirtualKey, (uint, string)>();
-        foreach (var toIntercept in KeybindsToIntercept.Keys)
-        {
-            if (!Keybinds.TryGetValue(toIntercept, out var keybind))
-                continue;
-
-            if (toIntercept is "CMD_CHAT" or "CMD_COMMAND")
-            {
-                // Direct chat option is selected
-                if (DirectChat)
-                    continue;
-            }
-
-            void Intercept(VirtualKey key, ModifierFlag modifier)
-            {
-                if (!KeyPressed(key, modifier))
-                    return;
-
-                var bits = BitOperations.PopCount((uint) modifier);
-                if (!turnedOff.TryGetValue(key, out var previousBits) || previousBits.Item1 < bits)
-                    turnedOff[key] = ((uint) bits, toIntercept);
-            }
-
-            Intercept(keybind.Key1, keybind.Modifier1);
-            Intercept(keybind.Key2, keybind.Modifier2);
-        }
-
-        foreach (var (key, (_, keybind)) in turnedOff)
-        {
-            Plugin.KeyState[key] = false;
-            if (!KeybindsToIntercept.TryGetValue(keybind, out var info))
-                continue;
-
-            try
-            {
-                Activated?.Invoke(new ChatActivatedArgs(info) { TellReason = TellReason.Reply, });
-            }
-            catch (Exception ex)
-            {
-                Plugin.Log.Error(ex, "Error in chat Activated event");
-            }
-        }
-    }
-
     private void Login()
     {
         var agent = AgentChatLog.Instance();
@@ -357,7 +161,7 @@ internal sealed unsafe class Chat : IDisposable
         if (eventId != 0x31 || value == null || value->UInt is not (0x05 or 0x0C))
             return ChatLogRefreshHook!.Original(log, eventId, value);
 
-        if (DirectChat && CurrentCharacter != null)
+        if (Plugin.Functions.KeybindManager.DirectChat && CurrentCharacter != null)
         {
             // FIXME: this whole system sucks
             // FIXME v2: I hate everything about this, but it works
@@ -376,7 +180,7 @@ internal sealed unsafe class Chat : IDisposable
 
                 try
                 {
-                    Activated?.Invoke(new ChatActivatedArgs(new ChannelSwitchInfo(null)) { Input = input, });
+                    Plugin.ChatLogWindow.Activated(new ChatActivatedArgs(new ChannelSwitchInfo(null)) { Input = input, });
                 }
                 catch (Exception ex)
                 {
@@ -397,7 +201,7 @@ internal sealed unsafe class Chat : IDisposable
 
         try
         {
-            Activated?.Invoke(new ChatActivatedArgs(new ChannelSwitchInfo(null)) { AddIfNotPresent = addIfNotPresent, });
+            Plugin.ChatLogWindow.Activated(new ChatActivatedArgs(new ChannelSwitchInfo(null)) { AddIfNotPresent = addIfNotPresent, });
         }
         catch (Exception ex)
         {
@@ -463,7 +267,7 @@ internal sealed unsafe class Chat : IDisposable
             try
             {
                 var target = new TellTarget(playerName->ToString(), worldId, contentId, (TellReason) reason);
-                Activated?.Invoke(new ChatActivatedArgs(new ChannelSwitchInfo(InputChannel.Tell))
+                Plugin.ChatLogWindow.Activated(new ChatActivatedArgs(new ChannelSwitchInfo(InputChannel.Tell))
                 {
                     TellReason = (TellReason) reason,
                     TellTarget = target,
@@ -545,38 +349,6 @@ internal sealed unsafe class Chat : IDisposable
 
         utfName->Dtor(true);
         utfWorld->Dtor(true);
-    }
-
-    private static VirtualKey GetKeyForModifier(ModifierFlag modifierFlag) => modifierFlag switch
-    {
-        ModifierFlag.Shift => VirtualKey.SHIFT,
-        ModifierFlag.Ctrl => VirtualKey.CONTROL,
-        ModifierFlag.Alt => VirtualKey.MENU,
-        _ => VirtualKey.NO_KEY,
-    };
-
-    private Keybind GetKeybind(string id)
-    {
-        var outData = stackalloc byte[11];
-        var idString = Utf8String.FromString(id);
-        GetKeybindNative(UIInputData.Instance(), idString, (nint) outData);
-        idString->Dtor(true);
-
-        var key1 = (VirtualKey) outData[0];
-        if (key1 is VirtualKey.F23)
-            key1 = VirtualKey.OEM_2;
-
-        var key2 = (VirtualKey) outData[2];
-        if (key2 is VirtualKey.F23)
-            key2 = VirtualKey.OEM_2;
-
-        return new Keybind
-        {
-            Key1 = key1,
-            Modifier1 = (ModifierFlag) outData[1],
-            Key2 = key2,
-            Modifier2 = (ModifierFlag) outData[3],
-        };
     }
 
     internal TellHistoryInfo? GetTellHistoryInfo(int index)

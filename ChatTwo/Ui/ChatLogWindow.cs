@@ -3,12 +3,12 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;
 using ChatTwo.Code;
+using ChatTwo.GameFunctions;
 using ChatTwo.GameFunctions.Types;
 using ChatTwo.Resources;
 using ChatTwo.Util;
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.ClientState.Conditions;
-using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface;
@@ -121,7 +121,6 @@ public sealed class ChatLogWindow : Window
         TextCommandSheet = Plugin.DataManager.GetExcelSheet<TextCommand>()!;
         FontIcon = Plugin.TextureProvider.CreateFromTexFile(Plugin.DataManager.GetFile<TexFile>("common/font/fonticon_ps5.tex")!);
 
-        Plugin.Functions.Chat.Activated += Activated;
         Plugin.ClientState.Login += Login;
         Plugin.ClientState.Logout += Logout;
 
@@ -133,7 +132,6 @@ public sealed class ChatLogWindow : Window
         Plugin.AddonLifecycle.UnregisterListener(AddonEvent.PostRequestedUpdate, "ItemDetail", PayloadHandler.MoveTooltip);
         Plugin.ClientState.Logout -= Logout;
         Plugin.ClientState.Login -= Login;
-        Plugin.Functions.Chat.Activated -= Activated;
         FontIcon?.Dispose();
         Plugin.Commands.Register("/chat2").Execute -= ToggleChat;
         Plugin.Commands.Register("/clearlog2").Execute -= ClearLog;
@@ -149,7 +147,7 @@ public sealed class ChatLogWindow : Window
         Plugin.MessageManager.FilterAllTabsAsync();
     }
 
-    private void Activated(ChatActivatedArgs args)
+    internal void Activated(ChatActivatedArgs args)
     {
         Activate = true;
         PlayedClosingSound = false;
@@ -335,83 +333,6 @@ public sealed class ChatLogWindow : Window
             height -= Plugin.InputPreview.PreviewHeight;
 
         return height;
-    }
-
-    private void HandleKeybinds(bool modifiersOnly = false)
-    {
-        var modifierState = (ModifierFlag) 0;
-        if (ImGui.GetIO().KeyAlt)
-            modifierState |= ModifierFlag.Alt;
-
-        if (ImGui.GetIO().KeyCtrl)
-            modifierState |= ModifierFlag.Ctrl;
-
-        if (ImGui.GetIO().KeyShift)
-            modifierState |= ModifierFlag.Shift;
-
-        bool KeyPressed(VirtualKey vk, ModifierFlag modifier)
-        {
-            if (!vk.TryToImGui(out var key))
-                return false;
-
-            var modifierPressed = Plugin.Config.KeybindMode switch
-            {
-                KeybindMode.Strict => modifier == modifierState,
-                KeybindMode.Flexible => modifierState.HasFlag(modifier),
-                _ => false,
-            };
-
-            return ImGui.IsKeyPressed(key) && modifierPressed && (modifier != 0 || !modifiersOnly);
-        }
-
-        // Test for custom keybinds for changing chat tabs before checking
-        // vanilla keybinds.
-        if (Plugin.Config.ChatTabBackward != null && KeyPressed(Plugin.Config.ChatTabBackward.Key, Plugin.Config.ChatTabBackward.Modifier))
-        {
-            Plugin.ChatLogWindow.ChangeTabDelta(-1);
-            return;
-        }
-        if (Plugin.Config.ChatTabForward != null && KeyPressed(Plugin.Config.ChatTabForward.Key, Plugin.Config.ChatTabForward.Modifier))
-        {
-            Plugin.ChatLogWindow.ChangeTabDelta(1);
-            return;
-        }
-
-        var turnedOff = new Dictionary<VirtualKey, (uint, string)>();
-        foreach (var (toIntercept, keybind) in Plugin.Functions.Chat.Keybinds)
-        {
-            if (toIntercept is "CMD_CHAT" or "CMD_COMMAND")
-                continue;
-
-            void Intercept(VirtualKey vk, ModifierFlag modifier)
-            {
-                if (!KeyPressed(vk, modifier))
-                    return;
-
-                var bits = BitOperations.PopCount((uint) modifier);
-                if (!turnedOff.TryGetValue(vk, out var previousBits) || previousBits.Item1 < bits)
-                    turnedOff[vk] = ((uint) bits, toIntercept);
-            }
-
-            Intercept(keybind.Key1, keybind.Modifier1);
-            Intercept(keybind.Key2, keybind.Modifier2);
-        }
-
-        foreach (var (_, (_, keybind)) in turnedOff)
-        {
-            if (!GameFunctions.Chat.KeybindsToIntercept.TryGetValue(keybind, out var info))
-                continue;
-
-            try
-            {
-                TellReason? reason = info.Channel == InputChannel.Tell ? TellReason.Reply : null;
-                Activated(new ChatActivatedArgs(info) { TellReason = reason, });
-            }
-            catch (Exception ex)
-            {
-                Plugin.Log.Error(ex, "Error in chat Activated event");
-            }
-        }
     }
 
     internal void ChangeTab(int index) => WantedTab = index;
@@ -801,9 +722,10 @@ public sealed class ChatLogWindow : Window
                 }
             }
 
+            // Process keybinds that have modifiers while the chat is focused.
             if (ImGui.IsItemActive())
             {
-                HandleKeybinds(true);
+                Plugin.Functions.KeybindManager.HandleKeybinds(KeyboardSource.ImGui, true, true);
                 LastActivityTime = FrameTime;
             }
 

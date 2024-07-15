@@ -25,11 +25,13 @@ internal unsafe class GameFunctions : IDisposable
     #endregion
 
     private Plugin Plugin { get; }
+    internal KeybindManager KeybindManager { get; }
     internal Chat Chat { get; }
 
     internal GameFunctions(Plugin plugin)
     {
         Plugin = plugin;
+        KeybindManager = new KeybindManager(plugin);
         Chat = new Chat(Plugin);
 
         Plugin.GameInteropProvider.InitializeFromAttributes(this);
@@ -40,6 +42,7 @@ internal unsafe class GameFunctions : IDisposable
     public void Dispose()
     {
         Chat.Dispose();
+        KeybindManager.Dispose();
 
         ResolveTextCommandPlaceholderHook?.Dispose();
 
