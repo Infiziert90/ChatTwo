@@ -101,15 +101,15 @@ internal unsafe class KeybindManager : IDisposable {
     private static readonly IReadOnlyCollection<VirtualKey> ModifierlessChatKeys = new[]
     {
         // VirtualKey.NO_KEY,
-        VirtualKey.LBUTTON,
-        VirtualKey.RBUTTON,
-        VirtualKey.CANCEL,
-        VirtualKey.MBUTTON,
-        VirtualKey.XBUTTON1,
-        VirtualKey.XBUTTON2,
-        VirtualKey.BACK,
-        VirtualKey.TAB,
-        VirtualKey.CLEAR,
+        // VirtualKey.LBUTTON,
+        // VirtualKey.RBUTTON,
+        // VirtualKey.CANCEL,
+        // VirtualKey.MBUTTON,
+        // VirtualKey.XBUTTON1,
+        // VirtualKey.XBUTTON2,
+        // VirtualKey.BACK,
+        // VirtualKey.TAB, // handled by ChatLogWindow
+        // VirtualKey.CLEAR,
         // VirtualKey.RETURN, // handled by imgui
         // VirtualKey.SHIFT,
         // VirtualKey.CONTROL,
@@ -130,18 +130,18 @@ internal unsafe class KeybindManager : IDisposable {
         // VirtualKey.SPACE,
         VirtualKey.PRIOR,
         VirtualKey.NEXT,
-        VirtualKey.END,
-        VirtualKey.HOME,
-        // VirtualKey.LEFT, // handled by imgui
-        VirtualKey.UP,
+        // VirtualKey.END,
+        // VirtualKey.HOME,
+        // VirtualKey.LEFT,  // handled by imgui
+        // VirtualKey.UP,    // handled by ChatLogWindow
         // VirtualKey.RIGHT, // handled by imgui
-        VirtualKey.DOWN,
-        VirtualKey.SELECT,
+        // VirtualKey.DOWN,  // handled by ChatLogWindow
+        // VirtualKey.SELECT,
         VirtualKey.PRINT,
         VirtualKey.EXECUTE,
         VirtualKey.SNAPSHOT,
-        VirtualKey.INSERT,
-        VirtualKey.DELETE,
+        // VirtualKey.INSERT,
+        // VirtualKey.DELETE,
         VirtualKey.HELP,
         // VirtualKey.KEY_0,
         // VirtualKey.KEY_1,
@@ -223,8 +223,8 @@ internal unsafe class KeybindManager : IDisposable {
         VirtualKey.F22,
         VirtualKey.F23,
         VirtualKey.F24,
-        VirtualKey.NUMLOCK,
-        VirtualKey.SCROLL,
+        // VirtualKey.NUMLOCK,
+        // VirtualKey.SCROLL,
         // VirtualKey.OEM_FJ_JISHO,
         // VirtualKey.OEM_NEC_EQUAL,
         // VirtualKey.OEM_FJ_MASSHOU,
