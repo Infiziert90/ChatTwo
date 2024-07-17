@@ -1,5 +1,6 @@
 using ChatTwo.Resources;
 using ChatTwo.Util;
+using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 
 namespace ChatTwo.Ui.SettingsTabs;
@@ -37,27 +38,70 @@ internal sealed class Display : ISettingsTab
         ImGuiUtil.OptionCheckbox(ref Mutable.HideInBattle, Language.Options_HideInBattle_Name, Language.Options_HideInBattle_Description);
         ImGui.Spacing();
 
+        ImGui.Separator();
+        ImGui.Spacing();
+
         ImGuiUtil.OptionCheckbox(ref Mutable.HideWhenInactive, Language.Options_HideWhenInactive_Name, Language.Options_HideWhenInactive_Description);
         ImGui.Spacing();
 
         if (Mutable.HideWhenInactive)
         {
+            using var _ = ImRaii.PushIndent();
             ImGuiUtil.InputIntVertical(Language.Options_InactivityHideTimeout_Name,
                 Language.Options_InactivityHideTimeout_Description, ref Mutable.InactivityHideTimeout, 1, 10);
             // Enforce a minimum of 2 seconds to avoid people soft locking
             // themselves.
             Mutable.InactivityHideTimeout = Math.Max(2, Mutable.InactivityHideTimeout);
             ImGui.Spacing();
+
+            // This setting conflicts with HideInBattle, so it's disabled.
+            using (ImRaii.Disabled(Mutable.HideInBattle))
+            {
+                ImGuiUtil.OptionCheckbox(ref Mutable.InactivityHideActiveDuringBattle,
+                    Language.Options_InactivityHideActiveDuringBattle_Name,
+                    Language.Options_InactivityHideActiveDuringBattle_Description);
+                ImGui.Spacing();
+            }
+
+            using var channelTree = ImRaii.TreeNode(Language.Options_InactivityHideChannels_Name);
+            if (channelTree.Success)
+            {
+                if (ImGuiUtil.CtrlShiftButton(Language.Options_InactivityHideChannels_All_Label,
+                        Language.Options_InactivityHideChannels_Button_Tooltip))
+                {
+                    Mutable.InactivityHideChannels = TabsUtil.AllChannels();
+                    Mutable.InactivityHideExtraChatAll = true;
+                    Mutable.InactivityHideExtraChatChannels = [];
+                }
+
+                ImGui.SameLine();
+                if (ImGuiUtil.CtrlShiftButton(Language.Options_InactivityHideChannels_None_Label,
+                        Language.Options_InactivityHideChannels_Button_Tooltip))
+                {
+                    Mutable.InactivityHideChannels = new();
+                    Mutable.InactivityHideExtraChatAll = false;
+                    Mutable.InactivityHideExtraChatChannels = [];
+                }
+
+                ImGui.Spacing();
+
+                ImGuiUtil.ChannelSelector(Language.Options_Tabs_Channels, Mutable.InactivityHideChannels);
+                ImGuiUtil.ExtraChatSelector(Language.Options_Tabs_ExtraChatChannels,
+                    ref Mutable.InactivityHideExtraChatAll, Mutable.InactivityHideExtraChatChannels);
+            }
+            ImGui.Spacing();
         }
+
+        ImGui.Separator();
+        ImGui.Spacing();
 
         ImGuiUtil.OptionCheckbox(ref Mutable.PrettierTimestamps, Language.Options_PrettierTimestamps_Name, Language.Options_PrettierTimestamps_Description);
 
         if (Mutable.PrettierTimestamps)
         {
-            ImGui.TreePush();
+            using var _ = ImRaii.PushIndent();
             ImGuiUtil.OptionCheckbox(ref Mutable.MoreCompactPretty, Language.Options_MoreCompactPretty_Name, Language.Options_MoreCompactPretty_Description);
             ImGuiUtil.OptionCheckbox(ref Mutable.HideSameTimestamps, Language.Options_HideSameTimestamps_Name, Language.Options_HideSameTimestamps_Description);
-            ImGui.TreePop();
         }
         ImGui.Spacing();
 

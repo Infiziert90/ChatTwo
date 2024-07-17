@@ -4,6 +4,14 @@ using ChatTwo.Resources;
 namespace ChatTwo.Util;
 
 internal static class TabsUtil {
+    internal static Dictionary<ChatType, ChatSource> AllChannels()
+    {
+        var channels = new Dictionary<ChatType, ChatSource>();
+        foreach (var chatType in Enum.GetValues<ChatType>())
+            channels[chatType] = ChatSourceExt.All;
+        return channels;
+    }
+
     internal static Tab VanillaGeneral => new() {
         Name = Language.Tabs_Presets_General,
         ChatCodes = new Dictionary<ChatType, ChatSource> {

@@ -12,6 +12,9 @@ internal class Popout : Window
     private readonly Tab Tab;
     private readonly int Idx;
 
+    private long FrameTime; // set every frame
+    private long LastActivityTime = Environment.TickCount64;
+
     public Popout(ChatLogWindow chatLogWindow, Tab tab, int idx) : base($"{tab.Name}##popout")
     {
         ChatLogWindow = chatLogWindow;
@@ -34,7 +37,20 @@ internal class Popout : Window
 
     public override bool DrawConditions()
     {
-        return !ChatLogWindow.IsHidden;
+        FrameTime = Environment.TickCount64;
+        if (ChatLogWindow.IsHidden)
+            return false;
+
+        if (!Plugin.Config.HideWhenInactive || (!Plugin.Config.InactivityHideActiveDuringBattle && ChatLogWindow.InBattle) || !Tab.UnhideOnActivity)
+        {
+            LastActivityTime = FrameTime;
+            return true;
+        }
+
+        // Activity in the tab, this popout window, or the main chat log window.
+        var lastActivityTime = Math.Max(Tab.LastActivity, LastActivityTime);
+        lastActivityTime = Math.Max(lastActivityTime, ChatLogWindow.LastActivityTime);
+        return FrameTime - lastActivityTime <= 1000 * Plugin.Config.InactivityHideTimeout;
     }
 
     public override void PreDraw()
@@ -65,6 +81,9 @@ internal class Popout : Window
 
         var handler = ChatLogWindow.HandlerLender.Borrow();
         ChatLogWindow.DrawMessageLog(Tab, handler, ImGui.GetContentRegionAvail().Y, false);
+
+        if (ImGui.IsWindowHovered(ImGuiHoveredFlags.ChildWindows))
+            LastActivityTime = FrameTime;
     }
 
     public override void PostDraw()

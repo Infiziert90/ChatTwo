@@ -1,5 +1,6 @@
 using System.Numerics;
 using System.Text;
+using ChatTwo.Code;
 using ChatTwo.GameFunctions.Types;
 using ChatTwo.Resources;
 using Dalamud.Game.ClientState.Keys;
@@ -547,6 +548,80 @@ internal static class ImGuiUtil
 
         ImGui.PushTextWrapPos();
         return new EndUnconditionally(ImGui.PopTextWrapPos, true);
+    }
+
+    public static void ChannelSelector(string headerText, Dictionary<ChatType, ChatSource> chatCodes)
+    {
+        using var channelNode = ImRaii.TreeNode(headerText);
+        if (!channelNode)
+            return;
+
+        foreach (var (header, types) in ChatTypeExt.SortOrder)
+        {
+            using var headerNode = ImRaii.TreeNode(header);
+            if (!headerNode.Success)
+                continue;
+
+            foreach (var type in types)
+            {
+                if (type.IsGm())
+                    continue;
+
+                var enabled = chatCodes.ContainsKey(type);
+                if (ImGui.Checkbox($"##{type.Name()}", ref enabled))
+                {
+                    if (enabled)
+                        chatCodes[type] = ChatSourceExt.All;
+                    else
+                        chatCodes.Remove(type);
+                }
+
+                ImGui.SameLine();
+
+                if (!type.HasSource())
+                {
+                    ImGui.TextUnformatted(type.Name());
+                    continue;
+                }
+
+                using var typeNode = ImRaii.TreeNode($"{type.Name()}");
+                if (!typeNode.Success)
+                    continue;
+
+                chatCodes.TryGetValue(type, out var sourcesEnum);
+                var sources = (uint)sourcesEnum;
+
+                foreach (var source in Enum.GetValues<ChatSource>())
+                    if (ImGui.CheckboxFlags(source.Name(), ref sources, (uint)source))
+                        chatCodes[type] = (ChatSource)sources;
+            }
+        }
+    }
+
+    public static void ExtraChatSelector(string headerText, ref bool all, HashSet<Guid> extraChatChannels)
+    {
+        if (Plugin.ExtraChat.ChannelNames.Count <= 0)
+            return;
+
+        using var extraTree = ImRaii.TreeNode(headerText);
+        if (!extraTree.Success)
+            return;
+
+        ImGui.Checkbox(Language.Options_Tabs_ExtraChatAll, ref all);
+        ImGui.Separator();
+
+        using var _ = ImRaii.Disabled(all);
+        foreach (var (id, name) in Plugin.ExtraChat.ChannelNames)
+        {
+            var enabled = extraChatChannels.Contains(id);
+            if (!ImGui.Checkbox($"{name}##ec-{id}", ref enabled))
+                continue;
+
+            if (enabled)
+                extraChatChannels.Add(id);
+            else
+                extraChatChannels.Remove(id);
+        }
     }
 
     // Used to avoid pops if condition is false for Push.

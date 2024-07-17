@@ -87,7 +87,7 @@ public sealed class ChatLogWindow : Window
     private bool PlayedClosingSound = true;
 
     private long FrameTime; // set every frame
-    private long LastActivityTime = Environment.TickCount64;
+    internal long LastActivityTime = Environment.TickCount64;
 
     private readonly ExcelSheet<World> WorldSheet;
     private readonly ExcelSheet<LogFilter> LogFilterSheet;
@@ -348,7 +348,10 @@ public sealed class ChatLogWindow : Window
         return height;
     }
 
-    internal void ChangeTab(int index) => WantedTab = index;
+    internal void ChangeTab(int index) {
+        WantedTab = index;
+        LastActivityTime = FrameTime;
+    }
 
     internal void ChangeTabDelta(int offset)
     {
@@ -373,7 +376,7 @@ public sealed class ChatLogWindow : Window
             SetChannel(tab.Channel ?? tab.PreviousChannel);
     }
 
-    private static bool InBattle => Plugin.Condition[ConditionFlag.InCombat];
+    internal static bool InBattle => Plugin.Condition[ConditionFlag.InCombat];
     private static bool GposeActive => Plugin.Condition[ConditionFlag.WatchingCutscene];
     private static bool CutsceneActive => Plugin.Condition[ConditionFlag.OccupiedInCutSceneEvent] || Plugin.Condition[ConditionFlag.WatchingCutscene78];
 
@@ -448,7 +451,8 @@ public sealed class ChatLogWindow : Window
         FrameTime = Environment.TickCount64;
         if (IsHidden)
             return false;
-        if (!Plugin.Config.HideWhenInactive || Activate)
+
+        if (!Plugin.Config.HideWhenInactive || (!Plugin.Config.InactivityHideActiveDuringBattle && InBattle) || Activate)
         {
             LastActivityTime = FrameTime;
             return true;
@@ -456,11 +460,10 @@ public sealed class ChatLogWindow : Window
 
         var currentTab = CurrentTab; // local to avoid calling the getter repeatedly
         var lastActivityTime = Plugin.Config.Tabs
-            .Where(tab => tab.UnreadMode is not UnreadMode.None || tab == currentTab)
-            .Select(tab => tab.LastMessageTime)
-            .DefaultIfEmpty(0)
+            .Where(tab => !tab.PopOut && (tab.UnhideOnActivity || tab == currentTab))
+            .Select(tab => tab.LastActivity)
+            .Append(LastActivityTime)
             .Max();
-        lastActivityTime = Math.Max(lastActivityTime, LastActivityTime);
         return FrameTime - lastActivityTime <= 1000 * Plugin.Config.InactivityHideTimeout;
     }
 
