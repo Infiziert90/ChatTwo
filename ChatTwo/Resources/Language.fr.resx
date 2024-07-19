@@ -164,10 +164,10 @@
     <value>Afficher le bouton pour rejoindre le Réseau des Novices à côté du bouton des paramètres si vous êtes mentor.</value>
   </data>
   <data name="Options_ShowHideButton_Name" xml:space="preserve">
-        <value>Show hide button</value>
+        <value>Afficher le bouton de masquage</value>
     </data>
   <data name="Options_ShowHideButton_Description" xml:space="preserve">
-        <value>Show a hide button next to the settings button. The chat window can be returned by pressing return or slash to focus it.</value>
+        <value>Afficher un bouton de masquage à côté du bouton des paramètres. La fenêtre de chat peut être réactivée en appuyant sur retour ou barre oblique pour la focaliser.</value>
     </data>
   <data name="Options_FontSize_Name">
     <value>Taille de la police</value>
@@ -1175,7 +1175,7 @@
         <value>Date</value>
     </data>
   <data name="DbViewer_TableField_Type" xml:space="preserve">
-        <value>Chat Type</value>
+        <value>Type de Discussions</value>
     </data>
   <data name="DbViewer_TableField_Sender" xml:space="preserve">
         <value>Expéditeur</value>
@@ -1205,6 +1205,6 @@
         <value>DeVers :</value>
     </data>
   <data name="Chat_SendTell_Error" xml:space="preserve">
-        <value>An error occured while sending this tell message</value>
+        <value>Une erreur s'est produite pendant l'envoi du message</value>
     </data>
 </root>

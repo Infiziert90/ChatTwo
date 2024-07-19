@@ -122,112 +122,112 @@
         </value>
   </resheader>
   <data name="Options_HideChat_Name">
-    <value>Hide vanilla chat</value>
+    <value>Amagar el xat per defecte del joc</value>
   </data>
   <data name="Options_HideChat_Description">
-    <value>Hide the in-game chat window when the plugin is active.</value>
+    <value>Amagar la finestra del xat del joc quan el plug-in està activat.</value>
   </data>
   <data name="Options_HideDuringCutscenes_Name">
-    <value>Hide during cutscenes</value>
+    <value>Ocultar l'interfície del plug-in durant les cinemàtiques</value>
   </data>
   <data name="Options_HideDuringCutscenes_Description">
-    <value>Hide {0} during cutscenes.</value>
+    <value>Amagar {0} durant les cinemàtiques.</value>
   </data>
   <data name="Options_NativeItemTooltips_Name">
-    <value>Show native item tooltips</value>
+    <value>Mostrar la descripció nativa de l'item</value>
   </data>
   <data name="Options_NativeItemTooltips_Description">
-    <value>Show in-game item tooltips when hovering over items in {0}.</value>
+    <value>Mostrar la descripció de l'objecte quan el cursor passi sobre l'objecte en el {0}.</value>
   </data>
   <data name="Options_SidebarTabView_Name">
-    <value>Show tabs in a sidebar</value>
+    <value>Mostrar pestanyes en la barra lateral</value>
   </data>
   <data name="Options_SidebarTabView_Description">
-    <value>Show tabs in {0} as a sidebar instead of a bar at the top.</value>
+    <value>Mostrar pestanyes en {0} com una barra lateral en lloc d'una barra a la part superior.</value>
   </data>
   <data name="Options_PrettierTimestamps_Name">
-    <value>Use modern layout</value>
+    <value>Utilitzar disseny modern</value>
   </data>
   <data name="Options_PrettierTimestamps_Description">
-    <value>Display messages in a more modern style.</value>
+    <value>Mostrar missatges amb un estil més modern.</value>
   </data>
   <data name="Options_MoreCompactPretty_Name">
-    <value>More compact modern layout</value>
+    <value>Disseny més compacte i modern</value>
   </data>
   <data name="Options_MoreCompactPretty_Description">
-    <value>Reduce the spacing between messages.</value>
+    <value>Redueix l'espai entre missatges.</value>
   </data>
   <data name="Options_ShowNoviceNetwork_Name">
-    <value>Show Novice Network join button</value>
+    <value>Mostrar el botó d'unir-se a la Xarxa de Novells</value>
   </data>
   <data name="Options_ShowNoviceNetwork_Description">
     <value>Show the Novice Network join button next to the settings button if logged in as a mentor.</value>
   </data>
   <data name="Options_ShowHideButton_Name" xml:space="preserve">
-        <value>Show hide button</value>
+        <value>Mostrar botó amagar</value>
     </data>
   <data name="Options_ShowHideButton_Description" xml:space="preserve">
-        <value>Show a hide button next to the settings button. The chat window can be returned by pressing return or slash to focus it.</value>
+        <value>Mostrar el botó amagar al costat del botó ajustos. La finestra del xat es pot tornar a mostrar pressionant retrocedir o barra obliqua.</value>
     </data>
   <data name="Options_FontSize_Name">
-    <value>Font size</value>
+    <value>Mida de la font</value>
   </data>
   <data name="Options_WindowOpacity_Name">
-    <value>Window opacity</value>
+    <value>Opacitat de la finestra</value>
   </data>
   <data name="Options_CanMove_Name">
-    <value>Allow moving chat</value>
+    <value>Permetre moure el xat</value>
   </data>
   <data name="Options_CanResize_Name">
-    <value>Allow resizing chat</value>
+    <value>Permetre canviar la mida del xat</value>
   </data>
   <data name="Options_ShowTitleBar_Name">
-    <value>Show title bar for chat</value>
+    <value>Mostrar la barra del títol a la part superior esquerre del xat</value>
   </data>
   <data name="Options_Display_Tab">
-    <value>Display</value>
+    <value>Mostrar</value>
   </data>
   <data name="Options_ChatColours_Tab">
-    <value>Chat colours</value>
+    <value>Colors del xat</value>
   </data>
   <data name="Options_ChatColours_Reset">
-    <value>Reset to default</value>
+    <value>Restablir per defecte</value>
   </data>
   <data name="Options_ChatColours_Import">
-    <value>Import from game</value>
+    <value>Importar des del joc</value>
   </data>
   <data name="Options_Tabs_Tab">
-    <value>Tabs</value>
+    <value>Pestanyes</value>
   </data>
   <data name="Options_Tabs_Add">
-    <value>Add</value>
+    <value>Afegir</value>
   </data>
   <data name="Options_Tabs_Delete">
-    <value>Delete</value>
+    <value>Esborrar</value>
   </data>
   <data name="Options_Tabs_MoveUp">
-    <value>Move up</value>
+    <value>Moure cap amunt</value>
   </data>
   <data name="Options_Tabs_MoveDown">
-    <value>Move down</value>
+    <value>Moure cap avall</value>
   </data>
   <data name="Options_Tabs_Name">
-    <value>Name</value>
+    <value>Nom</value>
   </data>
   <data name="Options_Tabs_ShowTimestamps">
-    <value>Show timestamps</value>
+    <value>Mostrar hora</value>
   </data>
   <data name="Options_Tabs_UnreadMode">
     <value>Unread mode</value>
   </data>
   <data name="Options_Tabs_NoInputChannel">
-    <value>&lt;None&gt;</value>
+    <value>&lt;Cap&gt;</value>
   </data>
   <data name="Options_Tabs_InputChannel">
-    <value>Input channel</value>
+    <value>Canal d'entrada</value>
   </data>
   <data name="Options_Tabs_Channels">
-    <value>Channels</value>
+    <value>Canals</value>
   </data>
   <data name="UnreadMode_All_Tooltip">
     <value>Always show unread indicators.</value>
@@ -239,67 +239,67 @@
     <value>Never show unread indicators.</value>
   </data>
   <data name="Tab_DefaultName">
-    <value>New tab</value>
+    <value>Nova pestanya</value>
   </data>
   <data name="Settings_SaveAndClose">
-    <value>Save and close</value>
+    <value>Guardar i tancar</value>
   </data>
   <data name="Settings_Save">
-    <value>Save</value>
+    <value>Guardar</value>
   </data>
   <data name="Settings_Discard">
-    <value>Discard</value>
+    <value>Descartar</value>
   </data>
   <data name="Settings_Title">
-    <value>{0} settings</value>
+    <value>Configuració de {0}</value>
   </data>
   <data name="ChatLog_SwitcherDisabled">
-    <value>Disabled for this tab.</value>
+    <value>Desactivar per aquesta pestanya.</value>
   </data>
   <data name="ChatLog_HideChat">
-    <value>Hide chat</value>
+    <value>Ocultar xat</value>
   </data>
   <data name="ChatLog_Tabs_MoveUp">
-    <value>Move up</value>
+    <value>Moure cap amunt</value>
   </data>
   <data name="ChatLog_Tabs_MoveLeft">
-    <value>Move left</value>
+    <value>Moure a l'esquerra</value>
   </data>
   <data name="ChatLog_Tabs_MoveDown">
-    <value>Move down</value>
+    <value>Moure cap avall</value>
   </data>
   <data name="ChatLog_Tabs_MoveRight">
-    <value>Move right</value>
+    <value>Moure a la dreta</value>
   </data>
   <data name="Options_Tabs_ChannelTypes_Chat">
-    <value>Chat</value>
+    <value>Xat</value>
   </data>
   <data name="Options_Tabs_ChannelTypes_Battle">
-    <value>Battle</value>
+    <value>Combat</value>
   </data>
   <data name="Options_Tabs_ChannelTypes_Announcements">
-    <value>Announcements</value>
+    <value>Anuncis</value>
   </data>
   <data name="UnreadMode_All">
-    <value>All</value>
+    <value>Tots</value>
   </data>
   <data name="UnreadMode_Unseen">
     <value>Unseen</value>
   </data>
   <data name="UnreadMode_None">
-    <value>None</value>
+    <value>Cap</value>
   </data>
   <data name="ChatSource_Self">
     <value>Self</value>
   </data>
   <data name="ChatSource_PartyMember">
-    <value>Party Member</value>
+    <value>Membres del grup</value>
   </data>
   <data name="ChatSource_AllianceMember">
-    <value>Alliance Member</value>
+    <value>Membres de l'aliança</value>
   </data>
   <data name="ChatSource_Other">
-    <value>Other</value>
+    <value>Altres</value>
   </data>
   <data name="ChatSource_EngagedEnemy">
     <value>Engaged Enemy</value>
@@ -308,19 +308,19 @@
     <value>Unengaged Enemy</value>
   </data>
   <data name="ChatSource_FriendlyNpc">
-    <value>Friendly NPC</value>
+    <value>NPC amigable</value>
   </data>
   <data name="ChatSource_SelfPet">
-    <value>Pet (Self)</value>
+    <value>Mascota (Jo)</value>
   </data>
   <data name="ChatSource_PartyPet">
-    <value>Pet (Party)</value>
+    <value>Mascota (Grupo)</value>
   </data>
   <data name="ChatSource_AlliancePet">
-    <value>Pet (Alliance member)</value>
+    <value>Mascota (Membre de l'aliança)</value>
   </data>
   <data name="ChatSource_OtherPet">
-    <value>Pet (Other)</value>
+    <value>Mascota (Altres)</value>
   </data>
   <data name="Options_Font_Name">
     <value>Font</value>
@@ -344,16 +344,16 @@
     <value>Fonts</value>
   </data>
   <data name="Options_SymbolsFontSize_Name">
-    <value>Symbols font size</value>
+    <value>Mida dels símbols</value>
   </data>
   <data name="Options_JapaneseFontSize_Name">
-    <value>Japanese font size</value>
+    <value>Mida de la font japonesa</value>
   </data>
   <data name="Options_SymbolsFontSize_Description">
     <value>The font size to use for game symbols.</value>
   </data>
   <data name="ChatLog_Tabs_Delete">
-    <value>Delete tab</value>
+    <value>Eliminar Pestanya</value>
   </data>
   <data name="Options_HideWhenNotLoggedIn_Name">
     <value>Hide when not logged in</value>
@@ -365,13 +365,13 @@
     <value>General</value>
   </data>
   <data name="Options_Tabs_Preset">
-    <value>Preset: {0}</value>
+    <value>Preestablert: {0}</value>
   </data>
   <data name="Tabs_Presets_Event">
     <value>Event</value>
   </data>
   <data name="Options_Tabs_NewTab">
-    <value>New tab</value>
+    <value>Nova pestanya</value>
   </data>
   <data name="Options_About_Tab">
     <value>About</value>
@@ -380,7 +380,7 @@
     <value>{0} is a project to completely recreate the in-game chat and make it even better.</value>
   </data>
   <data name="Options_About_CrowdIn">
-    <value>Help to translate: </value>
+    <value>Ajuda per traduir: </value>
   </data>
   <data name="Options_About_Translators">
     <value>Translators</value>
@@ -1175,7 +1175,7 @@
         <value>Date</value>
     </data>
   <data name="DbViewer_TableField_Type" xml:space="preserve">
-        <value>Chat Type</value>
+        <value>Tipus de xat</value>
     </data>
   <data name="DbViewer_TableField_Sender" xml:space="preserve">
         <value>Sender</value>
@@ -1205,6 +1205,6 @@
         <value>FromTo:</value>
     </data>
   <data name="Chat_SendTell_Error" xml:space="preserve">
-        <value>An error occured while sending this tell message</value>
+        <value>S'ha produït un error enviant aquest missatge privat</value>
     </data>
 </root>

@@ -152,7 +152,7 @@
     <value>Mostrar mensajes con un estilo más moderno.</value>
   </data>
   <data name="Options_MoreCompactPretty_Name">
-    <value>Diseño moderno y compacto</value>
+    <value>Diseño más moderno y compacto</value>
   </data>
   <data name="Options_MoreCompactPretty_Description">
     <value>Reduce el espacio entre mensajes.</value>
@@ -164,10 +164,10 @@
     <value>Mostrar el botón de unirse a la Red de Novatos junto al botón de configuración si se conecta como mentor.</value>
   </data>
   <data name="Options_ShowHideButton_Name" xml:space="preserve">
-        <value>Show hide button</value>
+        <value>Mostrar botón ocultar</value>
     </data>
   <data name="Options_ShowHideButton_Description" xml:space="preserve">
-        <value>Show a hide button next to the settings button. The chat window can be returned by pressing return or slash to focus it.</value>
+        <value>Mostrar botón ocultar al lado del botón ajustes. La ventana de chat se puede volver a mostrar presionando retroceder o barra oblicua.</value>
     </data>
   <data name="Options_FontSize_Name">
     <value>Tamaño de fuente</value>
@@ -185,10 +185,10 @@
     <value>Mostrar la barra de título en la parte superior izquierda del chat</value>
   </data>
   <data name="Options_Display_Tab">
-    <value>General</value>
+    <value>Mostrar</value>
   </data>
   <data name="Options_ChatColours_Tab">
-    <value>Color del chat</value>
+    <value>Colores del chat</value>
   </data>
   <data name="Options_ChatColours_Reset">
     <value>Restablecer por defecto</value>
@@ -365,7 +365,7 @@
     <value>General</value>
   </data>
   <data name="Options_Tabs_Preset">
-    <value>Preset: {0}</value>
+    <value>Preestablecido: {0}</value>
   </data>
   <data name="Tabs_Presets_Event">
     <value>Evento</value>
@@ -380,7 +380,7 @@
     <value>{0} es un proyecto para recrear por completo el chat del juego y hacerlo incluso mejor.</value>
   </data>
   <data name="Options_About_CrowdIn">
-    <value>Haz clic en el botón de la izquierda para ayudar a traducir {0}.</value>
+    <value>Ayuda para traducir: </value>
   </data>
   <data name="Options_About_Translators">
     <value>Traductores</value>
@@ -1175,7 +1175,7 @@
         <value>Fecha</value>
     </data>
   <data name="DbViewer_TableField_Type" xml:space="preserve">
-        <value>Chat Type</value>
+        <value>Tipo de chat</value>
     </data>
   <data name="DbViewer_TableField_Sender" xml:space="preserve">
         <value>Remitente</value>
@@ -1205,6 +1205,6 @@
         <value>DePara:</value>
     </data>
   <data name="Chat_SendTell_Error" xml:space="preserve">
-        <value>An error occured while sending this tell message</value>
+        <value>Se produjo un error al enviar este mensaje privado</value>
     </data>
 </root>

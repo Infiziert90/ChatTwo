@@ -164,10 +164,10 @@
     <value>Zeigt den Knopf neben dem Einstellungsknopf an, um als Mentor dem Neulings-Chat beizutreten.</value>
   </data>
   <data name="Options_ShowHideButton_Name" xml:space="preserve">
-        <value>Show hide button</value>
+        <value>Schaltfläche "Ausblenden" anzeigen</value>
     </data>
   <data name="Options_ShowHideButton_Description" xml:space="preserve">
-        <value>Show a hide button next to the settings button. The chat window can be returned by pressing return or slash to focus it.</value>
+        <value>Eine Schaltfläche zum Ausblenden neben der Schaltfläche "Einstellungen" anzeigen. Das Chat-Fenster kann durch Drücken der Eingabetaste oder des Schrägstrichs wieder angezeigt werden.</value>
     </data>
   <data name="Options_FontSize_Name">
     <value>Schriftgröße</value>
@@ -1176,7 +1176,7 @@ Sie wurden gewarnt.</value>
         <value>Datum / Uhrzeit</value>
     </data>
   <data name="DbViewer_TableField_Type" xml:space="preserve">
-        <value>Chat Type</value>
+        <value>Chat Typ</value>
     </data>
   <data name="DbViewer_TableField_Sender" xml:space="preserve">
         <value>Absender</value>
@@ -1206,6 +1206,6 @@ Sie wurden gewarnt.</value>
         <value>Von-Bis:</value>
     </data>
   <data name="Chat_SendTell_Error" xml:space="preserve">
-        <value>An error occured while sending this tell message</value>
+        <value>Beim Senden dieser Nachricht ist ein Fehler aufgetreten</value>
     </data>
 </root>
