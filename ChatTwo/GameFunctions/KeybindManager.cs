@@ -5,10 +5,11 @@ using ChatTwo.Util;
 using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.Config;
 using Dalamud.Plugin.Services;
-using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using ImGuiNET;
+
+using ModifierFlag = ChatTwo.GameFunctions.Types.ModifierFlag;
 
 namespace ChatTwo.GameFunctions;
 
@@ -18,11 +19,6 @@ internal enum KeyboardSource {
 }
 
 internal unsafe class KeybindManager : IDisposable {
-    // Functions
-    // Replace with <https://github.com/aers/FFXIVClientStructs/pull/1036>
-    [Signature("E8 ?? ?? ?? ?? 48 8D 4D A0 8B F8")]
-    private readonly delegate* unmanaged<UIInputData*, Utf8String*, nint, uint> GetKeybindNative = null!;
-
     private Plugin Plugin { get; }
 
     internal bool DirectChat;
@@ -454,21 +450,21 @@ internal unsafe class KeybindManager : IDisposable {
         }
     }
 
-    private Keybind GetKeybind(string id)
+    private static Keybind GetKeybind(string id)
     {
-        var outData = stackalloc byte[11];
+        var outData = new UIInputData.Keybind();
         var idString = Utf8String.FromString(id);
-        GetKeybindNative(UIInputData.Instance(), idString, (nint) outData);
+        UIInputData.Instance()->GetKeybind(idString, &outData);
         idString->Dtor(true);
 
-        var key1 = RemapInvalidVirtualKey((VirtualKey) outData[0]);
-        var key2 = RemapInvalidVirtualKey((VirtualKey) outData[2]);
+        var key1 = RemapInvalidVirtualKey((VirtualKey) outData.Key);
+        var key2 = RemapInvalidVirtualKey((VirtualKey) outData.AltKey);
         return new Keybind
         {
             Key1 = key1,
-            Modifier1 = (ModifierFlag) outData[1],
+            Modifier1 = (ModifierFlag) outData.Modifier,
             Key2 = key2,
-            Modifier2 = (ModifierFlag) outData[3],
+            Modifier2 = (ModifierFlag) outData.AltModifier,
         };
     }
 

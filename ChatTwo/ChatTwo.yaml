@@ -23,7 +23,5 @@ tags:
     - Replacement
 changelog:  |-
   **Updates**
-  - More keybind handling improvements
-  - Add keybinds for switching tabs [thanks dean]
-  - Add auto hide after inactivity [default false, thanks dean]
-  - Fix auto scroll failing if custom cell padding is used [thanks zbee]
+  - Loc updates
+  - Fix multiple issues with keybinds
