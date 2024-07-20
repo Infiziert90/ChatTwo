@@ -8,6 +8,7 @@ using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using ImGuiNET;
+using ModifierFlag = ChatTwo.GameFunctions.Types.ModifierFlag;
 
 using ModifierFlag = ChatTwo.GameFunctions.Types.ModifierFlag;
 

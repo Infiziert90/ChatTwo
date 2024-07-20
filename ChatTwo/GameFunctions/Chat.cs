@@ -312,6 +312,36 @@ internal sealed unsafe class Chat : IDisposable
     //     EurekaContextMenuTellHook!.Original(a1, playerName, worldName, worldId, accountId, contentId, reason);
     // }
 
+    /// <summary>
+    /// Returns true if the channel is any non-linkshell channel, or if the
+    /// linkshell actually exists.
+    /// </summary>
+    internal static bool ValidAnyLinkshell(InputChannel channel)
+    {
+        var idx = channel.LinkshellIndex();
+        if (idx == uint.MaxValue || channel.IsExtraChatLinkshell())
+            return true;
+        if (channel.IsLinkshell() && ValidLinkshell(idx))
+            return true;
+        if (channel.IsCrossLinkshell() && ValidCrossLinkshell(idx))
+            return true;
+        return false;
+    }
+
+    internal static bool ValidLinkshell(uint idx)
+    {
+        if (idx > 7)
+            return false;
+        return InfoProxyLinkshell.Instance()->LinkShells[(int) idx].Id != 0;
+    }
+
+    internal static bool ValidCrossLinkshell(uint idx)
+    {
+        if (idx > 7)
+            return false;
+        return InfoProxyCrossWorldLinkshell.Instance()->CrossWorldLinkshells[(int) idx].Name.Length > 0;
+    }
+
     internal static void SetChannel(InputChannel channel, string? tellTarget = null)
     {
         // ExtraChat linkshells aren't supported in game so we never want to
@@ -326,6 +356,8 @@ internal sealed unsafe class Chat : IDisposable
         var idx = channel.LinkshellIndex();
         if (idx == uint.MaxValue)
             idx = 0;
+        if (!ValidAnyLinkshell(channel))
+            return;
 
         RaptureShellModule.Instance()->ChangeChatChannel((int) channel, idx, target, true);
         target->Dtor(true);

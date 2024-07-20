@@ -172,6 +172,9 @@ public sealed class ChatLogWindow : Window
 
         if (info.Channel != null)
         {
+            if (!GameFunctions.Chat.ValidAnyLinkshell(info.Channel.Value))
+                return;
+
             var prevTemp = TempChannel;
             if (info.Permanent)
                 SetChannel(info.Channel.Value);
@@ -206,11 +209,21 @@ public sealed class ChatLogWindow : Window
             if (info.Channel is InputChannel.Linkshell1 && info.Rotate != RotateMode.None)
             {
                 var idx = GameFunctions.Chat.RotateLinkshellHistory(mode);
+                if (idx < 0 || !GameFunctions.Chat.ValidLinkshell((uint)idx))
+                {
+                    TempChannel = 0;
+                    return;
+                }
                 TempChannel = info.Channel.Value + (uint) idx;
             }
             else if (info.Channel is InputChannel.CrossLinkshell1 && info.Rotate != RotateMode.None)
             {
                 var idx = GameFunctions.Chat.RotateCrossLinkshellHistory(mode);
+                if (idx < 0 || !GameFunctions.Chat.ValidCrossLinkshell((uint)idx))
+                {
+                    TempChannel = 0;
+                    return;
+                }
                 TempChannel = info.Channel.Value + (uint) idx;
             }
         }
@@ -480,10 +493,19 @@ public sealed class ChatLogWindow : Window
 
     public override void Draw()
     {
-        DrawChatLog();
-
-        AddPopOutsToDraw();
-        DrawAutoComplete();
+        try
+        {
+            DrawChatLog();
+            AddPopOutsToDraw();
+            DrawAutoComplete();
+        }
+        catch (Exception e)
+        {
+            Plugin.Log.Error($"Error drawing Chat Log window: {e}");
+            // Prevent recurring draw failures from constantly trying to grab
+            // input focus, which breaks every other ImGui window.
+            Activate = false;
+        }
     }
 
     private static bool IsChatMode => Plugin.Config.PreviewPosition is PreviewPosition.Inside or PreviewPosition.Tooltip;
