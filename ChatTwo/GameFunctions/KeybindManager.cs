@@ -9,6 +9,7 @@ using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using ImGuiNET;
+using ModifierFlag = ChatTwo.GameFunctions.Types.ModifierFlag;
 
 namespace ChatTwo.GameFunctions;
 
