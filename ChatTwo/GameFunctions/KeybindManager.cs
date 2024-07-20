@@ -25,6 +25,8 @@ internal unsafe class KeybindManager : IDisposable {
     internal bool DirectChat;
     private long LastRefresh;
 
+    private bool VanillaTextInputHasFocus;
+
     private readonly Dictionary<string, Keybind> Keybinds = new();
     private static readonly IReadOnlyDictionary<string, ChannelSwitchInfo> KeybindsToIntercept = new Dictionary<string, ChannelSwitchInfo>
     {
@@ -391,7 +393,19 @@ internal unsafe class KeybindManager : IDisposable {
 
         // Vanilla text input has focus
         if (RaptureAtkModule.Instance()->AtkModule.IsTextInputActive())
+        {
+            VanillaTextInputHasFocus = true;
             return;
+        }
+
+        // If the vanilla text input has just lost focus, clear all keys so we
+        // don't try to process them immediately.
+        if (VanillaTextInputHasFocus)
+        {
+            Plugin.KeyState.ClearAll();
+            VanillaTextInputHasFocus = false;
+            return;
+        }
 
         var modifierState = GetModifiers(source);
 
