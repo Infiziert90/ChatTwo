@@ -220,6 +220,9 @@
   <data name="Options_Tabs_UnreadMode">
     <value>Unread mode</value>
   </data>
+  <data name="Options_Tabs_InactivityBehaviour">
+    <value>Unhide the chat window on activity</value>
+  </data>
   <data name="Options_Tabs_NoInputChannel">
     <value>&lt;None&gt;</value>
   </data>
@@ -406,6 +409,39 @@
   <data name="Options_HideWhenUiHidden_Description">
     <value>Hide {0} when the game UI is hidden.</value>
   </data>
+  <data name="Options_HideWhenInactive_Name">
+    <value>Hide when inactive</value>
+  </data>
+  <data name="Options_HideWhenInactive_Description">
+    <value>Hide the chat after a configurable period of inactivity. The current tab and any other tabs with the setting enabled are considered for activity.</value>
+  </data>
+  <data name="Options_InactivityHideTimeout_Name">
+    <value>Inactivity timeout</value>
+  </data>
+  <data name="Options_InactivityHideTimeout_Description">
+    <value>How long to wait (in seconds) before considering the chat log inactive.</value>
+  </data>
+  <data name="Options_InactivityHideActiveDuringBattle_Name" xml:space="preserve">
+        <value>Enable inactivity hide during battle</value>
+    </data>
+  <data name="Options_InactivityHideActiveDuringBattle_Description" xml:space="preserve">
+        <value>When disabled, the chat log will stay active during battle.</value>
+    </data>
+  <data name="Options_InactivityHideChannels_Name">
+    <value>Chat channels considered for activity</value>
+  </data>
+  <data name="Options_InactivityHideChannels_Description">
+    <value>Which chat channels should be considered for activity. Other channels will not restore the chat regardless of which tab they occur in.</value>
+  </data>
+  <data name="Options_InactivityHideChannels_All_Label">
+    <value>Select All</value>
+  </data>
+  <data name="Options_InactivityHideChannels_None_Label">
+    <value>Unselect All</value>
+  </data>
+  <data name="Options_InactivityHideChannels_Button_Tooltip">
+    <value>Hold Ctrl+Shift to click.</value>
+  </data>
   <data name="Options_KeybindMode_Name">
     <value>Keybind mode</value>
   </data>
@@ -501,6 +537,27 @@
   </data>
   <data name="Options_OverrideStyleDropdown_Name">
     <value>Styles</value>
+  </data>
+  <data name="Options_ChatTabForwardKeybind_Name">
+    <value>Cycle chat tab forwards keybind</value>
+  </data>
+  <data name="Options_ChatTabBackwardKeybind_Name">
+    <value>Cycle chat tab backwards keybind</value>
+  </data>
+  <data name="Keybind_None">
+    <value>none set</value>
+  </data>
+  <data name="Keybind_EscToClear">
+    <value>ESC to clear</value>
+  </data>
+  <data name="Keybind_Modifier_Ctrl">
+    <value>Ctrl</value>
+  </data>
+  <data name="Keybind_Modifier_Alt">
+    <value>Alt</value>
+  </data>
+  <data name="Keybind_Modifier_Shift">
+    <value>Shift</value>
   </data>
   <data name="AutoTranslate_Completion_Key">
     <value>Ctrl + {0}</value>

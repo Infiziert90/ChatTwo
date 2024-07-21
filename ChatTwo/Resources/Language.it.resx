@@ -122,64 +122,64 @@
         </value>
   </resheader>
   <data name="Options_HideChat_Name">
-    <value>Hide vanilla chat</value>
+    <value>Nascondi chat di base</value>
   </data>
   <data name="Options_HideChat_Description">
-    <value>Hide the in-game chat window when the plugin is active.</value>
+    <value>Nascondi la finestra di chat di gioco quando il plugin è attivo.</value>
   </data>
   <data name="Options_HideDuringCutscenes_Name">
-    <value>Hide during cutscenes</value>
+    <value>Nascondi durante le cinematiche</value>
   </data>
   <data name="Options_HideDuringCutscenes_Description">
-    <value>Hide {0} during cutscenes.</value>
+    <value>Nascondi {0} durante le cinematiche.</value>
   </data>
   <data name="Options_NativeItemTooltips_Name">
-    <value>Show native item tooltips</value>
+    <value>Mostra suggerimenti nativi degli oggetti</value>
   </data>
   <data name="Options_NativeItemTooltips_Description">
-    <value>Show in-game item tooltips when hovering over items in {0}.</value>
+    <value>Mostra i suggerimenti degli oggetti di gioco quando si passa sopra gli oggetti in {0}.</value>
   </data>
   <data name="Options_SidebarTabView_Name">
-    <value>Show tabs in a sidebar</value>
+    <value>Mostra le schede in una barra laterale</value>
   </data>
   <data name="Options_SidebarTabView_Description">
-    <value>Show tabs in {0} as a sidebar instead of a bar at the top.</value>
+    <value>Mostra le schede in {0} come una barra laterale invece che di una barra in alto.</value>
   </data>
   <data name="Options_PrettierTimestamps_Name">
-    <value>Use modern layout</value>
+    <value>Utilizza il layout moderno</value>
   </data>
   <data name="Options_PrettierTimestamps_Description">
-    <value>Display messages in a more modern style.</value>
+    <value>Mostra i messaggi in uno stile più moderno.</value>
   </data>
   <data name="Options_MoreCompactPretty_Name">
-    <value>More compact modern layout</value>
+    <value>Layout moderno più compatto</value>
   </data>
   <data name="Options_MoreCompactPretty_Description">
-    <value>Reduce the spacing between messages.</value>
+    <value>Riduci la spaziatura tra i messaggi.</value>
   </data>
   <data name="Options_ShowNoviceNetwork_Name">
-    <value>Show Novice Network join button</value>
+    <value>Mostra il pulsante Unisciti alla Rete Novizio</value>
   </data>
   <data name="Options_ShowNoviceNetwork_Description">
-    <value>Show the Novice Network join button next to the settings button if logged in as a mentor.</value>
+    <value>Mostra il pulsante Unisciti alla Rete Novizi accanto al pulsante Impostazioni se connesso come mentore.</value>
   </data>
   <data name="Options_ShowHideButton_Name" xml:space="preserve">
-        <value>Show hide button</value>
+        <value>Mostra il pulsante nascondi</value>
     </data>
   <data name="Options_ShowHideButton_Description" xml:space="preserve">
-        <value>Show a hide button next to the settings button. The chat window can be returned by pressing return or slash to focus it.</value>
+        <value>Mostra un pulsante per nascondere accanto al pulsante Impostazioni. La finestra di chat può essere rimostrata premendo invio o slash per focalizzarlo.</value>
     </data>
   <data name="Options_FontSize_Name">
-    <value>Font size</value>
+    <value>Dimensione del carattere</value>
   </data>
   <data name="Options_WindowOpacity_Name">
-    <value>Window opacity</value>
+    <value>Opacità della finestra</value>
   </data>
   <data name="Options_CanMove_Name">
-    <value>Allow moving chat</value>
+    <value>Consenti lo spostamento della chat</value>
   </data>
   <data name="Options_CanResize_Name">
-    <value>Allow resizing chat</value>
+    <value>Consenti il ridimensionamento della chat</value>
   </data>
   <data name="Options_ShowTitleBar_Name">
     <value>Show title bar for chat</value>
@@ -219,6 +219,9 @@
   </data>
   <data name="Options_Tabs_UnreadMode">
     <value>Unread mode</value>
+  </data>
+  <data name="Options_Tabs_InactivityBehaviour">
+    <value>Unhide the chat window on activity</value>
   </data>
   <data name="Options_Tabs_NoInputChannel">
     <value>&lt;None&gt;</value>
@@ -406,6 +409,39 @@
   <data name="Options_HideWhenUiHidden_Description">
     <value>Hide {0} when the game UI is hidden.</value>
   </data>
+  <data name="Options_HideWhenInactive_Name">
+    <value>Hide when inactive</value>
+  </data>
+  <data name="Options_HideWhenInactive_Description">
+    <value>Hide the chat after a configurable period of inactivity. The current tab and any other tabs with the setting enabled are considered for activity.</value>
+  </data>
+  <data name="Options_InactivityHideTimeout_Name">
+    <value>Inactivity timeout</value>
+  </data>
+  <data name="Options_InactivityHideTimeout_Description">
+    <value>How long to wait (in seconds) before considering the chat log inactive.</value>
+  </data>
+  <data name="Options_InactivityHideActiveDuringBattle_Name" xml:space="preserve">
+        <value>Enable inactivity hide during battle</value>
+    </data>
+  <data name="Options_InactivityHideActiveDuringBattle_Description" xml:space="preserve">
+        <value>When disabled, the chat log will stay active during battle.</value>
+    </data>
+  <data name="Options_InactivityHideChannels_Name">
+    <value>Chat channels considered for activity</value>
+  </data>
+  <data name="Options_InactivityHideChannels_Description">
+    <value>Which chat channels should be considered for activity. Other channels will not restore the chat regardless of which tab they occur in.</value>
+  </data>
+  <data name="Options_InactivityHideChannels_All_Label">
+    <value>Select All</value>
+  </data>
+  <data name="Options_InactivityHideChannels_None_Label">
+    <value>Unselect All</value>
+  </data>
+  <data name="Options_InactivityHideChannels_Button_Tooltip">
+    <value>Hold Ctrl+Shift to click.</value>
+  </data>
   <data name="Options_KeybindMode_Name">
     <value>Keybind mode</value>
   </data>
@@ -501,6 +537,27 @@
   </data>
   <data name="Options_OverrideStyleDropdown_Name">
     <value>Styles</value>
+  </data>
+  <data name="Options_ChatTabForwardKeybind_Name">
+    <value>Cycle chat tab forwards keybind</value>
+  </data>
+  <data name="Options_ChatTabBackwardKeybind_Name">
+    <value>Cycle chat tab backwards keybind</value>
+  </data>
+  <data name="Keybind_None">
+    <value>none set</value>
+  </data>
+  <data name="Keybind_EscToClear">
+    <value>ESC to clear</value>
+  </data>
+  <data name="Keybind_Modifier_Ctrl">
+    <value>Ctrl</value>
+  </data>
+  <data name="Keybind_Modifier_Alt">
+    <value>Alt</value>
+  </data>
+  <data name="Keybind_Modifier_Shift">
+    <value>Shift</value>
   </data>
   <data name="AutoTranslate_Completion_Key">
     <value>Ctrl + {0}</value>
