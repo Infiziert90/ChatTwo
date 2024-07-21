@@ -124,6 +124,17 @@ internal partial class Message
         return new Message(0, 0, code, [], content, new SeString(), new SeString());
     }
 
+    internal bool Matches(Dictionary<ChatType, ChatSource> channels, bool allExtraChatChannels, HashSet<Guid> extraChatChannels)
+    {
+        if (ExtraChatChannel != Guid.Empty)
+            return allExtraChatChannels || extraChatChannels.Contains(ExtraChatChannel);
+
+        return Code.Type.IsGm()
+               || channels.TryGetValue(Code.Type, out var sources)
+               && (Code.Source is 0 or (ChatSource) 1
+                   || sources.HasFlag(Code.Source));
+    }
+
     private int GenerateHash()
     {
         return SortCode.GetHashCode()

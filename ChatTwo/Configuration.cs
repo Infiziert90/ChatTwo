@@ -3,6 +3,7 @@ using ChatTwo.Code;
 using ChatTwo.GameFunctions.Types;
 using ChatTwo.Resources;
 using ChatTwo.Ui;
+using ChatTwo.Util;
 using Dalamud.Configuration;
 using Dalamud.Game.ClientState.Keys;
 using ImGuiNET;
@@ -43,6 +44,10 @@ internal class Configuration : IPluginConfiguration
     public bool HideInBattle;
     public bool HideWhenInactive;
     public int InactivityHideTimeout = 10;
+    public bool InactivityHideActiveDuringBattle = true;
+    public Dictionary<ChatType, ChatSource> InactivityHideChannels = TabsUtil.AllChannels();
+    public bool InactivityHideExtraChatAll = true;
+    public HashSet<Guid> InactivityHideExtraChatChannels = [];
     public bool ShowHideButton = true;
     public bool NativeItemTooltips = true;
     public bool PrettierTimestamps = true;
@@ -106,6 +111,10 @@ internal class Configuration : IPluginConfiguration
         HideInBattle = other.HideInBattle;
         HideWhenInactive = other.HideWhenInactive;
         InactivityHideTimeout = other.InactivityHideTimeout;
+        InactivityHideActiveDuringBattle = other.InactivityHideActiveDuringBattle;
+        InactivityHideChannels = other.InactivityHideChannels.ToDictionary(entry => entry.Key, entry => entry.Value);
+        InactivityHideExtraChatAll = other.InactivityHideExtraChatAll;
+        InactivityHideExtraChatChannels = other.InactivityHideExtraChatChannels.ToHashSet();
         ShowHideButton = other.ShowHideButton;
         NativeItemTooltips = other.NativeItemTooltips;
         PrettierTimestamps = other.PrettierTimestamps;
@@ -188,6 +197,7 @@ internal class Tab
     public HashSet<Guid> ExtraChatChannels = [];
 
     public UnreadMode UnreadMode = UnreadMode.Unseen;
+    public bool UnhideOnActivity;
     public bool DisplayTimestamp = true;
     public InputChannel? Channel;
     public bool PopOut;
@@ -199,7 +209,7 @@ internal class Tab
     public uint Unread;
 
     [NonSerialized]
-    public long LastMessageTime;
+    public long LastActivity;
 
     [NonSerialized]
     public MessageList Messages = new();
@@ -210,31 +220,20 @@ internal class Tab
     [NonSerialized]
     public Guid Identifier = Guid.NewGuid();
 
-    internal bool Matches(Message message)
-    {
-        if (message.ExtraChatChannel != Guid.Empty)
-            return ExtraChatAll || ExtraChatChannels.Contains(message.ExtraChatChannel);
-
-        return message.Code.Type.IsGm()
-               || ChatCodes.TryGetValue(message.Code.Type, out var sources)
-               && (message.Code.Source is 0 or (ChatSource) 1
-                   || sources.HasFlag(message.Code.Source));
-    }
+    internal bool Matches(Message message) => message.Matches(ChatCodes, ExtraChatAll, ExtraChatChannels);
 
     internal void AddMessage(Message message, bool unread = true)
     {
         Messages.AddPrune(message, MessageManager.MessageDisplayLimit);
-        if (unread)
-        {
-            Unread += 1;
-            LastMessageTime = Environment.TickCount64;
-        }
+        if (!unread)
+            return;
+        Unread += 1;
+
+        if (message.Matches(Plugin.Config.InactivityHideChannels, Plugin.Config.InactivityHideExtraChatAll, Plugin.Config.InactivityHideExtraChatChannels))
+            LastActivity = Environment.TickCount64;
     }
 
-    internal void Clear()
-    {
-        Messages.Clear();
-    }
+    internal void Clear() => Messages.Clear();
 
     internal Tab Clone()
     {
@@ -245,6 +244,7 @@ internal class Tab
             ExtraChatAll = ExtraChatAll,
             ExtraChatChannels = ExtraChatChannels.ToHashSet(),
             UnreadMode = UnreadMode,
+            UnhideOnActivity = UnhideOnActivity,
             DisplayTimestamp = DisplayTimestamp,
             Channel = Channel,
             PopOut = PopOut,

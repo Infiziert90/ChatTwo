@@ -2481,7 +2481,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hide the chat after a configurable period of inactivity. The current tab and any tabs with unread indicators enabled are considered for activity..
+        ///   Looks up a localized string similar to Hide the chat after a configurable period of inactivity. The current tab and any other tabs with the setting enabled are considered for activity..
         /// </summary>
         internal static string Options_HideWhenInactive_Description {
             get {
@@ -2531,6 +2531,69 @@ namespace ChatTwo.Resources {
         internal static string Options_HideWhenUiHidden_Name {
             get {
                 return ResourceManager.GetString("Options_HideWhenUiHidden_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to When disabled, the chat log will stay active during battle..
+        /// </summary>
+        internal static string Options_InactivityHideActiveDuringBattle_Description {
+            get {
+                return ResourceManager.GetString("Options_InactivityHideActiveDuringBattle_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable inactivity hide during battle.
+        /// </summary>
+        internal static string Options_InactivityHideActiveDuringBattle_Name {
+            get {
+                return ResourceManager.GetString("Options_InactivityHideActiveDuringBattle_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select All.
+        /// </summary>
+        internal static string Options_InactivityHideChannels_All_Label {
+            get {
+                return ResourceManager.GetString("Options_InactivityHideChannels_All_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hold Ctrl+Shift to click..
+        /// </summary>
+        internal static string Options_InactivityHideChannels_Button_Tooltip {
+            get {
+                return ResourceManager.GetString("Options_InactivityHideChannels_Button_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Which chat channels should be considered for activity. Other channels will not restore the chat regardless of which tab they occur in..
+        /// </summary>
+        internal static string Options_InactivityHideChannels_Description {
+            get {
+                return ResourceManager.GetString("Options_InactivityHideChannels_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chat channels considered for activity.
+        /// </summary>
+        internal static string Options_InactivityHideChannels_Name {
+            get {
+                return ResourceManager.GetString("Options_InactivityHideChannels_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unselect All.
+        /// </summary>
+        internal static string Options_InactivityHideChannels_None_Label {
+            get {
+                return ResourceManager.GetString("Options_InactivityHideChannels_None_Label", resourceCulture);
             }
         }
         
@@ -3134,6 +3197,15 @@ namespace ChatTwo.Resources {
         internal static string Options_Tabs_ExtraChatChannels {
             get {
                 return ResourceManager.GetString("Options_Tabs_ExtraChatChannels", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unhide the chat window on activity.
+        /// </summary>
+        internal static string Options_Tabs_InactivityBehaviour {
+            get {
+                return ResourceManager.GetString("Options_Tabs_InactivityBehaviour", resourceCulture);
             }
         }
         

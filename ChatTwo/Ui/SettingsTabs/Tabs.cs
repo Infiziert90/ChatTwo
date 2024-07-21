@@ -108,6 +108,9 @@ internal sealed class Tabs : ISettingsTab
                 }
             }
 
+            if (Mutable.HideWhenInactive)
+                ImGui.Checkbox(Language.Options_Tabs_InactivityBehaviour, ref tab.UnhideOnActivity);
+
             ImGui.Checkbox(Language.Options_Tabs_NoInput, ref tab.InputDisabled);
             if (!tab.InputDisabled)
             {
@@ -124,81 +127,8 @@ internal sealed class Tabs : ISettingsTab
                 }
             }
 
-            using (var channelNode = ImRaii.TreeNode(Language.Options_Tabs_Channels))
-            {
-                if (channelNode)
-                {
-                    foreach (var (header, types) in ChatTypeExt.SortOrder)
-                    {
-                        using var headerNode = ImRaii.TreeNode(header + $"##{i}");
-                        if (!headerNode.Success)
-                            continue;
-
-                        foreach (var type in types)
-                        {
-                            if (type.IsGm())
-                                continue;
-
-                            var enabled = tab.ChatCodes.ContainsKey(type);
-                            if (ImGui.Checkbox($"##{type.Name()}-{i}", ref enabled))
-                            {
-                                if (enabled)
-                                    tab.ChatCodes[type] = ChatSourceExt.All;
-                                else
-                                    tab.ChatCodes.Remove(type);
-                            }
-
-                            ImGui.SameLine();
-
-                            if (!type.HasSource())
-                            {
-                                ImGui.TextUnformatted(type.Name());
-                                continue;
-                            }
-
-                            using var typeNode = ImRaii.TreeNode($"{type.Name()}##{i}");
-                            if (!typeNode.Success)
-                                continue;
-
-                            tab.ChatCodes.TryGetValue(type, out var sourcesEnum);
-                            var sources = (uint) sourcesEnum;
-
-                            foreach (var source in Enum.GetValues<ChatSource>())
-                                if (ImGui.CheckboxFlags(source.Name(), ref sources, (uint) source))
-                                    tab.ChatCodes[type] = (ChatSource) sources;
-                        }
-                    }
-                }
-            }
-
-
-            if (Plugin.ExtraChat.ChannelNames.Count <= 0)
-                continue;
-
-            using var extraTree = ImRaii.TreeNode(Language.Options_Tabs_ExtraChatChannels);
-            if (!extraTree.Success)
-                continue;
-
-            ImGui.Checkbox(Language.Options_Tabs_ExtraChatAll, ref tab.ExtraChatAll);
-            ImGui.Separator();
-
-            if (tab.ExtraChatAll)
-                ImGui.BeginDisabled();
-
-            foreach (var (id, name) in Plugin.ExtraChat.ChannelNames)
-            {
-                var enabled = tab.ExtraChatChannels.Contains(id);
-                if (!ImGui.Checkbox($"{name}##ec-{id}", ref enabled))
-                    continue;
-
-                if (enabled)
-                    tab.ExtraChatChannels.Add(id);
-                else
-                    tab.ExtraChatChannels.Remove(id);
-            }
-
-            if (tab.ExtraChatAll)
-                ImGui.EndDisabled();
+            ImGuiUtil.ChannelSelector(Language.Options_Tabs_Channels, tab.ChatCodes);
+            ImGuiUtil.ExtraChatSelector(Language.Options_Tabs_ExtraChatChannels, ref tab.ExtraChatAll, tab.ExtraChatChannels);
         }
 
         if (toRemove > -1)

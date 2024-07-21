@@ -10,8 +10,6 @@ using FFXIVClientStructs.FFXIV.Client.UI;
 using ImGuiNET;
 using ModifierFlag = ChatTwo.GameFunctions.Types.ModifierFlag;
 
-using ModifierFlag = ChatTwo.GameFunctions.Types.ModifierFlag;
-
 namespace ChatTwo.GameFunctions;
 
 internal enum KeyboardSource {
@@ -95,8 +93,8 @@ internal unsafe class KeybindManager : IDisposable {
 
     // List of keys that can be used as a part of keybinds while the chat is
     // focused WITHOUT modifiers. All other keys can only be used if their
-    // configured keybind contains modifiers. This allows for using e.g. F11 to
-    // change chat channel while typing.
+    // configured keybind contains modifiers (except only SHIFT). This allows
+    // for using e.g. F11 to change chat channel while typing.
     private static readonly IReadOnlyCollection<VirtualKey> ModifierlessChatKeys = new[]
     {
         // VirtualKey.NO_KEY,
