@@ -24,4 +24,5 @@ tags:
 changelog:  |-
   **Updates**
   - Loc updates
-  - Fix multiple issues with keybinds
+  - Fix multiple issues related to keybinds
+  - Add more options for auto hide [thanks dean]
