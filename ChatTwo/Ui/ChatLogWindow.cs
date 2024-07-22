@@ -546,6 +546,8 @@ public sealed class ChatLogWindow : Window
             {
                 var playerName = TellTarget.Name;
                 if (ScreenshotMode)
+                    // Note: don't use HidePlayerInString here because
+                    // abbreviation settings do not affect this.
                     playerName = HashPlayer(TellTarget.Name, TellTarget.World);
                 var world = WorldSheet.GetRow(TellTarget.World)?.Name?.RawString ?? "???";
 
@@ -594,6 +596,8 @@ public sealed class ChatLogWindow : Window
             {
                 if (!string.IsNullOrWhiteSpace(tellPlayerName) && tellWorldId != 0)
                 {
+                    // Note: don't use HidePlayerInString here because
+                    // abbreviation settings do not affect this.
                     var playerName = HashPlayer(tellPlayerName, tellWorldId);
                     var world = WorldSheet.GetRow(tellWorldId)?.Name?.RawString ?? "???";
 
@@ -1648,10 +1652,14 @@ public sealed class ChatLogWindow : Window
         var content = text.Content ?? "";
         if (ScreenshotMode)
         {
-            if (chunk.Link is PlayerPayload playerPayload && content.Contains(playerPayload.PlayerName))
-                content = content.Replace(playerPayload.PlayerName, HashPlayer(playerPayload.PlayerName, playerPayload.World.RowId));
-            else if (Plugin.ClientState.LocalPlayer is { } player && content.Contains(player.Name.TextValue))
-                content = content.Replace(player.Name.TextValue, HashPlayer(player.Name.TextValue, player.HomeWorld.Id));
+            // TODO: the result of hashing the player name should be cached.
+            //       Currently we recalculate the abbreviated player names, the
+            //       hashes and the string replacements every frame when they
+            //       never change.
+            if (chunk.Link is PlayerPayload playerPayload)
+                content = HidePlayerInString(content, playerPayload.PlayerName, playerPayload.World.RowId);
+            else if (Plugin.ClientState.LocalPlayer is { } player)
+                content = HidePlayerInString(content, player.Name.TextValue, player.HomeWorld.Id);
         }
 
         if (wrap)
@@ -1683,6 +1691,14 @@ public sealed class ChatLogWindow : Window
 
         ImGui.Image(FontIcon.ImGuiHandle, size, uv0, uv1);
         ImGuiUtil.PostPayload(chunk, handler);
+
+    }
+
+    private string HidePlayerInString(string str, string playerName, uint worldId)
+    {
+        var expected = Plugin.Functions.Chat.AbbreviatePlayerName(playerName);
+        var hash = HashPlayer(playerName, worldId);
+        return str.Replace(playerName, expected).Replace(expected, hash);
     }
 
     private string HashPlayer(string playerName, uint worldId)
