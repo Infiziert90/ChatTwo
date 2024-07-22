@@ -429,7 +429,7 @@ public sealed class ChatLogWindow : Window
 
     public override unsafe void PreOpenCheck()
     {
-        Flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse;
+        Flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoFocusOnAppearing;
         if (!Plugin.Config.CanMove)
             Flags |= ImGuiWindowFlags.NoMove;
 
