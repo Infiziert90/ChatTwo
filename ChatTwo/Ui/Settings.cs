@@ -150,12 +150,11 @@ public sealed class SettingsWindow : Window
         // calculate all conditions before updating config
         var hideChanged = !Mutable.HideChat && Mutable.HideChat != Plugin.Config.HideChat;
         var languageChanged = Mutable.LanguageOverride != Plugin.Config.LanguageOverride;
-        var fontChanged = Mutable.GlobalFont != Plugin.Config.GlobalFont
-                          || Mutable.JapaneseFont != Plugin.Config.JapaneseFont
+        var fontChanged = Mutable.GlobalFontV2 != Plugin.Config.GlobalFontV2
+                          || Mutable.JapaneseFontV3 != Plugin.Config.JapaneseFontV3
                           || Mutable.ExtraGlyphRanges != Plugin.Config.ExtraGlyphRanges;
-        var fontSizeChanged = Math.Abs(Mutable.FontSize - Plugin.Config.FontSize) > 0.001
-                              || Math.Abs(Mutable.JapaneseFontSize - Plugin.Config.JapaneseFontSize) > 0.001
-                              || Math.Abs(Mutable.SymbolsFontSize - Plugin.Config.SymbolsFontSize) > 0.001;
+        var fontSizeChanged = Math.Abs(Mutable.SymbolsFontSizeV2 - Plugin.Config.SymbolsFontSizeV2) > 0.001
+                          || Math.Abs(Mutable.FontSizeV2 - Plugin.Config.FontSizeV2) > 0.001;
 
         Plugin.Config.UpdateFrom(Mutable, true);
 

@@ -9,89 +9,47 @@ public class Fonts : ISettingsTab
     private Configuration Mutable { get; }
 
     public string Name => Language.Options_Fonts_Tab + "###tabs-fonts";
-    private List<string> GlobalFonts { get; set; } = [];
-    private List<string> JpFonts { get; set; } = [];
 
     internal Fonts(Configuration mutable)
     {
         Mutable = mutable;
-        UpdateFonts();
     }
 
-    private void UpdateFonts()
+    public void Draw(bool _)
     {
-        GlobalFonts = Ui.Fonts.GetFonts();
-        JpFonts = Ui.Fonts.GetJpFonts();
-    }
-
-    public void Draw(bool changed)
-    {
-        if (changed)
-            UpdateFonts();
-
         using var wrap = ImGuiUtil.TextWrapPos();
 
         ImGui.Checkbox(Language.Options_FontsEnabled, ref Mutable.FontsEnabled);
         ImGui.Spacing();
 
-        if (Mutable.FontsEnabled)
+        if (!Mutable.FontsEnabled)
         {
-            using (var combo = ImGuiUtil.BeginComboVertical(Language.Options_Font_Name, Mutable.GlobalFont))
+            ImGuiUtil.FontSizeCombo(Language.Options_FontSize_Name, ref Mutable.FontSizeV2);
+            ImGuiUtil.HelpText($"[Old Size] {FontManager.SizeInPt(Mutable.FontSize)}pt"); // TODO Remove after 24.08
+        }
+        else
+        {
+            var globalChooser = ImGuiUtil.FontChooser(Language.Options_Font_Name, Mutable.GlobalFontV2);
+            globalChooser?.ResultTask.ContinueWith(r =>
             {
-                if (combo)
-                {
-                    foreach (var font in Ui.Fonts.GlobalFonts)
-                    {
-                        if (ImGui.Selectable(font.Name, Mutable.GlobalFont == font.Name))
-                            Mutable.GlobalFont = font.Name;
+                if (r.IsCompletedSuccessfully)
+                    Mutable.GlobalFontV2 = r.Result;
+            });
 
-                        if (ImGui.IsWindowAppearing() && Mutable.GlobalFont == font.Name)
-                            ImGui.SetScrollHereY(0.5f);
-                    }
-
-                    ImGui.Separator();
-
-                    foreach (var name in GlobalFonts)
-                    {
-                        if (ImGui.Selectable(name, Mutable.GlobalFont == name))
-                            Mutable.GlobalFont = name;
-
-                        if (ImGui.IsWindowAppearing() && Mutable.GlobalFont == name)
-                            ImGui.SetScrollHereY(0.5f);
-                    }
-                }
-            }
-
+            ImGuiUtil.HelpText($"[Old Font] {Mutable.GlobalFont} ({FontManager.SizeInPt(Mutable.FontSize)}pt)"); // TODO Remove after 24.08
             ImGuiUtil.HelpText(string.Format(Language.Options_Font_Description, Plugin.PluginName));
             ImGuiUtil.WarningText(Language.Options_Font_Warning);
             ImGui.Spacing();
 
-            using (var combo = ImGuiUtil.BeginComboVertical(Language.Options_JapaneseFont_Name, Mutable.JapaneseFont))
+            // LocaleNames being null means it is likely a game font which all support JP symbols
+            var japaneseChooser = ImGuiUtil.FontChooser(Language.Options_JapaneseFont_Name, Mutable.JapaneseFontV3, id => !id.LocaleNames?.ContainsKey("ja-jp") ?? false, "いろはにほへと   ちりぬるを");
+            japaneseChooser?.ResultTask.ContinueWith(r =>
             {
-                if (combo)
-                {
-                    foreach (var (name, _) in Ui.Fonts.JapaneseFonts)
-                    {
-                        if (ImGui.Selectable(name, Mutable.JapaneseFont == name))
-                            Mutable.JapaneseFont = name;
+                if (r.IsCompletedSuccessfully)
+                    Mutable.JapaneseFontV3 = r.Result;
+            });
 
-                        if (ImGui.IsWindowAppearing() && Mutable.JapaneseFont == name)
-                            ImGui.SetScrollHereY(0.5f);
-                    }
-
-                    ImGui.Separator();
-
-                    foreach (var family in JpFonts)
-                    {
-                        if (ImGui.Selectable(family, Mutable.JapaneseFont == family))
-                            Mutable.JapaneseFont = family;
-
-                        if (ImGui.IsWindowAppearing() && Mutable.JapaneseFont == family)
-                            ImGui.SetScrollHereY(0.5f);
-                    }
-                }
-            }
-
+            ImGuiUtil.HelpText($"[Old Font] {Mutable.JapaneseFont} ({FontManager.SizeInPt(Mutable.JapaneseFontSize)}pt)"); // TODO Remove after 24.08
             ImGuiUtil.HelpText(string.Format(Language.Options_JapaneseFont_Description, Plugin.PluginName));
             ImGui.Spacing();
 
@@ -109,12 +67,8 @@ public class Fonts : ISettingsTab
             ImGui.Spacing();
         }
 
-        const float speed = .0125f;
-        const float min = 8f;
-        const float max = 36f;
-        ImGuiUtil.DragFloatVertical(Language.Options_FontSize_Name, ref Mutable.FontSize, speed, min, max, $"{Mutable.FontSize:N1}");
-        ImGuiUtil.DragFloatVertical(Language.Options_JapaneseFontSize_Name, ref Mutable.JapaneseFontSize, speed, min, max, $"{Mutable.JapaneseFontSize:N1}");
-        ImGuiUtil.DragFloatVertical(Language.Options_SymbolsFontSize_Name, ref Mutable.SymbolsFontSize, speed, min, max, $"{Mutable.SymbolsFontSize:N1}");
+        ImGuiUtil.FontSizeCombo(Language.Options_SymbolsFontSize_Name, ref Mutable.SymbolsFontSizeV2);
+        ImGuiUtil.HelpText($"[Old Size] {FontManager.SizeInPt(Mutable.SymbolsFontSize)}pt"); // TODO Remove after 24.08
         ImGuiUtil.HelpText(Language.Options_SymbolsFontSize_Description);
 
         ImGui.Spacing();

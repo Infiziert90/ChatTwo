@@ -2,10 +2,11 @@ using System.Collections;
 using ChatTwo.Code;
 using ChatTwo.GameFunctions.Types;
 using ChatTwo.Resources;
-using ChatTwo.Ui;
 using ChatTwo.Util;
+using Dalamud;
 using Dalamud.Configuration;
 using Dalamud.Game.ClientState.Keys;
+using Dalamud.Interface.FontIdentifier;
 using ImGuiNET;
 
 namespace ChatTwo;
@@ -80,11 +81,25 @@ internal class Configuration : IPluginConfiguration
 
     public bool FontsEnabled = true;
     public ExtraGlyphRanges ExtraGlyphRanges = 0;
+    public float FontSizeV2 = 12.75f;
+    public float SymbolsFontSizeV2 = 12.75f;
+    public SingleFontSpec GlobalFontV2 = new()
+    {
+        FontId = new DalamudAssetFontAndFamilyId(DalamudAsset.NotoSansKrRegular), // dalamud only ships KR as regular, which chat2 used previously for global fonts
+        SizePt = 12.75f,
+    };
+    public SingleFontSpec JapaneseFontV3 = new()
+    {
+        FontId = new DalamudAssetFontAndFamilyId(DalamudAsset.NotoSansJpMedium),
+        SizePt = 12.75f,
+    };
+
+    // TODO Remove after 24.08
     public float FontSize = 17f;
     public float JapaneseFontSize = 17f;
     public float SymbolsFontSize = 17f;
-    public string GlobalFont = Fonts.GlobalFonts[0].Name;
-    public string JapaneseFont = Fonts.JapaneseFonts[0].Item1;
+    public string GlobalFont = "Chat 2: Noto Sans";
+    public string JapaneseFont = "Chat 2: Noto Sans JP";
 
     public float TooltipOffset;
     public float WindowAlpha = 100f;
@@ -145,11 +160,10 @@ internal class Configuration : IPluginConfiguration
         BlockedEmotes = other.BlockedEmotes;
         FontsEnabled = other.FontsEnabled;
         ExtraGlyphRanges = other.ExtraGlyphRanges;
-        FontSize = other.FontSize;
-        JapaneseFontSize = other.JapaneseFontSize;
-        SymbolsFontSize = other.SymbolsFontSize;
-        GlobalFont = other.GlobalFont;
-        JapaneseFont = other.JapaneseFont;
+        FontSizeV2 = other.FontSizeV2;
+        GlobalFontV2 = other.GlobalFontV2;
+        JapaneseFontV3 = other.JapaneseFontV3;
+        SymbolsFontSizeV2 = other.SymbolsFontSizeV2;
         TooltipOffset = other.TooltipOffset;
         WindowAlpha = other.WindowAlpha;
         ChatColours = other.ChatColours.ToDictionary(entry => entry.Key, entry => entry.Value);

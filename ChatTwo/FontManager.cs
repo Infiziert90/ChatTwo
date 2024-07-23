@@ -1,5 +1,4 @@
-﻿using ChatTwo.Ui;
-using Dalamud.Interface;
+﻿using Dalamud.Interface;
 using Dalamud.Interface.GameFonts;
 using Dalamud.Interface.ManagedFontAtlas;
 using Dalamud.Interface.Utility;
@@ -9,8 +8,6 @@ namespace ChatTwo;
 
 public class FontManager
 {
-    private readonly Plugin Plugin;
-
     internal IFontHandle Axis { get; private set; }
     internal IFontHandle AxisItalic { get; private set; }
 
@@ -19,45 +16,37 @@ public class FontManager
 
     internal IFontHandle FontAwesome { get; private set; }
 
-    private FaceData _regularFont;
-    private FaceData? _italicFont;
-    private FaceData _jpFont;
-    private FaceData _gameSymFont;
+    private readonly byte[] GameSymFont;
 
-    private ushort[] _ranges;
-    private ushort[] _jpRange;
-    private ushort[] _symRange = [0xE020, 0xE0DB, 0];
+    private ushort[] Ranges;
+    private ushort[] JpRange;
+    private readonly ushort[] SymRange = [0xE020, 0xE0DB, 0];
 
-    public FontManager(Plugin plugin)
+
+    public static readonly HashSet<float> AxisFontSizeList =
+    [
+        9.6f, 10f, 12f, 14f, 16f,
+        18f, 18.4f, 20f, 23f, 34f,
+        36f, 40f, 45f, 46f, 68f, 90f,
+    ];
+
+    public FontManager()
     {
-        Plugin = plugin;
-
-        byte[] gameSym;
         var filePath = Path.Combine(Plugin.Interface.ConfigDirectory.FullName, "FFXIV_Lodestone_SSF.ttf");
         if (File.Exists(filePath))
         {
-            gameSym = File.ReadAllBytes(filePath);
+            GameSymFont = File.ReadAllBytes(filePath);
         }
         else
         {
-            gameSym = new HttpClient().GetAsync("https://img.finalfantasyxiv.com/lds/pc/global/fonts/FFXIV_Lodestone_SSF.ttf")
+            GameSymFont = new HttpClient().GetAsync("https://img.finalfantasyxiv.com/lds/pc/global/fonts/FFXIV_Lodestone_SSF.ttf")
                 .Result
                 .Content
                 .ReadAsByteArrayAsync()
                 .Result;
 
-            Dalamud.Utility.Util.WriteAllBytesSafe(filePath, gameSym);
+            Dalamud.Utility.Util.WriteAllBytesSafe(filePath, GameSymFont);
         }
-
-        _gameSymFont = new FaceData(gameSym);
-    }
-
-    private byte[] GetResource(string name)
-    {
-        var stream = GetType().Assembly.GetManifestResourceStream(name)!;
-        var memory = new MemoryStream();
-        stream.CopyTo(memory);
-        return memory.ToArray();
     }
 
     private unsafe void SetUpRanges()
@@ -102,80 +91,23 @@ public class FontManager
             if (Plugin.Config.ExtraGlyphRanges.HasFlag(extraRange))
                 ranges.Add(extraRange.Range());
 
-        _ranges = BuildRange(null, ranges.ToArray());
-        _jpRange = BuildRange(GlyphRangesJapanese.GlyphRanges);
-    }
-
-    private void SetUpUserFonts()
-    {
-        FontData? fontData = null;
-        if (Plugin.Config.GlobalFont.StartsWith(Fonts.IncludedIndicator))
-        {
-            var globalFont = Fonts.GlobalFonts.FirstOrDefault(font => font.Name == Plugin.Config.GlobalFont);
-            if (globalFont != null)
-            {
-                var regular = new FaceData(GetResource(globalFont.ResourcePath));
-                var italic = new FaceData(GetResource(globalFont.ResourcePathItalic));
-                fontData = new FontData(regular, italic);
-            }
-        }
-        else
-        {
-            fontData = Fonts.GetFont(Plugin.Config.GlobalFont, true);
-        }
-
-        if (fontData == null)
-        {
-            Plugin.Config.GlobalFont = Fonts.GlobalFonts[0].Name;
-            Plugin.SaveConfig();
-
-            var globalFont = Fonts.GlobalFonts[0];
-            var regular = new FaceData(GetResource(globalFont.ResourcePath));
-            var italic = new FaceData(GetResource(globalFont.ResourcePathItalic));
-            fontData = new FontData(regular, italic);
-        }
-
-        _regularFont = fontData.Regular;
-        _italicFont = fontData.Italic ?? null;
-
-        FontData? jpFontData = null;
-        if (Plugin.Config.JapaneseFont.StartsWith(Fonts.IncludedIndicator))
-        {
-            var jpFont = Fonts.JapaneseFonts.FirstOrDefault(item => item.Item1 == Plugin.Config.JapaneseFont);
-            if (jpFont != default)
-                jpFontData = new FontData(new FaceData(GetResource(jpFont.Item2)), null);
-        }
-        else
-        {
-            jpFontData = Fonts.GetFont(Plugin.Config.JapaneseFont, false);
-        }
-
-        if (jpFontData == null)
-        {
-            Plugin.Config.JapaneseFont = Fonts.JapaneseFonts[0].Item1;
-            Plugin.SaveConfig();
-
-            var jpFont = Fonts.JapaneseFonts[0];
-            jpFontData = new FontData(new FaceData(GetResource(jpFont.Item2)), null);
-        }
-
-        _jpFont = jpFontData.Regular;
+        Ranges = BuildRange(null, ranges.ToArray());
+        JpRange = BuildRange(GlyphRangesJapanese.GlyphRanges);
     }
 
     public void BuildFonts()
     {
         SetUpRanges();
-        SetUpUserFonts();
 
-        Axis = Plugin.Interface.UiBuilder.FontAtlas.NewGameFontHandle(new GameFontStyle(GameFontFamily.Axis, Plugin.Config.FontSize));
-        AxisItalic = Plugin.Interface.UiBuilder.FontAtlas.NewGameFontHandle(new GameFontStyle(GameFontFamily.Axis, Plugin.Config.FontSize)
+        Axis = Plugin.Interface.UiBuilder.FontAtlas.NewGameFontHandle(new GameFontStyle(GameFontFamily.Axis, SizeInPx(Plugin.Config.FontSizeV2)));
+        AxisItalic = Plugin.Interface.UiBuilder.FontAtlas.NewGameFontHandle(new GameFontStyle(GameFontFamily.Axis, SizeInPx(Plugin.Config.FontSizeV2))
         {
-            SkewStrength = Plugin.Config.FontSize / 6
+            SkewStrength = SizeInPx(Plugin.Config.FontSizeV2) / 6
         });
 
         FontAwesome = Plugin.Interface.UiBuilder.FontAtlas.NewDelegateFontHandle(e =>
         {
-            e.OnPreBuild(tk => tk.AddFontAwesomeIconFont(new SafeFontConfig { SizePx = Plugin.Config.FontSize }));
+            e.OnPreBuild(tk => tk.AddFontAwesomeIconFont(new SafeFontConfig { SizePx = GetFontSize() }));
             e.OnPostBuild(tk => tk.FitRatio(tk.Font));
         });
 
@@ -183,43 +115,45 @@ public class FontManager
             e => e.OnPreBuild(
                 tk =>
                 {
-                    var config = new SafeFontConfig { SizePx = Plugin.Config.FontSize, GlyphRanges = _ranges };
-                    config.MergeFont = tk.AddFontFromMemory(_regularFont.Data, config, "ChatTwo2 RegularFont");
+                    var config = new SafeFontConfig {SizePt = Plugin.Config.GlobalFontV2.SizePt, GlyphRanges = Ranges};
+                    config.MergeFont = Plugin.Config.GlobalFontV2.FontId.AddToBuildToolkit(tk, config);
 
-                    config.SizePx = Plugin.Config.JapaneseFontSize;
-                    config.GlyphRanges = _jpRange;
-                    tk.AddFontFromMemory(_jpFont.Data, config, "ChatTwo2 JP Regular");
+                    config.SizePt = Plugin.Config.JapaneseFontV3.SizePt;
+                    config.GlyphRanges = JpRange;
+                    Plugin.Config.JapaneseFontV3.FontId.AddToBuildToolkit(tk, config);
 
-                    config.SizePx = Plugin.Config.SymbolsFontSize;
-                    config.GlyphRanges = _symRange;
-                    tk.AddFontFromMemory(_gameSymFont.Data, config, "ChatTwo2 Sym Font");
+                    config.SizePt = Plugin.Config.SymbolsFontSizeV2;
+                    config.GlyphRanges = SymRange;
+                    tk.AddFontFromMemory(GameSymFont, config, "ChatTwo2 Sym Font");
 
                     tk.Font = config.MergeFont;
                 }
             ));
 
-        // load italic noto sans and merge in jp + game icons
-        ItalicFont = null;
-        if (_italicFont != null)
-        {
-            ItalicFont = Plugin.Interface.UiBuilder.FontAtlas.NewDelegateFontHandle(
-                e => e.OnPreBuild(
-                    tk =>
-                    {
-                        var config = new SafeFontConfig { SizePx = Plugin.Config.FontSize, GlyphRanges = _ranges };
-                        config.MergeFont = tk.AddFontFromMemory(_italicFont.Data, config, "ChatTwo2 ItalicFont");
+        // load italic version if it exists, else default to regular
+        ItalicFont = Plugin.Interface.UiBuilder.FontAtlas.NewDelegateFontHandle(
+            e => e.OnPreBuild(
+                tk =>
+                {
+                    var italicVersion = Plugin.Config.GlobalFontV2.FontId.Family.Fonts.FirstOrDefault(f => f.EnglishName.Contains("Italic"));
 
-                        config.SizePx = Plugin.Config.JapaneseFontSize;
-                        config.GlyphRanges = _jpRange;
-                        tk.AddFontFromMemory(_jpFont.Data, config, "ChatTwo2 JP Regular");
+                    var config = new SafeFontConfig {SizePt = Plugin.Config.GlobalFontV2.SizePt, GlyphRanges = Ranges};
+                    config.MergeFont = italicVersion?.AddToBuildToolkit(tk, config) ?? Plugin.Config.GlobalFontV2.FontId.AddToBuildToolkit(tk, config);
 
-                        config.SizePx = Plugin.Config.SymbolsFontSize;
-                        config.GlyphRanges = _symRange;
-                        tk.AddFontFromMemory(_gameSymFont.Data, config, "ChatTwo2 Sym Font");
+                    config.SizePt = Plugin.Config.JapaneseFontV3.SizePt;
+                    config.GlyphRanges = JpRange;
+                    Plugin.Config.JapaneseFontV3.FontId.AddToBuildToolkit(tk, config);
 
-                        tk.Font = config.MergeFont;
-                    }
-                ));
-        }
+                    config.SizePt = Plugin.Config.SymbolsFontSizeV2;
+                    config.GlyphRanges = SymRange;
+                    tk.AddFontFromMemory(GameSymFont, config, "ChatTwo2 Sym Font");
+
+                    tk.Font = config.MergeFont;
+                }
+            ));
     }
+
+    public static float SizeInPt(float px) => (float) (px * 3.0 / 4.0);
+    public static float SizeInPx(float pt) => (float) (pt * 4.0 / 3.0);
+    public static float GetFontSize() => Plugin.Config.FontsEnabled ? Plugin.Config.GlobalFontV2.SizePx : SizeInPx(Plugin.Config.FontSizeV2);
 }

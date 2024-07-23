@@ -7,6 +7,8 @@ using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Interface;
 using Dalamud.Interface.Components;
+using Dalamud.Interface.FontIdentifier;
+using Dalamud.Interface.ImGuiFontChooserDialog;
 using Dalamud.Interface.Style;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
@@ -264,6 +266,42 @@ internal static class ImGuiUtil
         HelpText(description);
 
         return r;
+    }
+
+    public static SingleFontChooserDialog? FontChooser(string label, SingleFontSpec font, Predicate<IFontFamilyId>? exclusion = null, string? preview = null)
+    {
+        using var id = ImRaii.PushId(label);
+
+        ImGui.TextUnformatted(label);
+        var fontFamily = font.FontId.Family.EnglishName;
+        var fontStyle = font.FontId.EnglishName;
+        fontStyle = fontStyle.Equals(fontFamily) ? "" : $" - {fontStyle}";
+
+        var buttonText = $"{fontFamily}{fontStyle} ({font.SizePt}pt)";
+        if (!ImGui.Button($"{buttonText}##{label}"))
+            return null;
+
+        var chooser = SingleFontChooserDialog.CreateAuto((UiBuilder) Plugin.Interface.UiBuilder);
+        chooser.SelectedFont = font;
+        if (exclusion is not null)
+            chooser.FontFamilyExcludeFilter = exclusion;
+        if (preview is not null)
+            chooser.PreviewText = preview;
+
+        return chooser;
+    }
+
+    public static void FontSizeCombo(string label, ref float currentSize)
+    {
+        ImGui.TextUnformatted(label);
+        ImGui.SetNextItemWidth(-1);
+        using var combo = ImRaii.Combo($"##{label}", $"{currentSize:###.##}pt");
+        if (combo)
+        {
+            foreach (var size in FontManager.AxisFontSizeList)
+                if (ImGui.Selectable($"{size:###.##}pt", currentSize == size))
+                    currentSize = size;
+        }
     }
 
     public static bool Button(string id, FontAwesomeIcon icon, bool disabled)

@@ -107,9 +107,11 @@ internal sealed class ChatLog : ISettingsTab
         var currentStyle = Mutable.ChosenStyle ?? Language.Options_OverrideStyle_NotSelected;
         using var combo = ImRaii.Combo(Language.Options_OverrideStyleDropdown_Name, currentStyle);
         if (combo)
+        {
             foreach (var style in styles)
                 if (ImGui.Selectable(style.Name, Mutable.ChosenStyle == style.Name))
                     Mutable.ChosenStyle = style.Name;
+        }
 
         ImGui.Spacing();
     }

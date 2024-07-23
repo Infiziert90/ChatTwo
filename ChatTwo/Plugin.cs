@@ -85,7 +85,7 @@ public sealed class Plugin : IDalamudPlugin
             Functions = new GameFunctions.GameFunctions(this);
             Ipc = new IpcManager();
             ExtraChat = new ExtraChat(this);
-            FontManager = new FontManager(this);
+            FontManager = new FontManager();
 
             ChatLogWindow = new ChatLogWindow(this);
             SettingsWindow = new SettingsWindow(this);

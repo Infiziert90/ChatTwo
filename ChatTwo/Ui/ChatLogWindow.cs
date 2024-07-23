@@ -1683,7 +1683,7 @@ public sealed class ChatLogWindow : Window
 
         var texSize = new Vector2(FontIcon!.Width, FontIcon.Height);
 
-        var sizeRatio = Plugin.Config.FontSize / entry.Height;
+        var sizeRatio = FontManager.GetFontSize() / entry.Height;
         var size = new Vector2(entry.Width, entry.Height) * sizeRatio * ImGuiHelpers.GlobalScale;
 
         var uv0 = new Vector2(entry.Left, entry.Top + 170) * 2 / texSize;
