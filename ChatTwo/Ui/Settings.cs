@@ -152,6 +152,7 @@ public sealed class SettingsWindow : Window
         var languageChanged = Mutable.LanguageOverride != Plugin.Config.LanguageOverride;
         var fontChanged = Mutable.GlobalFontV2 != Plugin.Config.GlobalFontV2
                           || Mutable.JapaneseFontV2 != Plugin.Config.JapaneseFontV2
+                          || Mutable.ItalicFontV2 != Plugin.Config.ItalicFontV2
                           || Mutable.ExtraGlyphRanges != Plugin.Config.ExtraGlyphRanges;
         var fontSizeChanged = Math.Abs(Mutable.SymbolsFontSizeV2 - Plugin.Config.SymbolsFontSizeV2) > 0.001
                           || Math.Abs(Mutable.FontSizeV2 - Plugin.Config.FontSizeV2) > 0.001;
