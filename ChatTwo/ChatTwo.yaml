@@ -30,4 +30,4 @@ changelog:  |-
 
   **LiteDB**
   - Migration option removed
-  - Old files can still be removed in the database tab
+  - Old files can still be deleted in the database tab

@@ -69,7 +69,10 @@ public class Fonts : ISettingsTab
             });
             ImGui.SameLine();
             if (ImGui.Button("Reset##italic"))
+            {
+                Mutable.ItalicEnabled = false;
                 Mutable.ItalicFontV2 = new SingleFontSpec{ FontId = new DalamudAssetFontAndFamilyId(DalamudAsset.NotoSansKrRegular), SizePt = 12.75f };
+            }
 
             ImGuiUtil.HelpText(string.Format(Language.Options_Italic_Description, Plugin.PluginName));
             ImGui.Spacing();

@@ -31,9 +31,9 @@
       },
       "Pidgin": {
         "type": "Direct",
-        "requested": "[3.2.2, )",
-        "resolved": "3.2.2",
-        "contentHash": "imvuRt8fzxJCJs9kCk7s418NRyEdP6aDtz2qL9XYcn1ywTkpnrSq4IORVTQ879HNoTfJkyGkFadmEoCZEsebGg=="
+        "requested": "[3.2.3, )",
+        "resolved": "3.2.3",
+        "contentHash": "/1Q/f9asEZH7bogARG4EUxYT3LGB+mNC19db4unmx8gL04kkPzkg1VuX/BFk4UMJsqVopYComG/ydCrj1flCww=="
       },
       "SixLabors.ImageSharp": {
         "type": "Direct",
