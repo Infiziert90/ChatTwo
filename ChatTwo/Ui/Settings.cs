@@ -156,6 +156,7 @@ public sealed class SettingsWindow : Window
                           || Mutable.ExtraGlyphRanges != Plugin.Config.ExtraGlyphRanges;
         var fontSizeChanged = Math.Abs(Mutable.SymbolsFontSizeV2 - Plugin.Config.SymbolsFontSizeV2) > 0.001
                           || Math.Abs(Mutable.FontSizeV2 - Plugin.Config.FontSizeV2) > 0.001;
+        var italicStateChanged = Mutable.ItalicEnabled != Plugin.Config.ItalicEnabled;
 
         Plugin.Config.UpdateFrom(Mutable, true);
 
@@ -165,7 +166,7 @@ public sealed class SettingsWindow : Window
         Plugin.MessageManager.ClearAllTabs();
         Plugin.MessageManager.FilterAllTabsAsync();
 
-        if (fontChanged || fontSizeChanged)
+        if (fontChanged || fontSizeChanged || italicStateChanged)
             Plugin.FontManager.BuildFonts();
 
         if (languageChanged)
