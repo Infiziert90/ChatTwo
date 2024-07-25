@@ -118,9 +118,9 @@ public class FontManager
                     var config = new SafeFontConfig {SizePt = Plugin.Config.GlobalFontV2.SizePt, GlyphRanges = Ranges};
                     config.MergeFont = Plugin.Config.GlobalFontV2.FontId.AddToBuildToolkit(tk, config);
 
-                    config.SizePt = Plugin.Config.JapaneseFontV3.SizePt;
+                    config.SizePt = Plugin.Config.JapaneseFontV2.SizePt;
                     config.GlyphRanges = JpRange;
-                    Plugin.Config.JapaneseFontV3.FontId.AddToBuildToolkit(tk, config);
+                    Plugin.Config.JapaneseFontV2.FontId.AddToBuildToolkit(tk, config);
 
                     config.SizePt = Plugin.Config.SymbolsFontSizeV2;
                     config.GlyphRanges = SymRange;
@@ -140,9 +140,9 @@ public class FontManager
                     var config = new SafeFontConfig {SizePt = Plugin.Config.GlobalFontV2.SizePt, GlyphRanges = Ranges};
                     config.MergeFont = italicVersion?.AddToBuildToolkit(tk, config) ?? Plugin.Config.GlobalFontV2.FontId.AddToBuildToolkit(tk, config);
 
-                    config.SizePt = Plugin.Config.JapaneseFontV3.SizePt;
+                    config.SizePt = Plugin.Config.JapaneseFontV2.SizePt;
                     config.GlyphRanges = JpRange;
-                    Plugin.Config.JapaneseFontV3.FontId.AddToBuildToolkit(tk, config);
+                    Plugin.Config.JapaneseFontV2.FontId.AddToBuildToolkit(tk, config);
 
                     config.SizePt = Plugin.Config.SymbolsFontSizeV2;
                     config.GlyphRanges = SymRange;

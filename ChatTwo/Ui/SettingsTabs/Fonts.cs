@@ -47,15 +47,15 @@ public class Fonts : ISettingsTab
             ImGui.Spacing();
 
             // LocaleNames being null means it is likely a game font which all support JP symbols
-            var japaneseChooser = ImGuiUtil.FontChooser(Language.Options_JapaneseFont_Name, Mutable.JapaneseFontV3, id => !id.LocaleNames?.ContainsKey("ja-jp") ?? false, "いろはにほへと   ちりぬるを");
+            var japaneseChooser = ImGuiUtil.FontChooser(Language.Options_JapaneseFont_Name, Mutable.JapaneseFontV2, id => !id.LocaleNames?.ContainsKey("ja-jp") ?? false, "いろはにほへと   ちりぬるを");
             japaneseChooser?.ResultTask.ContinueWith(r =>
             {
                 if (r.IsCompletedSuccessfully)
-                    Mutable.JapaneseFontV3 = r.Result;
+                    Mutable.JapaneseFontV2 = r.Result;
             });
             ImGui.SameLine();
             if (ImGui.Button("Reset##japanese"))
-                Mutable.GlobalFontV2 = new SingleFontSpec{ FontId = new DalamudAssetFontAndFamilyId(DalamudAsset.NotoSansJpMedium), SizePt = 12.75f };
+                Mutable.JapaneseFontV2 = new SingleFontSpec{ FontId = new DalamudAssetFontAndFamilyId(DalamudAsset.NotoSansJpMedium), SizePt = 12.75f };
 
             ImGuiUtil.HelpText($"[Old Font] {Mutable.JapaneseFont} ({FontManager.SizeInPt(Mutable.JapaneseFontSize)}pt)"); // TODO Remove after 24.08
             ImGuiUtil.HelpText(string.Format(Language.Options_JapaneseFont_Description, Plugin.PluginName));

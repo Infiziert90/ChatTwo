@@ -151,7 +151,7 @@ public sealed class SettingsWindow : Window
         var hideChanged = !Mutable.HideChat && Mutable.HideChat != Plugin.Config.HideChat;
         var languageChanged = Mutable.LanguageOverride != Plugin.Config.LanguageOverride;
         var fontChanged = Mutable.GlobalFontV2 != Plugin.Config.GlobalFontV2
-                          || Mutable.JapaneseFontV3 != Plugin.Config.JapaneseFontV3
+                          || Mutable.JapaneseFontV2 != Plugin.Config.JapaneseFontV2
                           || Mutable.ExtraGlyphRanges != Plugin.Config.ExtraGlyphRanges;
         var fontSizeChanged = Math.Abs(Mutable.SymbolsFontSizeV2 - Plugin.Config.SymbolsFontSizeV2) > 0.001
                           || Math.Abs(Mutable.FontSizeV2 - Plugin.Config.FontSizeV2) > 0.001;

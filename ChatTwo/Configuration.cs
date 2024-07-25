@@ -88,7 +88,7 @@ internal class Configuration : IPluginConfiguration
         FontId = new DalamudAssetFontAndFamilyId(DalamudAsset.NotoSansKrRegular), // dalamud only ships KR as regular, which chat2 used previously for global fonts
         SizePt = 12.75f,
     };
-    public SingleFontSpec JapaneseFontV3 = new()
+    public SingleFontSpec JapaneseFontV2 = new()
     {
         FontId = new DalamudAssetFontAndFamilyId(DalamudAsset.NotoSansJpMedium),
         SizePt = 12.75f,
@@ -162,7 +162,7 @@ internal class Configuration : IPluginConfiguration
         ExtraGlyphRanges = other.ExtraGlyphRanges;
         FontSizeV2 = other.FontSizeV2;
         GlobalFontV2 = other.GlobalFontV2;
-        JapaneseFontV3 = other.JapaneseFontV3;
+        JapaneseFontV2 = other.JapaneseFontV2;
         SymbolsFontSizeV2 = other.SymbolsFontSizeV2;
         TooltipOffset = other.TooltipOffset;
         WindowAlpha = other.WindowAlpha;
