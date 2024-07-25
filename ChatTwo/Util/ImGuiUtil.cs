@@ -268,11 +268,17 @@ internal static class ImGuiUtil
         return r;
     }
 
-    public static SingleFontChooserDialog? FontChooser(string label, SingleFontSpec font, Predicate<IFontFamilyId>? exclusion = null, string? preview = null)
+    public static SingleFontChooserDialog? FontChooser(string label, SingleFontSpec font, bool checkbox, ref bool checkboxValue, Predicate<IFontFamilyId>? exclusion = null, string? preview = null)
     {
         using var id = ImRaii.PushId(label);
 
         ImGui.TextUnformatted(label);
+        if (checkbox)
+        {
+            ImGui.Checkbox("##enabled", ref checkboxValue);
+            ImGui.SameLine();
+        }
+
         var fontFamily = font.FontId.Family.EnglishName;
         var fontStyle = font.FontId.EnglishName;
         fontStyle = fontStyle.Equals(fontFamily) ? "" : $" - {fontStyle}";

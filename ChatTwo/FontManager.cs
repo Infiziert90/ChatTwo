@@ -130,27 +130,31 @@ public class FontManager
                 }
             ));
 
-        // load italic version if it exists, else default to regular
-        ItalicFont = Plugin.Interface.UiBuilder.FontAtlas.NewDelegateFontHandle(
-            e => e.OnPreBuild(
-                tk =>
-                {
-                    var italicVersion = Plugin.Config.GlobalFontV2.FontId.Family.Fonts.FirstOrDefault(f => f.EnglishName.Contains("Italic"));
+        if (Plugin.Config.ItalicEnabled)
+        {
+            ItalicFont = Plugin.Interface.UiBuilder.FontAtlas.NewDelegateFontHandle(
+                e => e.OnPreBuild(
+                    tk =>
+                    {
+                        var config = new SafeFontConfig {SizePt = Plugin.Config.GlobalFontV2.SizePt, GlyphRanges = Ranges};
+                        config.MergeFont = Plugin.Config.ItalicFontV2.FontId.AddToBuildToolkit(tk, config);
 
-                    var config = new SafeFontConfig {SizePt = Plugin.Config.GlobalFontV2.SizePt, GlyphRanges = Ranges};
-                    config.MergeFont = italicVersion?.AddToBuildToolkit(tk, config) ?? Plugin.Config.GlobalFontV2.FontId.AddToBuildToolkit(tk, config);
+                        config.SizePt = Plugin.Config.JapaneseFontV2.SizePt;
+                        config.GlyphRanges = JpRange;
+                        Plugin.Config.JapaneseFontV2.FontId.AddToBuildToolkit(tk, config);
 
-                    config.SizePt = Plugin.Config.JapaneseFontV2.SizePt;
-                    config.GlyphRanges = JpRange;
-                    Plugin.Config.JapaneseFontV2.FontId.AddToBuildToolkit(tk, config);
+                        config.SizePt = Plugin.Config.SymbolsFontSizeV2;
+                        config.GlyphRanges = SymRange;
+                        tk.AddFontFromMemory(GameSymFont, config, "ChatTwo2 Sym Font");
 
-                    config.SizePt = Plugin.Config.SymbolsFontSizeV2;
-                    config.GlyphRanges = SymRange;
-                    tk.AddFontFromMemory(GameSymFont, config, "ChatTwo2 Sym Font");
-
-                    tk.Font = config.MergeFont;
-                }
-            ));
+                        tk.Font = config.MergeFont;
+                    }
+                ));
+        }
+        else
+        {
+            ItalicFont = null;
+        }
     }
 
     public static float SizeInPt(float px) => (float) (px * 3.0 / 4.0);

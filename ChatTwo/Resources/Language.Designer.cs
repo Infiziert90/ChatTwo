@@ -2616,6 +2616,33 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to If enabled, uses the italic font in {0}, else it will use the ingame italic font..
+        /// </summary>
+        internal static string Options_Italic_Description {
+            get {
+                return ResourceManager.GetString("Options_Italic_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use italic font.
+        /// </summary>
+        internal static string Options_ItalicEnabled {
+            get {
+                return ResourceManager.GetString("Options_ItalicEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Italic font.
+        /// </summary>
+        internal static string Options_ItalicFont_Name {
+            get {
+                return ResourceManager.GetString("Options_ItalicFont_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The font {0} will use to display Japanese text..
         /// </summary>
         internal static string Options_JapaneseFont_Description {

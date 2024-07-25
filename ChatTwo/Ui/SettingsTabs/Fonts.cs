@@ -31,7 +31,7 @@ public class Fonts : ISettingsTab
         }
         else
         {
-            var globalChooser = ImGuiUtil.FontChooser(Language.Options_Font_Name, Mutable.GlobalFontV2);
+            var globalChooser = ImGuiUtil.FontChooser(Language.Options_Font_Name, Mutable.GlobalFontV2, false, ref _);
             globalChooser?.ResultTask.ContinueWith(r =>
             {
                 if (r.IsCompletedSuccessfully)
@@ -47,7 +47,7 @@ public class Fonts : ISettingsTab
             ImGui.Spacing();
 
             // LocaleNames being null means it is likely a game font which all support JP symbols
-            var japaneseChooser = ImGuiUtil.FontChooser(Language.Options_JapaneseFont_Name, Mutable.JapaneseFontV2, id => !id.LocaleNames?.ContainsKey("ja-jp") ?? false, "いろはにほへと   ちりぬるを");
+            var japaneseChooser = ImGuiUtil.FontChooser(Language.Options_JapaneseFont_Name, Mutable.JapaneseFontV2, false, ref _, id => !id.LocaleNames?.ContainsKey("ja-jp") ?? false, "いろはにほへと   ちりぬるを");
             japaneseChooser?.ResultTask.ContinueWith(r =>
             {
                 if (r.IsCompletedSuccessfully)
@@ -59,6 +59,19 @@ public class Fonts : ISettingsTab
 
             ImGuiUtil.HelpText($"[Old Font] {Mutable.JapaneseFont} ({FontManager.SizeInPt(Mutable.JapaneseFontSize)}pt)"); // TODO Remove after 24.08
             ImGuiUtil.HelpText(string.Format(Language.Options_JapaneseFont_Description, Plugin.PluginName));
+            ImGui.Spacing();
+
+            var italicChooser = ImGuiUtil.FontChooser(Language.Options_ItalicFont_Name, Mutable.ItalicFontV2, true, ref Mutable.ItalicEnabled);
+            italicChooser?.ResultTask.ContinueWith(r =>
+            {
+                if (r.IsCompletedSuccessfully)
+                    Mutable.ItalicFontV2 = r.Result;
+            });
+            ImGui.SameLine();
+            if (ImGui.Button("Reset##italic"))
+                Mutable.ItalicFontV2 = new SingleFontSpec{ FontId = new DalamudAssetFontAndFamilyId(DalamudAsset.NotoSansKrRegular), SizePt = 12.75f };
+
+            ImGuiUtil.HelpText(string.Format(Language.Options_Italic_Description, Plugin.PluginName));
             ImGui.Spacing();
 
             if (ImGui.CollapsingHeader(Language.Options_ExtraGlyphs_Name))

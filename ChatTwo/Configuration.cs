@@ -85,12 +85,19 @@ internal class Configuration : IPluginConfiguration
     public float SymbolsFontSizeV2 = 12.75f;
     public SingleFontSpec GlobalFontV2 = new()
     {
-        FontId = new DalamudAssetFontAndFamilyId(DalamudAsset.NotoSansKrRegular), // dalamud only ships KR as regular, which chat2 used previously for global fonts
+        // dalamud only ships KR as regular, which chat2 used previously for global fonts
+        FontId = new DalamudAssetFontAndFamilyId(DalamudAsset.NotoSansKrRegular),
         SizePt = 12.75f,
     };
     public SingleFontSpec JapaneseFontV2 = new()
     {
         FontId = new DalamudAssetFontAndFamilyId(DalamudAsset.NotoSansJpMedium),
+        SizePt = 12.75f,
+    };
+    public bool ItalicEnabled = false;
+    public SingleFontSpec ItalicFontV2 = new()
+    {
+        FontId = new DalamudAssetFontAndFamilyId(DalamudAsset.NotoSansKrRegular),
         SizePt = 12.75f,
     };
 
@@ -159,10 +166,12 @@ internal class Configuration : IPluginConfiguration
         ShowEmotes = other.ShowEmotes;
         BlockedEmotes = other.BlockedEmotes;
         FontsEnabled = other.FontsEnabled;
+        ItalicEnabled = other.ItalicEnabled;
         ExtraGlyphRanges = other.ExtraGlyphRanges;
         FontSizeV2 = other.FontSizeV2;
         GlobalFontV2 = other.GlobalFontV2;
         JapaneseFontV2 = other.JapaneseFontV2;
+        ItalicFontV2 = other.ItalicFontV2;
         SymbolsFontSizeV2 = other.SymbolsFontSizeV2;
         TooltipOffset = other.TooltipOffset;
         WindowAlpha = other.WindowAlpha;
