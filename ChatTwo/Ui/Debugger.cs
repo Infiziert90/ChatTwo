@@ -46,9 +46,9 @@ public class DebuggerWindow : Window
         if (ImGui.Selectable($"Agent Address: {agent:X}"))
             ImGui.SetClipboardText(agent.ToString("X"));
 
-        ImGui.TextUnformatted($"Handle Tooltips: {ChatLogWindow.PayloadHandler._handleTooltips}");
-        ImGui.TextUnformatted($"Hovered Item: {ChatLogWindow.PayloadHandler._hoveredItem}");
-        ImGui.TextUnformatted($"Hover Counter: {ChatLogWindow.PayloadHandler._hoverCounter}");
-        ImGui.TextUnformatted($"Last Hover Counter: {ChatLogWindow.PayloadHandler._lastHoverCounter}");
+        ImGui.TextUnformatted($"Handle Tooltips: {ChatLogWindow.PayloadHandler.HandleTooltips}");
+        ImGui.TextUnformatted($"Hovered Item: {ChatLogWindow.PayloadHandler.HoveredItem}");
+        ImGui.TextUnformatted($"Hover Counter: {ChatLogWindow.PayloadHandler.HoverCounter}");
+        ImGui.TextUnformatted($"Last Hover Counter: {ChatLogWindow.PayloadHandler.LastHoverCounter}");
     }
 }

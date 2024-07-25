@@ -31,3 +31,6 @@ changelog:  |-
   **LiteDB**
   - Migration option removed
   - Old files can still be deleted in the database tab
+
+  **Textures**
+  - Switch to dalamuds internal texture cache

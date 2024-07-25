@@ -53,7 +53,6 @@ public sealed class Plugin : IDalamudPlugin
 
     internal Commands Commands { get; }
     internal ChatCommon Common { get; }
-    internal TextureCache TextureCache { get; }
     internal GameFunctions.GameFunctions Functions { get; }
     internal MessageManager MessageManager { get; }
     internal IpcManager Ipc { get; }
@@ -80,7 +79,6 @@ public sealed class Plugin : IDalamudPlugin
 
             Commands = new Commands(this);
             Common = new ChatCommon();
-            TextureCache = new TextureCache();
             Functions = new GameFunctions.GameFunctions(this);
             Ipc = new IpcManager();
             ExtraChat = new ExtraChat(this);
@@ -158,7 +156,6 @@ public sealed class Plugin : IDalamudPlugin
         Ipc?.Dispose();
         MessageManager?.DisposeAsync().AsTask().Wait();
         Functions?.Dispose();
-        TextureCache?.Dispose();
         Commands?.Dispose();
 
         EmoteCache.Dispose();

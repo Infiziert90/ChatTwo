@@ -10,6 +10,7 @@ using Dalamud.Game.Config;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface.ImGuiNotification;
+using Dalamud.Interface.Textures;
 using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
@@ -32,10 +33,10 @@ public sealed class PayloadHandler {
     private ChatLogWindow LogWindow { get; }
     private (Chunk, Payload?)? Popup { get; set; }
 
-    public bool _handleTooltips;
-    public uint _hoveredItem;
-    public uint _hoverCounter;
-    public uint _lastHoverCounter;
+    public bool HandleTooltips;
+    public uint HoveredItem;
+    public uint HoverCounter;
+    public uint LastHoverCounter;
 
     private readonly ExcelSheet<Item> ItemSheet;
     private readonly ExcelSheet<EventItem> EventItemSheet;
@@ -58,12 +59,12 @@ public sealed class PayloadHandler {
     {
         DrawPopups();
 
-        if (_handleTooltips && ++_hoverCounter - _lastHoverCounter > 1)
+        if (HandleTooltips && ++HoverCounter - LastHoverCounter > 1)
         {
             GameFunctions.GameFunctions.CloseItemTooltip();
-            _hoveredItem = 0;
-            _hoverCounter = _lastHoverCounter = 0;
-            _handleTooltips = false;
+            HoveredItem = 0;
+            HoverCounter = LastHoverCounter = 0;
+            HandleTooltips = false;
         }
     }
 
@@ -232,17 +233,17 @@ public sealed class PayloadHandler {
             case ItemPayload item:
                 if (Plugin.Config.NativeItemTooltips)
                 {
-                    if (!_handleTooltips || _hoveredItem != item.RawItemId)
+                    if (!HandleTooltips || HoveredItem != item.RawItemId)
                     {
-                        _handleTooltips = true;
-                        _hoveredItem = item.RawItemId;
-                        _hoverCounter = _lastHoverCounter = 0;
+                        HandleTooltips = true;
+                        HoveredItem = item.RawItemId;
+                        HoverCounter = LastHoverCounter = 0;
 
                         GameFunctions.GameFunctions.OpenItemTooltip(item.RawItemId, item.Kind);
                     }
                     else
                     {
-                        _lastHoverCounter = _hoverCounter;
+                        LastHoverCounter = HoverCounter;
                     }
 
                     return;
@@ -269,7 +270,7 @@ public sealed class PayloadHandler {
 
     public unsafe void MoveTooltip(AddonEvent type, AddonArgs args)
     {
-        if (!_handleTooltips)
+        if (!HandleTooltips)
             return;
 
         // Only move if user has "Next to Cursor" option selected
@@ -311,7 +312,7 @@ public sealed class PayloadHandler {
 
     private void HoverStatus(StatusPayload status)
     {
-        if (LogWindow.Plugin.TextureCache.GetStatus(status.Status) is { } icon)
+        if (Plugin.TextureProvider.GetFromGameIcon(status.Status.Icon).GetWrapOrDefault() is { } icon)
             InlineIcon(icon);
 
         var name = ChunkUtil.ToChunks(status.Status.Name.ToDalamudString(), ChunkSource.None, null);
@@ -333,7 +334,7 @@ public sealed class PayloadHandler {
         if (item.Item == null)
             return;
 
-        if (LogWindow.Plugin.TextureCache.GetItem(item.Item, item.IsHQ) is { } icon)
+        if (Plugin.TextureProvider.GetFromGameIcon(new GameIconLookup(item.Item.Icon, item.IsHQ)).GetWrapOrDefault() is { } icon)
             InlineIcon(icon);
 
         var name = ChunkUtil.ToChunks(item.Item.Name.ToDalamudString(), ChunkSource.None, null);
@@ -350,7 +351,7 @@ public sealed class PayloadHandler {
         if (item == null)
             return;
 
-        if (LogWindow.Plugin.TextureCache.GetEventItem(item) is { } icon)
+        if (Plugin.TextureProvider.GetFromGameIcon(new GameIconLookup(item.Icon)).GetWrapOrDefault() is { } icon)
             InlineIcon(icon);
 
         var name = ChunkUtil.ToChunks(item.Name.ToDalamudString(), ChunkSource.None, null);
@@ -456,7 +457,7 @@ public sealed class PayloadHandler {
             return;
 
         var hq = payload.Kind == ItemPayload.ItemKind.Hq;
-        if (LogWindow.Plugin.TextureCache.GetItem(item, hq) is { } icon)
+        if (Plugin.TextureProvider.GetFromGameIcon(new GameIconLookup(item.Icon, hq)).GetWrapOrDefault() is { } icon)
             InlineIcon(icon);
 
         var name = item.Name.ToDalamudString();
@@ -502,7 +503,7 @@ public sealed class PayloadHandler {
         if (item == null)
             return;
 
-        if (LogWindow.Plugin.TextureCache.GetEventItem(item) is { } icon)
+        if (Plugin.TextureProvider.GetFromGameIcon(new GameIconLookup(item.Icon)).GetWrapOrDefault() is { } icon)
             InlineIcon(icon);
 
         var name = item.Name.ToDalamudString();
