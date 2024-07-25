@@ -1,5 +1,7 @@
 using ChatTwo.Resources;
 using ChatTwo.Util;
+using Dalamud;
+using Dalamud.Interface.FontIdentifier;
 using ImGuiNET;
 
 namespace ChatTwo.Ui.SettingsTabs;
@@ -35,6 +37,9 @@ public class Fonts : ISettingsTab
                 if (r.IsCompletedSuccessfully)
                     Mutable.GlobalFontV2 = r.Result;
             });
+            ImGui.SameLine();
+            if (ImGui.Button("Reset##global"))
+                Mutable.GlobalFontV2 = new SingleFontSpec{ FontId = new DalamudAssetFontAndFamilyId(DalamudAsset.NotoSansKrRegular), SizePt = 12.75f };
 
             ImGuiUtil.HelpText($"[Old Font] {Mutable.GlobalFont} ({FontManager.SizeInPt(Mutable.FontSize)}pt)"); // TODO Remove after 24.08
             ImGuiUtil.HelpText(string.Format(Language.Options_Font_Description, Plugin.PluginName));
@@ -48,6 +53,9 @@ public class Fonts : ISettingsTab
                 if (r.IsCompletedSuccessfully)
                     Mutable.JapaneseFontV3 = r.Result;
             });
+            ImGui.SameLine();
+            if (ImGui.Button("Reset##japanese"))
+                Mutable.GlobalFontV2 = new SingleFontSpec{ FontId = new DalamudAssetFontAndFamilyId(DalamudAsset.NotoSansJpMedium), SizePt = 12.75f };
 
             ImGuiUtil.HelpText($"[Old Font] {Mutable.JapaneseFont} ({FontManager.SizeInPt(Mutable.JapaneseFontSize)}pt)"); // TODO Remove after 24.08
             ImGuiUtil.HelpText(string.Format(Language.Options_JapaneseFont_Description, Plugin.PluginName));
