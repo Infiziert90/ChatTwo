@@ -136,7 +136,7 @@ public class FontManager
                 e => e.OnPreBuild(
                     tk =>
                     {
-                        var config = new SafeFontConfig {SizePt = Plugin.Config.GlobalFontV2.SizePt, GlyphRanges = Ranges};
+                        var config = new SafeFontConfig {SizePt = Plugin.Config.ItalicFontV2.SizePt, GlyphRanges = Ranges};
                         config.MergeFont = Plugin.Config.ItalicFontV2.FontId.AddToBuildToolkit(tk, config);
 
                         config.SizePt = Plugin.Config.JapaneseFontV2.SizePt;
