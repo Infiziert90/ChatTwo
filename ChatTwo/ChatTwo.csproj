@@ -57,18 +57,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="fonts\NotoSans-Italic.ttf"/>
-        <EmbeddedResource Include="fonts\NotoSans-Regular.ttf"/>
-        <EmbeddedResource Include="fonts\NotoSansJP-Regular.otf"/>
-        <EmbeddedResource Include="fonts\NotoSerif-Italic.ttf"/>
-        <EmbeddedResource Include="fonts\NotoSerif-Regular.ttf"/>
-        <EmbeddedResource Include="fonts\OpenSans-Italic.ttf"/>
-        <EmbeddedResource Include="fonts\OpenSans-Regular.ttf"/>
-        <EmbeddedResource Include="fonts\Roboto-Italic.ttf"/>
-        <EmbeddedResource Include="fonts\Roboto-Regular.ttf"/>
-    </ItemGroup>
-
-    <ItemGroup>
         <Compile Update="Resources\Language.Designer.cs">
             <DesignTime>True</DesignTime>
             <AutoGen>True</AutoGen>
