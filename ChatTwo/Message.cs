@@ -5,9 +5,7 @@ using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using System.Text.RegularExpressions;
 using Dalamud.Game.Text;
-using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
-using LiteDB;
 using Lumina.Excel.GeneratedSheets;
 
 namespace ChatTwo;
@@ -17,7 +15,6 @@ internal class SortCode
     internal ChatType Type { get; }
     internal ChatSource Source { get; }
 
-    [BsonCtor] // Used by LegacyMessageImporter
     public SortCode(ChatType type, ChatSource source)
     {
         Type = type;

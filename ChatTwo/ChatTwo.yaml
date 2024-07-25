@@ -22,7 +22,12 @@ tags:
     - Chat
     - Replacement
 changelog:  |-
-  **Updates**
-  - Loc updates
-  - Fix multiple issues related to keybinds
-  - Add more options for auto hide [thanks dean]
+  **Fonts**
+  - Uses dalamud font chooser
+  - Italic font version can be chosen
+  - Config options related to fonts have been reset
+  - Old font names and sizes used are displayed for up to a month
+
+  **LiteDB**
+  - Migration option removed
+  - Old files can still be removed in the database tab
