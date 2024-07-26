@@ -17,10 +17,10 @@ description: |-
 repo_url: https://github.com/Infiziert90/ChatTwo
 accepts_feedback: true
 tags:
-    - Social
-    - UI
-    - Chat
-    - Replacement
+  - Social
+  - UI
+  - Chat
+  - Replacement
 changelog:  |-
   **Fonts**
   - Uses dalamud font chooser
