@@ -172,20 +172,12 @@ public sealed class ChatLogWindow : Window
 
         if (info.Channel != null)
         {
-            if (!GameFunctions.Chat.ValidAnyLinkshell(info.Channel.Value))
-                return;
-
-            var prevTemp = TempChannel;
-            if (info.Permanent)
-                SetChannel(info.Channel.Value);
-            else
-                TempChannel = info.Channel.Value;
-
+            var targetChannel = info.Channel;
             if (info.Channel is InputChannel.Tell)
             {
                 if (info.Rotate != RotateMode.None)
                 {
-                    var idx = prevTemp != InputChannel.Tell
+                    var idx = TempChannel != InputChannel.Tell
                         ? 0 : info.Rotate == RotateMode.Reverse
                             ? -1 : 1;
 
@@ -205,27 +197,41 @@ public sealed class ChatLogWindow : Window
                 TellTarget = null;
             }
 
-            var mode = prevTemp == null ? RotateMode.None : info.Rotate;
-            if (info.Channel is InputChannel.Linkshell1 && info.Rotate != RotateMode.None)
+            if (info.Channel is InputChannel.Linkshell1 or InputChannel.CrossLinkshell1 && info.Rotate != RotateMode.None)
             {
-                var idx = GameFunctions.Chat.RotateLinkshellHistory(mode);
-                if (idx < 0 || !GameFunctions.Chat.ValidLinkshell((uint)idx))
+                // If any of these operations fail, do nothing.
+                targetChannel = null;
+                if (info.Permanent)
                 {
-                    TempChannel = 0;
-                    return;
+                    // Rotate using the game's code.
+                    if (info.Channel == InputChannel.Linkshell1)
+                    {
+                        var idx = GameFunctions.Chat.RotateLinkshellHistory(info.Rotate);
+                        if (idx >= 0 && GameFunctions.Chat.ValidLinkshell((uint)idx))
+                            targetChannel = info.Channel + (uint)idx;
+                    }
+                    else
+                    {
+                        var idx = GameFunctions.Chat.RotateCrossLinkshellHistory(info.Rotate);
+                        if (idx >= 0 && GameFunctions.Chat.ValidCrossLinkshell((uint)idx))
+                            targetChannel = info.Channel + (uint)idx;
+                    }
                 }
-                TempChannel = info.Channel.Value + (uint) idx;
+                else
+                {
+                    targetChannel = GameFunctions.Chat.ResolveTempInputChannel(TempChannel, info.Channel.Value, info.Rotate);
+                }
             }
-            else if (info.Channel is InputChannel.CrossLinkshell1 && info.Rotate != RotateMode.None)
+
+            if (targetChannel == null || !GameFunctions.Chat.ValidAnyLinkshell(targetChannel.Value))
             {
-                var idx = GameFunctions.Chat.RotateCrossLinkshellHistory(mode);
-                if (idx < 0 || !GameFunctions.Chat.ValidCrossLinkshell((uint)idx))
-                {
-                    TempChannel = 0;
-                    return;
-                }
-                TempChannel = info.Channel.Value + (uint) idx;
+                Plugin.Log.Warning($"Channel was set to an invalid value '{targetChannel}', ignoring");
+                return;
             }
+            if (info.Permanent)
+                SetChannel(targetChannel);
+            else
+                TempChannel = targetChannel;
         }
 
         if (info.Text != null && Chat.Length == 0)
