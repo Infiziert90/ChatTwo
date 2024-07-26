@@ -34,3 +34,6 @@ changelog:  |-
 
   **Textures**
   - Switch to dalamuds internal texture cache
+
+  **Misc**
+  - Role Icons are now compatible with penumbra [thanks mopi]

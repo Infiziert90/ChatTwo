@@ -13,14 +13,12 @@ using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface;
 using Dalamud.Interface.Style;
-using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
 using Dalamud.Memory;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using ImGuiNET;
-using Lumina.Data.Files;
 using Lumina.Excel;
 using Lumina.Excel.GeneratedSheets;
 
@@ -55,7 +53,6 @@ public sealed class ChatLogWindow : Window
     internal bool Activate;
     private int ActivatePos = -1;
     internal string Chat = string.Empty;
-    internal IDalamudTextureWrap? FontIcon;
     private readonly List<string> InputBacklog = [];
     private int InputBacklogIdx = -1;
     private int LastTab { get; set; }
@@ -131,7 +128,6 @@ public sealed class ChatLogWindow : Window
         Plugin.AddonLifecycle.UnregisterListener(AddonEvent.PostRequestedUpdate, "ItemDetail", PayloadHandler.MoveTooltip);
         Plugin.ClientState.Logout -= Logout;
         Plugin.ClientState.Login -= Login;
-        FontIcon?.Dispose();
         Plugin.Commands.Register("/chat2").Execute -= ToggleChat;
         Plugin.Commands.Register("/clearlog2").Execute -= ClearLog;
     }
@@ -497,7 +493,6 @@ public sealed class ChatLogWindow : Window
     {
         try
         {
-            FontIcon = Plugin.TextureProvider.GetFromGame("common/font/fonticon_ps5.tex").GetWrapOrDefault();
             DrawChatLog();
             AddPopOutsToDraw();
             DrawAutoComplete();
@@ -1592,7 +1587,7 @@ public sealed class ChatLogWindow : Window
 
     private void DrawChunk(Chunk chunk, bool wrap = true, PayloadHandler? handler = null, float lineWidth = 0f)
     {
-        if (chunk is IconChunk icon && FontIcon != null)
+        if (chunk is IconChunk icon)
         {
             DrawIcon(chunk, icon, handler);
             return;
@@ -1681,7 +1676,11 @@ public sealed class ChatLogWindow : Window
         if (!IconUtil.GfdFileView.TryGetEntry((uint) icon.Icon, out var entry))
             return;
 
-        var texSize = new Vector2(FontIcon!.Width, FontIcon.Height);
+        var iconTexture = Plugin.TextureProvider.GetFromGame("common/font/fonticon_ps5.tex").GetWrapOrDefault();
+        if (iconTexture == null)
+            return;
+
+        var texSize = new Vector2(iconTexture.Width, iconTexture.Height);
 
         var sizeRatio = FontManager.GetFontSize() / entry.Height;
         var size = new Vector2(entry.Width, entry.Height) * sizeRatio * ImGuiHelpers.GlobalScale;
@@ -1689,7 +1688,7 @@ public sealed class ChatLogWindow : Window
         var uv0 = new Vector2(entry.Left, entry.Top + 170) * 2 / texSize;
         var uv1 = new Vector2(entry.Left + entry.Width, entry.Top + entry.Height + 170) * 2 / texSize;
 
-        ImGui.Image(FontIcon.ImGuiHandle, size, uv0, uv1);
+        ImGui.Image(iconTexture.ImGuiHandle, size, uv0, uv1);
         ImGuiUtil.PostPayload(chunk, handler);
 
     }

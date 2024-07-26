@@ -170,7 +170,7 @@ public partial class InputPreview : Window
 
     private void DrawChunkPreview(Chunk chunk, PayloadHandler? handler = null, float lineWidth = 0f, int unique = 0)
     {
-        if (chunk is IconChunk icon && LogWindow.FontIcon != null)
+        if (chunk is IconChunk icon)
         {
             LogWindow.DrawIcon(chunk, icon, handler);
             if (icon.Icon != BitmapFontIcon.AutoTranslateBegin)
