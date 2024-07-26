@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -55,7 +55,7 @@ public sealed class ChatLogWindow : Window
     internal bool Activate;
     private int ActivatePos = -1;
     internal string Chat = string.Empty;
-    internal readonly IDalamudTextureWrap? FontIcon;
+    internal IDalamudTextureWrap? FontIcon;
     private readonly List<string> InputBacklog = [];
     private int InputBacklogIdx = -1;
     private int LastTab { get; set; }
@@ -119,7 +119,6 @@ public sealed class ChatLogWindow : Window
         WorldSheet = Plugin.DataManager.GetExcelSheet<World>()!;
         LogFilterSheet = Plugin.DataManager.GetExcelSheet<LogFilter>()!;
         TextCommandSheet = Plugin.DataManager.GetExcelSheet<TextCommand>()!;
-        FontIcon = Plugin.TextureProvider.CreateFromTexFile(Plugin.DataManager.GetFile<TexFile>("common/font/fonticon_ps5.tex")!);
 
         Plugin.ClientState.Login += Login;
         Plugin.ClientState.Logout += Logout;
@@ -498,6 +497,7 @@ public sealed class ChatLogWindow : Window
     {
         try
         {
+            FontIcon = Plugin.TextureProvider.GetFromGame("common/font/fonticon_ps5.tex").GetWrapOrDefault();
             DrawChatLog();
             AddPopOutsToDraw();
             DrawAutoComplete();
