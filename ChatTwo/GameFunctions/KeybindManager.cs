@@ -396,11 +396,13 @@ internal unsafe class KeybindManager : IDisposable {
             return;
         }
 
-        // If the vanilla text input has just lost focus, clear all keys so we
-        // don't try to process them immediately.
+        // If the vanilla text input has just lost focus, clear all non-modifier
+        // keys so we don't try to process them immediately on the next frame.
         if (VanillaTextInputHasFocus)
         {
-            Plugin.KeyState.ClearAll();
+            foreach (var key in Plugin.KeyState.GetValidVirtualKeys())
+                if (key is not VirtualKey.CONTROL and not VirtualKey.SHIFT and not VirtualKey.MENU)
+                    Plugin.KeyState[key] = false;
             VanillaTextInputHasFocus = false;
             return;
         }

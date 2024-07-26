@@ -354,6 +354,55 @@ internal sealed unsafe class Chat : IDisposable
         return InfoProxyCrossWorldLinkshell.Instance()->CrossWorldLinkshells[(int) idx].Name.Length > 0;
     }
 
+    private static uint? RotateLinkshell(uint currentIndex, RotateMode rotate, Func<uint, bool> validFn)
+    {
+        if (rotate == RotateMode.None)
+            return null;
+        var delta = rotate switch
+        {
+            RotateMode.Forward => 1,
+            RotateMode.Reverse => -1,
+        };
+
+        // Iterate up to 8 times to find a valid linkshell.
+        for (var i = 0; i < 8; i++)
+        {
+            currentIndex = (uint) ((8 + currentIndex + delta) % 8);
+            if (validFn(currentIndex))
+                return currentIndex;
+        }
+
+        return null;
+    }
+
+    internal static InputChannel? ResolveTempInputChannel(InputChannel? currentTempChannel, InputChannel channel, RotateMode rotate)
+    {
+        switch (channel)
+        {
+            case InputChannel.Linkshell1 or InputChannel.CrossLinkshell1 when rotate != RotateMode.None:
+            {
+                // If we're activating for the first time, start at the beginning
+                // or end of the linkshell list depending on the rotate mode.
+                var currentIndex = rotate == RotateMode.Forward ? 7u : 0u;
+                if (currentTempChannel != null)
+                {
+                    switch (channel)
+                    {
+                        case InputChannel.Linkshell1 when currentTempChannel.Value.IsLinkshell():
+                        case InputChannel.CrossLinkshell1 when currentTempChannel.Value.IsCrossLinkshell():
+                            currentIndex = currentTempChannel.Value.LinkshellIndex();
+                            break;
+                    }
+                }
+
+                var idx = RotateLinkshell(currentIndex, rotate, channel == InputChannel.Linkshell1 ? ValidLinkshell : ValidCrossLinkshell);
+                return channel + idx;
+            }
+            default:
+                return channel;
+        }
+    }
+
     internal static void SetChannel(InputChannel channel, string? tellTarget = null)
     {
         // ExtraChat linkshells aren't supported in game so we never want to
