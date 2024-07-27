@@ -393,7 +393,7 @@ public sealed class ChatLogWindow : Window
     private HideState CurrentHideState = HideState.None;
 
     public bool IsHidden;
-    public void HideStateCheck()
+    public unsafe void HideStateCheck()
     {
         // if the chat has no hide state set, and the player has entered battle, we hide chat if they have configured it
         if (Plugin.Config.HideInBattle && CurrentHideState == HideState.None && InBattle)
@@ -405,7 +405,15 @@ public sealed class ChatLogWindow : Window
 
         // if the chat has no hide state and in a cutscene, set the hide state to cutscene
         if (Plugin.Config.HideDuringCutscenes && CurrentHideState == HideState.None && (CutsceneActive || GposeActive))
-            CurrentHideState = HideState.Cutscene;
+        {
+            // Only hide the chat in a cutscene when the vanilla chat would've
+            // also been hidden. This prevents Chat 2 from hiding for a split
+            // second before the cutscene actually starts, because the game sets
+            // the cutscene conditions before processing the skip.
+            var raptureAtkUnitManager = RaptureAtkUnitManager.Instance();
+            if (raptureAtkUnitManager == null || raptureAtkUnitManager->UiFlags.HasFlag(UIModule.UiFlags.Chat))
+                CurrentHideState = HideState.Cutscene;
+        }
 
         // if the chat is hidden because of a cutscene and no longer in a cutscene, set the hide state to none
         if (CurrentHideState is HideState.Cutscene or HideState.CutsceneOverride && !CutsceneActive && !GposeActive)
