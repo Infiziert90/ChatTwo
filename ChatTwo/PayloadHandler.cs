@@ -14,7 +14,9 @@ using Dalamud.Interface.Textures;
 using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
+using Dalamud.Memory;
 using Dalamud.Utility;
+using FFXIVClientStructs.FFXIV.Client.LayoutEngine;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using ImGuiNET;
@@ -310,16 +312,27 @@ public sealed class PayloadHandler {
         ImGui.SetCursorPos(cursor + new Vector2(size.X + 4, size.Y / 2 - lineHeight / 2));
     }
 
+    private static unsafe SeString ResolveRsv(SeString input)
+    {
+        var txt = input.TextValue;
+        if (txt.StartsWith("_rsv_"))
+            input = SeString.Parse(LayoutWorld.Instance()->ResolveRsvString(txt));
+
+        return input;
+    }
+
     private void HoverStatus(StatusPayload status)
     {
         if (Plugin.TextureProvider.GetFromGameIcon(status.Status.Icon).GetWrapOrDefault() is { } icon)
             InlineIcon(icon);
 
-        var name = ChunkUtil.ToChunks(status.Status.Name.ToDalamudString(), ChunkSource.None, null);
+        var nameString = ResolveRsv(status.Status.Name.ToDalamudString());
+        var name = ChunkUtil.ToChunks(nameString, ChunkSource.None, null);
         LogWindow.DrawChunks(name.ToList());
         ImGui.Separator();
 
-        var desc = ChunkUtil.ToChunks(status.Status.Description.ToDalamudString(), ChunkSource.None, null);
+        var descString = ResolveRsv(status.Status.Description.ToDalamudString());
+        var desc = ChunkUtil.ToChunks(descString, ChunkSource.None, null);
         LogWindow.DrawChunks(desc.ToList());
     }
 
