@@ -22,21 +22,7 @@ tags:
   - Chat
   - Replacement
 changelog:  |-
-  **Fonts**
-  - Uses dalamud font chooser
-  - Italic font version can be chosen
-  - Config options related to fonts have been reset
-  - Old font names and sizes used are displayed for up to a month
-
-  **LiteDB**
-  - Migration option removed
-  - Old files can still be deleted in the database tab
-
-  **Keybinds**
-  - Avoids overriding modifiers after leaving a vanilla text box [thanks dean]
-    - This would prevent you from holding e.g. Ctrl between multiple vanilla text boxes
-  - Reworks linkshell rotation code to fix issues with LS number gaps causing linkshell rotation to not function [thanks dean]
-
-  **Textures**
-  - Switch to dalamuds internal texture cache
-  - Role icons are now compatible with penumbra [thanks mopi]
+  **Misc**
+  - Implement 24-hour clock timestamp option [default false]
+  - Fix hide activity channels not being saved across sessions
+  - Loc updates

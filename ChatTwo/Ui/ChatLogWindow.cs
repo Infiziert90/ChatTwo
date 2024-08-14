@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Globalization;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -1074,13 +1075,14 @@ public sealed class ChatLogWindow : Window
 
                 if (tab.DisplayTimestamp)
                 {
-                    var timestamp = message.Date.ToLocalTime().ToString("t");
+                    var timestamp = message.Date.ToLocalTime().ToString("t", !Plugin.Config.Use24HourClock ? null : CultureInfo.CreateSpecificCulture("es-ES"));
                     if (isTable)
                     {
                         if (!Plugin.Config.HideSameTimestamps || timestamp != lastTimestamp)
                         {
                             lastTimestamp = timestamp;
                             ImGui.TextUnformatted(timestamp);
+
                             // We use an IsItemHovered() check here instead of
                             // just calling SetTooltip() to avoid computing the
                             // tooltip string for all visible items on every

@@ -3381,6 +3381,24 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Display timestamps as their 24-hour clock version..
+        /// </summary>
+        internal static string Options_Use24HourClock_Description {
+            get {
+                return ResourceManager.GetString("Options_Use24HourClock_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 24-hour clock.
+        /// </summary>
+        internal static string Options_Use24HourClock_Name {
+            get {
+                return ResourceManager.GetString("Options_Use24HourClock_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This feature isn&apos;t implemented yet.
         /// </summary>
         internal static string Options_Warning_NotImplemented {

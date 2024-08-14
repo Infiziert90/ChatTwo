@@ -151,6 +151,12 @@
     <data name="Options_PrettierTimestamps_Description">
         <value>Display messages in a more modern style.</value>
     </data>
+    <data name="Options_Use24HourClock_Name">
+        <value>24-hour clock</value>
+    </data>
+    <data name="Options_Use24HourClock_Description">
+        <value>Display timestamps as their 24-hour clock version.</value>
+    </data>
     <data name="Options_MoreCompactPretty_Name">
         <value>More compact modern layout</value>
     </data>

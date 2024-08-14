@@ -96,6 +96,8 @@ internal sealed class Display : ISettingsTab
         ImGui.Separator();
         ImGui.Spacing();
 
+        ImGuiUtil.OptionCheckbox(ref Mutable.Use24HourClock, Language.Options_Use24HourClock_Name, Language.Options_Use24HourClock_Description);
+
         ImGuiUtil.OptionCheckbox(ref Mutable.PrettierTimestamps, Language.Options_PrettierTimestamps_Name, Language.Options_PrettierTimestamps_Description);
 
         if (Mutable.PrettierTimestamps)

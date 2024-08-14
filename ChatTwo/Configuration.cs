@@ -75,6 +75,7 @@ internal class Configuration : IPluginConfiguration
     public bool PlaySounds = true;
     public bool KeepInputFocus = true;
     public int MaxLinesToRender = 10_000;
+    public bool Use24HourClock;
 
     public bool ShowEmotes = true;
     public HashSet<string> BlockedEmotes = [];
@@ -163,6 +164,7 @@ internal class Configuration : IPluginConfiguration
         PlaySounds = other.PlaySounds;
         KeepInputFocus = other.KeepInputFocus;
         MaxLinesToRender = other.MaxLinesToRender;
+        Use24HourClock = other.Use24HourClock;
         ShowEmotes = other.ShowEmotes;
         BlockedEmotes = other.BlockedEmotes;
         FontsEnabled = other.FontsEnabled;
