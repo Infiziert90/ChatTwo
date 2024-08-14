@@ -341,6 +341,12 @@ Sie wurden gewarnt.</value>
   <data name="Options_JapaneseFont_Description">
     <value>Die Schriftart, die {0} nutzt, um japanischen Text anzuzeigen.</value>
   </data>
+  <data name="Options_ItalicFont_Name">
+    <value>Italic font</value>
+  </data>
+  <data name="Options_Italic_Description">
+    <value>If enabled, uses the italic font in {0}, else it will use the ingame italic font.</value>
+  </data>
   <data name="Options_Tabs_ChannelTypes_Special">
     <value>Spezielles</value>
   </data>
@@ -523,6 +529,9 @@ Sie wurden gewarnt.</value>
   </data>
   <data name="Options_FontsEnabled">
     <value>Eigene Schriftarten verwenden</value>
+  </data>
+  <data name="Options_ItalicEnabled">
+    <value>Use italic font</value>
   </data>
   <data name="AutoTranslate_Search_Hint">
     <value>Durchsuche Auto-Übersetzung...</value>

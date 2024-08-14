@@ -340,6 +340,12 @@
   <data name="Options_JapaneseFont_Description">
     <value>字型將用於 {0} 顯示日文文字。</value>
   </data>
+  <data name="Options_ItalicFont_Name">
+    <value>Italic font</value>
+  </data>
+  <data name="Options_Italic_Description">
+    <value>If enabled, uses the italic font in {0}, else it will use the ingame italic font.</value>
+  </data>
   <data name="Options_Tabs_ChannelTypes_Special">
     <value>特殊</value>
   </data>
@@ -523,6 +529,9 @@
   </data>
   <data name="Options_FontsEnabled">
     <value>啓用自定義字型</value>
+  </data>
+  <data name="Options_ItalicEnabled">
+    <value>Use italic font</value>
   </data>
   <data name="AutoTranslate_Search_Hint">
     <value>定型文搜尋…</value>

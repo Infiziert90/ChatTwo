@@ -164,10 +164,10 @@
     <value>以指导者身份登录时，在设置按钮旁边显示新人频道加入按钮。</value>
   </data>
   <data name="Options_ShowHideButton_Name" xml:space="preserve">
-        <value>Show hide button</value>
+        <value>显示隐藏按钮</value>
     </data>
   <data name="Options_ShowHideButton_Description" xml:space="preserve">
-        <value>Show a hide button next to the settings button. The chat window can be returned by pressing return or slash to focus it.</value>
+        <value>在设置按钮旁边显示隐藏按钮。聊天窗口可以通过按回车键或 "/" 恢复。</value>
     </data>
   <data name="Options_FontSize_Name">
     <value>字体大小</value>
@@ -221,7 +221,7 @@
     <value>未读模式</value>
   </data>
   <data name="Options_Tabs_InactivityBehaviour">
-    <value>Unhide the chat window on activity</value>
+    <value>活动时取消隐藏聊天窗口</value>
   </data>
   <data name="Options_Tabs_NoInputChannel">
     <value>&lt;无&gt;</value>
@@ -340,6 +340,12 @@
   <data name="Options_JapaneseFont_Description">
     <value>字体将用于 {0} 显示日文文本。</value>
   </data>
+  <data name="Options_ItalicFont_Name">
+    <value>斜体</value>
+  </data>
+  <data name="Options_Italic_Description">
+    <value>如果启用，则使用 {0} 中的斜体字体，否则将使用游戏中的斜体字体。</value>
+  </data>
   <data name="Options_Tabs_ChannelTypes_Special">
     <value>特殊</value>
   </data>
@@ -410,37 +416,37 @@
     <value>当游戏界面隐藏时隐藏 {0}。</value>
   </data>
   <data name="Options_HideWhenInactive_Name">
-    <value>Hide when inactive</value>
+    <value>非活动时隐藏</value>
   </data>
   <data name="Options_HideWhenInactive_Description">
-    <value>Hide the chat after a configurable period of inactivity. The current tab and any other tabs with the setting enabled are considered for activity.</value>
+    <value>在一段可配置的非活动时间后隐藏聊天窗口。当前聊天标签页和设置启用的其他标签页将被视为活动状态。</value>
   </data>
   <data name="Options_InactivityHideTimeout_Name">
-    <value>Inactivity timeout</value>
+    <value>非活动超时</value>
   </data>
   <data name="Options_InactivityHideTimeout_Description">
-    <value>How long to wait (in seconds) before considering the chat log inactive.</value>
+    <value>等待多长时间 (秒) 才认为聊天记录处于非活动状态。</value>
   </data>
   <data name="Options_InactivityHideActiveDuringBattle_Name" xml:space="preserve">
-        <value>Enable inactivity hide during battle</value>
+        <value>在战斗中启用非活动隐藏</value>
     </data>
   <data name="Options_InactivityHideActiveDuringBattle_Description" xml:space="preserve">
-        <value>When disabled, the chat log will stay active during battle.</value>
+        <value>禁用此选项，聊天记录将在战斗中保持活跃。</value>
     </data>
   <data name="Options_InactivityHideChannels_Name">
-    <value>Chat channels considered for activity</value>
+    <value>视为活动状态的聊天频道</value>
   </data>
   <data name="Options_InactivityHideChannels_Description">
-    <value>Which chat channels should be considered for activity. Other channels will not restore the chat regardless of which tab they occur in.</value>
+    <value>哪些聊天频道应被视为活动状态。其他频道无论出现在哪个标签页，都不会恢复聊天。</value>
   </data>
   <data name="Options_InactivityHideChannels_All_Label">
-    <value>Select All</value>
+    <value>全选</value>
   </data>
   <data name="Options_InactivityHideChannels_None_Label">
-    <value>Unselect All</value>
+    <value>取消全选</value>
   </data>
   <data name="Options_InactivityHideChannels_Button_Tooltip">
-    <value>Hold Ctrl+Shift to click.</value>
+    <value>按住 Ctrl + Shift 键点击。</value>
   </data>
   <data name="Options_KeybindMode_Name">
     <value>热键模式</value>
@@ -523,6 +529,9 @@
   <data name="Options_FontsEnabled">
     <value>启用自定义字体</value>
   </data>
+  <data name="Options_ItalicEnabled">
+    <value>将文字变为斜体</value>
+  </data>
   <data name="AutoTranslate_Search_Hint">
     <value>定型文搜索...</value>
   </data>
@@ -539,16 +548,16 @@
     <value>样式</value>
   </data>
   <data name="Options_ChatTabForwardKeybind_Name">
-    <value>Cycle chat tab forwards keybind</value>
+    <value>顺序切换聊天标签页快捷键</value>
   </data>
   <data name="Options_ChatTabBackwardKeybind_Name">
-    <value>Cycle chat tab backwards keybind</value>
+    <value>倒序切换聊天标签页快捷键</value>
   </data>
   <data name="Keybind_None">
-    <value>none set</value>
+    <value>未设置</value>
   </data>
   <data name="Keybind_EscToClear">
-    <value>ESC to clear</value>
+    <value>按下 ESC 键清除</value>
   </data>
   <data name="Keybind_Modifier_Ctrl">
     <value>Ctrl</value>
@@ -1232,7 +1241,7 @@
         <value>日期</value>
     </data>
   <data name="DbViewer_TableField_Type" xml:space="preserve">
-        <value>Chat Type</value>
+        <value>对话类型</value>
     </data>
   <data name="DbViewer_TableField_Sender" xml:space="preserve">
         <value>发送人</value>
@@ -1262,6 +1271,6 @@
         <value>来自：</value>
     </data>
   <data name="Chat_SendTell_Error" xml:space="preserve">
-        <value>An error occured while sending this tell message</value>
+        <value>发送悄悄话时发生了错误</value>
     </data>
 </root>

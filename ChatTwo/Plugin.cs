@@ -73,6 +73,7 @@ public sealed class Plugin : IDalamudPlugin
 
             if (Config.Tabs.Count == 0)
                 Config.Tabs.Add(TabsUtil.VanillaGeneral);
+            Config.InactivityHideChannels ??= TabsUtil.AllChannels();
 
             LanguageChanged(Interface.UiLanguage);
             ImGuiUtil.Initialize(this);

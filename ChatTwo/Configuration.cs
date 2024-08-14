@@ -46,7 +46,7 @@ internal class Configuration : IPluginConfiguration
     public bool HideWhenInactive;
     public int InactivityHideTimeout = 10;
     public bool InactivityHideActiveDuringBattle = true;
-    public Dictionary<ChatType, ChatSource> InactivityHideChannels = TabsUtil.AllChannels();
+    public Dictionary<ChatType, ChatSource>? InactivityHideChannels;
     public bool InactivityHideExtraChatAll = true;
     public HashSet<Guid> InactivityHideExtraChatChannels = [];
     public bool ShowHideButton = true;
@@ -111,13 +111,13 @@ internal class Configuration : IPluginConfiguration
     public float TooltipOffset;
     public float WindowAlpha = 100f;
     public Dictionary<ChatType, uint> ChatColours = new();
-    public List<Tab> Tabs = new();
+    public List<Tab> Tabs = [];
 
     public bool OverrideStyle;
     public string? ChosenStyle;
 
-    public ConfigKeyBind? ChatTabForward = null;
-    public ConfigKeyBind? ChatTabBackward = null;
+    public ConfigKeyBind? ChatTabForward;
+    public ConfigKeyBind? ChatTabBackward;
 
     internal void UpdateFrom(Configuration other, bool backToOriginal)
     {
@@ -252,7 +252,7 @@ internal class Tab
             return;
         Unread += 1;
 
-        if (message.Matches(Plugin.Config.InactivityHideChannels, Plugin.Config.InactivityHideExtraChatAll, Plugin.Config.InactivityHideExtraChatChannels))
+        if (message.Matches(Plugin.Config.InactivityHideChannels!, Plugin.Config.InactivityHideExtraChatAll, Plugin.Config.InactivityHideExtraChatChannels))
             LastActivity = Environment.TickCount64;
     }
 

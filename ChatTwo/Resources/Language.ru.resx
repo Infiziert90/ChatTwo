@@ -340,6 +340,12 @@
   <data name="Options_JapaneseFont_Description">
     <value>Шрифт {0} для отображения японского текста.</value>
   </data>
+  <data name="Options_ItalicFont_Name">
+    <value>Italic font</value>
+  </data>
+  <data name="Options_Italic_Description">
+    <value>If enabled, uses the italic font in {0}, else it will use the ingame italic font.</value>
+  </data>
   <data name="Options_Tabs_ChannelTypes_Special">
     <value>Особые</value>
   </data>
@@ -522,6 +528,9 @@
   </data>
   <data name="Options_FontsEnabled">
     <value>Включение пользовательских шрифтов</value>
+  </data>
+  <data name="Options_ItalicEnabled">
+    <value>Use italic font</value>
   </data>
   <data name="AutoTranslate_Search_Hint">
     <value>Поиск автоперевода...</value>

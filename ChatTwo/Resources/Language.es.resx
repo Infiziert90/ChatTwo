@@ -340,6 +340,12 @@
   <data name="Options_JapaneseFont_Description">
     <value>La fuente {0} se utilizará para mostrar el texto japonés.</value>
   </data>
+  <data name="Options_ItalicFont_Name">
+    <value>Italic font</value>
+  </data>
+  <data name="Options_Italic_Description">
+    <value>If enabled, uses the italic font in {0}, else it will use the ingame italic font.</value>
+  </data>
   <data name="Options_Tabs_ChannelTypes_Special">
     <value>Especiales</value>
   </data>
@@ -410,37 +416,37 @@
     <value>Ocultar {0} cuando la UI del juego está oculta.</value>
   </data>
   <data name="Options_HideWhenInactive_Name">
-    <value>Hide when inactive</value>
+    <value>Ocultar cuando esté inactivo</value>
   </data>
   <data name="Options_HideWhenInactive_Description">
-    <value>Hide the chat after a configurable period of inactivity. The current tab and any other tabs with the setting enabled are considered for activity.</value>
+    <value>Ocultar el chat después de un período configurable de inactividad. La pestaña actual y cualquier otra pestaña con la configuración habilitada se consideran para la actividad.</value>
   </data>
   <data name="Options_InactivityHideTimeout_Name">
-    <value>Inactivity timeout</value>
+    <value>Tiempo de espera por inactividad</value>
   </data>
   <data name="Options_InactivityHideTimeout_Description">
-    <value>How long to wait (in seconds) before considering the chat log inactive.</value>
+    <value>Cuánto tiempo esperar (en segundos) antes de considerar el registro de chat inactivo.</value>
   </data>
   <data name="Options_InactivityHideActiveDuringBattle_Name" xml:space="preserve">
-        <value>Enable inactivity hide during battle</value>
+        <value>Activar ocultación de inactividad durante la batalla</value>
     </data>
   <data name="Options_InactivityHideActiveDuringBattle_Description" xml:space="preserve">
-        <value>When disabled, the chat log will stay active during battle.</value>
+        <value>Cuando esté deshabilitado, el registro de chat permanecerá activo durante la batalla.</value>
     </data>
   <data name="Options_InactivityHideChannels_Name">
-    <value>Chat channels considered for activity</value>
+    <value>Canales de chat considerados para la actividad</value>
   </data>
   <data name="Options_InactivityHideChannels_Description">
     <value>Which chat channels should be considered for activity. Other channels will not restore the chat regardless of which tab they occur in.</value>
   </data>
   <data name="Options_InactivityHideChannels_All_Label">
-    <value>Select All</value>
+    <value>Seleccionar Todo</value>
   </data>
   <data name="Options_InactivityHideChannels_None_Label">
-    <value>Unselect All</value>
+    <value>Deseleccionar todo</value>
   </data>
   <data name="Options_InactivityHideChannels_Button_Tooltip">
-    <value>Hold Ctrl+Shift to click.</value>
+    <value>Mantenga Ctrl+Shift para hacer clic.</value>
   </data>
   <data name="Options_KeybindMode_Name">
     <value>Combinacion de Teclas</value>
@@ -523,6 +529,9 @@
   <data name="Options_FontsEnabled">
     <value>Habilitar fuentes personalizadas</value>
   </data>
+  <data name="Options_ItalicEnabled">
+    <value>Utilizar cursiva</value>
+  </data>
   <data name="AutoTranslate_Search_Hint">
     <value>Buscar en el Traductor Automático...</value>
   </data>
@@ -545,10 +554,10 @@
     <value>Cycle chat tab backwards keybind</value>
   </data>
   <data name="Keybind_None">
-    <value>none set</value>
+    <value>ninguno establecido</value>
   </data>
   <data name="Keybind_EscToClear">
-    <value>ESC to clear</value>
+    <value>ESC a limpiar</value>
   </data>
   <data name="Keybind_Modifier_Ctrl">
     <value>Ctrl</value>
@@ -557,7 +566,7 @@
     <value>Alt</value>
   </data>
   <data name="Keybind_Modifier_Shift">
-    <value>Shift</value>
+    <value>Mayús</value>
   </data>
   <data name="AutoTranslate_Completion_Key">
     <value>Ctrl + {0}</value>

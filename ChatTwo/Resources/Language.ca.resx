@@ -293,7 +293,7 @@
     <value>Cap</value>
   </data>
   <data name="ChatSource_Self">
-    <value>Self</value>
+    <value>Jo</value>
   </data>
   <data name="ChatSource_PartyMember">
     <value>Membres del grup</value>
@@ -326,7 +326,7 @@
     <value>Mascota (Altres)</value>
   </data>
   <data name="Options_Font_Name">
-    <value>Font</value>
+    <value>Tipus de lletra</value>
   </data>
   <data name="Options_JapaneseFont_Name">
     <value>Japanese font</value>
@@ -340,8 +340,14 @@
   <data name="Options_JapaneseFont_Description">
     <value>The font {0} will use to display Japanese text.</value>
   </data>
+  <data name="Options_ItalicFont_Name">
+    <value>Cursiva</value>
+  </data>
+  <data name="Options_Italic_Description">
+    <value>If enabled, uses the italic font in {0}, else it will use the ingame italic font.</value>
+  </data>
   <data name="Options_Tabs_ChannelTypes_Special">
-    <value>Special</value>
+    <value>Especial</value>
   </data>
   <data name="Options_Fonts_Tab">
     <value>Fonts</value>
@@ -377,7 +383,7 @@
     <value>Nova pestanya</value>
   </data>
   <data name="Options_About_Tab">
-    <value>About</value>
+    <value>Sobre</value>
   </data>
   <data name="Options_About_Opening">
     <value>{0} is a project to completely recreate the in-game chat and make it even better.</value>
@@ -386,16 +392,16 @@
     <value>Ajuda per traduir: </value>
   </data>
   <data name="Options_About_Translators">
-    <value>Translators</value>
+    <value>Traductors</value>
   </data>
   <data name="CommandHelpSide_None">
-    <value>None</value>
+    <value>Cap</value>
   </data>
   <data name="CommandHelpSide_Left">
-    <value>Left</value>
+    <value>Esquerra</value>
   </data>
   <data name="CommandHelpSide_Right">
-    <value>Right</value>
+    <value>Dreta</value>
   </data>
   <data name="Options_CommandHelpSide_Name">
     <value>Command help side (None = off)</value>
@@ -416,7 +422,7 @@
     <value>Hide the chat after a configurable period of inactivity. The current tab and any other tabs with the setting enabled are considered for activity.</value>
   </data>
   <data name="Options_InactivityHideTimeout_Name">
-    <value>Inactivity timeout</value>
+    <value>Temps d'inactivitat</value>
   </data>
   <data name="Options_InactivityHideTimeout_Description">
     <value>How long to wait (in seconds) before considering the chat log inactive.</value>
@@ -434,10 +440,10 @@
     <value>Which chat channels should be considered for activity. Other channels will not restore the chat regardless of which tab they occur in.</value>
   </data>
   <data name="Options_InactivityHideChannels_All_Label">
-    <value>Select All</value>
+    <value>Seleccionar tot</value>
   </data>
   <data name="Options_InactivityHideChannels_None_Label">
-    <value>Unselect All</value>
+    <value>Deseleccionar tot</value>
   </data>
   <data name="Options_InactivityHideChannels_Button_Tooltip">
     <value>Hold Ctrl+Shift to click.</value>
@@ -449,7 +455,7 @@
     <value>The way in which {0} should handle keybinds.</value>
   </data>
   <data name="Options_Miscellaneous_Tab">
-    <value>Miscellaneous</value>
+    <value>Miscel·lània</value>
   </data>
   <data name="LanguageOverride_None">
     <value>Use Dalamud's default language</value>
@@ -458,7 +464,7 @@
     <value>Flexible</value>
   </data>
   <data name="KeybindMode_Strict_Name">
-    <value>Strict</value>
+    <value>Estricte</value>
   </data>
   <data name="KeybindMode_Flexible_Tooltip">
     <value>Process keybinds with modifiers even if other modifiers are pressed.</value>
@@ -497,10 +503,10 @@
     <value>Do not click these buttons unless you know what you're doing.</value>
   </data>
   <data name="Options_Database_Advanced">
-    <value>Advanced</value>
+    <value>Configuració avançada</value>
   </data>
   <data name="ChatLog_Tabs_PopOut">
-    <value>Pop out</value>
+    <value>Finestra emergent</value>
   </data>
   <data name="Options_HideSameTimestamps_Name">
     <value>Hide timestamps when redundant</value>
@@ -518,10 +524,13 @@
     <value>Use different opacity than main window</value>
   </data>
   <data name="Options_Tabs_Opacity">
-    <value>Opacity</value>
+    <value>Opacitat</value>
   </data>
   <data name="Options_FontsEnabled">
     <value>Enable custom fonts</value>
+  </data>
+  <data name="Options_ItalicEnabled">
+    <value>Use italic font</value>
   </data>
   <data name="AutoTranslate_Search_Hint">
     <value>Search Auto Translate...</value>
@@ -536,7 +545,7 @@
     <value>Override Style</value>
   </data>
   <data name="Options_OverrideStyleDropdown_Name">
-    <value>Styles</value>
+    <value>Estils</value>
   </data>
   <data name="Options_ChatTabForwardKeybind_Name">
     <value>Cycle chat tab forwards keybind</value>
@@ -578,28 +587,28 @@
     <value>Cyrillic</value>
   </data>
   <data name="ExtraGlyphRanges_Japanese_Name">
-    <value>Japanese</value>
+    <value>Japonès</value>
   </data>
   <data name="ExtraGlyphRanges_Korean_Name">
-    <value>Korean</value>
+    <value>Coreà</value>
   </data>
   <data name="ExtraGlyphRanges_Thai_Name">
-    <value>Thai</value>
+    <value>Tailandès</value>
   </data>
   <data name="ExtraGlyphRanges_Vietnamese_Name">
-    <value>Vietnamese</value>
+    <value>Vietnamita</value>
   </data>
   <data name="Context_Integrations">
-    <value>Integrations</value>
+    <value>Integracions</value>
   </data>
   <data name="Context_ScreenshotMode">
     <value>Screenshot mode</value>
   </data>
   <data name="Context_HideChat">
-    <value>Hide chat</value>
+    <value>Ocultar xat</value>
   </data>
   <data name="Context_Copy">
-    <value>Copy</value>
+    <value>Copiar</value>
   </data>
   <data name="Context_TryOn">
     <value>Try On</value>
@@ -632,7 +641,7 @@
     <value>Different world</value>
   </data>
   <data name="Context_Promote">
-    <value>Promote</value>
+    <value>Ascendeix</value>
   </data>
   <data name="Context_KickFromParty">
     <value>Kick from Party</value>

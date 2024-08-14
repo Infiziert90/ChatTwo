@@ -340,6 +340,12 @@
   <data name="Options_JapaneseFont_Description">
     <value>{0} 폰트는 일본어 글자를 표시할 때 사용됩니다.</value>
   </data>
+  <data name="Options_ItalicFont_Name">
+    <value>Italic font</value>
+  </data>
+  <data name="Options_Italic_Description">
+    <value>If enabled, uses the italic font in {0}, else it will use the ingame italic font.</value>
+  </data>
   <data name="Options_Tabs_ChannelTypes_Special">
     <value>특수</value>
   </data>
@@ -522,6 +528,9 @@
   </data>
   <data name="Options_FontsEnabled">
     <value>사용자 정의 글꼴 사용</value>
+  </data>
+  <data name="Options_ItalicEnabled">
+    <value>Use italic font</value>
   </data>
   <data name="AutoTranslate_Search_Hint">
     <value>상용구 사전에서 검색...</value>
