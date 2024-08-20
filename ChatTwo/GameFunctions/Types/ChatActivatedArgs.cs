@@ -7,6 +7,7 @@ internal sealed class ChatActivatedArgs
     internal ChannelSwitchInfo ChannelSwitchInfo { get; }
     internal TellReason? TellReason { get; init; }
     internal TellTarget? TellTarget { get; init; }
+    internal bool TellSpecial { get; init; } //  specific to Eureka/Bozja/Zadnor
 
     internal ChatActivatedArgs(ChannelSwitchInfo channelSwitchInfo)
     {

@@ -964,6 +964,9 @@
     <data name="Context_CopySuccess">
         <value>Copied message to clipboard</value>
     </data>
+    <data name="PartyInvite_NoId">
+        <value>Unable to find ID for this message, please try another one.</value>
+    </data>
     <data name="Context_CopyLink" xml:space="preserve">
         <value>Copy link to clipboard</value>
     </data>

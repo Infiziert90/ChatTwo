@@ -22,7 +22,14 @@ tags:
   - Chat
   - Replacement
 changelog:  |-
-  **Misc**
+  **Added**
   - Implement 24-hour clock timestamp option [default false]
-  - Fix hide activity channels not being saved across sessions
+
+  **Fixes**
+  - Bozja/Eureka tells should work again
+  - Invites in Bozja/Eureka should work again
+    - Added a notification that warns about fails duo missing player id
+  - Hide activity channels are now saved across sessions
+
+  **Misc**
   - Loc updates

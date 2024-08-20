@@ -30,20 +30,23 @@ internal sealed unsafe class Chat : IDisposable
     private readonly delegate* unmanaged<RaptureLogModule*, ushort, Utf8String*, Utf8String*, ulong, ulong, ushort, byte, int, byte, void> PrintTellNative = null!;
 
     [Signature("E8 ?? ?? ?? ?? 48 8D 4C 24 ?? E8 ?? ?? ?? ?? 48 8D 8C 24 ?? ?? ?? ?? E8 ?? ?? ?? ?? B0 01")]
-    private readonly delegate* unmanaged<NetworkModule*, ulong, ushort, Utf8String*, Utf8String*, ushort, ushort, bool> SendTellNative = null!;
+    private readonly delegate* unmanaged<NetworkModule*, ulong, ushort, Utf8String*, Utf8String*, ushort, ushort, byte> SendTellNative = null!;
 
     // Client::UI::AddonChatLog.OnRefresh
     [Signature("40 53 56 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 8B F0 8B FA", DetourName = nameof(ChatLogRefreshDetour))]
     private Hook<ChatLogRefreshDelegate>? ChatLogRefreshHook { get; init; }
     private delegate byte ChatLogRefreshDelegate(nint log, ushort eventId, AtkValue* value);
 
+    // Replace with CS version later
+    [Signature("E8 ?? ?? ?? ?? EB 81 48 8B 1D", DetourName = nameof(ContextMenuTellInForayDetour))]
+    private Hook<ContextMenuTellInForayDelegate>? ContextMenuTellInForayHook { get; set; }
+    private delegate void ContextMenuTellInForayDelegate(RaptureShellModule* module, Utf8String* playerName, Utf8String* worldName, ushort worldId, ulong accountId, ulong contentId, ushort reason);
+
     private Hook<AgentChatLog.Delegates.ChangeChannelName> ChangeChannelNameHook { get; init; }
     private Hook<RaptureShellModule.Delegates.ReplyInSelectedChatMode>? ReplyInSelectedChatModeHook { get; init; }
     private Hook<RaptureShellModule.Delegates.SetContextTellTarget>? SetChatLogTellTargetHook { get; init; }
-    private Hook<RaptureShellModule.Delegates.SetContextTellTargetInForay>? EurekaContextMenuTellHook { get; init; }
 
     // Pointers
-
     [Signature("48 8D 35 ?? ?? ?? ?? 8B 05", ScanType = ScanType.StaticAddress)]
     private readonly char* CurrentCharacter = null!;
 
@@ -75,6 +78,7 @@ internal sealed unsafe class Chat : IDisposable
         Plugin.GameInteropProvider.InitializeFromAttributes(this);
 
         ChatLogRefreshHook?.Enable();
+        ContextMenuTellInForayHook?.Enable();
 
         ChangeChannelNameHook = Plugin.GameInteropProvider.HookFromAddress<AgentChatLog.Delegates.ChangeChannelName>(AgentChatLog.MemberFunctionPointers.ChangeChannelName, ChangeChannelNameDetour);
         ChangeChannelNameHook.Enable();
@@ -84,9 +88,6 @@ internal sealed unsafe class Chat : IDisposable
 
         SetChatLogTellTargetHook = Plugin.GameInteropProvider.HookFromAddress<RaptureShellModule.Delegates.SetContextTellTarget>(RaptureShellModule.MemberFunctionPointers.SetContextTellTarget, SetContextTellTarget);
         SetChatLogTellTargetHook.Enable();
-
-        // EurekaContextMenuTellHook = Plugin.GameInteropProvider.HookFromAddress<RaptureShellModule.Delegates.SetContextTellTargetInForay>(RaptureShellModule.MemberFunctionPointers.SetContextTellTargetInForay, SetContextTellTargetInForay);
-        // EurekaContextMenuTellHook.Enable();
 
         Plugin.ClientState.Login += Login;
         Login();
@@ -100,7 +101,7 @@ internal sealed unsafe class Chat : IDisposable
         ReplyInSelectedChatModeHook?.Dispose();
         ChangeChannelNameHook?.Dispose();
         ChatLogRefreshHook?.Dispose();
-        EurekaContextMenuTellHook?.Dispose();
+        ContextMenuTellInForayHook?.Dispose();
     }
 
     internal string? GetLinkshellName(uint idx)
@@ -213,6 +214,11 @@ internal sealed unsafe class Chat : IDisposable
 
         try
         {
+            // We already called this function once, so we skip the duplicated call
+            // Also return the original value here so that vanilla chat receives all information
+            if (Plugin.ChatLogWindow.TellSpecial)
+                return ChatLogRefreshHook!.Original(log, eventId, value);
+
             Plugin.ChatLogWindow.Activated(new ChatActivatedArgs(new ChannelSwitchInfo(null)) { AddIfNotPresent = addIfNotPresent, });
         }
         catch (Exception ex)
@@ -294,35 +300,34 @@ internal sealed unsafe class Chat : IDisposable
         return SetChatLogTellTargetHook!.Original(a1, playerName, worldName, worldId, accountId, contentId, reason, setChatType);
     }
 
-    // private void SetContextTellTargetInForay(RaptureShellModule* a1, Utf8String* playerName, Utf8String* worldName, ushort worldId, ulong accountId, ulong contentId, ushort reason)
-    // {
-    //     Plugin.Log.Information($"SetContextTellTargetInForay");
-    //     if (!UsesTellTempChannel)
-    //     {
-    //         UsesTellTempChannel = true;
-    //         PreviousChannel = Channel.Channel;
-    //     }
-    //
-    //     if (playerName != null)
-    //     {
-    //         try
-    //         {
-    //             Plugin.Log.Information($"Name {playerName->ToString()} World {worldName->ToString()} WorldId {worldId} accountId {accountId} ContentId {contentId} Reason {reason} rapture reason {a1->TellReason}");
-    //             var target = new TellTarget(playerName->ToString(), worldId, contentId, (TellReason) reason);
-    //             Activated?.Invoke(new ChatActivatedArgs(new ChannelSwitchInfo(InputChannel.Tell))
-    //             {
-    //                 TellReason = (TellReason) reason,
-    //                 TellTarget = target,
-    //             });
-    //         }
-    //         catch (Exception ex)
-    //         {
-    //             Plugin.Log.Error(ex, "Error in chat Activated event");
-    //         }
-    //     }
-    //
-    //     EurekaContextMenuTellHook!.Original(a1, playerName, worldName, worldId, accountId, contentId, reason);
-    // }
+    private void ContextMenuTellInForayDetour(RaptureShellModule* a1, Utf8String* playerName, Utf8String* worldName, ushort worldId, ulong accountId, ulong contentId, ushort reason)
+    {
+        if (!UsesTellTempChannel)
+        {
+            UsesTellTempChannel = true;
+            PreviousChannel = Channel.Channel;
+        }
+
+        if (playerName != null)
+        {
+            try
+            {
+                var target = new TellTarget(playerName->ToString(), worldId, contentId, (TellReason) reason);
+                Plugin.ChatLogWindow.Activated(new ChatActivatedArgs(new ChannelSwitchInfo(InputChannel.Tell))
+                {
+                    TellReason = (TellReason) reason,
+                    TellTarget = target,
+                    TellSpecial = true,
+                });
+            }
+            catch (Exception ex)
+            {
+                Plugin.Log.Error(ex, "Error in chat Activated event");
+            }
+        }
+
+        ContextMenuTellInForayHook!.Original(a1, playerName, worldName, worldId, accountId, contentId, reason);
+    }
 
     /// <summary>
     /// Returns true if the channel is any non-linkshell channel, or if the
@@ -457,6 +462,16 @@ internal sealed unsafe class Chat : IDisposable
         return new TellHistoryInfo(name, world, contentId);
     }
 
+    internal void SendTellUsingCommandInner(byte[] message)
+    {
+        var mes = new Utf8String(message);
+
+        RaptureShellModule.Instance()->ExecuteCommandInner(&mes, UIModule.Instance());
+        RaptureAtkModule.Instance()->ClearFocus(); // Clear the focus of vanilla chat that was still active
+
+        mes.Dtor(true);
+    }
+
     internal void SendTell(TellReason reason, ulong contentId, string name, ushort homeWorld, byte[] message, string rawText)
     {
         var uName = Utf8String.FromString(name);
@@ -470,15 +485,19 @@ internal sealed unsafe class Chat : IDisposable
         var logModule = RaptureLogModule.Instance();
         var networkModule = Framework.Instance()->GetNetworkModuleProxy()->NetworkModule;
 
-        // TODO: Remap TellReasons
+        // // TODO: Remap TellReasons
         if (reason == TellReason.Direct)
             reason = TellReason.Friend;
 
         var ok = SendTellNative(networkModule, contentId, homeWorld, uName, encoded, (ushort) reason, homeWorld);
-        if (ok)
+        if (ok == 1)
+        {
             PrintTellNative(logModule, 33, uName, &decodedUtf8String, 0, contentId, homeWorld, 255, 0, 0);
+        }
         else
+        {
             Plugin.ChatGui.PrintError(Language.Chat_SendTell_Error);
+        }
 
         encoded->Dtor(true);
         uName->Dtor(true);

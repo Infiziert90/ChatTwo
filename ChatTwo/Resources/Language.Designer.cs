@@ -3417,6 +3417,15 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unable to find ID for this message, please try another one..
+        /// </summary>
+        internal static string PartyInvite_NoId {
+            get {
+                return ResourceManager.GetString("PartyInvite_NoId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Discard.
         /// </summary>
         internal static string Settings_Discard {

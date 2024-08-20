@@ -59,6 +59,7 @@ public sealed class ChatLogWindow : Window
     private int LastTab { get; set; }
     private InputChannel? TempChannel;
     private TellTarget? TellTarget;
+    public bool TellSpecial;
     private readonly Stopwatch LastResize = new();
     private AutoCompleteInfo? AutoCompleteInfo;
     private bool AutoCompleteOpen;
@@ -145,6 +146,8 @@ public sealed class ChatLogWindow : Window
 
     internal void Activated(ChatActivatedArgs args)
     {
+        TellSpecial = args.TellSpecial;
+
         Activate = true;
         PlayedClosingSound = false;
         if (Plugin.Config.PlaySounds)
@@ -856,6 +859,21 @@ public sealed class ChatLogWindow : Window
             var trimmed = Chat.Trim();
             AddBacklog(trimmed);
             InputBacklogIdx = -1;
+
+            if (TellSpecial)
+            {
+                var tellBytes = Encoding.UTF8.GetBytes(trimmed);
+                AutoTranslate.ReplaceWithPayload(ref tellBytes);
+
+                Plugin.Functions.Chat.SendTellUsingCommandInner(tellBytes);
+
+                TellSpecial = false;
+                if (TempChannel is InputChannel.Tell)
+                    TellTarget = null;
+
+                Chat = string.Empty;
+                return;
+            }
 
             if (!trimmed.StartsWith('/'))
             {

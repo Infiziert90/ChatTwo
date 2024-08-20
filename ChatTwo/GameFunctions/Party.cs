@@ -1,10 +1,12 @@
+using ChatTwo.Resources;
 using ChatTwo.Util;
+using Dalamud.Interface.ImGuiNotification;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Client.UI.Info;
 
 namespace ChatTwo.GameFunctions;
 
-internal sealed unsafe class Party
+internal static unsafe class Party
 {
     internal static void InviteSameWorld(string name, ushort world, ulong contentId)
     {
@@ -20,14 +22,24 @@ internal sealed unsafe class Party
         // if they're not on that world, it will fail
         // pass 0 and it will work on any world EXCEPT for the world the
         // current player is on
-        if (contentId != 0)
-            InfoProxyPartyInvite.Instance()->InviteToPartyContentId(contentId, 0);
+        if (contentId == 0)
+        {
+            WrapperUtil.AddNotification(Language.PartyInvite_NoId, NotificationType.Warning);
+            return;
+        }
+
+        InfoProxyPartyInvite.Instance()->InviteToPartyContentId(contentId, 0);
     }
 
     internal static void InviteInInstance(ulong contentId)
     {
-        if (contentId != 0)
-            InfoProxyPartyInvite.Instance()->InviteToPartyInInstance(contentId);
+        if (contentId == 0)
+        {
+            WrapperUtil.AddNotification(Language.PartyInvite_NoId, NotificationType.Warning);
+            return;
+        }
+
+        InfoProxyPartyInvite.Instance()->InviteToPartyInInstance(contentId);
     }
 
     internal static void Kick(string name, ulong contentId)
