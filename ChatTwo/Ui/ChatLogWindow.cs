@@ -58,7 +58,7 @@ public sealed class ChatLogWindow : Window
     private int InputBacklogIdx = -1;
     private int LastTab { get; set; }
     private InputChannel? TempChannel;
-    private TellTarget? TellTarget;
+    internal TellTarget? TellTarget;
     public bool TellSpecial;
     private readonly Stopwatch LastResize = new();
     private AutoCompleteInfo? AutoCompleteInfo;
@@ -555,84 +555,7 @@ public sealed class ChatLogWindow : Window
 
         using (ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, Vector2.Zero))
         {
-            if (TellTarget != null)
-            {
-                var playerName = TellTarget.Name;
-                if (ScreenshotMode)
-                    // Note: don't use HidePlayerInString here because
-                    // abbreviation settings do not affect this.
-                    playerName = HashPlayer(TellTarget.Name, TellTarget.World);
-                var world = WorldSheet.GetRow(TellTarget.World)?.Name?.RawString ?? "???";
-
-                DrawChunks(new Chunk[]
-                {
-                    new TextChunk(ChunkSource.None, null, "Tell "),
-                    new TextChunk(ChunkSource.None, null, playerName),
-                    new IconChunk(ChunkSource.None, null, BitmapFontIcon.CrossWorld),
-                    new TextChunk(ChunkSource.None, null, world),
-                });
-            }
-            else if (TempChannel != null)
-            {
-                if (TempChannel.Value.IsLinkshell())
-                {
-                    var idx = (uint) TempChannel.Value - (uint) InputChannel.Linkshell1;
-                    var lsName = Plugin.Functions.Chat.GetLinkshellName(idx);
-                    ImGui.TextUnformatted($"LS #{idx + 1}: {lsName}");
-                }
-                else if (TempChannel.Value.IsCrossLinkshell())
-                {
-                    var idx = (uint) TempChannel.Value - (uint) InputChannel.CrossLinkshell1;
-                    var cwlsName = Plugin.Functions.Chat.GetCrossLinkshellName(idx);
-                    ImGui.TextUnformatted($"CWLS [{idx + 1}]: {cwlsName}");
-                }
-                else
-                {
-                    ImGui.TextUnformatted(TempChannel.Value.ToChatType().Name());
-                }
-            }
-            else if (activeTab is { Channel: { } channel })
-            {
-                // We cannot lookup ExtraChat channel names from index over
-                // IPC so we just don't show the name if it's the tabs
-                // channel.
-                //
-                // We don't call channel.ToChatType().Name() as it has the
-                // long name as used in the settings window.
-                ImGui.TextUnformatted(channel.IsExtraChatLinkshell() ? $"ECLS [{channel.LinkshellIndex() + 1}]" : channel.ToChatType().Name());
-            }
-            else if (Plugin.ExtraChat.ChannelOverride is var (overrideName, _))
-            {
-                ImGui.TextUnformatted(overrideName);
-            }
-            else if (ScreenshotMode && Plugin.Functions.Chat.Channel is (InputChannel.Tell, _, var tellPlayerName, var tellWorldId))
-            {
-                if (!string.IsNullOrWhiteSpace(tellPlayerName) && tellWorldId != 0)
-                {
-                    // Note: don't use HidePlayerInString here because
-                    // abbreviation settings do not affect this.
-                    var playerName = HashPlayer(tellPlayerName, tellWorldId);
-                    var world = WorldSheet.GetRow(tellWorldId)?.Name?.RawString ?? "???";
-
-                    DrawChunks(new Chunk[]
-                    {
-                        new TextChunk(ChunkSource.None, null, "Tell "),
-                        new TextChunk(ChunkSource.None, null, playerName),
-                        new IconChunk(ChunkSource.None, null, BitmapFontIcon.CrossWorld),
-                        new TextChunk(ChunkSource.None, null, world),
-                    });
-                }
-                else
-                {
-                    // We still need to censor the name if we couldn't read
-                    // valid data.
-                    ImGui.TextUnformatted("Tell");
-                }
-            }
-            else
-            {
-                DrawChunks(Plugin.Functions.Chat.Channel.Name);
-            }
+            DrawChannelName(activeTab);
         }
 
         var beforeIcon = ImGui.GetCursorPos();
@@ -826,6 +749,105 @@ public sealed class ChatLogWindow : Window
             GameFunctions.GameFunctions.ClickNoviceNetworkButton();
     }
 
+    private void DrawChannelName(Tab? activeTab)
+    {
+        DrawChunks(ReadChannelName(activeTab));
+    }
+
+    internal Chunk[] ReadChannelName(Tab? activeTab)
+    {
+        Chunk[] channelNameChunks;
+        if (TellTarget != null)
+        {
+            var playerName = TellTarget.Name;
+            if (ScreenshotMode)
+                // Note: don't use HidePlayerInString here because
+                // abbreviation settings do not affect this.
+                playerName = HashPlayer(TellTarget.Name, TellTarget.World);
+            var world = WorldSheet.GetRow(TellTarget.World)?.Name?.RawString ?? "???";
+
+            channelNameChunks = new Chunk[]
+            {
+                new TextChunk(ChunkSource.None, null, "Tell "),
+                new TextChunk(ChunkSource.None, null, playerName),
+                new IconChunk(ChunkSource.None, null, BitmapFontIcon.CrossWorld),
+                new TextChunk(ChunkSource.None, null, world),
+            };
+        }
+        else if (TempChannel != null)
+        {
+            string name;
+            if (TempChannel.Value.IsLinkshell())
+            {
+                var idx = (uint) TempChannel.Value - (uint) InputChannel.Linkshell1;
+                var lsName = Plugin.Functions.Chat.GetLinkshellName(idx);
+                name = $"LS #{idx + 1}: {lsName}";
+            }
+            else if (TempChannel.Value.IsCrossLinkshell())
+            {
+                var idx = (uint) TempChannel.Value - (uint) InputChannel.CrossLinkshell1;
+                var cwlsName = Plugin.Functions.Chat.GetCrossLinkshellName(idx);
+                name = $"CWLS [{idx + 1}]: {cwlsName}";
+            }
+            else
+            {
+                name = TempChannel.Value.ToChatType().Name();
+            }
+
+            channelNameChunks = [new TextChunk(ChunkSource.None, null, name)];
+        }
+        else if (activeTab is { Channel: { } channel })
+        {
+            // We cannot lookup ExtraChat channel names from index over
+            // IPC so we just don't show the name if it's the tabs
+            // channel.
+            //
+            // We don't call channel.ToChatType().Name() as it has the
+            // long name as used in the settings window.
+            channelNameChunks = new Chunk[]
+            {
+                new TextChunk(ChunkSource.None, null, channel.IsExtraChatLinkshell() ? $"ECLS [{channel.LinkshellIndex() + 1}]" : channel.ToChatType().Name())
+            };
+        }
+        else if (Plugin.ExtraChat.ChannelOverride is var (overrideName, _))
+        {
+            channelNameChunks = new Chunk[]
+            {
+                new TextChunk(ChunkSource.None, null, overrideName)
+            };
+        }
+        else if (ScreenshotMode && Plugin.Functions.Chat.Channel is (InputChannel.Tell, _, var tellPlayerName, var tellWorldId))
+        {
+            if (!string.IsNullOrWhiteSpace(tellPlayerName) && tellWorldId != 0)
+            {
+                // Note: don't use HidePlayerInString here because
+                // abbreviation settings do not affect this.
+                var playerName = HashPlayer(tellPlayerName, tellWorldId);
+                var world = WorldSheet.GetRow(tellWorldId)?.Name?.RawString ?? "???";
+
+                channelNameChunks = new Chunk[]
+                {
+                    new TextChunk(ChunkSource.None, null, "Tell "),
+                    new TextChunk(ChunkSource.None, null, playerName),
+                    new IconChunk(ChunkSource.None, null, BitmapFontIcon.CrossWorld),
+                    new TextChunk(ChunkSource.None, null, world),
+                };
+            }
+            else
+            {
+                // We still need to censor the name if we couldn't read
+                // valid data.
+                channelNameChunks = [new TextChunk(ChunkSource.None, null, "Tell")];
+            }
+        }
+        else
+        {
+            channelNameChunks = Plugin.Functions.Chat.Channel.Name.ToArray();
+        }
+
+        return channelNameChunks;
+    }
+
     internal void SetChannel(InputChannel? channel)
     {
         channel ??= InputChannel.Say;
@@ -852,7 +874,7 @@ public sealed class ChatLogWindow : Window
         GameFunctions.Chat.SetChannel(channel.Value);
     }
 
-    private void SendChatBox(Tab? activeTab)
+    internal void SendChatBox(Tab? activeTab)
     {
         if (!string.IsNullOrWhiteSpace(Chat))
         {
@@ -1727,7 +1749,7 @@ public sealed class ChatLogWindow : Window
 
     }
 
-    private string HidePlayerInString(string str, string playerName, uint worldId)
+    internal string HidePlayerInString(string str, string playerName, uint worldId)
     {
         var expected = Plugin.Functions.Chat.AbbreviatePlayerName(playerName);
         var hash = HashPlayer(playerName, worldId);

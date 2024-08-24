@@ -668,6 +668,14 @@ internal static class ImGuiUtil
         }
     }
 
+    public static void WrappedTextWithColor(Vector4 color, string text)
+    {
+        using (ImRaii.PushColor(ImGuiCol.Text, color))
+        {
+            ImGui.TextWrapped(text);
+        }
+    }
+
     // Used to avoid pops if condition is false for Push.
     private static void Nop() { }
 }

@@ -16,7 +16,7 @@ public class FontManager
 
     internal IFontHandle FontAwesome { get; private set; }
 
-    private readonly byte[] GameSymFont;
+    internal readonly byte[] GameSymFont;
 
     private ushort[] Ranges;
     private ushort[] JpRange;

@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using ChatTwo.GameFunctions;
+using ChatTwo.Http;
 using ChatTwo.Ipc;
 using ChatTwo.Resources;
 using ChatTwo.Ui;
@@ -58,6 +59,8 @@ public sealed class Plugin : IDalamudPlugin
     internal IpcManager Ipc { get; }
     internal ExtraChat ExtraChat { get; }
     internal FontManager FontManager { get; }
+
+    internal ServerCore ServerCore { get; }
 
     internal int DeferredSaveFrames = -1;
 
@@ -126,9 +129,13 @@ public sealed class Plugin : IDalamudPlugin
             // profiling difficult.
             AutoTranslate.PreloadCache();
             #endif
+
+            ServerCore = new ServerCore(this);
+            Task.Run(() => ServerCore.Start());
         }
-        catch
+        catch (Exception ex)
         {
+            Log.Error(ex, "Plugin load threw an error, turning off plugin");
             Dispose();
             // Re-throw the exception to fail the plugin load.
             throw;
@@ -160,6 +167,7 @@ public sealed class Plugin : IDalamudPlugin
         Commands?.Dispose();
 
         EmoteCache.Dispose();
+        ServerCore.Dispose();
     }
 
     private void Draw()

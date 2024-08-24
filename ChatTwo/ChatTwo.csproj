@@ -46,14 +46,21 @@
             <HintPath>$(DalamudLibPath)\Lumina.Excel.dll</HintPath>
             <Private>false</Private>
         </Reference>
+        <Reference Include="Newtonsoft.Json">
+            <HintPath>$(DalamudLibPath)\Newtonsoft.Json.dll</HintPath>
+            <Private>false</Private>
+        </Reference>
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="DalamudPackager" Version="2.1.13" />
+        <PackageReference Include="EmbedIO" Version="3.5.2" />
+        <PackageReference Include="HtmlSanitizer" Version="8.1.870" />
         <PackageReference Include="MessagePack" Version="2.5.140" />
         <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.4" />
         <PackageReference Include="Pidgin" Version="3.2.3" />
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.5" />
+        <PackageReference Include="Watson.Lite" Version="6.2.2" />
     </ItemGroup>
 
     <ItemGroup>
@@ -73,5 +80,14 @@
 
     <ItemGroup>
       <Folder Include="images\" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="Http\static\*.*">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Http\templates\*.*">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 </Project>

@@ -463,6 +463,9 @@
     <data name="Options_Miscellaneous_Tab">
         <value>Miscellaneous</value>
     </data>
+    <data name="Options_Webinterface_Tab">
+        <value>Webinterface</value>
+    </data>
     <data name="LanguageOverride_None">
         <value>Use Dalamud's default language</value>
     </data>
@@ -547,6 +550,12 @@
     <data name="Options_SortAutoTranslate_Description">
         <value>If this is enabled, the Auto Translate list will be sorted alphabetically.</value>
     </data>
+    <data name="Options_WebinterfaceEnable_Name">
+        <value>Enable</value>
+    </data>
+    <data name="Options_WebinterfaceEnable_Description">
+        <value>Enables the webinterface that can be accessed with a browser.</value>
+    </data>
     <data name="Options_OverrideStyle_Name">
         <value>Override Style</value>
     </data>
@@ -558,6 +567,18 @@
     </data>
     <data name="Options_ChatTabBackwardKeybind_Name">
         <value>Cycle chat tab backwards keybind</value>
+    </data>
+    <data name="Webinterface_CurrentPassword">
+        <value>Your current password to access the webinterface:</value>
+    </data>
+    <data name="Webinterface_PasswordReset_Tooltip">
+        <value>Reset your password and invalidate all session tokens.</value>
+    </data>
+    <data name="Webinterface_Status">
+        <value>Webinterface Status:</value>
+    </data>
+    <data name="Webinterface_Status_Active">
+        <value>Active:</value>
     </data>
     <data name="Keybind_None">
         <value>none set</value>

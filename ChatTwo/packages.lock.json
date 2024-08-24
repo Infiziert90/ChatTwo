@@ -8,6 +8,26 @@
         "resolved": "2.1.13",
         "contentHash": "rMN1omGe8536f4xLMvx9NwfvpAc9YFFfeXJ1t4P4PE6Gu8WCIoFliR1sh07hM+bfODmesk/dvMbji7vNI+B/pQ=="
       },
+      "EmbedIO": {
+        "type": "Direct",
+        "requested": "[3.5.2, )",
+        "resolved": "3.5.2",
+        "contentHash": "YU4j+3XvuO8/VPkNf7KWOF1TpMhnyVhXnPsG1mvnDhTJ9D5BZOFXVDvCpE/SkQ1AJ0Aa+dXOVSW3ntgmLL7aJg==",
+        "dependencies": {
+          "Unosquare.Swan.Lite": "3.1.0"
+        }
+      },
+      "HtmlSanitizer": {
+        "type": "Direct",
+        "requested": "[8.1.870, )",
+        "resolved": "8.1.870",
+        "contentHash": "bQWYaKg8PrlgnhM9sPALl0UorpjWQkPTQiSTVyvm8imqF9lCLqBmtC0adUDi8xUYcdg6SJC+aHCw1MOjcg+Wnw==",
+        "dependencies": {
+          "AngleSharp": "[0.17.1]",
+          "AngleSharp.Css": "[0.17.0]",
+          "System.Collections.Immutable": "8.0.0"
+        }
+      },
       "MessagePack": {
         "type": "Direct",
         "requested": "[2.5.140, )",
@@ -41,6 +61,43 @@
         "resolved": "3.1.5",
         "contentHash": "lNtlq7dSI/QEbYey+A0xn48z5w4XHSffF8222cC4F4YwTXfEImuiBavQcWjr49LThT/pRmtWJRcqA/PlL+eJ6g=="
       },
+      "Watson.Lite": {
+        "type": "Direct",
+        "requested": "[6.2.2, )",
+        "resolved": "6.2.2",
+        "contentHash": "yRYcaRFSnqwy/rrPd+WIFLyvNfgTANo447KiK7j1mKpgUIYPNDAKYxqj9wkDVfvGIHxzt4z3CFK6eWOGWUYsuQ==",
+        "dependencies": {
+          "CavemanTcp": "2.0.2",
+          "Watson.Core": "6.2.2"
+        }
+      },
+      "AngleSharp": {
+        "type": "Transitive",
+        "resolved": "0.17.1",
+        "contentHash": "5MPI4bbixlwxb0W/smOMeIR+QlxMy5/5jD+WnIAw4pBC+7AhLPe5bS3cLgQMJyvd6q0A48sG+uYOt/ep406GLA==",
+        "dependencies": {
+          "System.Buffers": "4.5.1",
+          "System.Text.Encoding.CodePages": "6.0.0"
+        }
+      },
+      "AngleSharp.Css": {
+        "type": "Transitive",
+        "resolved": "0.17.0",
+        "contentHash": "bg0AcugmX6BFEi/DHG61QrwRU8iuiX4H8LZehdIzYdqOM/dgb3BsCTzNIcc1XADn4+xfQEdVwJYTSwUxroL4vg==",
+        "dependencies": {
+          "AngleSharp": "[0.17.0, 0.18.0)"
+        }
+      },
+      "CavemanTcp": {
+        "type": "Transitive",
+        "resolved": "2.0.2",
+        "contentHash": "T161WxkgNTMC5SQPPDfLCGCD2j3YTvF0ZUGy/1pcGaYi6y7mcSzPymgVzG/6mOjAxJNGotK8hf1iOD8eT3bbhQ=="
+      },
+      "IpMatcher": {
+        "type": "Transitive",
+        "resolved": "1.0.4.4",
+        "contentHash": "93zP6KaDdRttUI3fFet6mYQGed1gTVK2amIOxpq4tDl3NRY+2tP/iA30hvRrs+ZY8u8KGF/J7kX6l7jrhKHfZA=="
+      },
       "MessagePack.Annotations": {
         "type": "Transitive",
         "resolved": "2.5.140",
@@ -58,6 +115,11 @@
         "type": "Transitive",
         "resolved": "17.6.3",
         "contentHash": "N0ZIanl1QCgvUumEL1laasU0a7sOE5ZwLZVTn0pAePnfhq8P7SvTjF8Axq+CnavuQkmdQpGNXQ1efZtu5kDFbA=="
+      },
+      "RegexMatcher": {
+        "type": "Transitive",
+        "resolved": "1.0.8",
+        "contentHash": "h3wa6sKJnyojCH2wJpvHdQRGWn+eKiSYGKPInIzvdl+SaKhUN9Qpr0CK4A3aqrYFBTEJKFN7pzYlNR4S5gZnaw=="
       },
       "SQLitePCLRaw.bundle_e_sqlite3": {
         "type": "Transitive",
@@ -89,6 +151,16 @@
           "SQLitePCLRaw.core": "2.1.6"
         }
       },
+      "System.Buffers": {
+        "type": "Transitive",
+        "resolved": "4.5.1",
+        "contentHash": "Rw7ijyl1qqRS0YQD/WycNst8hUUMgrMH4FCn1nNm27M4VxchZ1js3fVjQaANHO5f3sN4isvP4a+Met9Y4YomAg=="
+      },
+      "System.Collections.Immutable": {
+        "type": "Transitive",
+        "resolved": "8.0.0",
+        "contentHash": "AurL6Y5BA1WotzlEvVaIDpqzpIPvYnnldxru8oXJU2yFxFUy3+pNXjXd1ymO+RA0rq0+590Q8gaz2l3Sr7fmqg=="
+      },
       "System.Memory": {
         "type": "Transitive",
         "resolved": "4.5.3",
@@ -98,6 +170,62 @@
         "type": "Transitive",
         "resolved": "6.0.0",
         "contentHash": "/iUeP3tq1S0XdNNoMz5C9twLSrM/TH+qElHkXWaPvuNOt+99G75NrV0OS2EqHx5wMN7popYjpc8oTjC1y16DLg=="
+      },
+      "System.Text.Encoding.CodePages": {
+        "type": "Transitive",
+        "resolved": "6.0.0",
+        "contentHash": "ZFCILZuOvtKPauZ/j/swhvw68ZRi9ATCfvGbk1QfydmcXBkIWecWKn/250UH7rahZ5OoDBaiAudJtPvLwzw85A==",
+        "dependencies": {
+          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+        }
+      },
+      "System.Text.Encodings.Web": {
+        "type": "Transitive",
+        "resolved": "8.0.0",
+        "contentHash": "yev/k9GHAEGx2Rg3/tU6MQh4HGBXJs70y7j1LaM1i/ER9po+6nnQ6RRqTJn1E7Xu0fbIFK80Nh5EoODxrbxwBQ=="
+      },
+      "System.Text.Json": {
+        "type": "Transitive",
+        "resolved": "8.0.4",
+        "contentHash": "bAkhgDJ88XTsqczoxEMliSrpijKZHhbJQldhAmObj/RbrN3sU5dcokuXmWJWsdQAhiMJ9bTayWsL1C9fbbCRhw==",
+        "dependencies": {
+          "System.Text.Encodings.Web": "8.0.0"
+        }
+      },
+      "System.ValueTuple": {
+        "type": "Transitive",
+        "resolved": "4.5.0",
+        "contentHash": "okurQJO6NRE/apDIP23ajJ0hpiNmJ+f0BwOlB/cSqTLQlw5upkf+5+96+iG2Jw40G1fCVCyPz/FhIABUjMR+RQ=="
+      },
+      "Timestamps": {
+        "type": "Transitive",
+        "resolved": "1.0.9",
+        "contentHash": "xdCVp+T4VFXOT+Ube2Cz527fnFXFUxQK24uPMGcCmICIpIcGCXPtI7vKLnWsJ6Nfc1B92tNBK9e/I8NDq2ee6g=="
+      },
+      "Unosquare.Swan.Lite": {
+        "type": "Transitive",
+        "resolved": "3.1.0",
+        "contentHash": "X3s5QE/KMj3WAPFqFve7St+Ds10BB50u8kW8PmKIn7FVkn7yEXe9Yxr2htt1WV85DRqfFR0MN/BUNHkGHtL4OQ==",
+        "dependencies": {
+          "System.ValueTuple": "4.5.0"
+        }
+      },
+      "UrlMatcher": {
+        "type": "Transitive",
+        "resolved": "3.0.0",
+        "contentHash": "IavFDKxhcg5ehi3baGEejxnZoj4bqfkDnoMxTV+6Y4WHVxW8wgxTzdSl9q5WSMi366LG0amDfOxaUJxuHawNLw=="
+      },
+      "Watson.Core": {
+        "type": "Transitive",
+        "resolved": "6.2.2",
+        "contentHash": "lqdT+foblghBKLXuvXBFLJmO9J0TkPCBiQFH4xg4txFM7osm1jvF2IzYjor6w1NL+kNDhvlCRkBNaPSSxfJO/A==",
+        "dependencies": {
+          "IpMatcher": "1.0.4.4",
+          "RegexMatcher": "1.0.8",
+          "System.Text.Json": "8.0.4",
+          "Timestamps": "1.0.9",
+          "UrlMatcher": "3.0.0"
+        }
       }
     }
   }

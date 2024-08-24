@@ -1,0 +1,243 @@
+﻿/* fonts */
+@font-face {
+    font-family: Lodestone;
+    src: url('files/FFXIV_Lodestone_SSF.ttf') format('truetype');
+    unicode-range: U+E020-E0DB;
+}
+
+@font-face {
+    font-family: 'Inter var';
+    font-weight: 100 900;
+    font-style: oblique 0deg 10deg;
+    src: url('static/Inter.var.woff2') format('woff2');
+}
+
+/* variables */
+:root {
+    --fg: white;
+    --fg-faint: #a0a0a0;
+    --fg-scrollbar: #404040;
+    --bg: #101010;
+    --bg-input: #202020;
+    --bg-input-hover: #282828;
+    --focus-color: #4060a0;
+
+    --gradient-clickable: linear-gradient(to bottom, #404040, var(--bg-input) 65%, var(--bg-input));
+    --gradient-clickable-hover: linear-gradient(to bottom, #505050, var(--bg-input-hover) 65%, var(--bg-input-hover));
+
+    --timestamp-width: 70px;
+}
+
+/* reset */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+* {
+    color: var(--fg);
+    font-family: Lodestone, 'Inter var', sans-serif;
+    font-feature-settings: 'tnum';
+}
+
+html {
+    font-size: 16px;
+}
+
+/* layout and global styles */
+body {
+    padding: 50px;
+    height: 100dvh;
+    background-color: var(--bg-input-hover);
+}
+
+body > main {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg);
+    border-radius: 20px;
+
+    box-shadow: 0 0 50px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* message list */
+section#messages {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    padding: 20px;
+    line-height: 1.5;
+
+    .scroll-container {
+        height: 100%;
+        overflow-y: scroll;
+        scrollbar-color: var(--fg-scrollbar) var(--bg);
+
+        &.more-messages::before {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 100px;
+            width: calc(100% - 200px);
+            height: 200px;
+            background-image: radial-gradient(50% 20% at 50% 100%, #60a0ff40, transparent);
+        }
+    }
+
+    ol {
+        list-style-type: none;
+    }
+
+    li {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+
+        .timestamp {
+            flex: 0 0 var(--timestamp-width);
+            color: var(--fg-faint);
+            text-align: right;
+        }
+    }
+}
+
+#timestamp-width-probe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    opacity: 0;
+}
+
+/* input bar, channel selector, ... */
+section#input {
+    flex-grow: 0;
+    padding: 20px;
+
+    form {
+        display: flex;
+        gap: 10px;
+    }
+
+    input, button, select {
+        font-size: 1rem;
+        border: 3px solid transparent;
+        border-radius: 20px;
+        background-color: var(--bg-input);
+
+        &:focus {
+            outline: 2px solid var(--focus-color);
+        }
+    }
+
+    button, select {
+        padding: 5px 15px;
+        border: 3px solid var(--bg-input);
+        background-image: var(--gradient-clickable);
+        cursor: pointer;
+
+        &:hover {
+            border-color: var(--bg-input-hover);
+            background-color: var(--bg-input-hover);
+            background-image: var(--gradient-clickable-hover);
+        }
+    }
+
+    .select-container, button {
+        position: relative;
+        flex-grow: 0;
+        flex-shrink: 0;
+    }
+
+    .select-container {
+        flex-basis: 0;
+
+        &::before {
+            /* "message-circle" icon from https://github.com/feathericons/feather, under MIT license */
+            mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>');
+        }
+
+        select {
+            width: 100%;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+            appearance: none;
+            color: transparent;
+        }
+    }
+
+    button {
+        padding-left: calc(20px + 1.5rem);
+
+        &::before {
+            /* "send" icon from https://github.com/feathericons/feather, under MIT license */
+            mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>');
+        }
+    }
+
+    .select-container::before, button::before {
+        content: '';
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 1.3rem;
+        height: 1.3rem;
+        background-color: var(--fg);
+        mask-size: 100%;
+        pointer-events: none;
+    }
+
+    .select-container::before {
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+    }
+
+    .input-container {
+        flex: 1;
+        position: relative;
+
+        #chat-input {
+            width: 100%;
+            padding: 5px 20px;
+        }
+
+        #channel-hint {
+            position: absolute;
+            top: -1.2em;
+            left: 23px;
+            font-size: 1.1rem;
+            font-weight: 550;
+            pointer-events: none;
+        }
+    }
+}
+
+/*** mobile ***/
+@media ((max-width: 600px) and (orientation: portrait)) or (max-width: 400px) {
+body {
+    padding: 0;
+}
+
+body > main {
+    border-radius: 0;
+    box-shadow: none;
+}
+
+section#input {
+    button {
+        max-width: 0;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+        color: transparent;
+    }
+
+    button::before {
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+    }
+}
+}

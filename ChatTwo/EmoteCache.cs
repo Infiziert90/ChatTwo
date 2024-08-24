@@ -148,6 +148,8 @@ public static class EmoteCache
         public bool Failed;
         public bool IsLoaded;
 
+        public byte[] RawData = [];
+
         protected IDalamudTextureWrap? Texture;
 
         public virtual void Draw(Vector2 size)
@@ -155,39 +157,26 @@ public static class EmoteCache
             ImGui.Image(Texture!.ImGuiHandle, size);
         }
 
-        internal static async Task<byte[]> LoadAsync(Emote emote)
+        internal async Task<byte[]> LoadAsync(Emote emote)
         {
-            try
-            {
-                // TODO: Remove after 01.06.2024
-                var oldDir = Path.Join(Plugin.Interface.ConfigDirectory.FullName, "emotes");
-                if (Directory.Exists(oldDir))
-                    Directory.Delete(oldDir, true);
-            }
-            catch
-            {
-                // Ignore
-            }
-
             var dir = Path.Join(Plugin.Interface.ConfigDirectory.FullName, "EmoteCacheV1");
             Directory.CreateDirectory(dir);
 
-            byte[] image;
             var filePath = Path.Join(dir, $"{emote.Id}.{emote.ImageType}");
             if (File.Exists(filePath))
             {
-                image = await File.ReadAllBytesAsync(filePath);
+                RawData = await File.ReadAllBytesAsync(filePath);
             }
             else
             {
                 var content = await new HttpClient().GetAsync(EmotePath.Format(emote.Id));
-                image = await content.Content.ReadAsByteArrayAsync();
+                RawData = await content.Content.ReadAsByteArrayAsync();
 
                 await using var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.Read);
-                stream.Write(image, 0, image.Length);
+                stream.Write(RawData, 0, RawData.Length);
             }
 
-            return image;
+            return RawData;
         }
 
         public abstract void InnerDispose();

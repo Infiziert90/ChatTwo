@@ -120,6 +120,10 @@ internal class Configuration : IPluginConfiguration
     public ConfigKeyBind? ChatTabForward;
     public ConfigKeyBind? ChatTabBackward;
 
+    // Webinterface
+    public bool WebinterfaceEnabled;
+    public string WebinterfacePassword = WebinterfaceUtil.GenerateSimpleAuthCode();
+
     internal void UpdateFrom(Configuration other, bool backToOriginal)
     {
         if (backToOriginal)
@@ -183,6 +187,8 @@ internal class Configuration : IPluginConfiguration
         ChosenStyle = other.ChosenStyle;
         ChatTabForward = other.ChatTabForward;
         ChatTabBackward = other.ChatTabBackward;
+        WebinterfaceEnabled = other.WebinterfaceEnabled;
+        WebinterfacePassword = other.WebinterfacePassword;
     }
 }
 
@@ -286,26 +292,26 @@ internal class Tab
     /// </summary>
     internal class MessageList
     {
-        private ReaderWriterLock rwl = new();
+        private readonly SemaphoreSlim LockSlim = new(1, 1);
 
-        private readonly List<Message> messages;
-        private readonly HashSet<Guid> trackedMessageIds;
+        private readonly List<Message> Messages;
+        private readonly HashSet<Guid> TrackedMessageIds;
 
         public MessageList()
         {
-            messages = new();
-            trackedMessageIds = new();
+            Messages = [];
+            TrackedMessageIds = [];
         }
 
         public MessageList(int initialCapacity)
         {
-            messages = new(initialCapacity);
-            trackedMessageIds = new(initialCapacity);
+            Messages = new List<Message>(initialCapacity);
+            TrackedMessageIds = new HashSet<Guid>(initialCapacity);
         }
 
         public void AddPrune(Message message, int max)
         {
-            rwl.AcquireWriterLock(-1);
+            LockSlim.Wait(-1);
             try
             {
                 AddLocked(message);
@@ -313,13 +319,13 @@ internal class Tab
             }
             finally
             {
-                rwl.ReleaseWriterLock();
+                LockSlim.Release();
             }
         }
 
         public void AddSortPrune(IEnumerable<Message> messages, int max)
         {
-            rwl.AcquireWriterLock(-1);
+            LockSlim.Wait(-1);
             try
             {
                 foreach (var message in messages)
@@ -330,44 +336,60 @@ internal class Tab
             }
             finally
             {
-                rwl.ReleaseWriterLock();
+                LockSlim.Release();
             }
         }
 
         private void AddLocked(Message message)
         {
-            if (trackedMessageIds.Contains(message.Id))
+            if (TrackedMessageIds.Contains(message.Id))
                 return;
 
-            messages.Add(message);
-            trackedMessageIds.Add(message.Id);
+            Messages.Add(message);
+            TrackedMessageIds.Add(message.Id);
         }
 
         public void Clear()
         {
-            rwl.AcquireWriterLock(-1);
+            LockSlim.Wait(-1);
             try
             {
-                messages.Clear();
-                trackedMessageIds.Clear();
+                Messages.Clear();
+                TrackedMessageIds.Clear();
             }
             finally
             {
-                rwl.ReleaseWriterLock();
+                LockSlim.Release();
             }
         }
 
         private void SortLocked()
         {
-            messages.Sort((a, b) => a.Date.CompareTo(b.Date));
+            Messages.Sort((a, b) => a.Date.CompareTo(b.Date));
         }
 
         private void PruneMaxLocked(int max)
         {
-            while (messages.Count > max)
+            while (Messages.Count > max)
             {
-                trackedMessageIds.Remove(messages[0].Id);
-                messages.RemoveAt(0);
+                TrackedMessageIds.Remove(Messages[0].Id);
+                Messages.RemoveAt(0);
+            }
+        }
+
+        /// <summary>
+        /// Returns an array copy of the message list for usage outside of main thread
+        /// </summary>
+        public async Task<Message[]> GetCopy(int millisecondsTimeout = -1)
+        {
+            await LockSlim.WaitAsync(millisecondsTimeout);
+            try
+            {
+                return Messages.ToArray();
+            }
+            finally
+            {
+                LockSlim.Release();
             }
         }
 
@@ -377,11 +399,11 @@ internal class Tab
         /// </summary>
         public RLockedMessageList GetReadOnly(int millisecondsTimeout = -1)
         {
-            rwl.AcquireReaderLock(millisecondsTimeout);
-            return new RLockedMessageList(rwl, messages);
+            LockSlim.Wait(millisecondsTimeout);
+            return new RLockedMessageList(LockSlim, Messages);
         }
 
-        internal class RLockedMessageList(ReaderWriterLock rwl, List<Message> messages) : IReadOnlyList<Message>, IDisposable
+        internal class RLockedMessageList(SemaphoreSlim lockSlim, List<Message> messages) : IReadOnlyList<Message>, IDisposable
         {
             public IEnumerator<Message> GetEnumerator()
             {
@@ -399,7 +421,7 @@ internal class Tab
 
             public void Dispose()
             {
-                rwl.ReleaseReaderLock();
+                lockSlim.Release();
             }
         }
     }

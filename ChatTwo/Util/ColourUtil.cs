@@ -4,7 +4,7 @@ using System.Numerics;
 namespace ChatTwo.Util;
 
 internal static class ColourUtil {
-    private static (byte r, byte g, byte b, byte a) RgbaToComponents(uint rgba) {
+    internal static (byte r, byte g, byte b, byte a) RgbaToComponents(uint rgba) {
         var r = (byte) ((rgba & 0xFF000000) >> 24);
         var g = (byte) ((rgba & 0xFF0000) >> 16);
         var b = (byte) ((rgba & 0xFF00) >> 8);

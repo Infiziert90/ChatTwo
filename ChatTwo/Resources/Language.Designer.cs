@@ -3408,6 +3408,33 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Webinterface.
+        /// </summary>
+        internal static string Options_Webinterface_Tab {
+            get {
+                return ResourceManager.GetString("Options_Webinterface_Tab", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enables the webinterface that can be accessed with a browser..
+        /// </summary>
+        internal static string Options_WebinterfaceEnable_Description {
+            get {
+                return ResourceManager.GetString("Options_WebinterfaceEnable_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable.
+        /// </summary>
+        internal static string Options_WebinterfaceEnable_Name {
+            get {
+                return ResourceManager.GetString("Options_WebinterfaceEnable_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Window opacity.
         /// </summary>
         internal static string Options_WindowOpacity_Name {
@@ -3539,6 +3566,42 @@ namespace ChatTwo.Resources {
         internal static string UnreadMode_Unseen_Tooltip {
             get {
                 return ResourceManager.GetString("UnreadMode_Unseen_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your current password to access the webinterface:.
+        /// </summary>
+        internal static string Webinterface_CurrentPassword {
+            get {
+                return ResourceManager.GetString("Webinterface_CurrentPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset your password and invalidate all session tokens..
+        /// </summary>
+        internal static string Webinterface_PasswordReset_Tooltip {
+            get {
+                return ResourceManager.GetString("Webinterface_PasswordReset_Tooltip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Webinterface Status:.
+        /// </summary>
+        internal static string Webinterface_Status {
+            get {
+                return ResourceManager.GetString("Webinterface_Status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Active:.
+        /// </summary>
+        internal static string Webinterface_Status_Active {
+            get {
+                return ResourceManager.GetString("Webinterface_Status_Active", resourceCulture);
             }
         }
     }
