@@ -68,6 +68,9 @@ public sealed class ChatLogWindow : Window
     private int AutoCompleteSelection;
     private bool AutoCompleteShouldScroll;
 
+    // Used to detect channel changes for the webinterface
+    public Chunk[] PreviousChannel = [];
+
     public int CursorPos;
 
     public Vector2 LastWindowPos { get; private set; } = Vector2.Zero;
@@ -227,6 +230,7 @@ public sealed class ChatLogWindow : Window
                 Plugin.Log.Warning($"Channel was set to an invalid value '{targetChannel}', ignoring");
                 return;
             }
+
             if (info.Permanent)
                 SetChannel(targetChannel);
             else
@@ -751,6 +755,14 @@ public sealed class ChatLogWindow : Window
 
     private void DrawChannelName(Tab? activeTab)
     {
+        var currentChannel = ReadChannelName(activeTab);
+
+        if (!currentChannel.SequenceEqual(PreviousChannel))
+        {
+            PreviousChannel = currentChannel;
+            Plugin.ServerCore?.SendChannelSwitch(currentChannel);
+        }
+
         DrawChunks(ReadChannelName(activeTab));
     }
 
@@ -766,13 +778,13 @@ public sealed class ChatLogWindow : Window
                 playerName = HashPlayer(TellTarget.Name, TellTarget.World);
             var world = WorldSheet.GetRow(TellTarget.World)?.Name?.RawString ?? "???";
 
-            channelNameChunks = new Chunk[]
-            {
+            channelNameChunks =
+            [
                 new TextChunk(ChunkSource.None, null, "Tell "),
                 new TextChunk(ChunkSource.None, null, playerName),
                 new IconChunk(ChunkSource.None, null, BitmapFontIcon.CrossWorld),
-                new TextChunk(ChunkSource.None, null, world),
-            };
+                new TextChunk(ChunkSource.None, null, world)
+            ];
         }
         else if (TempChannel != null)
         {
@@ -804,17 +816,11 @@ public sealed class ChatLogWindow : Window
             //
             // We don't call channel.ToChatType().Name() as it has the
             // long name as used in the settings window.
-            channelNameChunks = new Chunk[]
-            {
-                new TextChunk(ChunkSource.None, null, channel.IsExtraChatLinkshell() ? $"ECLS [{channel.LinkshellIndex() + 1}]" : channel.ToChatType().Name())
-            };
+            channelNameChunks = [new TextChunk(ChunkSource.None, null, channel.IsExtraChatLinkshell() ? $"ECLS [{channel.LinkshellIndex() + 1}]" : channel.ToChatType().Name())];
         }
         else if (Plugin.ExtraChat.ChannelOverride is var (overrideName, _))
         {
-            channelNameChunks = new Chunk[]
-            {
-                new TextChunk(ChunkSource.None, null, overrideName)
-            };
+            channelNameChunks = [new TextChunk(ChunkSource.None, null, overrideName)];
         }
         else if (ScreenshotMode && Plugin.Functions.Chat.Channel is (InputChannel.Tell, _, var tellPlayerName, var tellWorldId))
         {
@@ -825,13 +831,13 @@ public sealed class ChatLogWindow : Window
                 var playerName = HashPlayer(tellPlayerName, tellWorldId);
                 var world = WorldSheet.GetRow(tellWorldId)?.Name?.RawString ?? "???";
 
-                channelNameChunks = new Chunk[]
-                {
+                channelNameChunks =
+                [
                     new TextChunk(ChunkSource.None, null, "Tell "),
                     new TextChunk(ChunkSource.None, null, playerName),
                     new IconChunk(ChunkSource.None, null, BitmapFontIcon.CrossWorld),
-                    new TextChunk(ChunkSource.None, null, world),
-                };
+                    new TextChunk(ChunkSource.None, null, world)
+                ];
             }
             else
             {

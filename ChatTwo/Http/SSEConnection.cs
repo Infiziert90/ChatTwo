@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using ChatTwo.Http.MessageProtocol;
-using Newtonsoft.Json;
 using WatsonWebserver.Core;
 
 namespace ChatTwo.Http;
@@ -12,7 +11,7 @@ public class SSEConnection
     private readonly CancellationToken Token;
 
     public bool Done;
-    public readonly Stack<BaseMessage> OutboundStack = new();
+    public readonly Queue<BaseEvent> OutboundQueue = new();
 
     public SSEConnection(CancellationToken token)
     {
@@ -34,11 +33,10 @@ public class SSEConnection
                 if (Token.IsCancellationRequested)
                     return;
 
-                if (!OutboundStack.TryPop(out var message))
+                if (!OutboundQueue.TryDequeue(out var outgoingEvent))
                     continue;
 
-                var data = JsonConvert.SerializeObject(message);
-                await ctx.Response.SendChunk(Encoding.UTF8.GetBytes($"id: {Index}\ndata: {data}\n\n"), Token);
+                await ctx.Response.SendChunk(outgoingEvent.Build(), Token);
                 Index++;
             }
         }
@@ -48,12 +46,12 @@ public class SSEConnection
         }
         catch (Exception ex)
         {
-            Plugin.Log.Error(ex, "Event queued failed to continue");
+            Plugin.Log.Error(ex, "SSE handler failed.");
         }
         finally
         {
             // "No Content" (204) didn't work for Firefox, so manually closing the connection on client side
-            await ctx.Response.SendFinalChunk("data: closing\nevent: close\n\n"u8.ToArray());
+            await ctx.Response.SendFinalChunk(new CloseEvent().Build());
 
             Done = true;
         }

@@ -35,7 +35,8 @@ public class RouteController
         Core.HostContext.Routes.PostAuthentication.Static.Add(HttpMethod.POST, "/send", ReceiveMessage, ExceptionRoute);
         Core.HostContext.Routes.PostAuthentication.Parameter.Add(HttpMethod.GET, "/emote/{name}", GetEmote, ExceptionRoute);
 
-        Core.HostContext.Routes.PreAuthentication.Parameter.Add(HttpMethod.GET, "/sse", StartServerEvent, ExceptionRoute);
+        // Server-Sent Events Route
+        Core.HostContext.Routes.PostAuthentication.Static.Add(HttpMethod.GET, "/sse", NewServerEvent, ExceptionRoute);
     }
 
     private async Task ExceptionRoute(HttpContextBase ctx, Exception _)
@@ -153,7 +154,7 @@ public class RouteController
         await ctx.Response.Send("Message was send to the channel.");
     }
 
-    private async Task StartServerEvent(HttpContextBase ctx)
+    private async Task NewServerEvent(HttpContextBase ctx)
     {
         try
         {
@@ -164,7 +165,9 @@ public class RouteController
 
             // TODO Check if reconnect or new connection
             var messages = await WebserverUtil.FrameworkWrapper(Core.Processing.ReadMessageList);
-            sse.OutboundStack.Push(new NewMessage(messages.ToArray()));
+            var channelName = await Plugin.Framework.RunOnTick(() => Core.Processing.ReadChannelName(Plugin.ChatLogWindow.PreviousChannel));
+            sse.OutboundQueue.Enqueue(new NewMessageEvent(new Messages(messages)));
+            sse.OutboundQueue.Enqueue(new SwitchChannelEvent(new SwitchChannel(channelName)));
 
             await sse.HandleEventLoop(ctx);
 

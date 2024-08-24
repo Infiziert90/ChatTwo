@@ -3,18 +3,22 @@ class SSEConnection {
     constructor() {
         this.socket = new EventSource('/sse', );
 
-        this.socket.addEventListener('close', (e) => {
+        this.socket.addEventListener('close', (event) => {
             console.log("Closing SSE connection.")
             this.socket.close()
         });
 
-        this.socket.onmessage = (event) => {
+        this.socket.addEventListener('switch-channel', (event) => {
+            updateChannelHint(JSON.parse(event.data).channel)
+        });
+
+        this.socket.addEventListener('new-message', (event) => {
             let eventData = JSON.parse(event.data);
             for (let message of eventData.messages)
             {
                 addMessage(message);
             }
-        };
+        });
     }
 
     send(message) {

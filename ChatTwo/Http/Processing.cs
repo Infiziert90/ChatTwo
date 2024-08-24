@@ -17,13 +17,9 @@ public class Processing
         Plugin = plugin;
     }
 
-    public string ReadChannelName()
+    public string ReadChannelName(Chunk[] channelName)
     {
-        var messages = new List<string>();
-        foreach (var chunk in Plugin.ChatLogWindow.ReadChannelName(Plugin.ChatLogWindow.CurrentTab))
-            messages.Add(ProcessChunk(chunk, noColor: true));
-
-        return string.Join("", messages);
+        return string.Join("", channelName.Select(chunk => ProcessChunk(chunk, noColor: true)));
     }
 
     internal async Task<MessageResponse[]> ReadMessageList()

@@ -1,21 +1,22 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text;
+using Newtonsoft.Json;
 
 namespace ChatTwo.Http.MessageProtocol;
 
-public struct MessageResponse()
-{
-    [JsonProperty("timestamp")] public string Timestamp = "";
-    [JsonProperty("messageHTML")] public string Message = "";
-}
+public class CloseEvent() : BaseEvent("close");
 
-public class NewMessage(MessageResponse[] messages) : BaseMessage(MessageName)
-{
-    private const string MessageName = "chat-message";
+public class SwitchChannelEvent(SwitchChannel switchChannel) : BaseEvent("switch-channel", JsonConvert.SerializeObject(switchChannel));
 
-    [JsonProperty("messages")] public MessageResponse[] Messages { get; set; } = messages;
-}
+public class NewMessageEvent(Messages messages) : BaseEvent("new-message", JsonConvert.SerializeObject(messages));
 
-public class BaseMessage(string messageType)
+public class BaseEvent(string eventType, string? data = null)
 {
-    [JsonProperty("messageType")] public string MessageType { get; set; } = messageType;
+    private string Event = eventType;
+    private string Data = data ?? "0"; // SSE requires data on each response
+
+    public byte[] Build()
+    {
+        // SSE always ends with \n\n
+        return Encoding.UTF8.GetBytes($"event: {Event}\ndata: {Data}\n\n");
+    }
 }

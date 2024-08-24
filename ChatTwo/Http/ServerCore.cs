@@ -45,14 +45,31 @@ public class ServerCore : IAsyncDisposable
         {
             Plugin.Framework.RunOnTick(() =>
             {
-                var bundledMessage = new NewMessage([Processing.ReadMessageContent(message)]);
+                var bundledResponse = new NewMessageEvent(new Messages([Processing.ReadMessageContent(message)]));
                 foreach (var eventServer in EventConnections)
-                    eventServer.OutboundStack.Push(bundledMessage);
+                    eventServer.OutboundQueue.Enqueue(bundledResponse);
             });
         }
         catch (Exception ex)
         {
-            Plugin.Log.Error(ex, "Send message to websockets failed.");
+            Plugin.Log.Error(ex, "Sending message over SSE failed.");
+        }
+    }
+
+    internal void SendChannelSwitch(Chunk[] channelName)
+    {
+        try
+        {
+            Plugin.Framework.RunOnTick(() =>
+            {
+                var bundledResponse = new SwitchChannelEvent(new SwitchChannel(Processing.ReadChannelName(channelName)));
+                foreach (var eventServer in EventConnections)
+                    eventServer.OutboundQueue.Enqueue(bundledResponse);
+            });
+        }
+        catch (Exception ex)
+        {
+            Plugin.Log.Error(ex, "Sending channel switch over SSE failed.");
         }
     }
     #endregion
@@ -101,13 +118,13 @@ public class ServerCore : IAsyncDisposable
     public async ValueTask DisposeAsync()
     {
         await TokenSource.CancelAsync();
+        HostContext.Stop();
 
-        foreach (var eventServer in EventConnections)
+        // We get a copy, so that the original can be cleaned up succesfully
+        foreach (var eventServer in EventConnections.ToArray())
             await eventServer.DisposeAsync();
 
-        HostContext.Stop();
         HostContext.Dispose();
-
         RouteController.Dispose();
     }
 }
