@@ -20,7 +20,6 @@ using Dalamud.Interface.Windowing;
 using Dalamud.Memory;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using ImGuiNET;
-using Lumina.Excel;
 using Lumina.Excel.GeneratedSheets;
 
 namespace ChatTwo.Ui;
@@ -91,10 +90,6 @@ public sealed class ChatLogWindow : Window
     private long FrameTime; // set every frame
     internal long LastActivityTime = Environment.TickCount64;
 
-    private readonly ExcelSheet<World> WorldSheet;
-    private readonly ExcelSheet<LogFilter> LogFilterSheet;
-    private readonly ExcelSheet<TextCommand> TextCommandSheet;
-
     internal ChatLogWindow(Plugin plugin) : base($"{Plugin.PluginName}###chat2")
     {
         Plugin = plugin;
@@ -117,10 +112,6 @@ public sealed class ChatLogWindow : Window
 
         Plugin.Commands.Register("/clearlog2", "Clear the Chat 2 chat log").Execute += ClearLog;
         Plugin.Commands.Register("/chat2").Execute += ToggleChat;
-
-        WorldSheet = Plugin.DataManager.GetExcelSheet<World>()!;
-        LogFilterSheet = Plugin.DataManager.GetExcelSheet<LogFilter>()!;
-        TextCommandSheet = Plugin.DataManager.GetExcelSheet<TextCommand>()!;
 
         Plugin.ClientState.Login += Login;
         Plugin.ClientState.Logout += Logout;
@@ -302,7 +293,7 @@ public sealed class ChatLogWindow : Window
                 AddTextCommandChannel(command, type);
         }
 
-        var echo = Plugin.DataManager.GetExcelSheet<TextCommand>()?.GetRow(116);
+        var echo = Sheets.TextCommandSheet.GetRow(116);
         if (echo != null)
             AddTextCommandChannel(echo, ChatType.Echo);
     }
@@ -573,39 +564,10 @@ public sealed class ChatLogWindow : Window
         {
             if (popup)
             {
-                foreach (var channel in Enum.GetValues<InputChannel>())
-                {
-                    var name = LogFilterSheet.FirstOrDefault(row => row.LogKind == (byte) channel.ToChatType())?.Name?.RawString ?? channel.ToChatType().Name();
-                    if (channel.IsLinkshell())
-                    {
-                        var lsName = Plugin.Functions.Chat.GetLinkshellName(channel.LinkshellIndex());
-                        if (string.IsNullOrWhiteSpace(lsName))
-                            continue;
-
-                        name += $": {lsName}";
-                    }
-
-                    if (channel.IsCrossLinkshell())
-                    {
-                        var lsName = Plugin.Functions.Chat.GetCrossLinkshellName(channel.LinkshellIndex());
-                        if (string.IsNullOrWhiteSpace(lsName))
-                            continue;
-
-                        name += $": {lsName}";
-                    }
-
-                    // Check if the linkshell with this index is registered in
-                    // the ExtraChat plugin by seeing if the command is
-                    // registered. The command gets registered only if a
-                    // linkshell is assigned (and even gets unassigned if the
-                    // index changes!).
-                    if (channel.IsExtraChatLinkshell())
-                        if (!Plugin.CommandManager.Commands.ContainsKey(channel.Prefix()))
-                            continue;
-
+                var channels = GetAvailableChannels();
+                foreach (var (name, channel) in channels)
                     if (ImGui.Selectable(name))
                         SetChannel(channel);
-                }
             }
         }
 
@@ -753,6 +715,45 @@ public sealed class ChatLogWindow : Window
             GameFunctions.GameFunctions.ClickNoviceNetworkButton();
     }
 
+    internal Dictionary<string, InputChannel> GetAvailableChannels()
+    {
+        var channels = new Dictionary<string, InputChannel>();
+        foreach (var channel in Enum.GetValues<InputChannel>())
+        {
+            var name = Sheets.LogFilterSheet.FirstOrDefault(row => row.LogKind == (byte) channel.ToChatType())?.Name?.RawString ?? channel.ToChatType().Name();
+            if (channel.IsLinkshell())
+            {
+                var lsName = Plugin.Functions.Chat.GetLinkshellName(channel.LinkshellIndex());
+                if (string.IsNullOrWhiteSpace(lsName))
+                    continue;
+
+                name += $": {lsName}";
+            }
+
+            if (channel.IsCrossLinkshell())
+            {
+                var lsName = Plugin.Functions.Chat.GetCrossLinkshellName(channel.LinkshellIndex());
+                if (string.IsNullOrWhiteSpace(lsName))
+                    continue;
+
+                name += $": {lsName}";
+            }
+
+            // Check if the linkshell with this index is registered in
+            // the ExtraChat plugin by seeing if the command is
+            // registered. The command gets registered only if a
+            // linkshell is assigned (and even gets unassigned if the
+            // index changes!).
+            if (channel.IsExtraChatLinkshell())
+                if (!Plugin.CommandManager.Commands.ContainsKey(channel.Prefix()))
+                    continue;
+
+            channels.Add(name, channel);
+        }
+
+        return channels;
+    }
+
     private void DrawChannelName(Tab? activeTab)
     {
         var currentChannel = ReadChannelName(activeTab);
@@ -776,7 +777,7 @@ public sealed class ChatLogWindow : Window
                 // Note: don't use HidePlayerInString here because
                 // abbreviation settings do not affect this.
                 playerName = HashPlayer(TellTarget.Name, TellTarget.World);
-            var world = WorldSheet.GetRow(TellTarget.World)?.Name?.RawString ?? "???";
+            var world = Sheets.WorldSheet.GetRow(TellTarget.World)?.Name?.RawString ?? "???";
 
             channelNameChunks =
             [
@@ -829,7 +830,7 @@ public sealed class ChatLogWindow : Window
                 // Note: don't use HidePlayerInString here because
                 // abbreviation settings do not affect this.
                 var playerName = HashPlayer(tellPlayerName, tellWorldId);
-                var world = WorldSheet.GetRow(tellWorldId)?.Name?.RawString ?? "???";
+                var world = Sheets.WorldSheet.GetRow(tellWorldId)?.Name?.RawString ?? "???";
 
                 channelNameChunks =
                 [
@@ -909,7 +910,7 @@ public sealed class ChatLogWindow : Window
                 {
                     var target = TellTarget;
                     var reason = target.Reason;
-                    var world = WorldSheet.GetRow(target.World);
+                    var world = Sheets.WorldSheet.GetRow(target.World);
                     if (world is { IsPublic: true })
                     {
                         if (reason == TellReason.Reply && GameFunctions.GameFunctions.GetFriends().Any(friend => friend.ContentId == target.ContentId))
@@ -1571,7 +1572,7 @@ public sealed class ChatLogWindow : Window
         if (text.StartsWith('/'))
         {
             var command = text.Split(' ')[0];
-            var cmd = TextCommandSheet.FirstOrDefault(cmd =>
+            var cmd = Sheets.TextCommandSheet.FirstOrDefault(cmd =>
                 cmd.Command.RawString == command || cmd.Alias.RawString == command ||
                 cmd.ShortCommand.RawString == command || cmd.ShortAlias.RawString == command);
 

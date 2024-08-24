@@ -1,4 +1,5 @@
-﻿using ChatTwo.Http.MessageProtocol;
+﻿using ChatTwo.Code;
+using ChatTwo.Http.MessageProtocol;
 using WatsonWebserver.Core;
 using WatsonWebserver.Lite;
 using ExceptionEventArgs = WatsonWebserver.Core.ExceptionEventArgs;
@@ -63,6 +64,24 @@ public class ServerCore : IAsyncDisposable
             Plugin.Framework.RunOnTick(() =>
             {
                 var bundledResponse = new SwitchChannelEvent(new SwitchChannel(Processing.ReadChannelName(channelName)));
+                foreach (var eventServer in EventConnections)
+                    eventServer.OutboundQueue.Enqueue(bundledResponse);
+            });
+        }
+        catch (Exception ex)
+        {
+            Plugin.Log.Error(ex, "Sending channel switch over SSE failed.");
+        }
+    }
+
+    internal void SendChannelList()
+    {
+        try
+        {
+            Plugin.Framework.RunOnTick(() =>
+            {
+                var channels = Plugin.ChatLogWindow.GetAvailableChannels();
+                var bundledResponse = new ChannelListEvent(new ChannelList(channels.ToDictionary(pair => pair.Key, pair => (uint)pair.Value)));
                 foreach (var eventServer in EventConnections)
                     eventServer.OutboundQueue.Enqueue(bundledResponse);
             });

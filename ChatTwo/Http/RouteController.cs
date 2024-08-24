@@ -165,9 +165,11 @@ public class RouteController
 
             // TODO Check if reconnect or new connection
             var messages = await WebserverUtil.FrameworkWrapper(Core.Processing.ReadMessageList);
+            var channels = await Plugin.Framework.RunOnTick(Plugin.ChatLogWindow.GetAvailableChannels);
             var channelName = await Plugin.Framework.RunOnTick(() => Core.Processing.ReadChannelName(Plugin.ChatLogWindow.PreviousChannel));
             sse.OutboundQueue.Enqueue(new NewMessageEvent(new Messages(messages)));
             sse.OutboundQueue.Enqueue(new SwitchChannelEvent(new SwitchChannel(channelName)));
+            sse.OutboundQueue.Enqueue(new ChannelListEvent(new ChannelList(channels.ToDictionary(pair => pair.Key, pair => (uint)pair.Value))));
 
             await sse.HandleEventLoop(ctx);
 

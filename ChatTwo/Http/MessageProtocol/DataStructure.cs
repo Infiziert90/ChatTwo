@@ -7,6 +7,11 @@ public struct SwitchChannel(string name)
     [JsonProperty("channel")] public string Name = name;
 }
 
+public struct ChannelList(Dictionary<string, uint> channels)
+{
+    [JsonProperty("channels")] public Dictionary<string, uint> Channels = channels;
+}
+
 public struct Messages(MessageResponse[] set)
 {
     [JsonProperty("messages")] public MessageResponse[] Set = set;

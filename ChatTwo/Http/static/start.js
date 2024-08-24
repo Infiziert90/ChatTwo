@@ -13,11 +13,14 @@ class SSEConnection {
         });
 
         this.socket.addEventListener('new-message', (event) => {
-            let eventData = JSON.parse(event.data);
-            for (let message of eventData.messages)
+            for (let message of JSON.parse(event.data).messages)
             {
                 addMessage(message);
             }
+        });
+
+        this.socket.addEventListener('channel-list', (event) => {
+            updateChannelOptions(JSON.parse(event.data).channels)
         });
     }
 
@@ -31,13 +34,29 @@ const sse = new SSEConnection();
 
 // channel switcher
 function updateChannelHint(label) {
-    document.getElementById('channel-hint').innerText = label;
+    document.getElementById('channel-hint').innerHTML = label;
 }
+
 document.getElementById('channel-select').addEventListener('change', (event) => {
-    updateChannelHint(event.target.value);
     // TODO: send new channel to "backend"
     // ws.send(...);
 });
+
+function updateChannelOptions(channels) {
+    let select = document.getElementById('channel-select');
+
+    // clear existing channels
+    select.innerHTML = '';
+
+    for (let [ name, channel ] of Object.entries(channels))
+    {
+        let option = document.createElement('option');
+        option.text = name;
+        option.value = channel;
+
+        select.appendChild(option)
+    }
+}
 
 
 // functions for handling the message list
