@@ -5,17 +5,16 @@ using WatsonWebserver.Core;
 
 namespace ChatTwo.Http;
 
-public class EventServer
+public class SSEConnection
 {
+    private long Index;
     private bool Stopping;
-    private bool Finished;
     private readonly CancellationToken Token;
 
+    public bool Done;
     public readonly Stack<BaseMessage> OutboundStack = new();
 
-    private long Index;
-
-    public EventServer(CancellationToken token)
+    public SSEConnection(CancellationToken token)
     {
         Token = token;
     }
@@ -53,10 +52,10 @@ public class EventServer
         }
         finally
         {
-            // No Content (204) didn't work for Firefox, so manually closing the connection on client side
+            // "No Content" (204) didn't work for Firefox, so manually closing the connection on client side
             await ctx.Response.SendFinalChunk("data: closing\nevent: close\n\n"u8.ToArray());
 
-            Finished = true;
+            Done = true;
         }
     }
 
@@ -67,7 +66,7 @@ public class EventServer
         var timeout = 1000; // 1000ms
         while (timeout > 0)
         {
-            if (Finished)
+            if (Done)
                 break;
 
             timeout -= 100;

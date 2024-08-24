@@ -16,7 +16,7 @@ public class ServerCore : IAsyncDisposable
     internal readonly CancellationTokenSource TokenSource = new();
     internal readonly string StaticDir = Path.Combine(Plugin.Interface.AssemblyLocation.DirectoryName!, "Http");
 
-    internal readonly List<EventServer> EventConnections = [];
+    internal readonly List<SSEConnection> EventConnections = [];
 
     public ServerCore(Plugin plugin)
     {

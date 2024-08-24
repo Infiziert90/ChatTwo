@@ -159,7 +159,7 @@ public class RouteController
         {
             Plugin.Log.Information($"Client connected: {ctx.Guid}");
 
-            var sse = new EventServer(Core.TokenSource.Token);
+            var sse = new SSEConnection(Core.TokenSource.Token);
             Core.EventConnections.Add(sse);
 
             // TODO Check if reconnect or new connection
@@ -167,6 +167,10 @@ public class RouteController
             sse.OutboundStack.Push(new NewMessage(messages.ToArray()));
 
             await sse.HandleEventLoop(ctx);
+
+            // It should always be done after return
+            if (sse.Done)
+                Core.EventConnections.Remove(sse);
         }
         catch (Exception ex)
         {
