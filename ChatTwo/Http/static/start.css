@@ -1,7 +1,7 @@
 ﻿/* fonts */
 @font-face {
     font-family: Lodestone;
-    src: url('files/FFXIV_Lodestone_SSF.ttf') format('truetype');
+    src: url('/files/FFXIV_Lodestone_SSF.ttf') format('truetype');
     unicode-range: U+E020-E0DB;
 }
 
@@ -9,7 +9,7 @@
     font-family: 'Inter var';
     font-weight: 100 900;
     font-style: oblique 0deg 10deg;
-    src: url('static/Inter.var.woff2') format('woff2');
+    src: url('Inter.var.woff2') format('woff2');
 }
 
 /* variables */

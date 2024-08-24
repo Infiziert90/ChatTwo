@@ -1,4 +1,5 @@
-﻿using Lumina.Data.Files;
+﻿using ChatTwo.Http.MessageProtocol;
+using Lumina.Data.Files;
 using WatsonWebserver.Core;
 
 using HttpMethod = WatsonWebserver.Core.HttpMethod;
@@ -33,6 +34,8 @@ public class RouteController
         Core.HostContext.Routes.PostAuthentication.Static.Add(HttpMethod.GET, "/chat", ChatBoxRoute, ExceptionRoute);
         Core.HostContext.Routes.PostAuthentication.Static.Add(HttpMethod.POST, "/send", ReceiveMessage, ExceptionRoute);
         Core.HostContext.Routes.PostAuthentication.Parameter.Add(HttpMethod.GET, "/emote/{name}", GetEmote, ExceptionRoute);
+
+        Core.HostContext.Routes.PreAuthentication.Parameter.Add(HttpMethod.GET, "/sse", StartServerEvent, ExceptionRoute);
     }
 
     private async Task ExceptionRoute(HttpContextBase ctx, Exception _)
@@ -148,6 +151,27 @@ public class RouteController
         });
 
         await ctx.Response.Send("Message was send to the channel.");
+    }
+
+    private async Task StartServerEvent(HttpContextBase ctx)
+    {
+        try
+        {
+            Plugin.Log.Information($"Client connected: {ctx.Guid}");
+
+            var sse = new EventServer(Core.TokenSource.Token);
+            Core.EventConnections.Add(sse);
+
+            // TODO Check if reconnect or new connection
+            var messages = await WebserverUtil.FrameworkWrapper(Core.Processing.ReadMessageList);
+            sse.OutboundStack.Push(new NewMessage(messages.ToArray()));
+
+            await sse.HandleEventLoop(ctx);
+        }
+        catch (Exception ex)
+        {
+            Plugin.Log.Error(ex, "Failed to finish the server event function");
+        }
     }
     #endregion
 }

@@ -8,14 +8,14 @@ public struct MessageResponse()
     [JsonProperty("messageHTML")] public string Message = "";
 }
 
-public class WebSocketNewMessage(MessageResponse[] messages) : BaseOutboundMessage(MessageName)
+public class NewMessage(MessageResponse[] messages) : BaseMessage(MessageName)
 {
     private const string MessageName = "chat-message";
 
     [JsonProperty("messages")] public MessageResponse[] Messages { get; set; } = messages;
 }
 
-public class BaseOutboundMessage(string messageType)
+public class BaseMessage(string messageType)
 {
     [JsonProperty("messageType")] public string MessageType { get; set; } = messageType;
 }

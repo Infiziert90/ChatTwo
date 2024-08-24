@@ -1,23 +1,22 @@
 ﻿using ChatTwo.Http.MessageProtocol;
-using EmbedIO;
 using WatsonWebserver.Core;
 using WatsonWebserver.Lite;
 using ExceptionEventArgs = WatsonWebserver.Core.ExceptionEventArgs;
 
 namespace ChatTwo.Http;
 
-public class ServerCore : IDisposable
+public class ServerCore : IAsyncDisposable
 {
     private readonly Plugin Plugin;
-    private readonly Processing Processing;
-    private readonly RouteController RouteController;
+    internal readonly Processing Processing;
+    internal readonly RouteController RouteController;
 
     internal readonly WebserverLite HostContext;
-    private readonly WebSocketServer Websocket;
-    private readonly WebServer Host;
 
     internal readonly CancellationTokenSource TokenSource = new();
     internal readonly string StaticDir = Path.Combine(Plugin.Interface.AssemblyLocation.DirectoryName!, "Http");
+
+    internal readonly List<EventServer> EventConnections = [];
 
     public ServerCore(Plugin plugin)
     {
@@ -37,37 +36,18 @@ public class ServerCore : IDisposable
         HostContext.Settings.Debug.Responses = true;
         HostContext.Settings.Debug.AccessControl = true;
         HostContext.Events.Logger = logMessage => Plugin.Log.Information(logMessage);
-
-
-        // Websocket
-        Host = new WebServer(o => o
-            .WithUrlPrefixes($"http://*:9001")
-            .WithMode(HttpListenerMode.EmbedIO)
-        );
-
-        Websocket = new WebSocketServer("/ws");
-        Host.WithModule(Websocket);
-
-        Websocket.OnClientConnected += ClientConnected;
     }
 
-    #region WebsocketFunctions
-    private void ClientConnected(object? sender, EventArgs args)
-    {
-        Task.Run(async () =>
-        {
-            var messages = await WebserverUtil.FrameworkWrapper(Processing.ReadMessageList);
-            Websocket.BroadcastMessage(new WebSocketNewMessage(messages.ToArray()));
-        });
-    }
-
+    #region SSEFunctions
     internal void SendNewMessage(Message message)
     {
         try
         {
             Plugin.Framework.RunOnTick(() =>
             {
-                Websocket.BroadcastMessage(new WebSocketNewMessage([Processing.ReadMessageContent(message)]));
+                var bundledMessage = new NewMessage([Processing.ReadMessageContent(message)]);
+                foreach (var eventServer in EventConnections)
+                    eventServer.OutboundStack.Push(bundledMessage);
             });
         }
         catch (Exception ex)
@@ -111,7 +91,6 @@ public class ServerCore : IDisposable
         try
         {
             HostContext.Start(TokenSource.Token);
-            Host.Start(TokenSource.Token);
         }
         catch (Exception ex)
         {
@@ -119,15 +98,15 @@ public class ServerCore : IDisposable
         }
     }
 
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
-        TokenSource.Cancel();
+        await TokenSource.CancelAsync();
+
+        foreach (var eventServer in EventConnections)
+            await eventServer.DisposeAsync();
 
         HostContext.Stop();
         HostContext.Dispose();
-
-        Websocket.Dispose();
-        Host.Dispose();
 
         RouteController.Dispose();
     }

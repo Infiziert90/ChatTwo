@@ -1,31 +1,20 @@
 ﻿// websocket connection
-class WSConnection {
+class SSEConnection {
     constructor() {
-        this.socket = new WebSocket('ws://192.168.2.106:9001/ws');
-        this.socket.addEventListener('open', this.onWSOpen.bind(this));
-        this.socket.addEventListener('close', this.onWSClose.bind(this));
-        this.socket.addEventListener('message', this.onWSMessage.bind(this));
-    }
+        this.socket = new EventSource('/sse', );
 
-    onWSOpen() {
-        // send request for initial data (channels, currently selected channel)
-    }
+        this.socket.addEventListener('close', (e) => {
+            console.log("Closing SSE connection.")
+            this.socket.close()
+        });
 
-    onWSClose() {
-        // open new websocket here? for mobile
-    }
-
-    onWSMessage(event) {
-        try {
+        this.socket.onmessage = (event) => {
             let eventData = JSON.parse(event.data);
             for (let message of eventData.messages)
             {
                 addMessage(message);
             }
-        } catch (error) {
-            // TODO: error handling?
-            return;
-        }
+        };
     }
 
     send(message) {
@@ -33,7 +22,7 @@ class WSConnection {
     }
 }
 
-const ws = new WSConnection();
+const sse = new SSEConnection();
 
 
 // channel switcher

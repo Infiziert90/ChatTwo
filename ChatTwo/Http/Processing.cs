@@ -26,10 +26,10 @@ public class Processing
         return string.Join("", messages);
     }
 
-    internal async Task<List<MessageResponse>> ReadMessageList()
+    internal async Task<MessageResponse[]> ReadMessageList()
     {
         var tabMessages = await Plugin.ChatLogWindow.CurrentTab!.Messages.GetCopy();
-        return tabMessages.Select(ReadMessageContent).ToList();
+        return tabMessages.Select(ReadMessageContent).ToArray();
     }
 
     internal MessageResponse ReadMessageContent(Message message)

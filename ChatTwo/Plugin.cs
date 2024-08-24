@@ -167,7 +167,7 @@ public sealed class Plugin : IDalamudPlugin
         Commands?.Dispose();
 
         EmoteCache.Dispose();
-        ServerCore.Dispose();
+        ServerCore?.DisposeAsync().AsTask().Wait();
     }
 
     private void Draw()
