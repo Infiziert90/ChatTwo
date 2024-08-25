@@ -38,8 +38,20 @@ function updateChannelHint(label) {
 }
 
 document.getElementById('channel-select').addEventListener('change', (event) => {
-    // TODO: send new channel to "backend"
-    // ws.send(...);
+    (async () => {
+        const rawResponse = await fetch('/channel', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({channel: event.target.value})
+        });
+        const content = await rawResponse.json();
+
+        // TODO use the response
+        console.log(content);
+    })();
 });
 
 function updateChannelOptions(channels) {
@@ -121,6 +133,21 @@ document.querySelector('#input > form').addEventListener('submit', (event) => {
             'Content-type': 'application/txt; charset=UTF-8'
         }
     });
+
+    (async () => {
+        const rawResponse = await fetch('/send', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({message: message})
+        });
+        const content = await rawResponse.json();
+
+        // TODO use the response
+        console.log(content);
+    })();
 
     chatInput.value = '';
 });

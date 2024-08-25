@@ -1,10 +1,12 @@
 ﻿using System.Collections.Concurrent;
 using System.Web;
+using ChatTwo.Code;
 using ChatTwo.Http.MessageProtocol;
 using ChatTwo.Util;
 using Lumina.Data.Files;
+using Newtonsoft.Json;
 using WatsonWebserver.Core;
-
+using ErrorEventArgs = Newtonsoft.Json.Serialization.ErrorEventArgs;
 using HttpMethod = WatsonWebserver.Core.HttpMethod;
 
 namespace ChatTwo.Http;
@@ -19,6 +21,11 @@ public class RouteController
 
     private readonly ConcurrentDictionary<string, long> RateLimit = [];
     internal readonly ConcurrentDictionary<string, bool> SessionTokens = [];
+
+    private readonly JsonSerializerSettings JsonSettings = new()
+    {
+        Error = delegate(object? sender, ErrorEventArgs args) { args.ErrorContext.Handled = true; }
+    };
 
     public RouteController(Plugin plugin, ServerCore core)
     {
@@ -40,7 +47,7 @@ public class RouteController
         // Post Auth
         Core.HostContext.Routes.PostAuthentication.Static.Add(HttpMethod.GET, "/chat", ChatBoxRoute, ExceptionRoute);
         Core.HostContext.Routes.PostAuthentication.Static.Add(HttpMethod.POST, "/send", ReceiveMessage, ExceptionRoute);
-        Core.HostContext.Routes.PostAuthentication.Static.Add(HttpMethod.POST, "/switch", ReceiveChannelSwitch, ExceptionRoute);
+        Core.HostContext.Routes.PostAuthentication.Static.Add(HttpMethod.POST, "/channel", ReceiveChannelSwitch, ExceptionRoute);
 
         // Server-Sent Events Route
         Core.HostContext.Routes.PostAuthentication.Static.Add(HttpMethod.GET, "/sse", NewSSEConnection, ExceptionRoute);
@@ -141,16 +148,22 @@ public class RouteController
 
     private async Task ReceiveMessage(HttpContextBase ctx)
     {
-        var content = ctx.Request.DataAsString;
-        if (content.Length is > 500 or < 2)
+        if (ctx.Request.ContentType != "application/json")
         {
-            await ctx.Response.Send("Invalid length for a chat message received.");
+            await ctx.Response.Send("Request contains wrong content type.");
+            return;
+        }
+
+        var content = JsonConvert.DeserializeObject<IncomingMessage>(ctx.Request.DataAsString, JsonSettings);
+        if (content.Message.Length is < 2 or > 500)
+        {
+            await ctx.Response.Send("Invalid message received.");
             return;
         }
 
         await Plugin.Framework.RunOnFrameworkThread(() =>
         {
-            Plugin.ChatLogWindow.Chat = content;
+            Plugin.ChatLogWindow.Chat = content.Message;
             Plugin.ChatLogWindow.SendChatBox(Plugin.ChatLogWindow.CurrentTab);
         });
 
@@ -159,20 +172,25 @@ public class RouteController
 
     private async Task ReceiveChannelSwitch(HttpContextBase ctx)
     {
-        var content = ctx.Request.DataAsString;
-        if (content.Length is > 500 or < 2)
+        if (ctx.Request.ContentType != "application/json")
         {
-            await ctx.Response.Send("Invalid length for a chat message received.");
+            await ctx.Response.Send("Request contains wrong content type.");
+            return;
+        }
+
+        var channel = JsonConvert.DeserializeObject<IncomingChannel>(ctx.Request.DataAsString, JsonSettings);
+        if (!Enum.IsDefined(typeof(InputChannel), channel.Channel))
+        {
+            await ctx.Response.Send("Invalid channel received.");
             return;
         }
 
         await Plugin.Framework.RunOnFrameworkThread(() =>
         {
-            Plugin.ChatLogWindow.Chat = content;
-            Plugin.ChatLogWindow.SendChatBox(Plugin.ChatLogWindow.CurrentTab);
+            Plugin.ChatLogWindow.SetChannel((InputChannel)channel.Channel);
         });
 
-        await ctx.Response.Send("Message was send to the channel.");
+        await ctx.Response.Send("Function to switch channels has been called.");
     }
 
     private async Task NewSSEConnection(HttpContextBase ctx)
