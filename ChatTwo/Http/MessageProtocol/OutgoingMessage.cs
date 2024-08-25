@@ -9,6 +9,8 @@ public class ChannelListEvent(ChannelList channelList) : BaseEvent("channel-list
 
 public class SwitchChannelEvent(SwitchChannel switchChannel) : BaseEvent("switch-channel", JsonConvert.SerializeObject(switchChannel));
 
+public class BulkMessagesEvent(Messages messages) : BaseEvent("bulk-messages", JsonConvert.SerializeObject(messages));
+
 public class NewMessageEvent(Messages messages) : BaseEvent("new-message", JsonConvert.SerializeObject(messages));
 
 public class BaseEvent(string eventType, string? data = null)

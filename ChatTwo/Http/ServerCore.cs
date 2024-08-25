@@ -56,6 +56,22 @@ public class ServerCore : IAsyncDisposable
         }
     }
 
+    internal void SendBulkMessageList()
+    {
+        try
+        {
+            Plugin.Framework.RunOnTick(() =>
+            {
+                foreach (var eventServer in EventConnections)
+                    eventServer.OutboundQueue.Enqueue(new BulkMessagesEvent(new Messages(Processing.ReadMessageList().Result)));
+            });
+        }
+        catch (Exception ex)
+        {
+            Plugin.Log.Error(ex, "Sending channel switch over SSE failed.");
+        }
+    }
+
     internal void SendChannelSwitch(Chunk[] channelName)
     {
         try

@@ -12,7 +12,18 @@ class SSEConnection {
             updateChannelHint(JSON.parse(event.data).channel)
         });
 
+        // New messages that are able to be directly processed
         this.socket.addEventListener('new-message', (event) => {
+            for (let message of JSON.parse(event.data).messages)
+            {
+                addMessage(message);
+            }
+        });
+
+        // New messages, that require a clean message list before processing
+        this.socket.addEventListener('bulk-messages', (event) => {
+            clearMessages();
+
             for (let message of JSON.parse(event.data).messages)
             {
                 addMessage(message);
