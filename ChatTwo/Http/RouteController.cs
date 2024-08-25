@@ -1,4 +1,7 @@
-﻿using ChatTwo.Http.MessageProtocol;
+﻿using System.Collections.Concurrent;
+using System.Web;
+using ChatTwo.Http.MessageProtocol;
+using ChatTwo.Util;
 using Lumina.Data.Files;
 using WatsonWebserver.Core;
 
@@ -14,6 +17,9 @@ public class RouteController
     private readonly string AuthTemplate;
     private readonly string ChatBoxTemplate;
 
+    private readonly ConcurrentDictionary<string, long> RateLimit = [];
+    internal readonly ConcurrentDictionary<string, bool> SessionTokens = [];
+
     public RouteController(Plugin plugin, ServerCore core)
     {
         Plugin = plugin;
@@ -28,15 +34,16 @@ public class RouteController
         Core.HostContext.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/files/gfdata.gfd", GetGfdData, ExceptionRoute);
         Core.HostContext.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/files/fonticon_ps5.tex", GetTexData, ExceptionRoute);
         Core.HostContext.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/files/FFXIV_Lodestone_SSF.ttf", GetLodestoneFont, ExceptionRoute);
+        Core.HostContext.Routes.PreAuthentication.Parameter.Add(HttpMethod.GET, "/emote/{name}", GetEmote, ExceptionRoute);
         Core.HostContext.Routes.PreAuthentication.Content.Add("/static", true, ExceptionRoute);
 
         // Post Auth
         Core.HostContext.Routes.PostAuthentication.Static.Add(HttpMethod.GET, "/chat", ChatBoxRoute, ExceptionRoute);
         Core.HostContext.Routes.PostAuthentication.Static.Add(HttpMethod.POST, "/send", ReceiveMessage, ExceptionRoute);
-        Core.HostContext.Routes.PostAuthentication.Parameter.Add(HttpMethod.GET, "/emote/{name}", GetEmote, ExceptionRoute);
+        Core.HostContext.Routes.PostAuthentication.Static.Add(HttpMethod.POST, "/switch", ReceiveChannelSwitch, ExceptionRoute);
 
         // Server-Sent Events Route
-        Core.HostContext.Routes.PostAuthentication.Static.Add(HttpMethod.GET, "/sse", NewServerEvent, ExceptionRoute);
+        Core.HostContext.Routes.PostAuthentication.Static.Add(HttpMethod.GET, "/sse", NewSSEConnection, ExceptionRoute);
     }
 
     private async Task ExceptionRoute(HttpContextBase ctx, Exception _)
@@ -99,28 +106,24 @@ public class RouteController
     #endregion
 
     #region PreAuthRoutes
-    private async Task AuthenticateClient(HttpContextBase ctx)
+    private async Task<bool> AuthenticateClient(HttpContextBase ctx)
     {
-        var receivedPassword = ctx.Request.DataAsString ?? "";
-        if (!receivedPassword.StartsWith("authcode="))
-        {
-            ctx.Response.StatusCode = 400;
-            await ctx.Response.Send("Authentication content invalid.");
-            return;
-        }
+        var currentTick = Environment.TickCount64;
+        if (RateLimit.TryGetValue(ctx.Request.Source.IpAddress, out var timestamp) && timestamp < currentTick)
+            return await Redirect(ctx, "/", "message", "Rate limit active.");
 
-        receivedPassword = receivedPassword[9..];
-        if (receivedPassword != Plugin.Config.WebinterfacePassword)
-        {
-            ctx.Response.StatusCode = 401;
-            await ctx.Response.Send("Authentication failed.");
-            return;
-        }
+        // The next request will be rate limited for 10s
+        RateLimit[ctx.Request.Source.IpAddress] = currentTick + 10_000;
 
-        ctx.Response.Headers.Add("Set-Cookie", $"auth={Plugin.Config.WebinterfacePassword}");
-        ctx.Response.Headers.Add("Location", "/chat");
-        ctx.Response.StatusCode = 302;
-        await ctx.Response.Send();
+        var authcode = HttpUtility.ParseQueryString(ctx.Request.DataAsString ?? "").Get("authcode");
+        if (authcode == null || authcode != Plugin.Config.WebinterfacePassword)
+            return await Redirect(ctx, "/", "message", "Authentication failed.");
+
+        var token = WebinterfaceUtil.GenerateSimpleToken();
+        SessionTokens.TryAdd(token, true);
+
+        ctx.Response.Headers.Add("Set-Cookie", $"ChatTwo-token={token}");
+        return await Redirect(ctx, "/chat");
     }
     #endregion
 
@@ -154,7 +157,25 @@ public class RouteController
         await ctx.Response.Send("Message was send to the channel.");
     }
 
-    private async Task NewServerEvent(HttpContextBase ctx)
+    private async Task ReceiveChannelSwitch(HttpContextBase ctx)
+    {
+        var content = ctx.Request.DataAsString;
+        if (content.Length is > 500 or < 2)
+        {
+            await ctx.Response.Send("Invalid length for a chat message received.");
+            return;
+        }
+
+        await Plugin.Framework.RunOnFrameworkThread(() =>
+        {
+            Plugin.ChatLogWindow.Chat = content;
+            Plugin.ChatLogWindow.SendChatBox(Plugin.ChatLogWindow.CurrentTab);
+        });
+
+        await ctx.Response.Send("Message was send to the channel.");
+    }
+
+    private async Task NewSSEConnection(HttpContextBase ctx)
     {
         try
         {
@@ -181,6 +202,19 @@ public class RouteController
         {
             Plugin.Log.Error(ex, "Failed to finish the server event function");
         }
+    }
+    #endregion
+
+    #region RedirectHelper
+    public static async Task<bool> Redirect(HttpContextBase ctx, string location, params string[] parameter)
+    {
+        var query = "?";
+        foreach (var (content, index) in parameter.WithIndex())
+            query += index % 2 == 0 ? $"{content}=" : Uri.EscapeDataString(content);
+
+        ctx.Response.Headers.Add("Location", $"{location}{query}");
+        ctx.Response.StatusCode = 302;
+        return await ctx.Response.Send();
     }
     #endregion
 }

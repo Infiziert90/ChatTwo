@@ -26,7 +26,7 @@ internal sealed class Webinterface(Plugin plugin, Configuration mutable) : ISett
         ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudViolet, "Do Not:");
         using (ImRaii.PushIndent(15.0f))
         {
-            ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudViolet, "- Forward the ports used (9000 and 9001)");
+            ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudViolet, "- Forward the port used (9000)");
             ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudViolet, "- Share your authentication code with anyone else");
             ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudViolet, "- Expect multi-boxing to work with this (only first client is tracked and utilised)");
         }
@@ -51,7 +51,10 @@ internal sealed class Webinterface(Plugin plugin, Configuration mutable) : ISett
         ImGui.TextUnformatted(Mutable.WebinterfacePassword);
         ImGui.SameLine();
         if (ImGuiUtil.IconButton(FontAwesomeIcon.Recycle, tooltip: Language.Webinterface_PasswordReset_Tooltip))
+        {
             Mutable.WebinterfacePassword = WebinterfaceUtil.GenerateSimpleAuthCode();
+            Plugin.ServerCore.InvalidateSessions();
+        }
 
         ImGuiUtil.WrappedTextWithColor(ImGuiColors.HealerGreen, Language.Webinterface_Status);
         using (ImRaii.PushIndent(10.0f))

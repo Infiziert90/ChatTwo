@@ -1,5 +1,4 @@
-﻿using ChatTwo.Code;
-using ChatTwo.Http.MessageProtocol;
+﻿using ChatTwo.Http.MessageProtocol;
 using WatsonWebserver.Core;
 using WatsonWebserver.Lite;
 using ExceptionEventArgs = WatsonWebserver.Core.ExceptionEventArgs;
@@ -107,14 +106,22 @@ public class ServerCore : IAsyncDisposable
 
     private async Task CheckAuthenticationCookie(HttpContextBase ctx)
     {
-        var cookie = ctx.Request.Headers.Get("Cookie") ?? "";
-        if (!cookie.StartsWith("auth=") || cookie[5..] != Plugin.Config.WebinterfacePassword)
+        if (RouteController.SessionTokens.IsEmpty)
         {
-            ctx.Response.StatusCode = 401;
-            await ctx.Response.Send("Your session auth code was invalid");
+            await RouteController.Redirect(ctx, "/", "message", "Invalid session token.");
+            return;
         }
 
+        var cookies = WebserverUtil.GetCookieData(ctx.Request.Headers.Get("Cookie") ?? "");
+        if (!cookies.TryGetValue("ChatTwo-token", out var token) || !RouteController.SessionTokens.ContainsKey(token))
+            await RouteController.Redirect(ctx, "/", "message", "Invalid session token.");
+
         // Do nothing to let auth pass
+    }
+
+    public void InvalidateSessions()
+    {
+        RouteController.SessionTokens.Clear();
     }
 
     public bool GetStats()

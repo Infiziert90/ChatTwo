@@ -59,8 +59,11 @@ public class Processing
             if (chunk.Link is EmotePayload emotePayload && Plugin.Config.ShowEmotes)
             {
                 var image = EmoteCache.GetEmote(emotePayload.Code);
+
+                // The emote name should be safe, it is checked against a list from BTTV.
+                // Still sanitizing it for the extra safety.
                 if (image is { Failed: false })
-                    return $"<span style\"height: 1em\"><img src=\"/emote/{emotePayload.Code}\"></span>";
+                    return $"<span style\"height: 1em\"><img src=\"/emote/{Sanitizer.Sanitize(emotePayload.Code)}\"></span>";
             }
 
             var colour = text.Foreground;

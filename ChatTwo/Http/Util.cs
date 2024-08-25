@@ -7,31 +7,27 @@ public static class WebserverUtil
         return await Plugin.Framework.RunOnTick(func).ConfigureAwait(false);
     }
 
-    public class DisposableWrapper : IDisposable {
-        private readonly Action Down;
-        private bool Disposed;
+    // From: https://github.com/NancyFx/Nancy/blob/master/src/Nancy/Request.cs#L176
+    /// <summary>
+    /// Gets the cookie data from the provided string if it exists
+    /// </summary>
+    /// <param name="cookieHeader">The string containing cookie data</param>
+    /// <returns>Cookies dictionary</returns>
+    public static Dictionary<string, string> GetCookieData(string cookieHeader)
+    {
+        var cookieDictionary = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        if (cookieHeader.Length == 0)
+            return cookieDictionary;
 
-        public DisposableWrapper(Action down) {
-            Down = down;
+        var values = cookieHeader.TrimEnd(';').Split(';');
+        foreach (var parts in values.Select(c => c.Split(['='], 2)))
+        {
+            var cookieName = parts[0].Trim();
+            var cookieValue = parts.Length == 1 ? string.Empty : parts[1]; //Cookie attribute
+
+            cookieDictionary[cookieName] = cookieValue;
         }
 
-        public void Dispose() {
-            if (Disposed) return;
-
-            Down();
-            Disposed = true;
-
-            GC.SuppressFinalize(this);
-        }
-    }
-}
-
-public static class AsyncUtils {
-    public static async Task<IDisposable> UseWaitAsync(this SemaphoreSlim semaphore, CancellationToken ct = default) {
-        await semaphore.WaitAsync(ct).ConfigureAwait(false);
-
-        return new WebserverUtil.DisposableWrapper(() => {
-            semaphore.Release();
-        });
+        return cookieDictionary;
     }
 }

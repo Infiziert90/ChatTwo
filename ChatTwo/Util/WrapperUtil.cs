@@ -8,4 +8,7 @@ public static class WrapperUtil
     {
         Plugin.Notification.AddNotification(new Notification { Content = content, Type = type, Minimized = minimized });
     }
+
+    public static IEnumerable<(T Value, int Index)> WithIndex<T>(this IEnumerable<T> list)
+        => list.Select((x, i) => (x, i));
 }
