@@ -180,11 +180,16 @@ async function AddGfdStylesheet(gfdPath, texPath) {
     const gfdPromise = LoadGfd(gfdPath);
     const texUrl = URL.createObjectURL(await texPromise);
     const gfd = await gfdPromise;
+    let width = 0;
+    let height = 0;
 
     let stylesheets = [];
     for (const entry of gfd) {
         if (entry.width * entry.height <= 0)
             continue;
+
+        width = entry.width;
+        height = entry.height;
 
         if (entry.redirect !== 0) {
             stylesheets[entry.redirect][0].push(entry.id);
@@ -210,7 +215,7 @@ async function AddGfdStylesheet(gfdPath, texPath) {
         ];
     }
 
-    let stylesheet = ".gfd-icon::before { content: ''; display: inline-block; overflow: hidden; vertical-align: top; height:0; }";
+    let stylesheet = ".gfd-icon::before { content: ''; display: inline-block; overflow: hidden; vertical-align: top; height:0; }\n";
     for (const entry of stylesheets) {
         if (!entry)
             continue;
@@ -218,6 +223,8 @@ async function AddGfdStylesheet(gfdPath, texPath) {
         stylesheet += `\n${entry[0].map(x => `.gfd-icon.gfd-icon-${x}::before`).join(', ')}{${entry[1]};}`;
         stylesheet += `\n${entry[0].map(x => `.gfd-icon.gfd-icon-hq-${x}::before`).join(', ')}{${entry[2]};}`;
     }
+    stylesheet += "\n.emote-icon { content: ''; display: inline-block; overflow: hidden; vertical-align: top; }";
+    stylesheet += `\n.emote-icon.emote-icon-hq {width: ${width * 2}px; height: ${height * 2}px; margin-bottom: -40px}`;
 
     const styleNode = document.createElement("style");
     styleNode.type = "text/css";

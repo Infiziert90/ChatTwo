@@ -100,11 +100,19 @@ public class RouteController
 
 
         var emote = EmoteCache.GetEmote(name);
-        if (emote is not { IsLoaded: true })
+        if (emote is null)
         {
             ctx.Response.StatusCode = 400;
             await ctx.Response.Send("Emote not valid.");
             return;
+        }
+
+        // Wait for the emote to be loaded a maximum of 5 times
+        var timeout = 5;
+        while (!emote.IsLoaded && timeout > 0)
+        {
+            timeout--;
+            await Task.Delay(25);
         }
 
         ctx.Response.Headers.Add("Cache-Control", "max-age=86400");

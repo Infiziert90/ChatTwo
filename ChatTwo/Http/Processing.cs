@@ -63,7 +63,7 @@ public class Processing
                 // The emote name should be safe, it is checked against a list from BTTV.
                 // Still sanitizing it for the extra safety.
                 if (image is { Failed: false })
-                    return $"<span style\"height: 1em\"><img src=\"/emote/{Sanitizer.Sanitize(emotePayload.Code)}\"></span>";
+                    return $"<span style=\"zoom:calc(16 * 4 / 3 / 40 * 1.4)\"><img class=\"emote-icon emote-icon-hq\" src=\"/emote/{Sanitizer.Sanitize(emotePayload.Code)}\"></span>";
             }
 
             var colour = text.Foreground;
