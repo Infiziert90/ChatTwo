@@ -124,7 +124,7 @@ public class RouteController
     private async Task<bool> AuthenticateClient(HttpContextBase ctx)
     {
         var currentTick = Environment.TickCount64;
-        if (RateLimit.TryGetValue(ctx.Request.Source.IpAddress, out var timestamp) && timestamp < currentTick)
+        if (RateLimit.TryGetValue(ctx.Request.Source.IpAddress, out var timestamp) && timestamp > currentTick)
             return await Redirect(ctx, "/", "message", "Rate limit active.");
 
         // The next request will be rate limited for 10s
