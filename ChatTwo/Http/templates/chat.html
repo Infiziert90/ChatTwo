@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Chat2</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="static/start.css">
+</head>
+
+<body>
+<main class="chat">
+    <section id="messages">
+        <div class="scroll-container">
+            <ol id="messages-list"></ol>
+        </div>
+    </section>
+
+    <section id="input">
+        <form>
+            <div class="select-container">
+                <select id="channel-select"></select>
+            </div>
+
+            <div class="input-container">
+                <input type="text" id="chat-input" placeholder="Message" enterkeyhint="send">
+                <div id="channel-hint"></div>
+            </div>
+
+            <button type="submit">Send</button>
+        </form>
+    </section>
+</main>
+
+<div id="timestamp-width-probe"></div>
+<script src="static/start.js"></script>
+</body>
+</html>
