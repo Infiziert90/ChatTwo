@@ -33,7 +33,7 @@ public class RouteController
         Core = core;
 
         AuthTemplate = File.ReadAllText(Path.Combine(Core.StaticDir, "templates", "auth.html"));
-        ChatBoxTemplate = File.ReadAllText(Path.Combine(Core.StaticDir, "templates", "start.html"));
+        ChatBoxTemplate = File.ReadAllText(Path.Combine(Core.StaticDir, "templates", "chat.html"));
 
         // Pre Auth
         Core.HostContext.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/", AuthRoute, ExceptionRoute);
