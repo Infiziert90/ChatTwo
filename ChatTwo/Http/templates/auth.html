@@ -3,17 +3,20 @@
 <head>
     <title>Authentication</title>
 
-    <link rel="stylesheet" href="/static/start.css">
-</head>
-<body>
-<div style="text-align: center;">
-    <h3 style="color: #fff">Authcode</h3>
-    <form action="/auth" method="POST">
-        <input style="color: #fff; background: #121212" type="password" id="authcode" name="authcode">
-        <input style="color: #fff; background: #121212" type="submit" value="Submit">
-    </form>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <img src="/emote/Sure">
-</div>
+    <link rel="stylesheet" href="static/start.css">
+</head>
+
+<body>
+    <main class="auth">
+        <h1>Authcode</h1>
+        <form action="/auth" method="POST">
+            <input type="password" name="authcode">
+            <button type="submit">Submit</button>
+        </form>
+        <img src="/emote/Sure">
+    </main>
 </body>
 </html>

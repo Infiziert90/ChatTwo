@@ -38,7 +38,7 @@
 * {
     color: var(--fg);
     font-family: Lodestone, 'Inter var', sans-serif;
-    font-feature-settings: 'tnum';
+    font-feature-settings: 'tnum', 'calt' 0;  /* calt appears to be on by default */
 }
 
 html {
@@ -52,15 +52,56 @@ body {
     background-color: var(--bg-input-hover);
 }
 
-body > main {
+body > main.chat {
     display: flex;
     flex-direction: column;
     width: 100%;
     height: 100%;
     background-color: var(--bg);
     border-radius: 20px;
-
     box-shadow: 0 0 50px 0 rgba(0, 0, 0, 0.5);
+}
+
+body > main.auth {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    height: 100%;
+
+    h1 {
+        font-size: 1.5rem;
+        font-weight: 400;
+    }
+
+    input { width: 150px; }
+
+    input, button {
+        padding: 5px 20px;
+        font-size: 1rem;
+        border: 3px solid transparent;
+        border-radius: 20px;
+        background-color: var(--bg-input);
+
+        &:focus {
+            outline: 2px solid var(--focus-color);
+        }
+    }
+
+    button {
+        padding: 5px 15px;
+        border: 3px solid var(--bg-input);
+        background-image: var(--gradient-clickable);
+        cursor: pointer;
+
+        &:hover {
+            border-color: var(--bg-input-hover);
+            background-color: var(--bg-input-hover);
+            background-image: var(--gradient-clickable-hover);
+        }
+    }
 }
 
 /* message list */
@@ -84,6 +125,7 @@ section#messages {
             width: calc(100% - 200px);
             height: 200px;
             background-image: radial-gradient(50% 20% at 50% 100%, #60a0ff40, transparent);
+            pointer-events: none;
         }
     }
 
@@ -100,6 +142,10 @@ section#messages {
             flex: 0 0 var(--timestamp-width);
             color: var(--fg-faint);
             text-align: right;
+        }
+
+        .message {
+            white-space: pre-wrap;
         }
     }
 }
@@ -216,28 +262,64 @@ section#input {
     }
 }
 
+/* icons, emotes */
+.gfd-icon {
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    zoom: 0.75;
+
+    &::before {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+}
+
+.emote-icon {
+    display: inline-block;
+    position: relative;
+    width: 2rem;
+    vertical-align: middle;
+
+    img {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 2rem;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+}
+
 /*** mobile ***/
 @media ((max-width: 600px) and (orientation: portrait)) or (max-width: 400px) {
-body {
-    padding: 0;
-}
-
-body > main {
-    border-radius: 0;
-    box-shadow: none;
-}
-
-section#input {
-    button {
-        max-width: 0;
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
-        color: transparent;
+    body {
+        padding: 0;
     }
 
-    button::before {
-        left: 50%;
-        transform: translateX(-50%) translateY(-50%);
+    body > main {
+        border-radius: 0;
+        box-shadow: none;
     }
-}
+
+    section#input {
+        button {
+            max-width: 0;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+            color: transparent;
+        }
+
+        button::before {
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+        }
+    }
 }
