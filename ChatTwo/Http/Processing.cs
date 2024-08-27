@@ -85,6 +85,9 @@ public class Processing
             }
 
             userContent = Sanitizer.Sanitize(userContent);
+            if (text.Link is UriPayload uri)
+                userContent = $"<a href=\"{uri.Uri}\" target=\"_blank\">{userContent}</a>";
+
             return noColor
                 ? userContent
                 : $"<span style=\"color:rgba({color.r}, {color.g}, {color.b}, {color.a})\">{userContent}</span>";
