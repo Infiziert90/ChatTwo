@@ -59,6 +59,10 @@ public class SSEConnection
             // "No Content" (204) didn't work for Firefox, so manually closing the connection on client side
             await ctx.Response.SendFinalChunk(new CloseEvent().Build());
 
+            // Manually confirm that we have finished our connection, even if the final response failed
+            // This can happen if the client disconnects before the server does
+            ctx.Response.ResponseSent = true;
+
             Done = true;
         }
     }
