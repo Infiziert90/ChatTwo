@@ -55,7 +55,6 @@
     <ItemGroup>
         <PackageReference Include="DalamudPackager" Version="2.1.13" />
         <PackageReference Include="EmbedIO" Version="3.5.2" />
-        <PackageReference Include="HtmlSanitizer" Version="8.1.870" />
         <PackageReference Include="MessagePack" Version="2.5.140" />
         <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.4" />
         <PackageReference Include="Pidgin" Version="3.2.3" />

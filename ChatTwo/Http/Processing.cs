@@ -1,16 +1,15 @@
 ﻿using System.Globalization;
+using System.Net;
 using ChatTwo.Code;
 using ChatTwo.Http.MessageProtocol;
 using ChatTwo.Util;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
-using Ganss.Xss;
 
 namespace ChatTwo.Http;
 
 public class Processing
 {
     private readonly Plugin Plugin;
-    private readonly HtmlSanitizer Sanitizer = new();
 
     public Processing(Plugin plugin)
     {
@@ -63,7 +62,7 @@ public class Processing
                 // The emote name should be safe, it is checked against a list from BTTV.
                 // Still sanitizing it for the extra safety.
                 if (image is { Failed: false })
-                    return $"<span class=\"emote-icon\"><img src=\"/emote/{Sanitizer.Sanitize(emotePayload.Code)}\"></span>";
+                    return $"<span class=\"emote-icon\"><img src=\"/emote/{WebUtility.HtmlEncode(emotePayload.Code)}\"></span>";
             }
 
             var colour = text.Foreground;
@@ -84,7 +83,9 @@ public class Processing
                     userContent = Plugin.ChatLogWindow.HidePlayerInString(userContent, player.Name.TextValue, player.HomeWorld.Id);
             }
 
-            userContent = Sanitizer.Sanitize(userContent);
+            // HTML encode any user content to prevent xss
+            userContent = WebUtility.HtmlEncode(userContent);
+
             if (text.Link is UriPayload uri)
                 userContent = $"<a href=\"{uri.Uri}\" target=\"_blank\">{userContent}</a>";
 
