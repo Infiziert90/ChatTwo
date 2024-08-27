@@ -36,7 +36,13 @@ public class SSEConnection
                 if (!OutboundQueue.TryDequeue(out var outgoingEvent))
                     continue;
 
-                await ctx.Response.SendChunk(outgoingEvent.Build(), Token);
+                if (!await ctx.Response.SendChunk(outgoingEvent.Build(), Token))
+                {
+                    Plugin.Log.Information("SSE connection was unable to send new data");
+                    Plugin.Log.Information($"Client disconnected: {ctx.Guid}");
+                    return;
+                }
+
                 Index++;
             }
         }
