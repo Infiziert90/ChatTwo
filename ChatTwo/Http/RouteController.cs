@@ -36,10 +36,12 @@ public class RouteController
 
         // Pre Auth
         Core.Host.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/", AuthRoute, ExceptionRoute);
+        Core.Host.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/auth", GetAuthenticateClient, ExceptionRoute);
         Core.Host.Routes.PreAuthentication.Static.Add(HttpMethod.POST, "/auth", AuthenticateClient, ExceptionRoute);
         Core.Host.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/files/gfdata.gfd", GetGfdData, ExceptionRoute);
         Core.Host.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/files/fonticon_ps5.tex", GetTexData, ExceptionRoute);
         Core.Host.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/files/FFXIV_Lodestone_SSF.ttf", GetLodestoneFont, ExceptionRoute);
+        Core.Host.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/favicon.ico", GetFavicon, ExceptionRoute);
         Core.Host.Routes.PreAuthentication.Parameter.Add(HttpMethod.GET, "/emote/{name}", GetEmote, ExceptionRoute);
         Core.Host.Routes.PreAuthentication.Content.Add("/static", true, ExceptionRoute);
 
@@ -87,6 +89,12 @@ public class RouteController
         await ctx.Response.Send(data);
     }
 
+    private async Task GetFavicon(HttpContextBase ctx)
+    {
+        ctx.Response.StatusCode = 404;
+        await ctx.Response.Send();
+    }
+
     private async Task GetEmote(HttpContextBase ctx)
     {
         var name = ctx.Request.Url.Parameters["name"] ?? "";
@@ -122,9 +130,11 @@ public class RouteController
     #region PreAuthRoutes
     private async Task<bool> AuthenticateClient(HttpContextBase ctx)
     {
+        Plugin.Log.Information($"Auth requested");
+
         var currentTick = Environment.TickCount64;
         if (RateLimit.TryGetValue(ctx.Request.Source.IpAddress, out var timestamp) && timestamp > currentTick)
-            return await Redirect(ctx, "/", ("message", "Rate limit active."), ("retry", "12345"));
+            return await Redirect(ctx, "/", ("message", "Rate limit active."));
 
         // The next request will be rate limited for 10s
         RateLimit[ctx.Request.Source.IpAddress] = currentTick + 10_000;
@@ -138,6 +148,15 @@ public class RouteController
 
         ctx.Response.Headers.Add("Set-Cookie", $"ChatTwo-token={token}");
         return await Redirect(ctx, "/chat");
+    }
+
+    private async Task<bool> GetAuthenticateClient(HttpContextBase ctx)
+    {
+        Plugin.Log.Information($"Get was used for auth requested");
+        Plugin.Log.Information($"{ctx.Request.Url.Full}");
+        Plugin.Log.Information($"{ctx.RouteType}");
+
+        return await Redirect(ctx, "/", ("message", "Rate limit active."));
     }
     #endregion
 

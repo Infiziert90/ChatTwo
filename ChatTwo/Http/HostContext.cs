@@ -79,7 +79,6 @@ public class HostContext
         {
             IsActive = false;
             IsStopping = true;
-            await Task.Delay(10000);
             Host.Stop();
 
             // Save our session tokens
@@ -114,9 +113,9 @@ public class HostContext
         Plugin.Log.Error(args.Exception, "Webserver threw an exception.");
     }
 
-    private async Task DefaultRoute(HttpContextBase ctx)
+    private async Task<bool> DefaultRoute(HttpContextBase ctx)
     {
-        await ctx.Response.Send("Nothing to see here.");
+        return await ctx.Response.Send("Nothing to see here.");
     }
 
     private async Task CheckAuthenticationCookie(HttpContextBase ctx)

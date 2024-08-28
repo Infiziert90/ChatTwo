@@ -22,14 +22,32 @@ tags:
   - Chat
   - Replacement
 changelog:  |-
-  **Added**
-  - Implement 24-hour clock timestamp option [default false]
+  **Welcome to future~**
+  - Webinterface added
+    - *Does not work if your game client is offline or you are logged out*
 
-  **Fixes**
-  - Bozja/Eureka tells should work again
-  - Invites in Bozja/Eureka should work again
-    - Added a notification that warns about fails duo missing player id
-  - Hide activity channels are now saved across sessions
+  **Features**
+  - Browse chat on any device
+  - Write chat messages
+  - Easily copy & paste messages
+  - Automatically start with plugin load
 
-  **Misc**
-  - Loc updates
+  **Security**
+  - This feature is not intended to be used outside of your local network
+  - Do not forward this port
+  - Never share your authcode
+  - Multibox support is not given, first client only
+
+  **To be added very soon**
+  - Display errors as small notifications
+
+  **Planned**
+  - Tab support
+  - Browser specific settings
+  - Styling support
+
+  **Welcomed**
+  - User that want to expand this to apps or other platforms
+
+  *Note: A FAQ will be provided in the chat2 thread on dalamud's discord, linked in About*
+
