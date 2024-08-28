@@ -1,12 +1,10 @@
-﻿using System.Text;
-using ChatTwo.Http.MessageProtocol;
+﻿using ChatTwo.Http.MessageProtocol;
 using WatsonWebserver.Core;
 
 namespace ChatTwo.Http;
 
 public class SSEConnection
 {
-    private long Index;
     private bool Stopping;
     private readonly CancellationToken Token;
 
@@ -42,8 +40,6 @@ public class SSEConnection
                     Plugin.Log.Information($"Client disconnected: {ctx.Guid}");
                     return;
                 }
-
-                Index++;
             }
         }
         catch (TaskCanceledException)

@@ -125,14 +125,14 @@ public class RouteController
     {
         var currentTick = Environment.TickCount64;
         if (RateLimit.TryGetValue(ctx.Request.Source.IpAddress, out var timestamp) && timestamp > currentTick)
-            return await Redirect(ctx, "/", "message", "Rate limit active.");
+            return await Redirect(ctx, "/", ("message", "Rate limit active."), ("retry", "12345"));
 
         // The next request will be rate limited for 10s
         RateLimit[ctx.Request.Source.IpAddress] = currentTick + 10_000;
 
         var authcode = HttpUtility.ParseQueryString(ctx.Request.DataAsString ?? "").Get("authcode");
         if (authcode == null || authcode != Plugin.Config.WebinterfacePassword)
-            return await Redirect(ctx, "/", "message", "Authentication failed.");
+            return await Redirect(ctx, "/", ("message", "Authentication failed."));
 
         var token = WebinterfaceUtil.GenerateSimpleToken();
         SessionTokens.TryAdd(token, true);
@@ -208,15 +208,8 @@ public class RouteController
             Plugin.Log.Information($"Client connected: {ctx.Guid}");
 
             var sse = new SSEConnection(Core.TokenSource.Token);
+            await Core.Processing.PrepareNewClient(sse);
             Core.EventConnections.Add(sse);
-
-            // TODO Check if reconnect or new connection
-            var messages = await WebserverUtil.FrameworkWrapper(Core.Processing.ReadMessageList);
-            var channels = await Plugin.Framework.RunOnTick(Plugin.ChatLogWindow.GetAvailableChannels);
-            var channelName = await Plugin.Framework.RunOnTick(() => Core.Processing.ReadChannelName(Plugin.ChatLogWindow.PreviousChannel));
-            sse.OutboundQueue.Enqueue(new NewMessageEvent(new Messages(messages)));
-            sse.OutboundQueue.Enqueue(new SwitchChannelEvent(new SwitchChannel(channelName)));
-            sse.OutboundQueue.Enqueue(new ChannelListEvent(new ChannelList(channels.ToDictionary(pair => pair.Key, pair => (uint)pair.Value))));
 
             await sse.HandleEventLoop(ctx);
 
@@ -232,13 +225,13 @@ public class RouteController
     #endregion
 
     #region RedirectHelper
-    public static async Task<bool> Redirect(HttpContextBase ctx, string location, params string[] parameter)
+    public static async Task<bool> Redirect(HttpContextBase ctx, string location, params (string, string)[] parameter)
     {
-        var query = "?";
-        foreach (var (content, index) in parameter.WithIndex())
-            query += index % 2 == 0 ? $"{content}=" : Uri.EscapeDataString(content);
+        var query = HttpUtility.ParseQueryString(string.Empty);
+        foreach (var (key, value) in parameter)
+            query.Add(key, value);
 
-        ctx.Response.Headers.Add("Location", $"{location}{query}");
+        ctx.Response.Headers.Add("Location", $"{location}?{query}");
         ctx.Response.StatusCode = 302;
         return await ctx.Response.Send();
     }

@@ -124,13 +124,13 @@ public class ServerCore : IAsyncDisposable
     {
         if (RouteController.SessionTokens.IsEmpty)
         {
-            await RouteController.Redirect(ctx, "/", "message", "Invalid session token.");
+            await RouteController.Redirect(ctx, "/", ("message", "Invalid session token."));
             return;
         }
 
         var cookies = WebserverUtil.GetCookieData(ctx.Request.Headers.Get("Cookie") ?? "");
         if (!cookies.TryGetValue("ChatTwo-token", out var token) || !RouteController.SessionTokens.ContainsKey(token))
-            await RouteController.Redirect(ctx, "/", "message", "Invalid session token.");
+            await RouteController.Redirect(ctx, "/", ("message", "Invalid session token."));
 
         // Do nothing to let auth pass
     }

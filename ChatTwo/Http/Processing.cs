@@ -16,7 +16,7 @@ public class Processing
         Plugin = plugin;
     }
 
-    public string ReadChannelName(Chunk[] channelName)
+    internal string ReadChannelName(Chunk[] channelName)
     {
         return string.Join("", channelName.Select(chunk => ProcessChunk(chunk, noColor: true)));
     }
@@ -42,6 +42,17 @@ public class Processing
         response.Message = content;
 
         return response;
+    }
+
+    internal async Task PrepareNewClient(SSEConnection sse)
+    {
+        var messages = await WebserverUtil.FrameworkWrapper(ReadMessageList);
+        var channels = await Plugin.Framework.RunOnTick(Plugin.ChatLogWindow.GetAvailableChannels);
+        var channelName = await Plugin.Framework.RunOnTick(() => ReadChannelName(Plugin.ChatLogWindow.PreviousChannel));
+
+        sse.OutboundQueue.Enqueue(new NewMessageEvent(new Messages(messages)));
+        sse.OutboundQueue.Enqueue(new SwitchChannelEvent(new SwitchChannel(channelName)));
+        sse.OutboundQueue.Enqueue(new ChannelListEvent(new ChannelList(channels.ToDictionary(pair => pair.Key, pair => (uint)pair.Value))));
     }
 
     private string ProcessChunk(Chunk chunk, bool noColor = false)
