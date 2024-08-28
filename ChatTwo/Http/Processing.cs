@@ -50,7 +50,8 @@ public class Processing
         var channels = await Plugin.Framework.RunOnTick(Plugin.ChatLogWindow.GetAvailableChannels);
         var channelName = await Plugin.Framework.RunOnTick(() => ReadChannelName(Plugin.ChatLogWindow.PreviousChannel));
 
-        sse.OutboundQueue.Enqueue(new NewMessageEvent(new Messages(messages)));
+        // Using the bulk message event to clear everything on the client side that may still exist
+        sse.OutboundQueue.Enqueue(new BulkMessagesEvent(new Messages(messages)));
         sse.OutboundQueue.Enqueue(new SwitchChannelEvent(new SwitchChannel(channelName)));
         sse.OutboundQueue.Enqueue(new ChannelListEvent(new ChannelList(channels.ToDictionary(pair => pair.Key, pair => (uint)pair.Value))));
     }

@@ -92,6 +92,25 @@ public class ServerCore : IAsyncDisposable
             Plugin.Log.Error(ex, "Sending channel switch over SSE failed.");
         }
     }
+
+    internal void SendNewLogin()
+    {
+        if (!HostContext.IsActive)
+            return;
+
+        try
+        {
+            Plugin.Framework.RunOnTick(async () =>
+            {
+                foreach (var eventServer in HostContext.EventConnections)
+                    await HostContext.Processing.PrepareNewClient(eventServer);
+            });
+        }
+        catch (Exception ex)
+        {
+            Plugin.Log.Error(ex, "Preparing all clients after login failed.");
+        }
+    }
     #endregion
 
     public void InvalidateSessions()

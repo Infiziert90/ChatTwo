@@ -38,10 +38,12 @@ public class HostContext
             Host.Events.ExceptionEncountered += ExceptionEncountered;
 
             // Settings
+            #if DEBUG
             Host.Settings.Debug.Requests = true;
             Host.Settings.Debug.Routing = true;
             Host.Settings.Debug.Responses = true;
             Host.Settings.Debug.AccessControl = true;
+            #endif
             Host.Events.Logger = logMessage => Plugin.Log.Information(logMessage);
 
             IsActive = true;
@@ -116,7 +118,6 @@ public class HostContext
     {
         await ctx.Response.Send("Nothing to see here.");
     }
-    #endregion
 
     private async Task CheckAuthenticationCookie(HttpContextBase ctx)
     {
@@ -132,4 +133,5 @@ public class HostContext
 
         // Do nothing to let auth pass
     }
+    #endregion
 }

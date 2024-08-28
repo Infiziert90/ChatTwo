@@ -374,6 +374,10 @@ public sealed class ChatLogWindow : Window
         // If channel is null it doesn't have a default, and we never selected this channel before
         if (channel != null)
             SetChannel(tab.Channel ?? tab.PreviousChannel);
+
+        // Inform the webinterface about tab switch
+        // TODO implement tabs in the webinterface
+        Plugin.ServerCore.SendNewLogin();
     }
 
     internal static bool InBattle => Plugin.Condition[ConditionFlag.InCombat];

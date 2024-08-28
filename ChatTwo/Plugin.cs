@@ -88,6 +88,9 @@ public sealed class Plugin : IDalamudPlugin
             ExtraChat = new ExtraChat(this);
             FontManager = new FontManager();
 
+            // ChatLog calls this in its ctor if the player is already logged in
+            ServerCore = new ServerCore(this);
+
             ChatLogWindow = new ChatLogWindow(this);
             SettingsWindow = new SettingsWindow(this);
             DbViewer = new DbViewer(this);
@@ -129,8 +132,6 @@ public sealed class Plugin : IDalamudPlugin
             // profiling difficult.
             AutoTranslate.PreloadCache();
             #endif
-
-            ServerCore = new ServerCore(this);
 
             // Automatically start the webserver if requested
             if (Config.WebinterfaceAutoStart)
