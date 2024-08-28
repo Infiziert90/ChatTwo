@@ -119,11 +119,17 @@ internal sealed class Webinterface(Plugin plugin, Configuration mutable) : ISett
                 uri = null;
             }
 
+            ImGui.AlignTextToFramePadding();
             ImGui.TextUnformatted(Language.Webinterface_Controls_Url);
             ImGui.SameLine();
             if (uri is not null)
             {
-                if (ImGui.Selectable(uri.AbsoluteUri))
+                var clicked = false;
+                clicked |= ImGui.Selectable(uri.AbsoluteUri);
+                ImGui.SameLine();
+                clicked |= ImGuiUtil.IconButton(FontAwesomeIcon.ExternalLinkAlt, "urlOpen");
+
+                if (clicked)
                     WrapperUtil.TryOpenURI(uri);
             }
             else
