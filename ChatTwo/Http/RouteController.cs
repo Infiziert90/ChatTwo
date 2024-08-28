@@ -158,14 +158,16 @@ public class RouteController
     {
         if (ctx.Request.ContentType != "application/json")
         {
-            await ctx.Response.Send("Request contains wrong content type.");
+            ctx.Response.StatusCode = 415;
+            await ctx.Response.Send(JsonConvert.SerializeObject(new ErrorResponse("Request contains wrong media type.")));
             return;
         }
 
         var content = JsonConvert.DeserializeObject<IncomingMessage>(ctx.Request.DataAsString, JsonSettings);
         if (content.Message.Length is < 2 or > 500)
         {
-            await ctx.Response.Send("Invalid message received.");
+            ctx.Response.StatusCode = 400;
+            await ctx.Response.Send(JsonConvert.SerializeObject(new ErrorResponse("Invalid message received.")));
             return;
         }
 
@@ -175,21 +177,24 @@ public class RouteController
             Plugin.ChatLogWindow.SendChatBox(Plugin.ChatLogWindow.CurrentTab);
         });
 
-        await ctx.Response.Send("Message was send to the channel.");
+        ctx.Response.StatusCode = 201;
+        await ctx.Response.Send(JsonConvert.SerializeObject(new OkResponse("Message was send to the channel.")));
     }
 
     private async Task ReceiveChannelSwitch(HttpContextBase ctx)
     {
         if (ctx.Request.ContentType != "application/json")
         {
-            await ctx.Response.Send("Request contains wrong content type.");
+            ctx.Response.StatusCode = 415;
+            await ctx.Response.Send(JsonConvert.SerializeObject(new ErrorResponse("Request contains wrong media type.")));
             return;
         }
 
         var channel = JsonConvert.DeserializeObject<IncomingChannel>(ctx.Request.DataAsString, JsonSettings);
         if (!Enum.IsDefined(typeof(InputChannel), channel.Channel))
         {
-            await ctx.Response.Send("Invalid channel received.");
+            ctx.Response.StatusCode = 400;
+            await ctx.Response.Send(JsonConvert.SerializeObject(new ErrorResponse("Invalid channel received.")));
             return;
         }
 
@@ -198,7 +203,8 @@ public class RouteController
             Plugin.ChatLogWindow.SetChannel((InputChannel)channel.Channel);
         });
 
-        await ctx.Response.Send("Function to switch channels has been called.");
+        ctx.Response.StatusCode = 201;
+        await ctx.Response.Send(JsonConvert.SerializeObject(new OkResponse("Channel switch got initiated.")));
     }
 
     private async Task NewSSEConnection(HttpContextBase ctx)

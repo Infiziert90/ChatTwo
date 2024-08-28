@@ -2,7 +2,7 @@
 
 namespace ChatTwo.Http.MessageProtocol;
 
-#region Outgoing
+#region Outgoing SSE
 public struct SwitchChannel(string name)
 {
     [JsonProperty("channel")] public string Name = name;
@@ -25,7 +25,19 @@ public struct MessageResponse()
 }
 #endregion
 
-#region Incoming
+#region Outgoing POST
+public struct OkResponse(string message)
+{
+    [JsonProperty("message")] public string Message = message;
+}
+
+public struct ErrorResponse(string reason)
+{
+    [JsonProperty("reason")] public string Reason = reason;
+}
+#endregion
+
+#region Incoming POST
 public struct IncomingMessage()
 {
     [JsonProperty("message")] public string Message = string.Empty;
