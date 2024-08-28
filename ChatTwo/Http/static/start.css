@@ -120,17 +120,6 @@ section#messages {
         height: 100%;
         overflow-y: scroll;
         scrollbar-color: var(--fg-scrollbar) var(--bg);
-
-        &.more-messages::before {
-            content: '';
-            position: absolute;
-            bottom: -20px;
-            left: 100px;
-            width: calc(100% - 200px);
-            height: 200px;
-            background-image: radial-gradient(50% 20% at 50% 100%, #60a0ff40, transparent);
-            pointer-events: none;
-        }
     }
 
     ol {
@@ -151,6 +140,22 @@ section#messages {
         .message {
             white-space: pre-wrap;
         }
+    }
+
+    #more-messages-indicator {
+        position: absolute;
+        display: none;
+        right: 30px;
+        bottom: 0;
+        pointer-events: none;
+
+        svg {
+            filter: drop-shadow(0 0 5px #60a0ff) drop-shadow(0 0 15px #60a0ff);
+        }
+    }
+
+    &.more-messages #more-messages-indicator {
+        display: block;
     }
 }
 
@@ -259,9 +264,14 @@ section#input {
             position: absolute;
             top: -1.2em;
             left: 23px;
+            max-width: 100%;
+            overflow: hidden;
             font-size: 1.1rem;
             font-weight: 550;
+            white-space: nowrap;
+            text-overflow: ellipsis;
             pointer-events: none;
+
         }
     }
 }
@@ -297,6 +307,7 @@ section#input {
         top: 0;
         left: 0;
         width: 2rem;
+        height: 2rem;
         transform: translateY(-50%);
         pointer-events: none;
     }
@@ -308,9 +319,25 @@ section#input {
         padding: 0;
     }
 
-    body > main {
+    body > main.chat {
         border-radius: 0;
         box-shadow: none;
+    }
+
+    section#messages {
+        font-size: 0.9rem;
+
+        li {
+            align-items: baseline;
+
+            .timestamp {
+                font-size: 0.8rem;
+            }
+        }
+    }
+
+    #timestamp-width-probe {
+        font-size: 0.8rem;
     }
 
     section#input {
@@ -324,6 +351,20 @@ section#input {
         button::before {
             left: 50%;
             transform: translateX(-50%) translateY(-50%);
+        }
+
+        .input-container #channel-hint {
+            font-size: 0.9rem;
+        }
+    }
+
+    .gfd-icon { zoom: 0.65; }
+    .emote-icon {
+        width: 1.5rem;
+
+        img {
+            width: 1.5rem;
+            height: 1.5rem;
         }
     }
 }
