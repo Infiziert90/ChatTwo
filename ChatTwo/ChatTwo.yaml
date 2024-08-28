@@ -22,32 +22,32 @@ tags:
   - Chat
   - Replacement
 changelog:  |-
-  **Welcome to future~**
-  - Webinterface added
-    - *Does not work if your game client is offline or you are logged out*
+  **New Feature Added~**
+  - A web interface has been added
+  - *This will not function if your game client is offline or you are logged out of the game*
 
-  **Features**
-  - Browse chat on any device
-  - Write chat messages
+  **Main Features**
+  - View in-game chat on any device that has a web browser functionality
+  - Can send chat messages through the web interface directly into the game itself
   - Easily copy & paste messages
-  - Automatically start with plugin load
+  - Option for automatic starting the web interface feature
 
   **Security**
-  - This feature is not intended to be used outside of your local network
-  - Do not forward this port
-  - Never share your authcode
-  - Multibox support is not given, first client only
+  - This feature is not intended to be used outside of your local, private network
+  - Do not forward ports that are described inside the chat2 options panel
+  - Never share your authentication code under any circumstances
+  - Multi-box support is not provided, the web interface will track only the first client
 
-  **To be added very soon**
-  - Display errors as small notifications
+  **Additional Features soon to be Added**
+  - Display errors as small notifications inside the web interface
 
-  **Planned**
-  - Tab support
+  **Planned Features**
+  - Multiple Tabs support
   - Browser specific settings
-  - Styling support
+  - Stylization support
 
-  **Welcomed**
-  - User that want to expand this to apps or other platforms
+  **Additional Permissions Note**
+  - Users that wish to expand this to apps or other platforms are welcome to do so
 
-  *Note: A FAQ will be provided in the chat2 thread on dalamud's discord, linked in About*
+  *Note: An FAQ will be provided in the chat2 thread on the dalamud discord, linked in the About section*
 
