@@ -32,7 +32,7 @@
                 },
                 body: JSON.stringify({ channel: event.target.value })
             });
-            const content = await rawResponse.json();
+            // const content = await rawResponse.json();
             // TODO: use the response
         });
 
@@ -65,7 +65,7 @@
                 },
                 body: JSON.stringify({ message: message })
             });
-            const content = await rawResponse.json();
+            // const content = await rawResponse.json();
             // TODO: use the response
 
             this.elements.chatInput.value = '';
@@ -123,8 +123,6 @@
         if (scrolledToBottom) {
             liMessage.scrollIntoView();
         }
-        // // just to update this.scrolledToBottom
-        // this.messagesAreScrolledToBottom();
     }
 
     clearAllMessages() {
@@ -140,30 +138,42 @@
         });
 
         this.sse.addEventListener('switch-channel', (event) => {
-            // TODO: error handling
-            this.updateChannelHint(JSON.parse(event.data).channel);
+            try {
+                this.updateChannelHint(JSON.parse(event.data).channel);
+            } catch (error) {
+                console.error(error);
+            }
         });
 
         // new messages to be appended to the message list
         this.sse.addEventListener('new-message', (event) => {
-            // TODO: error handling
-            for (const message of JSON.parse(event.data).messages) {
-                this.addMessage(message);
+            try {
+                for (const message of JSON.parse(event.data).messages) {
+                    this.addMessage(message);
+                }
+            } catch (error) {
+                console.error(error);
             }
         });
 
         // a bulk of new messages, with a clear of the message list beforehand
         this.sse.addEventListener('bulk-messages', (event) => {
             this.clearAllMessages();
-            // TODO: error handling
-            for (const message of JSON.parse(event.data).messages) {
-                this.addMessage(message);
+            try {
+                for (const message of JSON.parse(event.data).messages) {
+                    this.addMessage(message);
+                }
+            } catch (error) {
+                console.error(error);
             }
         });
 
         this.sse.addEventListener('channel-list', (event) => {
-            // TODO: error handling
-            this.updateChannels(JSON.parse(event.data).channels);
+            try {
+                this.updateChannels(JSON.parse(event.data).channels);
+            } catch (error) {
+                console.error(error);
+            }
         });
     }
 }
