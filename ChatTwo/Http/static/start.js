@@ -48,7 +48,7 @@
         // adjust scroll when the window size changes; mostly for mobile (opening/closing the keyboard)
         window.addEventListener('resize', () => {
             if (this.scrolledToBottom) {
-                this.elements.messagesList.lastChild.scrollIntoView();
+                this.scrollMessagesToBottom();
             }
         })
 
@@ -98,9 +98,26 @@
     }
 
     messagesAreScrolledToBottom() {
-        this.scrolledToBottom =
-            this.elements.messagesContainer.scrollTop >= this.elements.messagesContainer.scrollHeight - this.elements.messagesContainer.offsetHeight;
+        if (this.elements.messagesContainer.scrollTopMax) {
+            this.scrolledToBottom = this.elements.messagesContainer.scrollTop === this.elements.messagesContainer.scrollTopMax;
+        } else {
+            this.scrolledToBottom =
+                (
+                    this.elements.messagesContainer.scrollHeight -
+                    this.elements.messagesContainer.clientHeight -
+                    this.elements.messagesContainer.scrollTop
+                ) < 1;
+        }
+
         return this.scrolledToBottom;
+    }
+
+    scrollMessagesToBottom() {
+        if (this.elements.messagesContainer.scrollTopMax) {
+            this.elements.messagesContainer.scrollTop = this.elements.messagesContainer.scrollTopMax;
+        } else {
+            this.elements.messagesList.lastChild.scrollIntoView();
+        }
     }
 
     addMessage(messageData) {
@@ -121,7 +138,7 @@
         this.elements.messagesList.appendChild(liMessage);
 
         if (scrolledToBottom) {
-            liMessage.scrollIntoView();
+            this.scrollMessagesToBottom();
         }
     }
 
