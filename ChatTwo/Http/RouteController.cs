@@ -36,7 +36,6 @@ public class RouteController
 
         // Pre Auth
         Core.Host.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/", AuthRoute, ExceptionRoute);
-        Core.Host.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/auth", GetAuthenticateClient, ExceptionRoute);
         Core.Host.Routes.PreAuthentication.Static.Add(HttpMethod.POST, "/auth", AuthenticateClient, ExceptionRoute);
         Core.Host.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/files/gfdata.gfd", GetGfdData, ExceptionRoute);
         Core.Host.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/files/fonticon_ps5.tex", GetTexData, ExceptionRoute);
@@ -130,11 +129,12 @@ public class RouteController
     #region PreAuthRoutes
     private async Task<bool> AuthenticateClient(HttpContextBase ctx)
     {
-        Plugin.Log.Information($"Auth requested");
-
         var currentTick = Environment.TickCount64;
         if (RateLimit.TryGetValue(ctx.Request.Source.IpAddress, out var timestamp) && timestamp > currentTick)
+        {
+            _ = ctx.Request.DataAsString; // Temp fix for Watson.Lite bug #155
             return await Redirect(ctx, "/", ("message", "Rate limit active."));
+        }
 
         // The next request will be rate limited for 10s
         RateLimit[ctx.Request.Source.IpAddress] = currentTick + 10_000;
@@ -148,15 +148,6 @@ public class RouteController
 
         ctx.Response.Headers.Add("Set-Cookie", $"ChatTwo-token={token}");
         return await Redirect(ctx, "/chat");
-    }
-
-    private async Task<bool> GetAuthenticateClient(HttpContextBase ctx)
-    {
-        Plugin.Log.Information($"Get was used for auth requested");
-        Plugin.Log.Information($"{ctx.Request.Url.Full}");
-        Plugin.Log.Information($"{ctx.RouteType}");
-
-        return await Redirect(ctx, "/", ("message", "Rate limit active."));
     }
     #endregion
 
@@ -256,7 +247,7 @@ public class RouteController
             query.Add(key, value);
 
         ctx.Response.Headers.Add("Location", $"{location}?{query}");
-        ctx.Response.StatusCode = 302;
+        ctx.Response.StatusCode = 303;
         return await ctx.Response.Send();
     }
     #endregion
