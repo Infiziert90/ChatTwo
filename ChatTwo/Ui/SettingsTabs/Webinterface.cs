@@ -16,21 +16,21 @@ internal sealed class Webinterface(Plugin plugin, Configuration mutable) : ISett
 
     public void Draw(bool changed)
     {
-        ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudWhite, "After checking 'Enabled' and clicking 'Start' this will load up Chat2's built-in web interface, which will allow devices on your network to access in-game chat. This feature may be used to allow a phone or another computer to see Chat2 activity, switch channels, and send messages as though you were typing in FFXIV itself.");
+        ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudWhite, Language.Options_Webinterface_Warning_Header);
         ImGui.Spacing();
-        ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudOrange, "For reasons of account security, this feature is not intended for use outside of your local network, you have been warned!");
+        ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudOrange, Language.Options_Webinterface_Warning_Reason);
 
         ImGui.Spacing();
         ImGui.Spacing();
-        ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudViolet, "Do Not:");
+        ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudViolet, Language.Options_Webinterface_Warning_DoNot);
         using (ImRaii.PushIndent(15.0f))
         {
-            ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudViolet, "- Forward the port used (9000)");
-            ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudViolet, "- Share your authentication code with anyone else");
-            ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudViolet, "- Expect multi-boxing to work with this (only first client works)");
+            ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudViolet, Language.Options_Webinterface_DoNot_Port);
+            ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudViolet, Language.Options_Webinterface_DoNot_Share);
+            ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudViolet, Language.Options_Webinterface_DoNot_Multibox);
         }
         ImGui.Spacing();
-        ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudOrange, "No support will be provided if any of the 'Do Not' clauses aren't respected and adhered to appropriately.");
+        ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudOrange, Language.Options_Webinterface_Warning_Support);
 
         ImGui.Spacing();
         ImGui.Separator();
@@ -51,6 +51,7 @@ internal sealed class Webinterface(Plugin plugin, Configuration mutable) : ISett
         ImGui.Spacing();
 
         ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudOrange, Language.Webinterface_CurrentPassword);
+        ImGui.AlignTextToFramePadding();
         ImGui.TextUnformatted(Mutable.WebinterfacePassword);
         ImGui.SameLine();
         if (ImGuiUtil.IconButton(FontAwesomeIcon.Recycle, tooltip: Language.Webinterface_PasswordReset_Tooltip))
@@ -62,37 +63,7 @@ internal sealed class Webinterface(Plugin plugin, Configuration mutable) : ISett
         ImGui.TextUnformatted(Language.Webinterface_Controls);
         using (ImRaii.PushIndent(10.0f))
         {
-            ImGui.TextUnformatted(Language.Webinterface_Controls_Active);
-            ImGui.SameLine();
-
             var isActive = Plugin.ServerCore.IsActive();
-            using (Plugin.FontManager.FontAwesome.Push())
-            using (ImRaii.PushColor(ImGuiCol.Text, isActive ? ImGuiColors.HealerGreen : ImGuiColors.DalamudRed))
-            {
-                ImGui.TextUnformatted(isActive ? FontAwesomeIcon.Check.ToIconString() : FontAwesomeIcon.Times.ToIconString());
-            }
-
-            Uri? uri;
-            try {
-                uri = new Uri($"http://{System.Net.Dns.GetHostName()}:{Mutable.WebinterfacePort}/");
-            }
-            catch(Exception)
-            {
-                uri = null;
-            }
-
-            ImGui.TextUnformatted(Language.Webinterface_Controls_Url);
-            ImGui.SameLine();
-            if (uri is not null)
-            {
-                if (ImGui.Selectable(uri.AbsoluteUri))
-                    WrapperUtil.TryOpenURI(uri);
-            }
-            else
-            {
-                ImGui.TextUnformatted("Unable to resolve hostname.");
-            }
-
             using (ImRaii.Disabled(isActive || Plugin.ServerCore.IsStopping()))
             {
                 if (ImGui.Button(Language.Webinterface_Button_Start))
@@ -129,10 +100,40 @@ internal sealed class Webinterface(Plugin plugin, Configuration mutable) : ISett
                     });
                 }
             }
+
+            ImGui.AlignTextToFramePadding();
+            ImGui.TextUnformatted(Language.Webinterface_Controls_Active);
+            ImGui.SameLine();
+            using (Plugin.FontManager.FontAwesome.Push())
+            using (ImRaii.PushColor(ImGuiCol.Text, isActive ? ImGuiColors.HealerGreen : ImGuiColors.DalamudRed))
+            {
+                ImGui.TextUnformatted(isActive ? FontAwesomeIcon.Check.ToIconString() : FontAwesomeIcon.Times.ToIconString());
+            }
+
+            Uri? uri;
+            try {
+                uri = new Uri($"http://{System.Net.Dns.GetHostName()}:{Mutable.WebinterfacePort}/");
+            }
+            catch(Exception)
+            {
+                uri = null;
+            }
+
+            ImGui.TextUnformatted(Language.Webinterface_Controls_Url);
+            ImGui.SameLine();
+            if (uri is not null)
+            {
+                if (ImGui.Selectable(uri.AbsoluteUri))
+                    WrapperUtil.TryOpenURI(uri);
+            }
+            else
+            {
+                ImGui.TextUnformatted(Language.Options_Webinterface_Hostname_Fail);
+            }
         }
 
         ImGui.Spacing();
         ImGui.Spacing();
-        ImGuiUtil.WrappedTextWithColor(ImGuiColors.HealerGreen, "Note: This will require at least a semi-modern browser in order to function correctly.");
+        ImGuiUtil.WrappedTextWithColor(ImGuiColors.HealerGreen, Language.Options_Webinterface_Note);
     }
 }

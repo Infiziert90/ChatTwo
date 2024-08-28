@@ -560,7 +560,7 @@
         <value>Start automatically</value>
     </data>
     <data name="Options_WebinterfaceAutoStart_Description">
-        <value>The Webinterface is going to be started when the plugins loads.</value>
+        <value>Webinterface will start alongside the plugin automatically</value>
     </data>
     <data name="Options_OverrideStyle_Name">
         <value>Override Style</value>
@@ -1335,5 +1335,32 @@
     </data>
     <data name="Webinterface_Option_Port_Description" xml:space="preserve">
         <value>The port this webinterface will be running on.</value>
+    </data>
+    <data name="Options_Webinterface_Warning_Header" xml:space="preserve">
+        <value>After checking 'Enabled' and clicking 'Start' this will load up Chat2's built-in web interface, which will allow devices on your network to access in-game chat. This feature may be used to allow a phone or another computer to see Chat2 activity, switch channels, and send messages as though you were typing in FFXIV itself.</value>
+    </data>
+    <data name="Options_Webinterface_Warning_Reason" xml:space="preserve">
+        <value>For reasons of account security, this feature is not intended for use outside of your local network, you have been warned!</value>
+    </data>
+    <data name="Options_Webinterface_Warning_DoNot" xml:space="preserve">
+        <value>Do Not:</value>
+    </data>
+    <data name="Options_Webinterface_DoNot_Port" xml:space="preserve">
+        <value>- Forward the port used (9000)</value>
+    </data>
+    <data name="Options_Webinterface_DoNot_Share" xml:space="preserve">
+        <value>- Share your authentication code with anyone else</value>
+    </data>
+    <data name="Options_Webinterface_DoNot_Multibox" xml:space="preserve">
+        <value>- Expect multi-boxing to work with this (only first client works)</value>
+    </data>
+    <data name="Options_Webinterface_Warning_Support" xml:space="preserve">
+        <value>No support will be provided if any of the 'Do Not' clauses aren't respected and adhered to appropriately.</value>
+    </data>
+    <data name="Options_Webinterface_Hostname_Fail" xml:space="preserve">
+        <value>Unable to resolve hostname.</value>
+    </data>
+    <data name="Options_Webinterface_Note" xml:space="preserve">
+        <value>Note: This will require at least a semi-modern browser in order to function correctly.</value>
     </data>
 </root>

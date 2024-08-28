@@ -3408,6 +3408,51 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to - Expect multi-boxing to work with this (only first client works).
+        /// </summary>
+        internal static string Options_Webinterface_DoNot_Multibox {
+            get {
+                return ResourceManager.GetString("Options_Webinterface_DoNot_Multibox", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to - Forward the port used (9000).
+        /// </summary>
+        internal static string Options_Webinterface_DoNot_Port {
+            get {
+                return ResourceManager.GetString("Options_Webinterface_DoNot_Port", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to - Share your authentication code with anyone else.
+        /// </summary>
+        internal static string Options_Webinterface_DoNot_Share {
+            get {
+                return ResourceManager.GetString("Options_Webinterface_DoNot_Share", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to resolve hostname..
+        /// </summary>
+        internal static string Options_Webinterface_Hostname_Fail {
+            get {
+                return ResourceManager.GetString("Options_Webinterface_Hostname_Fail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Note: This will require at least a semi-modern browser in order to function correctly..
+        /// </summary>
+        internal static string Options_Webinterface_Note {
+            get {
+                return ResourceManager.GetString("Options_Webinterface_Note", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Webinterface.
         /// </summary>
         internal static string Options_Webinterface_Tab {
@@ -3417,7 +3462,43 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The Webinterface is going to be started when the plugins loads..
+        ///   Looks up a localized string similar to Do Not:.
+        /// </summary>
+        internal static string Options_Webinterface_Warning_DoNot {
+            get {
+                return ResourceManager.GetString("Options_Webinterface_Warning_DoNot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to After checking &apos;Enabled&apos; and clicking &apos;Start&apos; this will load up Chat2&apos;s built-in web interface, which will allow devices on your network to access in-game chat. This feature may be used to allow a phone or another computer to see Chat2 activity, switch channels, and send messages as though you were typing in FFXIV itself..
+        /// </summary>
+        internal static string Options_Webinterface_Warning_Header {
+            get {
+                return ResourceManager.GetString("Options_Webinterface_Warning_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to For reasons of account security, this feature is not intended for use outside of your local network, you have been warned!.
+        /// </summary>
+        internal static string Options_Webinterface_Warning_Reason {
+            get {
+                return ResourceManager.GetString("Options_Webinterface_Warning_Reason", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No support will be provided if any of the &apos;Do Not&apos; clauses aren&apos;t respected and adhered to appropriately..
+        /// </summary>
+        internal static string Options_Webinterface_Warning_Support {
+            get {
+                return ResourceManager.GetString("Options_Webinterface_Warning_Support", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Webinterface will start alongside the plugin automatically.
         /// </summary>
         internal static string Options_WebinterfaceAutoStart_Description {
             get {
