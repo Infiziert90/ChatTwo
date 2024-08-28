@@ -165,7 +165,7 @@ internal sealed unsafe class Chat : IDisposable
 
         ChangeChannelNameDetour(agent);
 
-        // Inform all clients that a new login happend
+        // Inform all clients that a new login happened
         Plugin.ServerCore.SendNewLogin();
     }
 

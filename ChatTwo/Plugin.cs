@@ -81,15 +81,15 @@ public sealed class Plugin : IDalamudPlugin
             LanguageChanged(Interface.UiLanguage);
             ImGuiUtil.Initialize(this);
 
+            // Functions calls this in its ctor if the player is already logged in
+            ServerCore = new ServerCore(this);
+
             Commands = new Commands(this);
             Common = new ChatCommon();
             Functions = new GameFunctions.GameFunctions(this);
             Ipc = new IpcManager();
             ExtraChat = new ExtraChat(this);
             FontManager = new FontManager();
-
-            // ChatLog calls this in its ctor if the player is already logged in
-            ServerCore = new ServerCore(this);
 
             ChatLogWindow = new ChatLogWindow(this);
             SettingsWindow = new SettingsWindow(this);
