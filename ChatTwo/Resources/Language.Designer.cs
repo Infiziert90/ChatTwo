@@ -3606,7 +3606,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Controls:.
+        ///   Looks up a localized string similar to Control Panel:.
         /// </summary>
         internal static string Webinterface_Controls {
             get {
@@ -3620,6 +3620,15 @@ namespace ChatTwo.Resources {
         internal static string Webinterface_Controls_Active {
             get {
                 return ResourceManager.GetString("Webinterface_Controls_Active", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to URL:.
+        /// </summary>
+        internal static string Webinterface_Controls_Url {
+            get {
+                return ResourceManager.GetString("Webinterface_Controls_Url", resourceCulture);
             }
         }
         

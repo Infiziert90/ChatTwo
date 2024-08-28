@@ -16,9 +16,7 @@ internal sealed class Webinterface(Plugin plugin, Configuration mutable) : ISett
 
     public void Draw(bool changed)
     {
-        ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudWhite, "On checking 'Enabled' this will enable and load up Chat2's built-in web interface, which will allow devices on your network to access in-game chat. This feature may be used to allow a phone or another computer to see Chat2 activity, switch channels, and send messages as though you were typing in FFXIV itself.");
-        ImGui.Spacing();
-        ImGuiUtil.WrappedTextWithColor(ImGuiColors.HealerGreen, "Note: This will require at least a semi-modern browser in order to function correctly.");
+        ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudWhite, "After checking 'Enabled' and clicking 'Start' this will load up Chat2's built-in web interface, which will allow devices on your network to access in-game chat. This feature may be used to allow a phone or another computer to see Chat2 activity, switch channels, and send messages as though you were typing in FFXIV itself.");
         ImGui.Spacing();
         ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudOrange, "For reasons of account security, this feature is not intended for use outside of your local network, you have been warned!");
 
@@ -29,7 +27,7 @@ internal sealed class Webinterface(Plugin plugin, Configuration mutable) : ISett
         {
             ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudViolet, "- Forward the port used (9000)");
             ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudViolet, "- Share your authentication code with anyone else");
-            ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudViolet, "- Expect multi-boxing to work with this (only first client is tracked and utilised)");
+            ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudViolet, "- Expect multi-boxing to work with this (only first client works)");
         }
         ImGui.Spacing();
         ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudOrange, "No support will be provided if any of the 'Do Not' clauses aren't respected and adhered to appropriately.");
@@ -43,8 +41,6 @@ internal sealed class Webinterface(Plugin plugin, Configuration mutable) : ISett
 
         if (!Mutable.WebinterfaceEnabled)
             return;
-
-        ImGui.Separator();
         ImGui.Spacing();
 
         ImGuiUtil.OptionCheckbox(ref Mutable.WebinterfaceAutoStart, Language.Options_WebinterfaceAutoStart_Name, Language.Options_WebinterfaceAutoStart_Description);
@@ -63,7 +59,7 @@ internal sealed class Webinterface(Plugin plugin, Configuration mutable) : ISett
             Plugin.ServerCore.InvalidateSessions();
         }
 
-        ImGuiUtil.WrappedTextWithColor(ImGuiColors.HealerGreen, Language.Webinterface_Controls);
+        ImGui.TextUnformatted(Language.Webinterface_Controls);
         using (ImRaii.PushIndent(10.0f))
         {
             ImGui.TextUnformatted(Language.Webinterface_Controls_Active);
@@ -74,6 +70,27 @@ internal sealed class Webinterface(Plugin plugin, Configuration mutable) : ISett
             using (ImRaii.PushColor(ImGuiCol.Text, isActive ? ImGuiColors.HealerGreen : ImGuiColors.DalamudRed))
             {
                 ImGui.TextUnformatted(isActive ? FontAwesomeIcon.Check.ToIconString() : FontAwesomeIcon.Times.ToIconString());
+            }
+
+            Uri? uri;
+            try {
+                uri = new Uri($"http://{System.Net.Dns.GetHostName()}:{Mutable.WebinterfacePort}/");
+            }
+            catch(Exception)
+            {
+                uri = null;
+            }
+
+            ImGui.TextUnformatted(Language.Webinterface_Controls_Url);
+            ImGui.SameLine();
+            if (uri is not null)
+            {
+                if (ImGui.Selectable(uri.AbsoluteUri))
+                    WrapperUtil.TryOpenURI(uri);
+            }
+            else
+            {
+                ImGui.TextUnformatted("Unable to resolve hostname.");
             }
 
             using (ImRaii.Disabled(isActive || Plugin.ServerCore.IsStopping()))
@@ -113,6 +130,9 @@ internal sealed class Webinterface(Plugin plugin, Configuration mutable) : ISett
                 }
             }
         }
+
         ImGui.Spacing();
+        ImGui.Spacing();
+        ImGuiUtil.WrappedTextWithColor(ImGuiColors.HealerGreen, "Note: This will require at least a semi-modern browser in order to function correctly.");
     }
 }

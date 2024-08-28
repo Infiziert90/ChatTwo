@@ -581,10 +581,13 @@
         <value>Reset your password and invalidate all session tokens.</value>
     </data>
     <data name="Webinterface_Controls">
-        <value>Controls:</value>
+        <value>Control Panel:</value>
     </data>
     <data name="Webinterface_Controls_Active">
         <value>Active:</value>
+    </data>
+    <data name="Webinterface_Controls_Url">
+        <value>URL:</value>
     </data>
     <data name="Keybind_None">
         <value>none set</value>

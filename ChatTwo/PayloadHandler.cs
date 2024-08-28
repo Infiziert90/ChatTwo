@@ -417,7 +417,7 @@ public sealed class PayloadHandler {
                     GameFunctions.GameFunctions.OpenPartyFinder();
                 break;
             case UriPayload uri:
-                TryOpenURI(uri.Uri);
+                WrapperUtil.TryOpenURI(uri.Uri);
                 break;
             default:
                 RightClickPayload(chunk, payload);
@@ -671,26 +671,12 @@ public sealed class PayloadHandler {
         ImGui.Separator();
 
         if (ImGui.Selectable(Language.Context_OpenInBrowser))
-            TryOpenURI(uri.Uri);
+            WrapperUtil.TryOpenURI(uri.Uri);
 
         if (ImGui.Selectable(Language.Context_CopyLink))
         {
             ImGui.SetClipboardText(uri.Uri.ToString());
             WrapperUtil.AddNotification(Language.Context_CopyLinkNotification, NotificationType.Info);
-        }
-    }
-
-    private void TryOpenURI(Uri uri)
-    {
-        try
-        {
-            Plugin.Log.Debug($"Opening URI {uri} in default browser");
-            Dalamud.Utility.Util.OpenLink(uri.ToString());
-        }
-        catch (Exception ex)
-        {
-            Plugin.Log.Error($"Error opening URI: {ex}");
-            WrapperUtil.AddNotification(Language.Context_OpenInBrowserError, NotificationType.Error);
         }
     }
 }
