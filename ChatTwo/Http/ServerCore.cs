@@ -1,52 +1,29 @@
 ﻿using ChatTwo.Http.MessageProtocol;
-using WatsonWebserver.Core;
-using WatsonWebserver.Lite;
-using ExceptionEventArgs = WatsonWebserver.Core.ExceptionEventArgs;
-
 namespace ChatTwo.Http;
 
 public class ServerCore : IAsyncDisposable
 {
     private readonly Plugin Plugin;
-    internal readonly Processing Processing;
-    internal readonly RouteController RouteController;
-
-    internal readonly WebserverLite HostContext;
-
-    internal readonly CancellationTokenSource TokenSource = new();
-    internal readonly string StaticDir = Path.Combine(Plugin.Interface.AssemblyLocation.DirectoryName!, "Http");
-
-    internal readonly List<SSEConnection> EventConnections = [];
+    private readonly HostContext HostContext;
 
     public ServerCore(Plugin plugin)
     {
         Plugin = plugin;
-        HostContext = new WebserverLite(new WebserverSettings("*", 9000), DefaultRoute);
-
-        Processing = new Processing(plugin);
-        RouteController = new RouteController(plugin, this);
-
-        HostContext.Routes.PreAuthentication.Content.BaseDirectory = StaticDir;
-        HostContext.Routes.AuthenticateRequest = CheckAuthenticationCookie;
-        HostContext.Events.ExceptionEncountered += ExceptionEncountered;
-
-        // Settings
-        HostContext.Settings.Debug.Requests = true;
-        HostContext.Settings.Debug.Routing = true;
-        HostContext.Settings.Debug.Responses = true;
-        HostContext.Settings.Debug.AccessControl = true;
-        HostContext.Events.Logger = logMessage => Plugin.Log.Information(logMessage);
+        HostContext = new HostContext(plugin);
     }
 
-    #region SSEFunctions
+    #region SSE Helper
     internal void SendNewMessage(Message message)
     {
+        if (!HostContext.IsActive)
+            return;
+
         try
         {
             Plugin.Framework.RunOnTick(() =>
             {
-                var bundledResponse = new NewMessageEvent(new Messages([Processing.ReadMessageContent(message)]));
-                foreach (var eventServer in EventConnections)
+                var bundledResponse = new NewMessageEvent(new Messages([HostContext.Processing.ReadMessageContent(message)]));
+                foreach (var eventServer in HostContext.EventConnections)
                     eventServer.OutboundQueue.Enqueue(bundledResponse);
             });
         }
@@ -58,12 +35,15 @@ public class ServerCore : IAsyncDisposable
 
     internal void SendBulkMessageList()
     {
+        if (!HostContext.IsActive)
+            return;
+
         try
         {
             Plugin.Framework.RunOnTick(() =>
             {
-                foreach (var eventServer in EventConnections)
-                    eventServer.OutboundQueue.Enqueue(new BulkMessagesEvent(new Messages(Processing.ReadMessageList().Result)));
+                foreach (var eventServer in HostContext.EventConnections)
+                    eventServer.OutboundQueue.Enqueue(new BulkMessagesEvent(new Messages(HostContext.Processing.ReadMessageList().Result)));
             });
         }
         catch (Exception ex)
@@ -74,12 +54,15 @@ public class ServerCore : IAsyncDisposable
 
     internal void SendChannelSwitch(Chunk[] channelName)
     {
+        if (!HostContext.IsActive)
+            return;
+
         try
         {
             Plugin.Framework.RunOnTick(() =>
             {
-                var bundledResponse = new SwitchChannelEvent(new SwitchChannel(Processing.ReadChannelName(channelName)));
-                foreach (var eventServer in EventConnections)
+                var bundledResponse = new SwitchChannelEvent(new SwitchChannel(HostContext.Processing.ReadChannelName(channelName)));
+                foreach (var eventServer in HostContext.EventConnections)
                     eventServer.OutboundQueue.Enqueue(bundledResponse);
             });
         }
@@ -91,13 +74,16 @@ public class ServerCore : IAsyncDisposable
 
     internal void SendChannelList()
     {
+        if (!HostContext.IsActive)
+            return;
+
         try
         {
             Plugin.Framework.RunOnTick(() =>
             {
                 var channels = Plugin.ChatLogWindow.GetAvailableChannels();
                 var bundledResponse = new ChannelListEvent(new ChannelList(channels.ToDictionary(pair => pair.Key, pair => (uint)pair.Value)));
-                foreach (var eventServer in EventConnections)
+                foreach (var eventServer in HostContext.EventConnections)
                     eventServer.OutboundQueue.Enqueue(bundledResponse);
             });
         }
@@ -108,65 +94,43 @@ public class ServerCore : IAsyncDisposable
     }
     #endregion
 
-    #region GeneralHandlers
-    private static void ExceptionEncountered(object? _, ExceptionEventArgs args)
-    {
-        Plugin.Log.Error(args.Exception, "Webserver threw an exception.");
-    }
-
-    private async Task DefaultRoute(HttpContextBase ctx)
-    {
-        await ctx.Response.Send("Nothing to see here.");
-    }
-    #endregion
-
-    private async Task CheckAuthenticationCookie(HttpContextBase ctx)
-    {
-        if (RouteController.SessionTokens.IsEmpty)
-        {
-            await RouteController.Redirect(ctx, "/", ("message", "Invalid session token."));
-            return;
-        }
-
-        var cookies = WebserverUtil.GetCookieData(ctx.Request.Headers.Get("Cookie") ?? "");
-        if (!cookies.TryGetValue("ChatTwo-token", out var token) || !RouteController.SessionTokens.ContainsKey(token))
-            await RouteController.Redirect(ctx, "/", ("message", "Invalid session token."));
-
-        // Do nothing to let auth pass
-    }
-
     public void InvalidateSessions()
     {
-        RouteController.SessionTokens.Clear();
+        if (!HostContext.IsActive)
+            return;
+
+        Plugin.Config.SessionTokens.Clear();
+        Plugin.SaveConfig();
     }
 
-    public bool GetStats()
+    public bool IsActive()
     {
-        return HostContext.IsListening;
+        return HostContext is { IsActive: true, Host.IsListening: true };
     }
 
-    public void Start()
+    public bool IsStopping()
     {
-        try
-        {
-            HostContext.Start(TokenSource.Token);
-        }
-        catch (Exception ex)
-        {
-            Plugin.Log.Error(ex, "Startup failed with an error.");
-        }
+        return HostContext is { IsActive: false, IsStopping: true };
+    }
+
+
+    public bool Start()
+    {
+        return HostContext.Start();
+    }
+
+    public void Run()
+    {
+        HostContext.Run();
+    }
+
+    public async ValueTask<bool> Stop()
+    {
+        return await HostContext.Stop();
     }
 
     public async ValueTask DisposeAsync()
     {
-        await TokenSource.CancelAsync();
-        HostContext.Stop();
-
-        // We get a copy, so that the original can be cleaned up succesfully
-        foreach (var eventServer in EventConnections.ToArray())
-            await eventServer.DisposeAsync();
-
-        HostContext.Dispose();
-        RouteController.Dispose();
+        await HostContext.DisposeAsync();
     }
 }

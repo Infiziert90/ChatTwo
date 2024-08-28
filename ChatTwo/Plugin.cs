@@ -131,7 +131,16 @@ public sealed class Plugin : IDalamudPlugin
             #endif
 
             ServerCore = new ServerCore(this);
-            Task.Run(() => ServerCore.Start());
+
+            // Automatically start the webserver if requested
+            if (Config.WebinterfaceAutoStart)
+            {
+                Task.Run(() =>
+                {
+                    ServerCore.Start();
+                    ServerCore.Run();
+                });
+            }
         }
         catch (Exception ex)
         {

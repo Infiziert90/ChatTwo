@@ -2,6 +2,7 @@ using ChatTwo.Resources;
 using ChatTwo.Util;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
+using Dalamud.Interface.ImGuiNotification;
 using Dalamud.Interface.Utility.Raii;
 using ImGuiNET;
 
@@ -37,14 +38,20 @@ internal sealed class Webinterface(Plugin plugin, Configuration mutable) : ISett
         ImGui.Separator();
         ImGui.Spacing();
 
-        ImGui.Checkbox(Language.Options_WebinterfaceEnable_Name, ref Mutable.WebinterfaceEnabled);
-        ImGuiUtil.HelpText(Language.Options_WebinterfaceEnable_Description);
+        ImGuiUtil.OptionCheckbox(ref Mutable.WebinterfaceEnabled, Language.Options_WebinterfaceEnable_Name, Language.Options_WebinterfaceEnable_Description);
         ImGui.Spacing();
 
         if (!Mutable.WebinterfaceEnabled)
             return;
 
         ImGui.Separator();
+        ImGui.Spacing();
+
+        ImGuiUtil.OptionCheckbox(ref Mutable.WebinterfaceAutoStart, Language.Options_WebinterfaceAutoStart_Name, Language.Options_WebinterfaceAutoStart_Description);
+        ImGui.Spacing();
+
+        if (ImGuiUtil.InputIntVertical(Language.Webinterface_Option_Port_Name, Language.Webinterface_Option_Port_Description, ref Mutable.WebinterfacePort))
+            Mutable.WebinterfacePort = Math.Clamp(Mutable.WebinterfacePort, 1024, 49151);
         ImGui.Spacing();
 
         ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudOrange, Language.Webinterface_CurrentPassword);
@@ -56,18 +63,56 @@ internal sealed class Webinterface(Plugin plugin, Configuration mutable) : ISett
             Plugin.ServerCore.InvalidateSessions();
         }
 
-        ImGuiUtil.WrappedTextWithColor(ImGuiColors.HealerGreen, Language.Webinterface_Status);
+        ImGuiUtil.WrappedTextWithColor(ImGuiColors.HealerGreen, Language.Webinterface_Controls);
         using (ImRaii.PushIndent(10.0f))
         {
-            ImGui.TextUnformatted(Language.Webinterface_Status_Active);
+            ImGui.TextUnformatted(Language.Webinterface_Controls_Active);
             ImGui.SameLine();
 
-            var isActive = Plugin.ServerCore.GetStats();
+            var isActive = Plugin.ServerCore.IsActive();
             using (Plugin.FontManager.FontAwesome.Push())
-            using (ImRaii.PushColor(ImGuiCol.Text, isActive ? ImGuiColors.HealerGreen : ImGuiColors.DalamudOrange))
+            using (ImRaii.PushColor(ImGuiCol.Text, isActive ? ImGuiColors.HealerGreen : ImGuiColors.DalamudRed))
             {
-                ImGui.TextUnformatted($"{(isActive ? FontAwesomeIcon.Check.ToIconString() : FontAwesomeIcon.Cross.ToIconString())}");
+                ImGui.TextUnformatted(isActive ? FontAwesomeIcon.Check.ToIconString() : FontAwesomeIcon.Times.ToIconString());
+            }
+
+            using (ImRaii.Disabled(isActive || Plugin.ServerCore.IsStopping()))
+            {
+                if (ImGui.Button(Language.Webinterface_Button_Start))
+                {
+                    Task.Run(() =>
+                    {
+                        var ok = Plugin.ServerCore.Start();
+                        if (ok)
+                        {
+                            Plugin.ServerCore.Run();
+                            WrapperUtil.AddNotification(Language.Webinterface_Start_Success, NotificationType.Success);
+                        }
+                        else
+                        {
+                            WrapperUtil.AddNotification(Language.Webinterface_Start_Failed, NotificationType.Error);
+                        }
+                    });
+                }
+            }
+
+            ImGui.SameLine();
+
+            using (ImRaii.Disabled(!isActive || Plugin.ServerCore.IsStopping()))
+            {
+                if (ImGui.Button(Language.Webinterface_Button_Stop))
+                {
+                    Task.Run(async () =>
+                    {
+                        var ok = await Plugin.ServerCore.Stop();
+                        if (ok)
+                            WrapperUtil.AddNotification(Language.Webinterface_Stop_Success, NotificationType.Success);
+                        else
+                            WrapperUtil.AddNotification(Language.Webinterface_Stop_Failed, NotificationType.Error);
+                    });
+                }
             }
         }
+        ImGui.Spacing();
     }
 }

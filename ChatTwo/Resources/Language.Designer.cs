@@ -3417,6 +3417,24 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The Webinterface is going to be started when the plugins loads..
+        /// </summary>
+        internal static string Options_WebinterfaceAutoStart_Description {
+            get {
+                return ResourceManager.GetString("Options_WebinterfaceAutoStart_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start automatically.
+        /// </summary>
+        internal static string Options_WebinterfaceAutoStart_Name {
+            get {
+                return ResourceManager.GetString("Options_WebinterfaceAutoStart_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Enables the webinterface that can be accessed with a browser..
         /// </summary>
         internal static string Options_WebinterfaceEnable_Description {
@@ -3426,7 +3444,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enable.
+        ///   Looks up a localized string similar to Enabled.
         /// </summary>
         internal static string Options_WebinterfaceEnable_Name {
             get {
@@ -3570,11 +3588,65 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Your current password to access the webinterface:.
+        ///   Looks up a localized string similar to Start.
+        /// </summary>
+        internal static string Webinterface_Button_Start {
+            get {
+                return ResourceManager.GetString("Webinterface_Button_Start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop.
+        /// </summary>
+        internal static string Webinterface_Button_Stop {
+            get {
+                return ResourceManager.GetString("Webinterface_Button_Stop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Controls:.
+        /// </summary>
+        internal static string Webinterface_Controls {
+            get {
+                return ResourceManager.GetString("Webinterface_Controls", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Active:.
+        /// </summary>
+        internal static string Webinterface_Controls_Active {
+            get {
+                return ResourceManager.GetString("Webinterface_Controls_Active", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Authcode:.
         /// </summary>
         internal static string Webinterface_CurrentPassword {
             get {
                 return ResourceManager.GetString("Webinterface_CurrentPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The port this webinterface will be running on..
+        /// </summary>
+        internal static string Webinterface_Option_Port_Description {
+            get {
+                return ResourceManager.GetString("Webinterface_Option_Port_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Port.
+        /// </summary>
+        internal static string Webinterface_Option_Port_Name {
+            get {
+                return ResourceManager.GetString("Webinterface_Option_Port_Name", resourceCulture);
             }
         }
         
@@ -3588,20 +3660,38 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Webinterface Status:.
+        ///   Looks up a localized string similar to Webinterface failed to start. Check /xllog for more information..
         /// </summary>
-        internal static string Webinterface_Status {
+        internal static string Webinterface_Start_Failed {
             get {
-                return ResourceManager.GetString("Webinterface_Status", resourceCulture);
+                return ResourceManager.GetString("Webinterface_Start_Failed", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Active:.
+        ///   Looks up a localized string similar to Webinterface was started..
         /// </summary>
-        internal static string Webinterface_Status_Active {
+        internal static string Webinterface_Start_Success {
             get {
-                return ResourceManager.GetString("Webinterface_Status_Active", resourceCulture);
+                return ResourceManager.GetString("Webinterface_Start_Success", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Webinterface failed to stop. Check /xllog for more information..
+        /// </summary>
+        internal static string Webinterface_Stop_Failed {
+            get {
+                return ResourceManager.GetString("Webinterface_Stop_Failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Webinterface was stopped..
+        /// </summary>
+        internal static string Webinterface_Stop_Success {
+            get {
+                return ResourceManager.GetString("Webinterface_Stop_Success", resourceCulture);
             }
         }
     }

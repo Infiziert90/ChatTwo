@@ -14,20 +14,19 @@ namespace ChatTwo.Http;
 public class RouteController
 {
     private readonly Plugin Plugin;
-    private readonly ServerCore Core;
+    private readonly HostContext Core;
 
     private readonly string AuthTemplate;
     private readonly string ChatBoxTemplate;
 
     private readonly ConcurrentDictionary<string, long> RateLimit = [];
-    internal readonly ConcurrentDictionary<string, bool> SessionTokens = [];
 
     private readonly JsonSerializerSettings JsonSettings = new()
     {
-        Error = delegate(object? sender, ErrorEventArgs args) { args.ErrorContext.Handled = true; }
+        Error = delegate(object? _, ErrorEventArgs args) { args.ErrorContext.Handled = true; }
     };
 
-    public RouteController(Plugin plugin, ServerCore core)
+    public RouteController(Plugin plugin, HostContext core)
     {
         Plugin = plugin;
         Core = core;
@@ -36,21 +35,21 @@ public class RouteController
         ChatBoxTemplate = File.ReadAllText(Path.Combine(Core.StaticDir, "templates", "chat.html"));
 
         // Pre Auth
-        Core.HostContext.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/", AuthRoute, ExceptionRoute);
-        Core.HostContext.Routes.PreAuthentication.Static.Add(HttpMethod.POST, "/auth", AuthenticateClient, ExceptionRoute);
-        Core.HostContext.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/files/gfdata.gfd", GetGfdData, ExceptionRoute);
-        Core.HostContext.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/files/fonticon_ps5.tex", GetTexData, ExceptionRoute);
-        Core.HostContext.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/files/FFXIV_Lodestone_SSF.ttf", GetLodestoneFont, ExceptionRoute);
-        Core.HostContext.Routes.PreAuthentication.Parameter.Add(HttpMethod.GET, "/emote/{name}", GetEmote, ExceptionRoute);
-        Core.HostContext.Routes.PreAuthentication.Content.Add("/static", true, ExceptionRoute);
+        Core.Host.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/", AuthRoute, ExceptionRoute);
+        Core.Host.Routes.PreAuthentication.Static.Add(HttpMethod.POST, "/auth", AuthenticateClient, ExceptionRoute);
+        Core.Host.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/files/gfdata.gfd", GetGfdData, ExceptionRoute);
+        Core.Host.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/files/fonticon_ps5.tex", GetTexData, ExceptionRoute);
+        Core.Host.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/files/FFXIV_Lodestone_SSF.ttf", GetLodestoneFont, ExceptionRoute);
+        Core.Host.Routes.PreAuthentication.Parameter.Add(HttpMethod.GET, "/emote/{name}", GetEmote, ExceptionRoute);
+        Core.Host.Routes.PreAuthentication.Content.Add("/static", true, ExceptionRoute);
 
         // Post Auth
-        Core.HostContext.Routes.PostAuthentication.Static.Add(HttpMethod.GET, "/chat", ChatBoxRoute, ExceptionRoute);
-        Core.HostContext.Routes.PostAuthentication.Static.Add(HttpMethod.POST, "/send", ReceiveMessage, ExceptionRoute);
-        Core.HostContext.Routes.PostAuthentication.Static.Add(HttpMethod.POST, "/channel", ReceiveChannelSwitch, ExceptionRoute);
+        Core.Host.Routes.PostAuthentication.Static.Add(HttpMethod.GET, "/chat", ChatBoxRoute, ExceptionRoute);
+        Core.Host.Routes.PostAuthentication.Static.Add(HttpMethod.POST, "/send", ReceiveMessage, ExceptionRoute);
+        Core.Host.Routes.PostAuthentication.Static.Add(HttpMethod.POST, "/channel", ReceiveChannelSwitch, ExceptionRoute);
 
         // Server-Sent Events Route
-        Core.HostContext.Routes.PostAuthentication.Static.Add(HttpMethod.GET, "/sse", NewSSEConnection, ExceptionRoute);
+        Core.Host.Routes.PostAuthentication.Static.Add(HttpMethod.GET, "/sse", NewSSEConnection, ExceptionRoute);
     }
 
     private async Task ExceptionRoute(HttpContextBase ctx, Exception _)
@@ -135,7 +134,7 @@ public class RouteController
             return await Redirect(ctx, "/", ("message", "Authentication failed."));
 
         var token = WebinterfaceUtil.GenerateSimpleToken();
-        SessionTokens.TryAdd(token, true);
+        Plugin.Config.SessionTokens.TryAdd(token, true);
 
         ctx.Response.Headers.Add("Set-Cookie", $"ChatTwo-token={token}");
         return await Redirect(ctx, "/chat");

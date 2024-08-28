@@ -551,10 +551,16 @@
         <value>If this is enabled, the Auto Translate list will be sorted alphabetically.</value>
     </data>
     <data name="Options_WebinterfaceEnable_Name">
-        <value>Enable</value>
+        <value>Enabled</value>
     </data>
     <data name="Options_WebinterfaceEnable_Description">
         <value>Enables the webinterface that can be accessed with a browser.</value>
+    </data>
+    <data name="Options_WebinterfaceAutoStart_Name">
+        <value>Start automatically</value>
+    </data>
+    <data name="Options_WebinterfaceAutoStart_Description">
+        <value>The Webinterface is going to be started when the plugins loads.</value>
     </data>
     <data name="Options_OverrideStyle_Name">
         <value>Override Style</value>
@@ -569,15 +575,15 @@
         <value>Cycle chat tab backwards keybind</value>
     </data>
     <data name="Webinterface_CurrentPassword">
-        <value>Your current password to access the webinterface:</value>
+        <value>Authcode:</value>
     </data>
     <data name="Webinterface_PasswordReset_Tooltip">
         <value>Reset your password and invalidate all session tokens.</value>
     </data>
-    <data name="Webinterface_Status">
-        <value>Webinterface Status:</value>
+    <data name="Webinterface_Controls">
+        <value>Controls:</value>
     </data>
-    <data name="Webinterface_Status_Active">
+    <data name="Webinterface_Controls_Active">
         <value>Active:</value>
     </data>
     <data name="Keybind_None">
@@ -1302,5 +1308,29 @@
     </data>
     <data name="Chat_SendTell_Error" xml:space="preserve">
         <value>An error occured while sending this tell message</value>
+    </data>
+    <data name="Webinterface_Stop_Success" xml:space="preserve">
+        <value>Webinterface was stopped.</value>
+    </data>
+    <data name="Webinterface_Stop_Failed" xml:space="preserve">
+        <value>Webinterface failed to stop. Check /xllog for more information.</value>
+    </data>
+    <data name="Webinterface_Button_Stop" xml:space="preserve">
+        <value>Stop</value>
+    </data>
+    <data name="Webinterface_Button_Start" xml:space="preserve">
+        <value>Start</value>
+    </data>
+    <data name="Webinterface_Start_Success" xml:space="preserve">
+        <value>Webinterface was started.</value>
+    </data>
+    <data name="Webinterface_Start_Failed" xml:space="preserve">
+        <value>Webinterface failed to start. Check /xllog for more information.</value>
+    </data>
+    <data name="Webinterface_Option_Port_Name" xml:space="preserve">
+        <value>Port</value>
+    </data>
+    <data name="Webinterface_Option_Port_Description" xml:space="preserve">
+        <value>The port this webinterface will be running on.</value>
     </data>
 </root>

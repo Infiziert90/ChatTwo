@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Concurrent;
 using ChatTwo.Code;
 using ChatTwo.GameFunctions.Types;
 using ChatTwo.Resources;
@@ -122,7 +123,10 @@ internal class Configuration : IPluginConfiguration
 
     // Webinterface
     public bool WebinterfaceEnabled;
+    public bool WebinterfaceAutoStart;
     public string WebinterfacePassword = WebinterfaceUtil.GenerateSimpleAuthCode();
+    public int WebinterfacePort = 9000;
+    public ConcurrentDictionary<string, bool> SessionTokens = [];
 
     internal void UpdateFrom(Configuration other, bool backToOriginal)
     {
@@ -139,7 +143,7 @@ internal class Configuration : IPluginConfiguration
         HideWhenInactive = other.HideWhenInactive;
         InactivityHideTimeout = other.InactivityHideTimeout;
         InactivityHideActiveDuringBattle = other.InactivityHideActiveDuringBattle;
-        InactivityHideChannels = other.InactivityHideChannels.ToDictionary(entry => entry.Key, entry => entry.Value);
+        InactivityHideChannels = other.InactivityHideChannels?.ToDictionary(entry => entry.Key, entry => entry.Value);
         InactivityHideExtraChatAll = other.InactivityHideExtraChatAll;
         InactivityHideExtraChatChannels = other.InactivityHideExtraChatChannels.ToHashSet();
         ShowHideButton = other.ShowHideButton;
@@ -188,7 +192,9 @@ internal class Configuration : IPluginConfiguration
         ChatTabForward = other.ChatTabForward;
         ChatTabBackward = other.ChatTabBackward;
         WebinterfaceEnabled = other.WebinterfaceEnabled;
+        WebinterfaceAutoStart = other.WebinterfaceAutoStart;
         WebinterfacePassword = other.WebinterfacePassword;
+        WebinterfacePort = other.WebinterfacePort;
     }
 }
 
