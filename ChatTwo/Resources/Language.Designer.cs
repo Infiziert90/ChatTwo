@@ -3784,5 +3784,14 @@ namespace ChatTwo.Resources {
                 return ResourceManager.GetString("Webinterface_Stop_Success", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Usage Notice.
+        /// </summary>
+        internal static string Webinterface_UsageNotice {
+            get {
+                return ResourceManager.GetString("Webinterface_UsageNotice", resourceCulture);
+            }
+        }
     }
 }

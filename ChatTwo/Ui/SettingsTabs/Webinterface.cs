@@ -16,7 +16,7 @@ internal sealed class Webinterface(Plugin plugin, Configuration mutable) : ISett
 
     public void Draw(bool changed)
     {
-        if (ImGui.CollapsingHeader("Usage Notice", ImGuiTreeNodeFlags.DefaultOpen))
+        if (ImGui.CollapsingHeader(Language.Webinterface_UsageNotice, ImGuiTreeNodeFlags.DefaultOpen))
         {
             ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudWhite, Language.Options_Webinterface_Warning_Header);
             ImGui.Spacing();

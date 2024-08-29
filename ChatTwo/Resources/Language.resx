@@ -1363,4 +1363,7 @@
     <data name="Options_Webinterface_Note" xml:space="preserve">
         <value>Note: This will require at least a semi-modern browser in order to function correctly.</value>
     </data>
+    <data name="Webinterface_UsageNotice" xml:space="preserve">
+        <value>Usage Notice</value>
+    </data>
 </root>
