@@ -16,23 +16,27 @@ internal sealed class Webinterface(Plugin plugin, Configuration mutable) : ISett
 
     public void Draw(bool changed)
     {
-        ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudWhite, Language.Options_Webinterface_Warning_Header);
-        ImGui.Spacing();
-        ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudOrange, Language.Options_Webinterface_Warning_Reason);
-
-        ImGui.Spacing();
-        ImGui.Spacing();
-        ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudViolet, Language.Options_Webinterface_Warning_DoNot);
-        using (ImRaii.PushIndent(15.0f))
+        if (ImGui.CollapsingHeader("Usage Notice", ImGuiTreeNodeFlags.DefaultOpen))
         {
-            ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudViolet, Language.Options_Webinterface_DoNot_Port);
-            ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudViolet, Language.Options_Webinterface_DoNot_Share);
-            ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudViolet, Language.Options_Webinterface_DoNot_Multibox);
-        }
-        ImGui.Spacing();
-        ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudOrange, Language.Options_Webinterface_Warning_Support);
+            ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudWhite, Language.Options_Webinterface_Warning_Header);
+            ImGui.Spacing();
+            ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudOrange, Language.Options_Webinterface_Warning_Reason);
 
-        ImGui.Spacing();
+            ImGui.Spacing();
+            ImGui.Spacing();
+            ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudViolet, Language.Options_Webinterface_Warning_DoNot);
+            using (ImRaii.PushIndent(15.0f))
+            {
+                ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudViolet, Language.Options_Webinterface_DoNot_Port);
+                ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudViolet, Language.Options_Webinterface_DoNot_Share);
+                ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudViolet, Language.Options_Webinterface_DoNot_Multibox);
+            }
+            ImGui.Spacing();
+            ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudOrange, Language.Options_Webinterface_Warning_Support);
+
+            ImGui.Spacing();
+        }
+
         ImGui.Separator();
         ImGui.Spacing();
 
@@ -136,10 +140,11 @@ internal sealed class Webinterface(Plugin plugin, Configuration mutable) : ISett
             {
                 ImGui.TextUnformatted(Language.Options_Webinterface_Hostname_Fail);
             }
+
+            ImGuiUtil.WrappedTextWithColor(ImGuiColors.HealerGreen, Language.Options_Webinterface_Note);
         }
 
         ImGui.Spacing();
         ImGui.Spacing();
-        ImGuiUtil.WrappedTextWithColor(ImGuiColors.HealerGreen, Language.Options_Webinterface_Note);
     }
 }
