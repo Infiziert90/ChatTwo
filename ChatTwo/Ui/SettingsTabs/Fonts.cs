@@ -27,7 +27,6 @@ public class Fonts : ISettingsTab
         if (!Mutable.FontsEnabled)
         {
             ImGuiUtil.FontSizeCombo(Language.Options_FontSize_Name, ref Mutable.FontSizeV2);
-            ImGuiUtil.HelpText($"[Old Size] {FontManager.SizeInPt(Mutable.FontSize)}pt"); // TODO Remove after 24.08
         }
         else
         {
@@ -41,7 +40,6 @@ public class Fonts : ISettingsTab
             if (ImGui.Button("Reset##global"))
                 Mutable.GlobalFontV2 = new SingleFontSpec{ FontId = new DalamudAssetFontAndFamilyId(DalamudAsset.NotoSansKrRegular), SizePt = 12.75f };
 
-            ImGuiUtil.HelpText($"[Old Font] {Mutable.GlobalFont} ({FontManager.SizeInPt(Mutable.FontSize)}pt)"); // TODO Remove after 24.08
             ImGuiUtil.HelpText(string.Format(Language.Options_Font_Description, Plugin.PluginName));
             ImGuiUtil.WarningText(Language.Options_Font_Warning);
             ImGui.Spacing();
@@ -57,7 +55,6 @@ public class Fonts : ISettingsTab
             if (ImGui.Button("Reset##japanese"))
                 Mutable.JapaneseFontV2 = new SingleFontSpec{ FontId = new DalamudAssetFontAndFamilyId(DalamudAsset.NotoSansJpMedium), SizePt = 12.75f };
 
-            ImGuiUtil.HelpText($"[Old Font] {Mutable.JapaneseFont} ({FontManager.SizeInPt(Mutable.JapaneseFontSize)}pt)"); // TODO Remove after 24.08
             ImGuiUtil.HelpText(string.Format(Language.Options_JapaneseFont_Description, Plugin.PluginName));
             ImGui.Spacing();
 
@@ -92,7 +89,6 @@ public class Fonts : ISettingsTab
         }
 
         ImGuiUtil.FontSizeCombo(Language.Options_SymbolsFontSize_Name, ref Mutable.SymbolsFontSizeV2);
-        ImGuiUtil.HelpText($"[Old Size] {FontManager.SizeInPt(Mutable.SymbolsFontSize)}pt"); // TODO Remove after 24.08
         ImGuiUtil.HelpText(Language.Options_SymbolsFontSize_Description);
 
         ImGui.Spacing();

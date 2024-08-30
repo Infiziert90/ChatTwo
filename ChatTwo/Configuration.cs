@@ -103,13 +103,6 @@ internal class Configuration : IPluginConfiguration
         SizePt = 12.75f,
     };
 
-    // TODO Remove after 24.08
-    public float FontSize = 17f;
-    public float JapaneseFontSize = 17f;
-    public float SymbolsFontSize = 17f;
-    public string GlobalFont = "Chat 2: Noto Sans";
-    public string JapaneseFont = "Chat 2: Noto Sans JP";
-
     public float TooltipOffset;
     public float WindowAlpha = 100f;
     public Dictionary<ChatType, uint> ChatColours = new();
