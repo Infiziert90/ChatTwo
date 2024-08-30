@@ -151,6 +151,12 @@
   <data name="Options_PrettierTimestamps_Description">
     <value>Exibir mensagens com um estilo mais moderno.</value>
   </data>
+  <data name="Options_Use24HourClock_Name">
+    <value>24-hour clock</value>
+  </data>
+  <data name="Options_Use24HourClock_Description">
+    <value>Display timestamps as their 24-hour clock version.</value>
+  </data>
   <data name="Options_MoreCompactPretty_Name">
     <value>Interface moderna compacta</value>
   </data>
@@ -457,6 +463,9 @@
   <data name="Options_Miscellaneous_Tab">
     <value>Diversos</value>
   </data>
+  <data name="Options_Webinterface_Tab">
+    <value>Webinterface</value>
+  </data>
   <data name="LanguageOverride_None">
     <value>Usar idioma padrão do Dalamud</value>
   </data>
@@ -541,6 +550,18 @@
   <data name="Options_SortAutoTranslate_Description">
     <value>Se esta opção estiver habilitada, a lista de tradução automática será classificada em ordem alfabética.</value>
   </data>
+  <data name="Options_WebinterfaceEnable_Name">
+    <value>Enabled</value>
+  </data>
+  <data name="Options_WebinterfaceEnable_Description">
+    <value>Enables the webinterface that can be accessed with a browser.</value>
+  </data>
+  <data name="Options_WebinterfaceAutoStart_Name">
+    <value>Start automatically</value>
+  </data>
+  <data name="Options_WebinterfaceAutoStart_Description">
+    <value>Webinterface will start alongside the plugin automatically</value>
+  </data>
   <data name="Options_OverrideStyle_Name">
     <value>Substituir estilo</value>
   </data>
@@ -552,6 +573,21 @@
   </data>
   <data name="Options_ChatTabBackwardKeybind_Name">
     <value>Cycle chat tab backwards keybind</value>
+  </data>
+  <data name="Webinterface_CurrentPassword">
+    <value>Authcode:</value>
+  </data>
+  <data name="Webinterface_PasswordReset_Tooltip">
+    <value>Reset your password and invalidate all session tokens.</value>
+  </data>
+  <data name="Webinterface_Controls">
+    <value>Control Panel:</value>
+  </data>
+  <data name="Webinterface_Controls_Active">
+    <value>Active:</value>
+  </data>
+  <data name="Webinterface_Controls_Url">
+    <value>URL:</value>
   </data>
   <data name="Keybind_None">
     <value>none set</value>
@@ -958,6 +994,9 @@
   <data name="Context_CopySuccess">
     <value>Mensagem copiada para área de transferência</value>
   </data>
+  <data name="PartyInvite_NoId">
+    <value>Unable to find ID for this message, please try another one.</value>
+  </data>
   <data name="Context_CopyLink" xml:space="preserve">
         <value>Copiar links para área de transferência</value>
     </data>
@@ -1272,5 +1311,59 @@
     </data>
   <data name="Chat_SendTell_Error" xml:space="preserve">
         <value>An error occured while sending this tell message</value>
+    </data>
+  <data name="Webinterface_Stop_Success" xml:space="preserve">
+        <value>Webinterface was stopped.</value>
+    </data>
+  <data name="Webinterface_Stop_Failed" xml:space="preserve">
+        <value>Webinterface failed to stop. Check /xllog for more information.</value>
+    </data>
+  <data name="Webinterface_Button_Stop" xml:space="preserve">
+        <value>Stop</value>
+    </data>
+  <data name="Webinterface_Button_Start" xml:space="preserve">
+        <value>Start</value>
+    </data>
+  <data name="Webinterface_Start_Success" xml:space="preserve">
+        <value>Webinterface was started.</value>
+    </data>
+  <data name="Webinterface_Start_Failed" xml:space="preserve">
+        <value>Webinterface failed to start. Check /xllog for more information.</value>
+    </data>
+  <data name="Webinterface_Option_Port_Name" xml:space="preserve">
+        <value>Port</value>
+    </data>
+  <data name="Webinterface_Option_Port_Description" xml:space="preserve">
+        <value>The port this webinterface will be running on.</value>
+    </data>
+  <data name="Options_Webinterface_Warning_Header" xml:space="preserve">
+        <value>After checking 'Enabled' and clicking 'Start' this will load up Chat2's built-in web interface, which will allow devices on your network to access in-game chat. This feature may be used to allow a phone or another computer to see Chat2 activity, switch channels, and send messages as though you were typing in FFXIV itself.</value>
+    </data>
+  <data name="Options_Webinterface_Warning_Reason" xml:space="preserve">
+        <value>For reasons of account security, this feature is not intended for use outside of your local network, you have been warned!</value>
+    </data>
+  <data name="Options_Webinterface_Warning_DoNot" xml:space="preserve">
+        <value>Do Not:</value>
+    </data>
+  <data name="Options_Webinterface_DoNot_Port" xml:space="preserve">
+        <value>- Forward the port used (9000)</value>
+    </data>
+  <data name="Options_Webinterface_DoNot_Share" xml:space="preserve">
+        <value>- Share your authentication code with anyone else</value>
+    </data>
+  <data name="Options_Webinterface_DoNot_Multibox" xml:space="preserve">
+        <value>- Expect multi-boxing to work with this (only first client works)</value>
+    </data>
+  <data name="Options_Webinterface_Warning_Support" xml:space="preserve">
+        <value>No support will be provided if any of the 'Do Not' clauses aren't respected and adhered to appropriately.</value>
+    </data>
+  <data name="Options_Webinterface_Hostname_Fail" xml:space="preserve">
+        <value>Unable to resolve hostname.</value>
+    </data>
+  <data name="Options_Webinterface_Note" xml:space="preserve">
+        <value>Note: This will require at least a semi-modern browser in order to function correctly.</value>
+    </data>
+  <data name="Webinterface_UsageNotice" xml:space="preserve">
+        <value>Usage Notice</value>
     </data>
 </root>

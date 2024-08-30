@@ -151,6 +151,12 @@
   <data name="Options_PrettierTimestamps_Description">
     <value>Affiche les messages dans un style plus moderne.</value>
   </data>
+  <data name="Options_Use24HourClock_Name">
+    <value>Horloge sur 24 heures</value>
+  </data>
+  <data name="Options_Use24HourClock_Description">
+    <value>Afficher les horodatages en version 24 heures.</value>
+  </data>
   <data name="Options_MoreCompactPretty_Name">
     <value>Mise en page moderne et davantage compacte</value>
   </data>
@@ -457,6 +463,9 @@
   <data name="Options_Miscellaneous_Tab">
     <value>Divers</value>
   </data>
+  <data name="Options_Webinterface_Tab">
+    <value>Interface web</value>
+  </data>
   <data name="LanguageOverride_None">
     <value>Utiliser la langue par défaut de Dalamud</value>
   </data>
@@ -541,6 +550,18 @@
   <data name="Options_SortAutoTranslate_Description">
     <value>Si cette option est activée, la liste de Traduction Automatique sera triée par ordre alphabétique.</value>
   </data>
+  <data name="Options_WebinterfaceEnable_Name">
+    <value>Activé</value>
+  </data>
+  <data name="Options_WebinterfaceEnable_Description">
+    <value>Activer l'interface web accessible depuis un navigateur.</value>
+  </data>
+  <data name="Options_WebinterfaceAutoStart_Name">
+    <value>Démarrer automatiquement</value>
+  </data>
+  <data name="Options_WebinterfaceAutoStart_Description">
+    <value>L'interface web démarrera automatiquement avec le plugin</value>
+  </data>
   <data name="Options_OverrideStyle_Name">
     <value>Remplacer le style</value>
   </data>
@@ -548,16 +569,31 @@
     <value>Style</value>
   </data>
   <data name="Options_ChatTabForwardKeybind_Name">
-    <value>Cycle chat tab forwards keybind</value>
+    <value>Raccourci clavier pour faire défiler l'onglet de discussion vers l'avant</value>
   </data>
   <data name="Options_ChatTabBackwardKeybind_Name">
-    <value>Cycle chat tab backwards keybind</value>
+    <value>Raccourci clavier pour faire défiler l'onglet de discussion vers l'arrière</value>
+  </data>
+  <data name="Webinterface_CurrentPassword">
+    <value>Code d'authentification :</value>
+  </data>
+  <data name="Webinterface_PasswordReset_Tooltip">
+    <value>Réinitialisez votre mot de passe et invalidez tous les jetons de session.</value>
+  </data>
+  <data name="Webinterface_Controls">
+    <value>Panneau de configuration :</value>
+  </data>
+  <data name="Webinterface_Controls_Active">
+    <value>Actif :</value>
+  </data>
+  <data name="Webinterface_Controls_Url">
+    <value>URL :</value>
   </data>
   <data name="Keybind_None">
-    <value>none set</value>
+    <value>aucune valeur définie</value>
   </data>
   <data name="Keybind_EscToClear">
-    <value>ESC to clear</value>
+    <value>Échap pour effacer</value>
   </data>
   <data name="Keybind_Modifier_Ctrl">
     <value>Ctrl</value>
@@ -958,6 +994,9 @@
   <data name="Context_CopySuccess">
     <value>Copier le message dans le presse-papiers</value>
   </data>
+  <data name="PartyInvite_NoId">
+    <value>Impossible de trouver l'ID de ce message, veuillez en essayer un autre.</value>
+  </data>
   <data name="Context_CopyLink" xml:space="preserve">
         <value>Copier le lien dans le presse-papiers</value>
     </data>
@@ -1272,5 +1311,59 @@
     </data>
   <data name="Chat_SendTell_Error" xml:space="preserve">
         <value>Une erreur s'est produite pendant l'envoi du message</value>
+    </data>
+  <data name="Webinterface_Stop_Success" xml:space="preserve">
+        <value>L'interface web a été arrêtée.</value>
+    </data>
+  <data name="Webinterface_Stop_Failed" xml:space="preserve">
+        <value>L'arrêt de l'interface Web a échoué. Consultez /xllog pour plus d'informations.</value>
+    </data>
+  <data name="Webinterface_Button_Stop" xml:space="preserve">
+        <value>Arrêter</value>
+    </data>
+  <data name="Webinterface_Button_Start" xml:space="preserve">
+        <value>Démarrer</value>
+    </data>
+  <data name="Webinterface_Start_Success" xml:space="preserve">
+        <value>L'interface Web a été démarrée.</value>
+    </data>
+  <data name="Webinterface_Start_Failed" xml:space="preserve">
+        <value>Échec du démarrage de l'interface Web. Vérifiez /xllog pour plus d'informations.</value>
+    </data>
+  <data name="Webinterface_Option_Port_Name" xml:space="preserve">
+        <value>Port</value>
+    </data>
+  <data name="Webinterface_Option_Port_Description" xml:space="preserve">
+        <value>Le port sur lequel s'exécutera cette interface web.</value>
+    </data>
+  <data name="Options_Webinterface_Warning_Header" xml:space="preserve">
+        <value>Après avoir coché 'Activé' et cliquez sur 'Démarrer', cela chargera l'interface web intégrée de Chat2, qui permettra aux périphériques de votre réseau d'accéder au chat en jeu. Cette fonctionnalité peut être utilisée pour permettre à un téléphone ou à un autre ordinateur de voir l'activité de Chat2, changer de canal, et envoyer des messages comme si vous écriviez dans FFXIV.</value>
+    </data>
+  <data name="Options_Webinterface_Warning_Reason" xml:space="preserve">
+        <value>Pour des raisons de sécurité du compte, cette fonctionnalité n'est pas destinée à être utilisée en dehors de votre réseau local, vous avez été averti !</value>
+    </data>
+  <data name="Options_Webinterface_Warning_DoNot" xml:space="preserve">
+        <value>Ne pas faire :</value>
+    </data>
+  <data name="Options_Webinterface_DoNot_Port" xml:space="preserve">
+        <value>- Rediriger le port utilisé (9000)</value>
+    </data>
+  <data name="Options_Webinterface_DoNot_Share" xml:space="preserve">
+        <value>- Partager votre code d'authentification avec n'importe qui d'autre</value>
+    </data>
+  <data name="Options_Webinterface_DoNot_Multibox" xml:space="preserve">
+        <value>- Vous attendre à ce que le multi-boxing fonctionne avec ça (seul le premier client fonctionne)</value>
+    </data>
+  <data name="Options_Webinterface_Warning_Support" xml:space="preserve">
+        <value>Aucune assistance ne sera fournie si l'une des clauses "Ne pas faire" n'est pas respectée et observée de manière appropriée.</value>
+    </data>
+  <data name="Options_Webinterface_Hostname_Fail" xml:space="preserve">
+        <value>Impossible de résoudre le nom d'hôte.</value>
+    </data>
+  <data name="Options_Webinterface_Note" xml:space="preserve">
+        <value>Note : Cela nécessitera au moins un navigateur semi-moderne pour fonctionner correctement.</value>
+    </data>
+  <data name="Webinterface_UsageNotice" xml:space="preserve">
+        <value>Notice d'utilisation</value>
     </data>
 </root>
