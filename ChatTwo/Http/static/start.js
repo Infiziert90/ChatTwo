@@ -147,7 +147,7 @@
         const frag = document.createDocumentFragment();
 
         for( const template of templates ) {
-            const spanElement = frag.createElement('span');
+            const spanElement = document.createElement('span');
             switch (template.payload) {
                 case 'text':
                     this.processTextTemplate(template, spanElement);
@@ -165,7 +165,7 @@
                     continue;
             }
 
-            frag.appendChild(this.processTemplate(template));
+            frag.appendChild(spanElement);
         }
 
         return frag;
@@ -173,7 +173,10 @@
 
     processTextTemplate(template, spanContent) {
         spanContent.innerText = template.content;
-        this.processColor(template, spanContent);
+        if (template.color !== 0)
+        {
+            this.processColor(template, spanContent);
+        }
     }
 
     processUrlTemplate(template, spanContent) {
@@ -182,7 +185,10 @@
         urlElement.href = encodeURI(template.content);
         urlElement.target = '_blank'
 
-        this.processColor(template, spanContent);
+        if (template.color !== 0)
+        {
+            this.processColor(template, spanContent);
+        }
     }
 
     // converts a RGBA uint number to components

@@ -65,6 +65,8 @@ public struct MessageTemplate()
 
     /// <summary>
     /// Used for text and url
+    ///
+    /// Ignore if 0!
     /// </summary>
     [JsonProperty("color")] public uint Color;
 
