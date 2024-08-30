@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using System.Net;
 using ChatTwo.Code;
 using ChatTwo.Http.MessageProtocol;
 using ChatTwo.Util;
@@ -16,9 +15,9 @@ public class Processing
         Plugin = plugin;
     }
 
-    internal string ReadChannelName(Chunk[] channelName)
+    internal MessageTemplate[] ReadChannelName(Chunk[] channelName)
     {
-        return string.Join("", channelName.Select(chunk => ProcessChunk(chunk, noColor: true)));
+        return channelName.Select(ProcessChunk).ToArray();
     }
 
     internal async Task<MessageResponse[]> ReadMessageList()
@@ -34,12 +33,9 @@ public class Processing
             Timestamp = message.Date.ToLocalTime().ToString("t", !Plugin.Config.Use24HourClock ? null : CultureInfo.CreateSpecificCulture("es-ES"))
         };
 
-        var content = "";
-        if (message.Sender.Count > 0)
-            content = message.Sender.Aggregate(content, (current, chunk) => current + ProcessChunk(chunk));
-
-        content = message.Content.Aggregate(content, (current, chunk) => current + ProcessChunk(chunk));
-        response.Message = content;
+        var sender = message.Sender.Select(ProcessChunk);
+        var content = message.Content.Select(ProcessChunk);
+        response.Templates = sender.Concat(content).ToArray();
 
         return response;
     }
@@ -56,13 +52,12 @@ public class Processing
         sse.OutboundQueue.Enqueue(new ChannelListEvent(new ChannelList(channels.ToDictionary(pair => pair.Key, pair => (uint)pair.Value))));
     }
 
-    private string ProcessChunk(Chunk chunk, bool noColor = false)
+    private MessageTemplate ProcessChunk(Chunk chunk)
     {
         if (chunk is IconChunk { } icon)
         {
-            return IconUtil.GfdFileView.TryGetEntry((uint) icon.Icon, out _)
-                ? $"<span class=\"gfd-icon gfd-icon-hq-{(uint)icon.Icon}\"></span>"
-                : "";
+            var iconId = (uint)icon.Icon;
+            return IconUtil.GfdFileView.TryGetEntry(iconId, out _) ? new MessageTemplate {Payload = "icon", Id = iconId}: MessageTemplate.Empty;
         }
 
         if (chunk is TextChunk { } text)
@@ -71,20 +66,18 @@ public class Processing
             {
                 var image = EmoteCache.GetEmote(emotePayload.Code);
 
-                // The emote name should be safe, it is checked against a list from BTTV.
-                // Still sanitizing it for the extra safety.
                 if (image is { Failed: false })
-                    return $"<span class=\"emote-icon\"><img src=\"/emote/{WebUtility.HtmlEncode(emotePayload.Code)}\"></span>";
+                    return new MessageTemplate { Payload = "emote", Color = 0, Content = emotePayload.Code };
             }
 
-            var colour = text.Foreground;
-            if (colour == null && text.FallbackColour != null)
+            var color = text.Foreground;
+            if (color == null && text.FallbackColour != null)
             {
                 var type = text.FallbackColour.Value;
-                colour = Plugin.Config.ChatColours.TryGetValue(type, out var col) ? col : type.DefaultColor();
+                color = Plugin.Config.ChatColours.TryGetValue(type, out var col) ? col : type.DefaultColor();
             }
 
-            var color = ColourUtil.RgbaToComponents(colour ?? 0);
+            color ??= 0;
 
             var userContent = text.Content ?? "";
             if (Plugin.ChatLogWindow.ScreenshotMode)
@@ -95,17 +88,10 @@ public class Processing
                     userContent = Plugin.ChatLogWindow.HidePlayerInString(userContent, player.Name.TextValue, player.HomeWorld.Id);
             }
 
-            // HTML encode any user content to prevent xss
-            userContent = WebUtility.HtmlEncode(userContent);
-
-            if (text.Link is UriPayload uri)
-                userContent = $"<a href=\"{uri.Uri}\" target=\"_blank\">{userContent}</a>";
-
-            return noColor
-                ? userContent
-                : $"<span style=\"color:rgba({color.r}, {color.g}, {color.b}, {color.a})\">{userContent}</span>";
+            var isNotUrl = text.Link is not UriPayload;
+            return new MessageTemplate { Payload = isNotUrl ? "text" : "url", Color = color.Value, Content = userContent };
         }
 
-        return string.Empty;
+        return MessageTemplate.Empty;
     }
 }

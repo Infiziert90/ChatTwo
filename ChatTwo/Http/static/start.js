@@ -72,8 +72,12 @@
         });
     }
 
-    updateChannelHint(labelHTML) {
-        this.elements.channelHint.innerHTML = labelHTML;
+    updateChannelHint(templates) {
+        this.elements.channelHint.innerHTML = '';
+
+        for(const template of templates) {
+            this.elements.channelHint.appendChild(this.processTemplate(template));
+        }
     }
 
     updateChannels(channels) {
@@ -131,7 +135,10 @@
         spanMessage.classList.add('message');
 
         spanTimestamp.innerText = messageData.timestamp;
-        spanMessage.innerHTML = messageData.messageHTML;
+
+        for(const template of messageData.templates) {
+            spanMessage.appendChild(this.processTemplate(template));
+        }
 
         liMessage.appendChild(spanTimestamp);
         liMessage.appendChild(spanMessage);
@@ -140,6 +147,67 @@
         if (scrolledToBottom) {
             this.scrollMessagesToBottom();
         }
+    }
+
+    processTemplate(template) {
+        const spanElement = document.createElement('span');
+        switch (template.payload) {
+            case 'text':
+                this.processTextTemplate(template, spanElement);
+                break;
+            case 'url':
+                this.processUrlTemplate(template, spanElement);
+                break;
+            case 'emote':
+                this.processEmote(template, spanElement);
+                break;
+            case 'icon':
+                this.processIcon(template, spanElement);
+                break;
+            case 'empty':
+                // Do nothing
+                break;
+        }
+
+        return spanElement;
+    }
+
+    processTextTemplate(template, spanContent) {
+        spanContent.innerText = template.content;
+        this.processColor(template, spanContent);
+    }
+
+    processUrlTemplate(template, spanContent) {
+        // TODO Sanitize href?
+        let urlElement = document.createElement('a');
+        urlElement.innerText = template.content;
+        urlElement.href = template.content;
+        urlElement.target = '_blank'
+
+        this.processColor(template, spanContent);
+    }
+
+    processColor(template, spanContent) {
+        let r = (template.color & 0xFF000000) >>> 24;
+        let g = (template.color & 0xFF0000) >>> 16;
+        let b = (template.color & 0xFF00) >>> 8;
+        let a = (template.color & 0xFF) / 255.0;
+
+        spanContent.style.color = `rgba(${r}, ${g}, ${b}, ${a})`;
+    }
+
+    processEmote(template, spanContent) {
+        // TODO Sanitize url?
+        let imgElement = document.createElement('img');
+        imgElement.src = `/emote/${template.content}`;
+
+        spanContent.classList.add('emote-icon');
+        spanContent.appendChild(imgElement);
+    }
+
+    processIcon(template, spanContent) {
+        spanContent.classList.add('gfd-icon');
+        spanContent.classList.add(`gfd-icon-hq-${template.id}`);
     }
 
     clearAllMessages() {
@@ -156,7 +224,7 @@
 
         this.sse.addEventListener('switch-channel', (event) => {
             try {
-                this.updateChannelHint(JSON.parse(event.data).channel);
+                this.updateChannelHint(JSON.parse(event.data).channelName);
             } catch (error) {
                 console.error(error);
             }
