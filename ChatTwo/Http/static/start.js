@@ -74,10 +74,7 @@
 
     updateChannelHint(templates) {
         this.elements.channelHint.innerHTML = '';
-
-        for(const template of templates) {
-            this.elements.channelHint.appendChild(this.processTemplate(template));
-        }
+        this.elements.channelHint.appendChild(this.processTemplate(templates));
     }
 
     updateChannels(channels) {
@@ -131,14 +128,11 @@
         const liMessage = document.createElement('li');
         const spanTimestamp = document.createElement('span');
         spanTimestamp.classList.add('timestamp');
-        const spanMessage = document.createElement('span');
-        spanMessage.classList.add('message');
-
         spanTimestamp.innerText = messageData.timestamp;
 
-        for(const template of messageData.templates) {
-            spanMessage.appendChild(this.processTemplate(template));
-        }
+        const spanMessage = document.createElement('span');
+        spanMessage.classList.add('message');
+        spanMessage.appendChild(this.processTemplate(messageData.templates))
 
         liMessage.appendChild(spanTimestamp);
         liMessage.appendChild(spanMessage);
@@ -149,27 +143,32 @@
         }
     }
 
-    processTemplate(template) {
-        const spanElement = document.createElement('span');
-        switch (template.payload) {
-            case 'text':
-                this.processTextTemplate(template, spanElement);
-                break;
-            case 'url':
-                this.processUrlTemplate(template, spanElement);
-                break;
-            case 'emote':
-                this.processEmote(template, spanElement);
-                break;
-            case 'icon':
-                this.processIcon(template, spanElement);
-                break;
-            case 'empty':
-                // Do nothing
-                break;
+    processTemplate(templates) {
+        const frag = document.createDocumentFragment();
+
+        for( const template of templates ) {
+            const spanElement = frag.createElement('span');
+            switch (template.payload) {
+                case 'text':
+                    this.processTextTemplate(template, spanElement);
+                    break;
+                case 'url':
+                    this.processUrlTemplate(template, spanElement);
+                    break;
+                case 'emote':
+                    this.processEmote(template, spanElement);
+                    break;
+                case 'icon':
+                    this.processIcon(template, spanElement);
+                    break;
+                case 'empty':
+                    continue;
+            }
+
+            frag.appendChild(this.processTemplate(template));
         }
 
-        return spanElement;
+        return frag;
     }
 
     processTextTemplate(template, spanContent) {
@@ -178,27 +177,26 @@
     }
 
     processUrlTemplate(template, spanContent) {
-        // TODO Sanitize href?
-        let urlElement = document.createElement('a');
+        const urlElement = document.createElement('a');
         urlElement.innerText = template.content;
-        urlElement.href = template.content;
+        urlElement.href = encodeURI(template.content);
         urlElement.target = '_blank'
 
         this.processColor(template, spanContent);
     }
 
+    // converts a RGBA uint number to components
     processColor(template, spanContent) {
-        let r = (template.color & 0xFF000000) >>> 24;
-        let g = (template.color & 0xFF0000) >>> 16;
-        let b = (template.color & 0xFF00) >>> 8;
-        let a = (template.color & 0xFF) / 255.0;
+        const r = (template.color & 0xFF000000) >>> 24;
+        const g = (template.color & 0xFF0000) >>> 16;
+        const b = (template.color & 0xFF00) >>> 8;
+        const a = (template.color & 0xFF) / 255.0;
 
         spanContent.style.color = `rgba(${r}, ${g}, ${b}, ${a})`;
     }
 
     processEmote(template, spanContent) {
-        // TODO Sanitize url?
-        let imgElement = document.createElement('img');
+        const imgElement = document.createElement('img');
         imgElement.src = `/emote/${template.content}`;
 
         spanContent.classList.add('emote-icon');
