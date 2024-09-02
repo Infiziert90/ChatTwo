@@ -1087,6 +1087,12 @@
   <data name="Options_MaxLinesToShow_Description" xml:space="preserve">
         <value>Limita a quantidade de linhas de registro para mostrar na janela do bate-papo. Isso pode melhorar um pouco o desempenho.</value>
     </data>
+  <data name="Options_WebinterfaceMaxLinesToSend_Name" xml:space="preserve">
+        <value>Log line limit for the webinterface</value>
+    </data>
+  <data name="Options_WebinterfaceMaxLinesToSend_Description" xml:space="preserve">
+        <value>Limits the amount of log lines to show in the webinterface. This will improve loading performance.</value>
+    </data>
   <data name="LoadMessages_Error" xml:space="preserve">
         <value>Ocorreu um erro ao carregar o histórico do bate-papo. Por favor, consulte os registros do plugin para obter mais informações para reportar este problema.</value>
     </data>

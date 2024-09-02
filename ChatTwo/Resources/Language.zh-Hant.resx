@@ -1088,6 +1088,12 @@
   <data name="Options_MaxLinesToShow_Description" xml:space="preserve">
         <value>限制在聊天窗口種現實的日誌行數，性能可能會因此略有提高。</value>
     </data>
+  <data name="Options_WebinterfaceMaxLinesToSend_Name" xml:space="preserve">
+        <value>Log line limit for the webinterface</value>
+    </data>
+  <data name="Options_WebinterfaceMaxLinesToSend_Description" xml:space="preserve">
+        <value>Limits the amount of log lines to show in the webinterface. This will improve loading performance.</value>
+    </data>
   <data name="LoadMessages_Error" xml:space="preserve">
         <value>載入聊天日誌時發生錯誤，清查勘查間日誌已獲得更多新系已報告此問題。</value>
     </data>

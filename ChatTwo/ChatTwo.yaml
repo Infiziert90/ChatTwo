@@ -31,6 +31,7 @@ changelog:  |-
   - Can send chat messages through the web interface directly into the game itself
   - Easily copy & paste messages
   - Option for automatic starting the web interface feature
+  - Log lines render limit for faster loading performance [Default 1000]
 
   **Security**
   - This feature is not intended to be used outside of your local, private network

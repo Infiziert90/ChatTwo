@@ -1087,6 +1087,12 @@
   <data name="Options_MaxLinesToShow_Description" xml:space="preserve">
         <value>Limiteer het maximum aantal regels die worden getoont in het chatvester.</value>
     </data>
+  <data name="Options_WebinterfaceMaxLinesToSend_Name" xml:space="preserve">
+        <value>Log line limit for the webinterface</value>
+    </data>
+  <data name="Options_WebinterfaceMaxLinesToSend_Description" xml:space="preserve">
+        <value>Limits the amount of log lines to show in the webinterface. This will improve loading performance.</value>
+    </data>
   <data name="LoadMessages_Error" xml:space="preserve">
         <value>Er is een fout opgetreden tijdens het laden van de chatgeschiedenis. Bekijk de plugin logs voor meer informatie om dit probleem te rapporteren.</value>
     </data>

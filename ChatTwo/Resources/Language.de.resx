@@ -1088,6 +1088,12 @@ Sie wurden gewarnt.</value>
   <data name="Options_MaxLinesToShow_Description" xml:space="preserve">
         <value>Begrenzt die Anzahl der Nachrichten, die im Chatfenster angezeigt werden sollen. Dies kann die Leistung leicht verbessern.</value>
     </data>
+  <data name="Options_WebinterfaceMaxLinesToSend_Name" xml:space="preserve">
+        <value>Log line limit for the webinterface</value>
+    </data>
+  <data name="Options_WebinterfaceMaxLinesToSend_Description" xml:space="preserve">
+        <value>Limits the amount of log lines to show in the webinterface. This will improve loading performance.</value>
+    </data>
   <data name="LoadMessages_Error" xml:space="preserve">
         <value>Beim Laden des Chat-Verlaufs ist ein Fehler aufgetreten. Weitere Informationen finden Sie unter /xllog, um dieses Problem zu melden.</value>
     </data>

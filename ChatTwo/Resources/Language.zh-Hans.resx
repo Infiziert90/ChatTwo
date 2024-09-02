@@ -464,7 +464,7 @@
     <value>偏好</value>
   </data>
   <data name="Options_Webinterface_Tab">
-    <value>Webinterface</value>
+    <value>网页界面</value>
   </data>
   <data name="LanguageOverride_None">
     <value>使用Dalamud的默认语言</value>
@@ -551,16 +551,16 @@
     <value>如果启用此选项，定型文列表将按字母顺序排序。</value>
   </data>
   <data name="Options_WebinterfaceEnable_Name">
-    <value>Enabled</value>
+    <value>启用</value>
   </data>
   <data name="Options_WebinterfaceEnable_Description">
-    <value>Enables the webinterface that can be accessed with a browser.</value>
+    <value>启用可通过浏览器访问的网络界面。</value>
   </data>
   <data name="Options_WebinterfaceAutoStart_Name">
-    <value>Start automatically</value>
+    <value>自动启动</value>
   </data>
   <data name="Options_WebinterfaceAutoStart_Description">
-    <value>Webinterface will start alongside the plugin automatically</value>
+    <value>网页界面将随插件一同启动</value>
   </data>
   <data name="Options_OverrideStyle_Name">
     <value>覆盖样式</value>
@@ -575,16 +575,16 @@
     <value>倒序切换聊天标签页快捷键</value>
   </data>
   <data name="Webinterface_CurrentPassword">
-    <value>Authcode:</value>
+    <value>验证码:</value>
   </data>
   <data name="Webinterface_PasswordReset_Tooltip">
-    <value>Reset your password and invalidate all session tokens.</value>
+    <value>重置密码并使所有会话令牌失效。</value>
   </data>
   <data name="Webinterface_Controls">
-    <value>Control Panel:</value>
+    <value>控制面板:</value>
   </data>
   <data name="Webinterface_Controls_Active">
-    <value>Active:</value>
+    <value>活动状态:</value>
   </data>
   <data name="Webinterface_Controls_Url">
     <value>URL:</value>
@@ -1087,6 +1087,12 @@
   <data name="Options_MaxLinesToShow_Description" xml:space="preserve">
         <value>限制在聊天窗口中显示的日志行数。这可能会稍微提高性能。</value>
     </data>
+  <data name="Options_WebinterfaceMaxLinesToSend_Name" xml:space="preserve">
+        <value>Log line limit for the webinterface</value>
+    </data>
+  <data name="Options_WebinterfaceMaxLinesToSend_Description" xml:space="preserve">
+        <value>Limits the amount of log lines to show in the webinterface. This will improve loading performance.</value>
+    </data>
   <data name="LoadMessages_Error" xml:space="preserve">
         <value>加载聊天记录时发生错误。请查看插件日志以获取更多信息以报告此问题。</value>
     </data>
@@ -1313,57 +1319,57 @@
         <value>发送悄悄话时发生了错误</value>
     </data>
   <data name="Webinterface_Stop_Success" xml:space="preserve">
-        <value>Webinterface was stopped.</value>
+        <value>网页界面已停止。</value>
     </data>
   <data name="Webinterface_Stop_Failed" xml:space="preserve">
-        <value>Webinterface failed to stop. Check /xllog for more information.</value>
+        <value>网页界面停止失败。检查 /xllog 获取更多信息。</value>
     </data>
   <data name="Webinterface_Button_Stop" xml:space="preserve">
-        <value>Stop</value>
+        <value>停止</value>
     </data>
   <data name="Webinterface_Button_Start" xml:space="preserve">
-        <value>Start</value>
+        <value>启动</value>
     </data>
   <data name="Webinterface_Start_Success" xml:space="preserve">
-        <value>Webinterface was started.</value>
+        <value>网页界面已停止。</value>
     </data>
   <data name="Webinterface_Start_Failed" xml:space="preserve">
-        <value>Webinterface failed to start. Check /xllog for more information.</value>
+        <value>网页界面启动失败。检查 /xllog 获取更多信息。</value>
     </data>
   <data name="Webinterface_Option_Port_Name" xml:space="preserve">
-        <value>Port</value>
+        <value>端口</value>
     </data>
   <data name="Webinterface_Option_Port_Description" xml:space="preserve">
-        <value>The port this webinterface will be running on.</value>
+        <value>网页界面将运行在此端口。</value>
     </data>
   <data name="Options_Webinterface_Warning_Header" xml:space="preserve">
-        <value>After checking 'Enabled' and clicking 'Start' this will load up Chat2's built-in web interface, which will allow devices on your network to access in-game chat. This feature may be used to allow a phone or another computer to see Chat2 activity, switch channels, and send messages as though you were typing in FFXIV itself.</value>
+        <value>勾选 “启用” 并点击 “启动” 后，将加载 Chat2 的内置网络界面，并允许网络上的设备访问游戏内聊天。此功能可用手机或其他电脑看到 Chat2 的活动、切换频道和发送信息，就像在 最终幻想14 中打字一样。</value>
     </data>
   <data name="Options_Webinterface_Warning_Reason" xml:space="preserve">
-        <value>For reasons of account security, this feature is not intended for use outside of your local network, you have been warned!</value>
+        <value>出于账户安全考虑，此功能不适合在本地网络之外使用，你已收到警告!</value>
     </data>
   <data name="Options_Webinterface_Warning_DoNot" xml:space="preserve">
-        <value>Do Not:</value>
+        <value>注意事项:</value>
     </data>
   <data name="Options_Webinterface_DoNot_Port" xml:space="preserve">
-        <value>- Forward the port used (9000)</value>
+        <value>- 不要转发使用的端口 (9000)</value>
     </data>
   <data name="Options_Webinterface_DoNot_Share" xml:space="preserve">
-        <value>- Share your authentication code with anyone else</value>
+        <value>- 不要与任何人分享你的验证码</value>
     </data>
   <data name="Options_Webinterface_DoNot_Multibox" xml:space="preserve">
-        <value>- Expect multi-boxing to work with this (only first client works)</value>
+        <value>- 不要尝试在多个客户端中同时使用 (仅第一个客户端工作)</value>
     </data>
   <data name="Options_Webinterface_Warning_Support" xml:space="preserve">
-        <value>No support will be provided if any of the 'Do Not' clauses aren't respected and adhered to appropriately.</value>
+        <value>如果 “注意事项” 中的任何条款没有得到适当遵守，将不会提供任何支持。</value>
     </data>
   <data name="Options_Webinterface_Hostname_Fail" xml:space="preserve">
-        <value>Unable to resolve hostname.</value>
+        <value>无法解析主机名。</value>
     </data>
   <data name="Options_Webinterface_Note" xml:space="preserve">
-        <value>Note: This will require at least a semi-modern browser in order to function correctly.</value>
+        <value>注意：需要至少是个半现代浏览器才能正常运行。</value>
     </data>
   <data name="Webinterface_UsageNotice" xml:space="preserve">
-        <value>Usage Notice</value>
+        <value>使用须知</value>
     </data>
 </root>
