@@ -75,7 +75,7 @@ internal class Configuration : IPluginConfiguration
     public bool CollapseDuplicateMessages;
     public bool PlaySounds = true;
     public bool KeepInputFocus = true;
-    public int MaxLinesToRender = 10_000;
+    public int MaxLinesToRender = 10_000; // 1-10000
     public bool Use24HourClock;
 
     public bool ShowEmotes = true;
@@ -96,7 +96,7 @@ internal class Configuration : IPluginConfiguration
         FontId = new DalamudAssetFontAndFamilyId(DalamudAsset.NotoSansJpMedium),
         SizePt = 12.75f,
     };
-    public bool ItalicEnabled = false;
+    public bool ItalicEnabled;
     public SingleFontSpec ItalicFontV2 = new()
     {
         FontId = new DalamudAssetFontAndFamilyId(DalamudAsset.NotoSansKrRegular),
@@ -120,6 +120,7 @@ internal class Configuration : IPluginConfiguration
     public string WebinterfacePassword = WebinterfaceUtil.GenerateSimpleAuthCode();
     public int WebinterfacePort = 9000;
     public ConcurrentDictionary<string, bool> SessionTokens = [];
+    public int WebinterfaceMaxLinesToSend = 1000; // 1-10000
 
     internal void UpdateFrom(Configuration other, bool backToOriginal)
     {
@@ -188,6 +189,7 @@ internal class Configuration : IPluginConfiguration
         WebinterfaceAutoStart = other.WebinterfaceAutoStart;
         WebinterfacePassword = other.WebinterfacePassword;
         WebinterfacePort = other.WebinterfacePort;
+        WebinterfaceMaxLinesToSend = other.WebinterfaceMaxLinesToSend;
     }
 }
 

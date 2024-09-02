@@ -54,6 +54,10 @@ internal sealed class Webinterface(Plugin plugin, Configuration mutable) : ISett
             Mutable.WebinterfacePort = Math.Clamp(Mutable.WebinterfacePort, 1024, 49151);
         ImGui.Spacing();
 
+        if (ImGuiUtil.InputIntVertical(Language.Options_WebinterfaceMaxLinesToSend_Name, Language.Options_WebinterfaceMaxLinesToSend_Description, ref Mutable.WebinterfaceMaxLinesToSend))
+            Mutable.WebinterfaceMaxLinesToSend = Math.Clamp(Mutable.WebinterfaceMaxLinesToSend, 1, 10_000);
+        ImGui.Spacing();
+
         ImGuiUtil.WrappedTextWithColor(ImGuiColors.DalamudOrange, Language.Webinterface_CurrentPassword);
         ImGui.AlignTextToFramePadding();
         ImGui.TextUnformatted(Mutable.WebinterfacePassword);

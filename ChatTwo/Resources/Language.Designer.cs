@@ -3534,6 +3534,24 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Limits the amount of log lines to show in the webinterface. This will improve loading performance..
+        /// </summary>
+        internal static string Options_WebinterfaceMaxLinesToSend_Description {
+            get {
+                return ResourceManager.GetString("Options_WebinterfaceMaxLinesToSend_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Log line limit for the webinterface.
+        /// </summary>
+        internal static string Options_WebinterfaceMaxLinesToSend_Name {
+            get {
+                return ResourceManager.GetString("Options_WebinterfaceMaxLinesToSend_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Window opacity.
         /// </summary>
         internal static string Options_WindowOpacity_Name {

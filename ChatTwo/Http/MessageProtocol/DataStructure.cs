@@ -6,9 +6,10 @@ namespace ChatTwo.Http.MessageProtocol;
 /// <summary>
 /// Contains the current channel name
 /// </summary>
-public struct SwitchChannel(MessageTemplate[] channelName)
+public struct SwitchChannel((MessageTemplate[] ChannelName, bool Locked) channel)
 {
-    [JsonProperty("channelName")] public MessageTemplate[] ChannelName = channelName;
+    [JsonProperty("channelName")] public MessageTemplate[] ChannelName = channel.ChannelName;
+    [JsonProperty("channelLocked")] public bool Locked = channel.Locked;
 }
 
 /// <summary>

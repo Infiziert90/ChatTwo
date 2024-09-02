@@ -15,15 +15,16 @@ public class Processing
         Plugin = plugin;
     }
 
-    internal MessageTemplate[] ReadChannelName(Chunk[] channelName)
+    internal (MessageTemplate[] ChannelName, bool Locked) ReadChannelName(Chunk[] channelName)
     {
-        return channelName.Select(ProcessChunk).ToArray();
+        var locked = Plugin.ChatLogWindow.CurrentTab is not { Channel: null };
+        return (channelName.Select(ProcessChunk).ToArray(), locked);
     }
 
     internal async Task<MessageResponse[]> ReadMessageList()
     {
         var tabMessages = await Plugin.ChatLogWindow.CurrentTab!.Messages.GetCopy();
-        return tabMessages.Select(ReadMessageContent).ToArray();
+        return tabMessages.TakeLast(Plugin.Config.WebinterfaceMaxLinesToSend).Select(ReadMessageContent).ToArray();
     }
 
     internal MessageResponse ReadMessageContent(Message message)
@@ -44,11 +45,11 @@ public class Processing
     {
         var messages = await WebserverUtil.FrameworkWrapper(ReadMessageList);
         var channels = await Plugin.Framework.RunOnTick(Plugin.ChatLogWindow.GetAvailableChannels);
-        var channelName = await Plugin.Framework.RunOnTick(() => ReadChannelName(Plugin.ChatLogWindow.PreviousChannel));
+        var channel = await Plugin.Framework.RunOnTick(() => ReadChannelName(Plugin.ChatLogWindow.PreviousChannel));
 
         // Using the bulk message event to clear everything on the client side that may still exist
         sse.OutboundQueue.Enqueue(new BulkMessagesEvent(new Messages(messages)));
-        sse.OutboundQueue.Enqueue(new SwitchChannelEvent(new SwitchChannel(channelName)));
+        sse.OutboundQueue.Enqueue(new SwitchChannelEvent(new SwitchChannel(channel)));
         sse.OutboundQueue.Enqueue(new ChannelListEvent(new ChannelList(channels.ToDictionary(pair => pair.Key, pair => (uint)pair.Value))));
     }
 

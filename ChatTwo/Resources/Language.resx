@@ -1087,6 +1087,12 @@
     <data name="Options_MaxLinesToShow_Description" xml:space="preserve">
         <value>Limits the amount of log lines to show in the chat window. This may slightly improve performance.</value>
     </data>
+    <data name="Options_WebinterfaceMaxLinesToSend_Name" xml:space="preserve">
+        <value>Log line limit for the webinterface</value>
+    </data>
+    <data name="Options_WebinterfaceMaxLinesToSend_Description" xml:space="preserve">
+        <value>Limits the amount of log lines to show in the webinterface. This will improve loading performance.</value>
+    </data>
     <data name="LoadMessages_Error" xml:space="preserve">
         <value>An error occurred while loading chat history. Please see plugin logs for more information to report this issue.</value>
     </data>

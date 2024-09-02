@@ -20,6 +20,7 @@
         };
         this.maxTimestampWidth = 0;
         this.scrolledToBottom = true;
+        this.channelLocked = false;
 
 
         // channel selector
@@ -72,9 +73,21 @@
         });
     }
 
-    updateChannelHint(templates) {
+    updateChannelHint(channel) {
         this.elements.channelHint.innerHTML = '';
-        this.elements.channelHint.appendChild(this.processTemplate(templates));
+
+        const channelElement = this.processTemplate(channel.channelName);
+
+        // Makes the channel selector unclickable if the channel is fixed
+        this.channelLocked = channel.channelLocked;
+        if (this.channelLocked) {
+            channelElement.firstChild.innerText = `(Locked) ${channelElement.firstChild.innerText}`;
+            this.elements.channelSelect.style.pointerEvents = 'none';
+        } else {
+            this.elements.channelSelect.style.pointerEvents = 'auto';
+        }
+
+        this.elements.channelHint.appendChild(channelElement);
     }
 
     updateChannels(channels) {
@@ -228,7 +241,7 @@
 
         this.sse.addEventListener('switch-channel', (event) => {
             try {
-                this.updateChannelHint(JSON.parse(event.data).channelName);
+                this.updateChannelHint(JSON.parse(event.data));
             } catch (error) {
                 console.error(error);
             }
