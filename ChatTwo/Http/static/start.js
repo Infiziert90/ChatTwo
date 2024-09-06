@@ -84,7 +84,7 @@
             channelElement.firstChild.innerText = `(Locked) ${channelElement.firstChild.innerText}`;
             this.elements.channelSelect.style.pointerEvents = 'none';
         } else {
-            this.elements.channelSelect.style.pointerEvents = 'auto';
+            this.elements.channelSelect.style.removeProperty('pointer-events');
         }
 
         this.elements.channelHint.appendChild(channelElement);

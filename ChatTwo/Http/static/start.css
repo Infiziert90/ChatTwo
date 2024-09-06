@@ -298,7 +298,9 @@ section#input {
     display: inline-block;
     position: relative;
     width: 2rem;
+    height: 1px;
     vertical-align: middle;
+    overflow: visible;
 
     img {
         content: '';
