@@ -1503,7 +1503,6 @@ public sealed class ChatLogWindow : Window
 
                 AutoCompleteShouldScroll = true;
                 return 1;
-
             default:
                 if(ImGui.IsKeyPressed(ImGuiKey.Tab))
                 {
