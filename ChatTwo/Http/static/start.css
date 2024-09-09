@@ -303,7 +303,6 @@ section#input {
     overflow: visible;
 
     img {
-        content: '';
         display: block;
         position: absolute;
         top: 0;
