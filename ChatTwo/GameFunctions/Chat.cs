@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using ChatTwo.Code;
 using ChatTwo.GameFunctions.Types;
 using ChatTwo.Resources;
@@ -467,12 +467,12 @@ internal sealed unsafe class Chat : IDisposable
 
     internal void SendTellUsingCommandInner(byte[] message)
     {
-        var mes = new Utf8String(message);
+        var mes = Utf8String.FromSequence(message);
 
-        RaptureShellModule.Instance()->ExecuteCommandInner(&mes, UIModule.Instance());
+        RaptureShellModule.Instance()->ExecuteCommandInner(mes, UIModule.Instance());
         RaptureAtkModule.Instance()->ClearFocus(); // Clear the focus of vanilla chat that was still active
 
-        mes.Dtor(true);
+        mes->Dtor(true);
     }
 
     internal void SendTell(TellReason reason, ulong contentId, string name, ushort homeWorld, byte[] message, string rawText)
