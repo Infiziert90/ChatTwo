@@ -5,8 +5,7 @@ using Dalamud.Game;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Utility;
-using Lumina.Excel;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
 using Pidgin;
 using static Pidgin.Parser;
 using static Pidgin.Parser<char>;
@@ -18,13 +17,6 @@ internal static class AutoTranslate
 {
     private static readonly Dictionary<ClientLanguage, List<AutoTranslateEntry>> Entries = new();
     private static readonly HashSet<(uint, uint)> ValidEntries = [];
-
-    private static readonly ExcelSheet<Completion> CompletionSheet;
-
-    static AutoTranslate()
-    {
-        CompletionSheet = Plugin.DataManager.GetExcelSheet<Completion>()!;
-    }
 
     private static Parser<char, (string name, Maybe<IEnumerable<ISelectorPart>> selector)> Parser()
     {
@@ -125,117 +117,123 @@ internal static class AutoTranslate
 
         var parser = Parser();
         var list = new List<AutoTranslateEntry>();
-        foreach (var row in CompletionSheet)
-        {
-            var lookup = row.LookupTable.TextValue();
-            if (lookup is not ("" or "@"))
-            {
-                var (sheetName, selector) = parser.ParseOrThrow(lookup);
-                var sheetType = typeof(Completion)
-                    .Assembly
-                    .GetType($"Lumina.Excel.GeneratedSheets.{sheetName}")!;
-                var getSheet = Plugin.DataManager
-                    .GetType()
-                    .GetMethod("GetExcelSheet", Type.EmptyTypes)!
-                    .MakeGenericMethod(sheetType);
-                var sheet = (ExcelSheetImpl) getSheet.Invoke(Plugin.DataManager, null)!;
-                var rowParsers = sheet.GetRowParsers().ToArray();
 
-                var columns = new List<int>();
-                var rows = new List<Range>();
-                if (selector.HasValue)
-                {
-                    columns.Clear();
-                    rows.Clear();
-                    foreach (var part in selector.Value)
-                    {
-                        switch (part)
-                        {
-                            case IndexRange range:
-                            {
-                                var start = (int) range.Start;
-                                var end = (int) (range.End + 1);
-                                rows.Add(start..end);
-                                break;
-                            }
-                            case SingleRow single:
-                            {
-                                var idx = (int) single.Row;
-                                rows.Add(idx..(idx + 1));
-                                break;
-                            }
-                            case ColumnSpecifier col:
-                                columns.Add((int) col.Column);
-                                break;
-                        }
-                    }
-                }
-
-                if (columns.Count == 0)
-                    columns.Add(0);
-
-                var validRows = rowParsers.Select(p => p.RowId).ToArray();
-                if (rows.Count == 0)
-                    // We can't use an "index from end" (like `^0`) here because
-                    // we're iterating over integers, not an array directly.
-                    // Previously, we were setting `0..^0` which caused these
-                    // sheets to be completely skipped due to this bug.
-                    // See below.
-                    rows.Add(..Index.FromStart((int)validRows.Max() + 1));
-
-                foreach (var range in rows)
-                {
-                    // We iterate over the range by numerical values here, so
-                    // we can't use an "index from end" otherwise nothing will
-                    // happen.
-                    // See above.
-                    for (var i = range.Start.Value; i < range.End.Value; i++)
-                    {
-                        if (!validRows.Contains((uint) i))
-                            continue;
-
-                        foreach (var col in columns)
-                        {
-                            var rowParser = rowParsers.FirstOrDefault(p => p.RowId == i);
-                            if (rowParser == null)
-                                continue;
-
-                            var rawName = rowParser.ReadColumn<Lumina.Text.SeString>(col)!;
-                            var name = rawName.ToDalamudString();
-                            var text = name.TextValue;
-                            if (text.Length > 0)
-                            {
-                                list.Add(new AutoTranslateEntry(
-                                    row.Group,
-                                    (uint) i,
-                                    text,
-                                    name
-                                ));
-
-                                if (shouldAdd)
-                                    ValidEntries.Add((row.Group, (uint) i));
-                            }
-                        }
-                    }
-                }
-            }
-            else if (lookup is not "@")
-            {
-                var text = row.Text.ToDalamudString();
-                list.Add(new AutoTranslateEntry(
-                    row.Group,
-                    row.RowId,
-                    text.TextValue,
-                    text
-                ));
-
-                if (shouldAdd)
-                    ValidEntries.Add((row.Group, row.RowId));
-            }
-        }
-
+        // TODO REMOVE AFTER FIX
         Entries[Plugin.DataManager.Language] = list;
         return list;
+
+        // TODO FIX
+        // foreach (var row in Sheets.CompletionSheet)
+        // {
+        //     var lookup = row.LookupTable.ExtractText();
+        //     if (lookup is not ("" or "@"))
+        //     {
+        //         var (sheetName, selector) = parser.ParseOrThrow(lookup);
+        //         var sheetType = typeof(Completion)
+        //             .Assembly
+        //             .GetType($"Lumina.Excel.Sheets.{sheetName}")!;
+        //         var getSheet = Plugin.DataManager
+        //             .GetType()
+        //             .GetMethod("GetExcelSheet", Type.EmptyTypes)!
+        //             .MakeGenericMethod(sheetType);
+        //         var sheet = (ExcelSheetImpl) getSheet.Invoke(Plugin.DataManager, null)!;
+        //         var rowParsers = sheet.GetRowParsers().ToArray();
+        //
+        //         var columns = new List<int>();
+        //         var rows = new List<Range>();
+        //         if (selector.HasValue)
+        //         {
+        //             columns.Clear();
+        //             rows.Clear();
+        //             foreach (var part in selector.Value)
+        //             {
+        //                 switch (part)
+        //                 {
+        //                     case IndexRange range:
+        //                     {
+        //                         var start = (int) range.Start;
+        //                         var end = (int) (range.End + 1);
+        //                         rows.Add(start..end);
+        //                         break;
+        //                     }
+        //                     case SingleRow single:
+        //                     {
+        //                         var idx = (int) single.Row;
+        //                         rows.Add(idx..(idx + 1));
+        //                         break;
+        //                     }
+        //                     case ColumnSpecifier col:
+        //                         columns.Add((int) col.Column);
+        //                         break;
+        //                 }
+        //             }
+        //         }
+        //
+        //         if (columns.Count == 0)
+        //             columns.Add(0);
+        //
+        //         var validRows = rowParsers.Select(p => p.RowId).ToArray();
+        //         if (rows.Count == 0)
+        //             // We can't use an "index from end" (like `^0`) here because
+        //             // we're iterating over integers, not an array directly.
+        //             // Previously, we were setting `0..^0` which caused these
+        //             // sheets to be completely skipped due to this bug.
+        //             // See below.
+        //             rows.Add(..Index.FromStart((int)validRows.Max() + 1));
+        //
+        //         foreach (var range in rows)
+        //         {
+        //             // We iterate over the range by numerical values here, so
+        //             // we can't use an "index from end" otherwise nothing will
+        //             // happen.
+        //             // See above.
+        //             for (var i = range.Start.Value; i < range.End.Value; i++)
+        //             {
+        //                 if (!validRows.Contains((uint) i))
+        //                     continue;
+        //
+        //                 foreach (var col in columns)
+        //                 {
+        //                     var rowParser = rowParsers.FirstOrDefault(p => p.RowId == i);
+        //                     if (rowParser == null)
+        //                         continue;
+        //
+        //                     var rawName = rowParser.ReadColumn<Lumina.Text.SeString>(col)!;
+        //                     var name = rawName.ToDalamudString();
+        //                     var text = name.TextValue;
+        //                     if (text.Length > 0)
+        //                     {
+        //                         list.Add(new AutoTranslateEntry(
+        //                             row.Group,
+        //                             (uint) i,
+        //                             text,
+        //                             name
+        //                         ));
+        //
+        //                         if (shouldAdd)
+        //                             ValidEntries.Add((row.Group, (uint) i));
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        //     else if (lookup is not "@")
+        //     {
+        //         var text = row.Text.ToDalamudString();
+        //         list.Add(new AutoTranslateEntry(
+        //             row.Group,
+        //             row.RowId,
+        //             text.TextValue,
+        //             text
+        //         ));
+        //
+        //         if (shouldAdd)
+        //             ValidEntries.Add((row.Group, row.RowId));
+        //     }
+        // }
+        //
+        // Entries[Plugin.DataManager.Language] = list;
+        // return list;
     }
 
     internal static List<AutoTranslateEntry> Matching(string prefix, bool sort)

@@ -4,7 +4,7 @@ using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
 using Dalamud.Utility;
 using ImGuiNET;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
 
 namespace ChatTwo.Ui;
 
@@ -59,6 +59,6 @@ public class CommandHelpWindow : Window {
         if (Command == null)
             return;
 
-        LogWindow.DrawChunks(ChunkUtil.ToChunks(Command.Description.ToDalamudString(), ChunkSource.None, null).ToList());
+        LogWindow.DrawChunks(ChunkUtil.ToChunks(Command.Value.Description.ToDalamudString(), ChunkSource.None, null).ToList());
     }
 }

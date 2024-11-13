@@ -19,8 +19,10 @@ using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
 using Dalamud.Memory;
 using FFXIVClientStructs.FFXIV.Client.UI;
+using FFXIVClientStructs.FFXIV.Client.UI.Agent;
+using FFXIVClientStructs.FFXIV.Client.UI.Info;
 using ImGuiNET;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
 
 namespace ChatTwo.Ui;
 
@@ -57,7 +59,6 @@ public sealed class ChatLogWindow : Window
     private int InputBacklogIdx = -1;
     private int LastTab { get; set; }
     private InputChannel? TempChannel;
-    internal TellTarget? TellTarget;
     public bool TellSpecial;
     private readonly Stopwatch LastResize = new();
     private AutoCompleteInfo? AutoCompleteInfo;
@@ -128,7 +129,7 @@ public sealed class ChatLogWindow : Window
         Plugin.Commands.Register("/clearlog2").Execute -= ClearLog;
     }
 
-    private void Logout()
+    private void Logout(int _, int __)
     {
         Plugin.MessageManager.ClearAllTabs();
     }
@@ -138,8 +139,12 @@ public sealed class ChatLogWindow : Window
         Plugin.MessageManager.FilterAllTabsAsync();
     }
 
-    internal void Activated(ChatActivatedArgs args)
+    internal unsafe void Activated(ChatActivatedArgs args)
     {
+        // Return if we don't have a tab selected
+        if (CurrentTab == null)
+            return;
+
         TellSpecial = args.TellSpecial;
 
         Activate = true;
@@ -176,18 +181,18 @@ public sealed class ChatLogWindow : Window
 
                     var tellInfo = Plugin.Functions.Chat.GetTellHistoryInfo(idx);
                     if (tellInfo != null && reason != null)
-                        TellTarget = new TellTarget(tellInfo.Name, (ushort) tellInfo.World, tellInfo.ContentId, reason.Value);
+                        CurrentTab!.TellTarget = new TellTarget(tellInfo.Name, (ushort) tellInfo.World, tellInfo.ContentId, reason.Value);
                 }
                 else
                 {
-                    TellTarget = null;
+                    CurrentTab!.TellTarget = null;
                     if (target != null)
-                        TellTarget = target;
+                        CurrentTab!.TellTarget = target;
                 }
             }
             else
             {
-                TellTarget = null;
+                CurrentTab!.TellTarget = null;
             }
 
             if (info.Channel is InputChannel.Linkshell1 or InputChannel.CrossLinkshell1 && info.Rotate != RotateMode.None)
@@ -199,15 +204,13 @@ public sealed class ChatLogWindow : Window
                     // Rotate using the game's code.
                     if (info.Channel == InputChannel.Linkshell1)
                     {
-                        var idx = GameFunctions.Chat.RotateLinkshellHistory(info.Rotate);
-                        if (idx >= 0 && GameFunctions.Chat.ValidLinkshell((uint)idx))
-                            targetChannel = info.Channel + (uint)idx;
+                        GameFunctions.Chat.RotateLinkshellHistory(info.Rotate);
+                        targetChannel = (InputChannel) AgentChatLog.Instance()->CurrentChannel;
                     }
                     else
                     {
-                        var idx = GameFunctions.Chat.RotateCrossLinkshellHistory(info.Rotate);
-                        if (idx >= 0 && GameFunctions.Chat.ValidCrossLinkshell((uint)idx))
-                            targetChannel = info.Channel + (uint)idx;
+                        GameFunctions.Chat.RotateCrossLinkshellHistory(info.Rotate);
+                        targetChannel = (InputChannel)AgentChatLog.Instance()->CurrentChannel;
                     }
                 }
                 else
@@ -293,17 +296,19 @@ public sealed class ChatLogWindow : Window
                 AddTextCommandChannel(command, type);
         }
 
-        var echo = Sheets.TextCommandSheet.GetRow(116);
-        if (echo != null)
+        if (Sheets.TextCommandSheet.HasRow(116))
+        {
+            var echo = Sheets.TextCommandSheet.GetRow(116);
             AddTextCommandChannel(echo, ChatType.Echo);
+        }
     }
 
     private void AddTextCommandChannel(TextCommand command, ChatType type)
     {
-        TextCommandChannels[command.Command] = type;
-        TextCommandChannels[command.ShortCommand] = type;
-        TextCommandChannels[command.Alias] = type;
-        TextCommandChannels[command.ShortAlias] = type;
+        TextCommandChannels[command.Command.ExtractText()] = type;
+        TextCommandChannels[command.ShortCommand.ExtractText()] = type;
+        TextCommandChannels[command.Alias.ExtractText()] = type;
+        TextCommandChannels[command.ShortAlias.ExtractText()] = type;
     }
 
     private void SetUpAllCommands()
@@ -313,10 +318,10 @@ public sealed class ChatLogWindow : Window
 
         var commandNames = commands.SelectMany(cmd => new[]
         {
-            cmd.Command.RawString,
-            cmd.ShortCommand.RawString,
-            cmd.Alias.RawString,
-            cmd.ShortAlias.RawString,
+            cmd.Command.ExtractText(),
+            cmd.ShortCommand.ExtractText(),
+            cmd.Alias.ExtractText(),
+            cmd.ShortAlias.ExtractText(),
         });
 
         foreach (var command in commandNames)
@@ -673,8 +678,8 @@ public sealed class ChatLogWindow : Window
                     UIModule.PlaySound(ChatCloseSfx);
                 }
 
-                if (TempChannel is InputChannel.Tell)
-                    TellTarget = null;
+                if (TempChannel is InputChannel.Tell && CurrentTab != null)
+                    CurrentTab.TellTarget = null;
 
                 TempChannel = null;
                 if (Plugin.Functions.Chat.UsesTellTempChannel)
@@ -724,7 +729,7 @@ public sealed class ChatLogWindow : Window
         var channels = new Dictionary<string, InputChannel>();
         foreach (var channel in Enum.GetValues<InputChannel>())
         {
-            var name = Sheets.LogFilterSheet.FirstOrDefault(row => row.LogKind == (byte) channel.ToChatType())?.Name?.RawString ?? channel.ToChatType().Name();
+            var name = Sheets.LogFilterSheet.FirstOrNull(row => row.LogKind == (byte) channel.ToChatType())?.Name.ExtractText() ?? channel.ToChatType().Name();
             if (channel.IsLinkshell())
             {
                 var lsName = Plugin.Functions.Chat.GetLinkshellName(channel.LinkshellIndex());
@@ -774,14 +779,17 @@ public sealed class ChatLogWindow : Window
     internal Chunk[] ReadChannelName(Tab? activeTab)
     {
         Chunk[] channelNameChunks;
-        if (TellTarget != null)
+        if (activeTab?.TellTarget != null)
         {
-            var playerName = TellTarget.Name;
+            var playerName = activeTab.TellTarget.Name;
             if (ScreenshotMode)
                 // Note: don't use HidePlayerInString here because
                 // abbreviation settings do not affect this.
-                playerName = HashPlayer(TellTarget.Name, TellTarget.World);
-            var world = Sheets.WorldSheet.GetRow(TellTarget.World)?.Name?.RawString ?? "???";
+                playerName = HashPlayer(activeTab.TellTarget.Name, activeTab.TellTarget.World);
+
+            var world = Sheets.WorldSheet.HasRow(activeTab.TellTarget.World)
+                ? Sheets.WorldSheet.GetRow(activeTab.TellTarget.World).Name.ExtractText()
+                : "???";
 
             channelNameChunks =
             [
@@ -834,7 +842,9 @@ public sealed class ChatLogWindow : Window
                 // Note: don't use HidePlayerInString here because
                 // abbreviation settings do not affect this.
                 var playerName = HashPlayer(tellPlayerName, tellWorldId);
-                var world = Sheets.WorldSheet.GetRow(tellWorldId)?.Name?.RawString ?? "???";
+                var world = Sheets.WorldSheet.HasRow(tellWorldId)
+                    ? Sheets.WorldSheet.GetRow(tellWorldId).Name.ExtractText()
+                    : "???";
 
                 channelNameChunks =
                 [
@@ -862,7 +872,8 @@ public sealed class ChatLogWindow : Window
     internal void SetChannel(InputChannel? channel)
     {
         channel ??= InputChannel.Say;
-        TellTarget = null;
+        if (CurrentTab != null)
+            CurrentTab.TellTarget = null;
 
         // Instead of calling SetChannel(), we ask the ExtraChat plugin to set a
         // channel override by just calling the command directly.
@@ -901,8 +912,8 @@ public sealed class ChatLogWindow : Window
                 Plugin.Functions.Chat.SendTellUsingCommandInner(tellBytes);
 
                 TellSpecial = false;
-                if (TempChannel is InputChannel.Tell)
-                    TellTarget = null;
+                if (TempChannel is InputChannel.Tell && CurrentTab != null)
+                    CurrentTab.TellTarget = null;
 
                 Chat = string.Empty;
                 return;
@@ -910,9 +921,9 @@ public sealed class ChatLogWindow : Window
 
             if (!trimmed.StartsWith('/'))
             {
-                if (TellTarget != null)
+                if (CurrentTab?.TellTarget != null)
                 {
-                    var target = TellTarget;
+                    var target = CurrentTab.TellTarget;
                     var reason = target.Reason;
                     var world = Sheets.WorldSheet.GetRow(target.World);
                     if (world is { IsPublic: true })
@@ -927,7 +938,7 @@ public sealed class ChatLogWindow : Window
                     }
 
                     if (TempChannel is InputChannel.Tell)
-                        TellTarget = null;
+                        CurrentTab.TellTarget = null;
 
                     Chat = string.Empty;
                     return;
@@ -1213,6 +1224,7 @@ public sealed class ChatLogWindow : Window
             var switchedTab = LastTab != tabI;
             if (switchedTab)
                 TabChannelSwitch(tab);
+
             LastTab = tabI;
             tab.Unread = 0;
 
@@ -1588,12 +1600,12 @@ public sealed class ChatLogWindow : Window
         if (text.StartsWith('/'))
         {
             var command = text.Split(' ')[0];
-            var cmd = Sheets.TextCommandSheet.FirstOrDefault(cmd =>
-                cmd.Command.RawString == command || cmd.Alias.RawString == command ||
-                cmd.ShortCommand.RawString == command || cmd.ShortAlias.RawString == command);
+            var cmd = Sheets.TextCommandSheet.FirstOrNull(cmd =>
+                cmd.Command.ExtractText() == command || cmd.Alias.ExtractText() == command ||
+                cmd.ShortCommand.ExtractText() == command || cmd.ShortAlias.ExtractText() == command);
 
             if (cmd != null)
-                Plugin.CommandHelpWindow.UpdateContent(cmd);
+                Plugin.CommandHelpWindow.UpdateContent(cmd.Value);
         }
 
         if (data->EventFlag != ImGuiInputTextFlags.CallbackHistory)
@@ -1733,7 +1745,7 @@ public sealed class ChatLogWindow : Window
             if (chunk.Link is PlayerPayload playerPayload)
                 content = HidePlayerInString(content, playerPayload.PlayerName, playerPayload.World.RowId);
             else if (Plugin.ClientState.LocalPlayer is { } player)
-                content = HidePlayerInString(content, player.Name.TextValue, player.HomeWorld.Id);
+                content = HidePlayerInString(content, player.Name.TextValue, player.HomeWorld.RowId);
         }
 
         if (wrap)

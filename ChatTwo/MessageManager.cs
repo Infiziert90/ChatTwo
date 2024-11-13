@@ -8,8 +8,9 @@ using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Hooking;
 using Dalamud.Interface.ImGuiNotification;
 using Dalamud.Plugin.Services;
+using Dalamud.Utility;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
 
 namespace ChatTwo;
 
@@ -90,7 +91,7 @@ internal class MessageManager : IAsyncDisposable
         return Path.Join(Plugin.Interface.ConfigDirectory.FullName, "chat-sqlite.db");
     }
 
-    private void Logout()
+    private void Logout(int _, int __)
     {
         LastContentId = 0;
     }
@@ -298,11 +299,8 @@ internal class MessageManager : IAsyncDisposable
         if (Formats.TryGetValue(type, out var cached))
             return cached;
 
-        var logKind = Plugin.DataManager.GetExcelSheet<LogKind>()!.GetRow((ushort)type);
-        if (logKind == null)
-            return null;
-
-        var format = (SeString)logKind.Format;
+        var logKind = Plugin.DataManager.GetExcelSheet<LogKind>().GetRow((ushort)type);
+        var format = logKind.Format.ToDalamudString();
 
         static bool IsStringParam(Payload payload, byte num)
         {

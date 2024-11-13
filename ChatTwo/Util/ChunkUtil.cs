@@ -38,14 +38,14 @@ internal static class ChunkUtil
                 case PayloadType.UIForeground:
                     var foregroundPayload = (UIForegroundPayload) payload;
                     if (foregroundPayload.IsEnabled)
-                        foreground.Push(foregroundPayload.UIColor.UIForeground);
+                        foreground.Push(foregroundPayload.UIColor.Value.UIForeground);
                     else if (foreground.Count > 0)
                         foreground.Pop();
                     break;
                 case PayloadType.UIGlow:
                     var glowPayload = (UIGlowPayload) payload;
                     if (glowPayload.IsEnabled)
-                        glow.Push(glowPayload.UIColor.UIGlow);
+                        glow.Push(glowPayload.UIColor.Value.UIGlow);
                     else if (glow.Count > 0)
                         glow.Pop();
                     break;

@@ -237,20 +237,14 @@ internal class Tab
     public float Opacity = 100f;
     public bool InputDisabled;
 
-    [NonSerialized]
-    public uint Unread;
+    [NonSerialized] public uint Unread;
+    [NonSerialized] public long LastActivity;
+    [NonSerialized] public MessageList Messages = new();
 
-    [NonSerialized]
-    public long LastActivity;
+    [NonSerialized] public TellTarget? TellTarget;
+    [NonSerialized] public InputChannel? PreviousChannel;
 
-    [NonSerialized]
-    public MessageList Messages = new();
-
-    [NonSerialized]
-    public InputChannel? PreviousChannel;
-
-    [NonSerialized]
-    public Guid Identifier = Guid.NewGuid();
+    [NonSerialized] public Guid Identifier = Guid.NewGuid();
 
     internal bool Matches(Message message) => message.Matches(ChatCodes, ExtraChatAll, ExtraChatChannels);
 

@@ -4,9 +4,9 @@
     "net8.0-windows7.0": {
       "DalamudPackager": {
         "type": "Direct",
-        "requested": "[2.1.13, )",
-        "resolved": "2.1.13",
-        "contentHash": "rMN1omGe8536f4xLMvx9NwfvpAc9YFFfeXJ1t4P4PE6Gu8WCIoFliR1sh07hM+bfODmesk/dvMbji7vNI+B/pQ=="
+        "requested": "[11.0.0, )",
+        "resolved": "11.0.0",
+        "contentHash": "bjT7XUlhIJSmsE/O76b7weUX+evvGQctbQB8aKXt94o+oPWxHpCepxAGMs7Thow3AzCyqWs7cOpp9/2wcgRRQA=="
       },
       "EmbedIO": {
         "type": "Direct",
@@ -19,30 +19,31 @@
       },
       "MessagePack": {
         "type": "Direct",
-        "requested": "[2.5.140, )",
-        "resolved": "2.5.140",
-        "contentHash": "nkIsgy8BkIfv40bSz9XZb4q//scI1PF3AYeB5X66nSlIhBIqbdpLz8Qk3gHvnjV3RZglQLO/ityK3eNfLii2NA==",
+        "requested": "[3.0.238-rc.1, )",
+        "resolved": "3.0.238-rc.1",
+        "contentHash": "gAVmHb2gswXviGFpAmUgGBVvZEjYGph7Co5hp6IbshEooIuZT34Rv4YcBKvVnUCHdoqxQvK6DZIOPSLSYv3LjQ==",
         "dependencies": {
-          "MessagePack.Annotations": "2.5.140",
-          "Microsoft.NET.StringTools": "17.6.3",
-          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
+          "MessagePack.Annotations": "3.0.238-rc.1",
+          "MessagePackAnalyzer": "3.0.238-rc.1",
+          "Microsoft.NET.StringTools": "17.11.4"
         }
       },
       "Microsoft.Data.Sqlite": {
         "type": "Direct",
-        "requested": "[8.0.4, )",
-        "resolved": "8.0.4",
-        "contentHash": "vgLm03wS+CfsolO7qk4KVuvt0CtzgdjKmoORuwxMmiIF1ow1JlOo1vwfDHfwXnGa5+QEbvOUy3169bBcHshfTg==",
+        "requested": "[9.0.0, )",
+        "resolved": "9.0.0",
+        "contentHash": "lw6wthgXGx3r/U775k1UkUAWIn0kAT0wj4ZRq0WlhPx4WAOiBsIjgDKgWkXcNTGT0KfHiClkM+tyPVFDvxeObw==",
         "dependencies": {
-          "Microsoft.Data.Sqlite.Core": "8.0.4",
-          "SQLitePCLRaw.bundle_e_sqlite3": "2.1.6"
+          "Microsoft.Data.Sqlite.Core": "9.0.0",
+          "SQLitePCLRaw.bundle_e_sqlite3": "2.1.10",
+          "SQLitePCLRaw.core": "2.1.10"
         }
       },
       "Pidgin": {
         "type": "Direct",
-        "requested": "[3.2.3, )",
-        "resolved": "3.2.3",
-        "contentHash": "/1Q/f9asEZH7bogARG4EUxYT3LGB+mNC19db4unmx8gL04kkPzkg1VuX/BFk4UMJsqVopYComG/ydCrj1flCww=="
+        "requested": "[3.3.0, )",
+        "resolved": "3.3.0",
+        "contentHash": "2rvIoIogQG1+vqvXCuz1xiAVljaiacG/wCz/TNpN74TzWw+9iSCjhBLf7kVg24sBi6tArRdrcklHq49ovW2NLA=="
       },
       "SixLabors.ImageSharp": {
         "type": "Direct",
@@ -52,18 +53,18 @@
       },
       "Watson.Lite": {
         "type": "Direct",
-        "requested": "[6.2.2, )",
-        "resolved": "6.2.2",
-        "contentHash": "yRYcaRFSnqwy/rrPd+WIFLyvNfgTANo447KiK7j1mKpgUIYPNDAKYxqj9wkDVfvGIHxzt4z3CFK6eWOGWUYsuQ==",
+        "requested": "[6.2.3, )",
+        "resolved": "6.2.3",
+        "contentHash": "NGVWwQTulT016tiSuwK/AUU+Ebgyq0r0xLaWxll29xv/LTV0w4pHtoPskUPRqnzV8Po+ZndCd5dsUzGCjP0BVA==",
         "dependencies": {
-          "CavemanTcp": "2.0.2",
-          "Watson.Core": "6.2.2"
+          "CavemanTcp": "2.0.3",
+          "Watson.Core": "6.2.3"
         }
       },
       "CavemanTcp": {
         "type": "Transitive",
-        "resolved": "2.0.2",
-        "contentHash": "T161WxkgNTMC5SQPPDfLCGCD2j3YTvF0ZUGy/1pcGaYi6y7mcSzPymgVzG/6mOjAxJNGotK8hf1iOD8eT3bbhQ=="
+        "resolved": "2.0.3",
+        "contentHash": "/feSFO+5A1tS69Vv9XgD8+Ahz9iRcPj8r1kXIIVxeL+VjUzpPpVoAOtNG70oyu+b8M1RqthZAszaVQHpSPzuwg=="
       },
       "IpMatcher": {
         "type": "Transitive",
@@ -72,21 +73,26 @@
       },
       "MessagePack.Annotations": {
         "type": "Transitive",
-        "resolved": "2.5.140",
-        "contentHash": "JE3vwluOrsJ4t3hnfXzIxJUh6lhx6M/KR8Sark/HOUw1DJ5UKu5JsAnnuaQngg6poFkRx1lzHSLTkxHNJO7+uQ=="
+        "resolved": "3.0.238-rc.1",
+        "contentHash": "yvnpKGuxZuFHnYZ9N8WQXQn0J28w2f0evh0RekDtuxIEKGPw/qQLQXyQWFzMunfb/+pKTWYlUZR1rvvNcwl10A=="
+      },
+      "MessagePackAnalyzer": {
+        "type": "Transitive",
+        "resolved": "3.0.238-rc.1",
+        "contentHash": "qweXSZ+3mrf3RAqBs71vrF20SiNmqQdbrrt/L3749jh7OPpvdyZcHhOd20BSk+THQXgmmQfqF5F3o/J7S7tGCQ=="
       },
       "Microsoft.Data.Sqlite.Core": {
         "type": "Transitive",
-        "resolved": "8.0.4",
-        "contentHash": "x5FE5m1h31UIDEk0j3r38HtYvsa0fxd5jXzvE/SARI7LecXt/jm4z2SUl6TEoJGQOo9Ow2wg3a0MU2E1TVVAdA==",
+        "resolved": "9.0.0",
+        "contentHash": "cFfZjFL+tqzGYw9lB31EkV1IWF5xRQNk2k+MQd+Cf86Gl6zTeAoiZIFw5sRB1Z8OxpEC7nu+nTDsLSjieBAPTw==",
         "dependencies": {
-          "SQLitePCLRaw.core": "2.1.6"
+          "SQLitePCLRaw.core": "2.1.10"
         }
       },
       "Microsoft.NET.StringTools": {
         "type": "Transitive",
-        "resolved": "17.6.3",
-        "contentHash": "N0ZIanl1QCgvUumEL1laasU0a7sOE5ZwLZVTn0pAePnfhq8P7SvTjF8Axq+CnavuQkmdQpGNXQ1efZtu5kDFbA=="
+        "resolved": "17.11.4",
+        "contentHash": "mudqUHhNpeqIdJoUx2YDWZO/I9uEDYVowan89R6wsomfnUJQk6HteoQTlNjZDixhT2B4IXMkMtgZtoceIjLRmA=="
       },
       "RegexMatcher": {
         "type": "Transitive",
@@ -95,32 +101,32 @@
       },
       "SQLitePCLRaw.bundle_e_sqlite3": {
         "type": "Transitive",
-        "resolved": "2.1.6",
-        "contentHash": "BmAf6XWt4TqtowmiWe4/5rRot6GerAeklmOPfviOvwLoF5WwgxcJHAxZtySuyW9r9w+HLILnm8VfJFLCUJYW8A==",
+        "resolved": "2.1.10",
+        "contentHash": "UxWuisvZ3uVcVOLJQv7urM/JiQH+v3TmaJc1BLKl5Dxfm/nTzTUrqswCqg/INiYLi61AXnHo1M1JPmPqqLnAdg==",
         "dependencies": {
-          "SQLitePCLRaw.lib.e_sqlite3": "2.1.6",
-          "SQLitePCLRaw.provider.e_sqlite3": "2.1.6"
+          "SQLitePCLRaw.lib.e_sqlite3": "2.1.10",
+          "SQLitePCLRaw.provider.e_sqlite3": "2.1.10"
         }
       },
       "SQLitePCLRaw.core": {
         "type": "Transitive",
-        "resolved": "2.1.6",
-        "contentHash": "wO6v9GeMx9CUngAet8hbO7xdm+M42p1XeJq47ogyRoYSvNSp0NGLI+MgC0bhrMk9C17MTVFlLiN6ylyExLCc5w==",
+        "resolved": "2.1.10",
+        "contentHash": "Ii8JCbC7oiVclaE/mbDEK000EFIJ+ShRPwAvvV89GOZhQ+ZLtlnSWl6ksCNMKu/VGXA4Nfi2B7LhN/QFN9oBcw==",
         "dependencies": {
           "System.Memory": "4.5.3"
         }
       },
       "SQLitePCLRaw.lib.e_sqlite3": {
         "type": "Transitive",
-        "resolved": "2.1.6",
-        "contentHash": "2ObJJLkIUIxRpOUlZNGuD4rICpBnrBR5anjyfUFQep4hMOIeqW+XGQYzrNmHSVz5xSWZ3klSbh7sFR6UyDj68Q=="
+        "resolved": "2.1.10",
+        "contentHash": "mAr69tDbnf3QJpRy2nJz8Qdpebdil00fvycyByR58Cn9eARvR+UiG2Vzsp+4q1tV3ikwiYIjlXCQFc12GfebbA=="
       },
       "SQLitePCLRaw.provider.e_sqlite3": {
         "type": "Transitive",
-        "resolved": "2.1.6",
-        "contentHash": "PQ2Oq3yepLY4P7ll145P3xtx2bX8xF4PzaKPRpw9jZlKvfe4LE/saAV82inND9usn1XRpmxXk7Lal3MTI+6CNg==",
+        "resolved": "2.1.10",
+        "contentHash": "uZVTi02C1SxqzgT0HqTWatIbWGb40iIkfc3FpFCpE/r7g6K0PqzDUeefL6P6HPhDtc6BacN3yQysfzP7ks+wSQ==",
         "dependencies": {
-          "SQLitePCLRaw.core": "2.1.6"
+          "SQLitePCLRaw.core": "2.1.10"
         }
       },
       "System.Memory": {
@@ -128,23 +134,10 @@
         "resolved": "4.5.3",
         "contentHash": "3oDzvc/zzetpTKWMShs1AADwZjQ/36HnsufHRPcOjyRAAMLDlu2iD33MBI2opxnezcVUtXyqDXXjoFMOU9c7SA=="
       },
-      "System.Runtime.CompilerServices.Unsafe": {
-        "type": "Transitive",
-        "resolved": "6.0.0",
-        "contentHash": "/iUeP3tq1S0XdNNoMz5C9twLSrM/TH+qElHkXWaPvuNOt+99G75NrV0OS2EqHx5wMN7popYjpc8oTjC1y16DLg=="
-      },
-      "System.Text.Encodings.Web": {
-        "type": "Transitive",
-        "resolved": "8.0.0",
-        "contentHash": "yev/k9GHAEGx2Rg3/tU6MQh4HGBXJs70y7j1LaM1i/ER9po+6nnQ6RRqTJn1E7Xu0fbIFK80Nh5EoODxrbxwBQ=="
-      },
       "System.Text.Json": {
         "type": "Transitive",
-        "resolved": "8.0.4",
-        "contentHash": "bAkhgDJ88XTsqczoxEMliSrpijKZHhbJQldhAmObj/RbrN3sU5dcokuXmWJWsdQAhiMJ9bTayWsL1C9fbbCRhw==",
-        "dependencies": {
-          "System.Text.Encodings.Web": "8.0.0"
-        }
+        "resolved": "8.0.5",
+        "contentHash": "0f1B50Ss7rqxXiaBJyzUu9bWFOO2/zSlifZ/UNMdiIpDYe4cY4LQQicP4nirK1OS31I43rn062UIJ1Q9bpmHpg=="
       },
       "System.ValueTuple": {
         "type": "Transitive",
@@ -171,12 +164,12 @@
       },
       "Watson.Core": {
         "type": "Transitive",
-        "resolved": "6.2.2",
-        "contentHash": "lqdT+foblghBKLXuvXBFLJmO9J0TkPCBiQFH4xg4txFM7osm1jvF2IzYjor6w1NL+kNDhvlCRkBNaPSSxfJO/A==",
+        "resolved": "6.2.3",
+        "contentHash": "ccdGhC60dHTV1CA+C+U8zZOTQD4yLoPUDV0ZyXqF4dYmQ/zgwhegAxBGkV3WIw+2fqnTKYwMhJFU/tbkykybvA==",
         "dependencies": {
           "IpMatcher": "1.0.4.4",
           "RegexMatcher": "1.0.8",
-          "System.Text.Json": "8.0.4",
+          "System.Text.Json": "8.0.5",
           "Timestamps": "1.0.9",
           "UrlMatcher": "3.0.0"
         }

@@ -6,7 +6,7 @@ using Dalamud.Game.Text.SeStringHandling.Payloads;
 using System.Text.RegularExpressions;
 using Dalamud.Game.Text;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
 
 namespace ChatTwo;
 

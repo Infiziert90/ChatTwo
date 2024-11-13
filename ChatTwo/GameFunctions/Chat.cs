@@ -29,7 +29,7 @@ internal sealed unsafe class Chat : IDisposable
     [Signature("48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8D B9 ?? ?? ?? ?? 33 C0")]
     private readonly delegate* unmanaged<RaptureLogModule*, ushort, Utf8String*, Utf8String*, ulong, ulong, ushort, byte, int, byte, void> PrintTellNative = null!;
 
-    [Signature("E8 ?? ?? ?? ?? 48 8D 4C 24 ?? E8 ?? ?? ?? ?? 48 8D 8C 24 ?? ?? ?? ?? E8 ?? ?? ?? ?? B0 01")]
+    [Signature("E8 ?? ?? ?? ?? 48 8D 4C 24 ?? E8 ?? ?? ?? ?? 48 8D 8C 24 ?? ?? ?? ?? E8 ?? ?? ?? ?? B0 ?? 48 8B 8C 24")]
     private readonly delegate* unmanaged<NetworkModule*, ulong, ushort, Utf8String*, Utf8String*, ushort, ushort, byte> SendTellNative = null!;
 
     // Client::UI::AddonChatLog.OnRefresh
@@ -38,7 +38,7 @@ internal sealed unsafe class Chat : IDisposable
     private delegate byte ChatLogRefreshDelegate(nint log, ushort eventId, AtkValue* value);
 
     // Replace with CS version later
-    [Signature("E8 ?? ?? ?? ?? EB 81 48 8B 1D", DetourName = nameof(ContextMenuTellInForayDetour))]
+    [Signature("48 89 5C 24 ?? 55 56 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 83 B9", DetourName = nameof(ContextMenuTellInForayDetour))]
     private Hook<ContextMenuTellInForayDelegate>? ContextMenuTellInForayHook { get; set; }
     private delegate void ContextMenuTellInForayDelegate(RaptureShellModule* module, Utf8String* playerName, Utf8String* worldName, ushort worldId, ulong accountId, ulong contentId, ushort reason);
 
@@ -123,16 +123,16 @@ internal sealed unsafe class Chat : IDisposable
         _ => 0,
     };
 
-    internal static int RotateLinkshellHistory(RotateMode mode)
+    internal static void RotateLinkshellHistory(RotateMode mode)
     {
         var uiModule = UIModule.Instance();
         if (mode == RotateMode.None)
             uiModule->LinkshellCycle = -1;
 
-        return uiModule->RotateLinkshellHistory(GetRotateIdx(mode));
+        uiModule->RotateLinkshellHistory(GetRotateIdx(mode));
     }
 
-    internal static int RotateCrossLinkshellHistory(RotateMode mode) =>
+    internal static void RotateCrossLinkshellHistory(RotateMode mode) =>
         UIModule.Instance()->RotateCrossLinkshellHistory(GetRotateIdx(mode));
 
     // This function looks up a channel's user-defined color.

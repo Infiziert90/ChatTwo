@@ -86,7 +86,7 @@ public class Processing
                 if (chunk.Link is PlayerPayload playerPayload)
                     userContent = Plugin.ChatLogWindow.HidePlayerInString(userContent, playerPayload.PlayerName, playerPayload.World.RowId);
                 else if (Plugin.ClientState.LocalPlayer is { } player)
-                    userContent = Plugin.ChatLogWindow.HidePlayerInString(userContent, player.Name.TextValue, player.HomeWorld.Id);
+                    userContent = Plugin.ChatLogWindow.HidePlayerInString(userContent, player.Name.TextValue, player.HomeWorld.RowId);
             }
 
             var isNotUrl = text.Link is not UriPayload;

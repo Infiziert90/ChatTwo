@@ -1,5 +1,5 @@
 using Dalamud.Plugin.Services;
-using Lumina.Excel.GeneratedSheets;
+using Lumina.Excel.Sheets;
 
 namespace ChatTwo.Code;
 
@@ -146,7 +146,7 @@ internal static class InputChannelExt
             return null;
 
         var cmds = data.GetExcelSheet<TextCommand>();
-        return cmds == null ? null : ids.Select(id => cmds.GetRow(id)).Where(id => id != null).Cast<TextCommand>();
+        return ids.Where(id => cmds.HasRow(id)).Select(id => cmds.GetRow(id));
     }
 
     internal static bool IsLinkshell(this InputChannel channel) => channel switch

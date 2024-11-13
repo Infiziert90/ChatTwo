@@ -5,7 +5,8 @@ using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
-
+using Lumina.Excel;
+using Lumina.Excel.Sheets;
 using DalamudPartyFinderPayload = Dalamud.Game.Text.SeStringHandling.Payloads.PartyFinderPayload;
 
 namespace ChatTwo.Ui;
@@ -84,11 +85,11 @@ public class SeStringDebugger : Window
                 {
                     RenderMetadataDictionary("Link MapLinkPayload", new Dictionary<string, string?>
                     {
-                        { "Map.RowId", map.Map?.RowId.ToString() },
-                        { "Map.PlaceName", map.Map?.PlaceName.Value?.Name.ToString() },
-                        { "Map.PlaceNameRegion", map.Map?.PlaceNameRegion.Value?.Name.ToString() },
-                        { "Map.PlaceNameSub", map.Map?.PlaceNameSub.Value?.Name.ToString() },
-                        { "TerritoryType.RowId", map.TerritoryType?.RowId.ToString() },
+                        { "Map.RowId", map.Map.RowId.ToString() },
+                        { "Map.PlaceName", map.Map.Value.PlaceName.Value.Name.ToString() },
+                        { "Map.PlaceNameRegion", map.Map.Value.PlaceNameRegion.Value.Name.ToString() },
+                        { "Map.PlaceNameSub", map.Map.Value.PlaceNameSub.Value.Name.ToString() },
+                        { "TerritoryType.RowId", map.TerritoryType.RowId.ToString() },
                         { "RawX", map.RawX.ToString() },
                         { "RawY", map.RawY.ToString() },
                         { "XCoord", map.XCoord.ToString() },
@@ -102,8 +103,8 @@ public class SeStringDebugger : Window
                 {
                     RenderMetadataDictionary("Link QuestPayload", new Dictionary<string, string?>
                     {
-                        { "Quest.RowId", quest.Quest?.RowId.ToString() },
-                        { "Quest.Name", quest.Quest?.Name.ToString() },
+                        { "Quest.RowId", quest.Quest.RowId.ToString() },
+                        { "Quest.Name", quest.Quest.Value.Name.ToString() },
                     });
                     break;
                 }
@@ -131,7 +132,7 @@ public class SeStringDebugger : Window
                     {
                         { "Displayed", player.DisplayedName },
                         { "Player Name", player.PlayerName },
-                        { "World Name", player.World.Name },
+                        { "World Name", player.World.Value.Name.ExtractText() },
                         { "Data", string.Join(" ", player.Encode().Select(b => b.ToString("X2"))) },
                     });
                     break;
@@ -144,7 +145,7 @@ public class SeStringDebugger : Window
                         { "RawItemId", item.RawItemId.ToString() },
                         { "Kind", EnumName(item.Kind) },
                         { "IsHQ", item.IsHQ.ToString() },
-                        { "Item.Name", item.Item?.Name.ToString() },
+                        { "Item.Name", item.Kind == ItemPayload.ItemKind.EventItem ? Sheets.EventItemSheet.GetRow(item.ItemId).Name.ExtractText() : Sheets.ItemSheet.GetRow(item.ItemId).Name.ExtractText() },
                     });
                     break;
                 }
@@ -197,8 +198,8 @@ public class SeStringDebugger : Window
                     RenderMetadataDictionary("Link StatusPayload", new Dictionary<string, string?>
                     {
                         { "Status.RowId", status.Status.RowId.ToString() },
-                        { "Status.Name", status.Status.Name },
-                        { "Status.Icon", status.Status.Icon.ToString() }
+                        { "Status.Name", status.Status.Value.Name.ExtractText() },
+                        { "Status.Icon", status.Status.Value.Icon.ToString() }
                     });
                     break;
                 }
