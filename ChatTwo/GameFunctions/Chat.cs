@@ -455,7 +455,7 @@ internal sealed unsafe class Chat : IDisposable
     internal TellHistoryInfo? GetTellHistoryInfo(int index)
     {
         var acquaintance = AcquaintanceModule.Instance()->GetTellHistory(index);
-        if (acquaintance->ContentId == 0)
+        if (acquaintance == null || acquaintance->ContentId == 0)
             return null;
 
         var name = new ReadOnlySeStringSpan(acquaintance->Name.AsSpan()).ExtractText();
@@ -467,12 +467,12 @@ internal sealed unsafe class Chat : IDisposable
 
     internal void SendTellUsingCommandInner(byte[] message)
     {
-        var mes = new Utf8String(message);
+        var mes = Utf8String.FromSequence(message);
 
-        RaptureShellModule.Instance()->ExecuteCommandInner(&mes, UIModule.Instance());
+        RaptureShellModule.Instance()->ExecuteCommandInner(mes, UIModule.Instance());
         RaptureAtkModule.Instance()->ClearFocus(); // Clear the focus of vanilla chat that was still active
 
-        mes.Dtor(true);
+        mes->Dtor(true);
     }
 
     internal void SendTell(TellReason reason, ulong contentId, string name, ushort homeWorld, byte[] message, string rawText)
