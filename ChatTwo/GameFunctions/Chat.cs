@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using ChatTwo.Code;
 using ChatTwo.GameFunctions.Types;
 using ChatTwo.Resources;
@@ -455,7 +455,7 @@ internal sealed unsafe class Chat : IDisposable
     internal TellHistoryInfo? GetTellHistoryInfo(int index)
     {
         var acquaintance = AcquaintanceModule.Instance()->GetTellHistory(index);
-        if (acquaintance->ContentId == 0)
+        if (acquaintance == null || acquaintance->ContentId == 0)
             return null;
 
         var name = new ReadOnlySeStringSpan(acquaintance->Name.AsSpan()).ExtractText();
