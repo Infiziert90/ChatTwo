@@ -1,4 +1,5 @@
 ﻿using ChatTwo.Http.MessageProtocol;
+
 namespace ChatTwo.Http;
 
 public class ServerCore : IAsyncDisposable

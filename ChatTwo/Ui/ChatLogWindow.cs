@@ -20,7 +20,6 @@ using Dalamud.Interface.Windowing;
 using Dalamud.Memory;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
-using FFXIVClientStructs.FFXIV.Client.UI.Info;
 using ImGuiNET;
 using Lumina.Excel.Sheets;
 
@@ -41,24 +40,12 @@ public sealed class ChatLogWindow : Window
 
     internal Vector4 DefaultText { get; set; }
 
-    internal int? WantedTab { get; set; }
-    internal Tab? CurrentTab
-    {
-        get
-        {
-            var i = LastTab;
-            return i > -1 && i < Plugin.Config.Tabs.Count ? Plugin.Config.Tabs[i] : null;
-        }
-    }
-
     internal bool FocusedPreview;
     internal bool Activate;
     private int ActivatePos = -1;
     internal string Chat = string.Empty;
     private readonly List<string> InputBacklog = [];
     private int InputBacklogIdx = -1;
-    private int LastTab { get; set; }
-    private InputChannel? TempChannel;
     public bool TellSpecial;
     private readonly Stopwatch LastResize = new();
     private AutoCompleteInfo? AutoCompleteInfo;
@@ -141,10 +128,6 @@ public sealed class ChatLogWindow : Window
 
     internal unsafe void Activated(ChatActivatedArgs args)
     {
-        // Return if we don't have a tab selected
-        if (CurrentTab == null)
-            return;
-
         TellSpecial = args.TellSpecial;
 
         Activate = true;
@@ -153,7 +136,7 @@ public sealed class ChatLogWindow : Window
             UIModule.PlaySound(ChatOpenSfx);
 
         // Don't set the channel or text content when activating a disabled tab.
-        if (CurrentTab?.InputDisabled == true)
+        if (Plugin.CurrentTab.InputDisabled)
         {
             // The closing sound would've been immediately played in this case.
             PlayedClosingSound = true;
@@ -175,24 +158,26 @@ public sealed class ChatLogWindow : Window
             {
                 if (info.Rotate != RotateMode.None)
                 {
-                    var idx = TempChannel != InputChannel.Tell
+                    var idx = Plugin.CurrentTab.CurrentChannel.TempChannel != InputChannel.Tell
                         ? 0 : info.Rotate == RotateMode.Reverse
                             ? -1 : 1;
 
                     var tellInfo = Plugin.Functions.Chat.GetTellHistoryInfo(idx);
                     if (tellInfo != null && reason != null)
-                        CurrentTab!.TellTarget = new TellTarget(tellInfo.Name, (ushort) tellInfo.World, tellInfo.ContentId, reason.Value);
+                    {
+                        Plugin.CurrentTab.CurrentChannel.TellTarget = new TellTarget(tellInfo.Name, (ushort) tellInfo.World, tellInfo.ContentId, reason.Value);
+                    }
                 }
                 else
                 {
-                    CurrentTab!.TellTarget = null;
+                    Plugin.CurrentTab.CurrentChannel.TellTarget = null;
                     if (target != null)
-                        CurrentTab!.TellTarget = target;
+                        Plugin.CurrentTab.CurrentChannel.TellTarget = target;
                 }
             }
             else
             {
-                CurrentTab!.TellTarget = null;
+                Plugin.CurrentTab.CurrentChannel.TellTarget = null;
             }
 
             if (info.Channel is InputChannel.Linkshell1 or InputChannel.CrossLinkshell1 && info.Rotate != RotateMode.None)
@@ -215,7 +200,7 @@ public sealed class ChatLogWindow : Window
                 }
                 else
                 {
-                    targetChannel = GameFunctions.Chat.ResolveTempInputChannel(TempChannel, info.Channel.Value, info.Rotate);
+                    targetChannel = GameFunctions.Chat.ResolveTempInputChannel(Plugin.CurrentTab.CurrentChannel.TempChannel, info.Channel.Value, info.Rotate);
                 }
             }
 
@@ -226,9 +211,11 @@ public sealed class ChatLogWindow : Window
             }
 
             if (info.Permanent)
+            {
                 SetChannel(targetChannel);
+            }
             else
-                TempChannel = targetChannel;
+                Plugin.CurrentTab.CurrentChannel.TempChannel = targetChannel.Value;
         }
 
         if (info.Text != null && Chat.Length == 0)
@@ -253,8 +240,8 @@ public sealed class ChatLogWindow : Window
                 Plugin.ChatGui.Print("- /clearlog2 help: shows this help");
                 break;
             default:
-                if (LastTab > -1 && LastTab < Plugin.Config.Tabs.Count)
-                    Plugin.Config.Tabs[LastTab].Clear();
+                if (Plugin.LastTab > -1 && Plugin.LastTab < Plugin.Config.Tabs.Count)
+                    Plugin.Config.Tabs[Plugin.LastTab].Clear();
                 break;
         }
     }
@@ -354,31 +341,27 @@ public sealed class ChatLogWindow : Window
     }
 
     internal void ChangeTab(int index) {
-        WantedTab = index;
+        Plugin.WantedTab = index;
         LastActivityTime = FrameTime;
     }
 
     internal void ChangeTabDelta(int offset)
     {
-        var newIndex = (LastTab + offset) % Plugin.Config.Tabs.Count;
+        var newIndex = (Plugin.LastTab + offset) % Plugin.Config.Tabs.Count;
         while (newIndex < 0)
             newIndex += Plugin.Config.Tabs.Count;
         ChangeTab(newIndex);
     }
 
-    private void TabChannelSwitch(Tab tab)
+    private void TabChannelSwitch(Tab newTab, Tab previousTab)
     {
-        // Save the previous channel to restore it later
-        var current = CurrentTab;
-        if (current is { Channel: null })
-            current.PreviousChannel = Plugin.Functions.Chat.Channel.Channel;
+        // Use the fixed channel if set by the user, or set it to the current tabs channel if this tab wasn't accessed before
+        if (newTab.Channel is not null)
+            newTab.CurrentChannel.Channel = newTab.Channel.Value;
+        else if (newTab.CurrentChannel.Channel is InputChannel.Invalid)
+            newTab.CurrentChannel = previousTab.CurrentChannel;
 
-        // Channel will be null if PreviousChannel is used
-        var channel = tab.Channel ?? tab.PreviousChannel;
-
-        // If channel is null it doesn't have a default, and we never selected this channel before
-        if (channel != null)
-            SetChannel(tab.Channel ?? tab.PreviousChannel);
+        SetChannel(newTab.CurrentChannel.Channel);
 
         // Inform the webinterface about tab switch
         // TODO implement tabs in the webinterface
@@ -475,7 +458,7 @@ public sealed class ChatLogWindow : Window
             return true;
         }
 
-        var currentTab = CurrentTab; // local to avoid calling the getter repeatedly
+        var currentTab = Plugin.CurrentTab; // local to avoid calling the getter repeatedly
         var lastActivityTime = Plugin.Config.Tabs
             .Where(tab => !tab.PopOut && (tab.UnhideOnActivity || tab == currentTab))
             .Select(tab => tab.LastActivity)
@@ -499,7 +482,7 @@ public sealed class ChatLogWindow : Window
         // the text input in a tab with input disabled. The usual way that
         // Activate gets disabled is via the text input callback, but that
         // doesn't get called if the input is disabled.
-        if (CurrentTab?.InputDisabled == true)
+        if (Plugin.CurrentTab.InputDisabled == true)
             Activate = false;
         if (Plugin.Config is { OverrideStyle: true, ChosenStyle: not null })
             StyleModel.GetConfiguredStyles()?.FirstOrDefault(style => style.Name == Plugin.Config.ChosenStyle)?.Pop();
@@ -548,12 +531,12 @@ public sealed class ChatLogWindow : Window
         if (IsChatMode && Plugin.InputPreview.IsDrawable)
             Plugin.InputPreview.CalculatePreview();
 
-        var currentTab = Plugin.Config.SidebarTabView ? DrawTabSidebar() : DrawTabBar();
+        if (Plugin.Config.SidebarTabView)
+            DrawTabSidebar();
+        else
+            DrawTabBar();
 
-        Tab? activeTab = null;
-        if (currentTab > -1 && currentTab < Plugin.Config.Tabs.Count)
-            activeTab = Plugin.Config.Tabs[currentTab];
-
+        var activeTab = Plugin.CurrentTab;
         if (Plugin.Config.PreviewPosition is PreviewPosition.Inside && Plugin.InputPreview.IsDrawable)
             Plugin.InputPreview.DrawPreview();
 
@@ -563,10 +546,10 @@ public sealed class ChatLogWindow : Window
         }
 
         var beforeIcon = ImGui.GetCursorPos();
-        if (ImGuiUtil.IconButton(FontAwesomeIcon.Comment) && activeTab is not { Channel: not null })
+        if (ImGuiUtil.IconButton(FontAwesomeIcon.Comment) && activeTab.Channel is null)
             ImGui.OpenPopup(ChatChannelPicker);
 
-        if (activeTab is { Channel: not null } && ImGui.IsItemHovered())
+        if (activeTab.Channel is not null && ImGui.IsItemHovered())
             ImGui.SetTooltip(Language.ChatLog_SwitcherDisabled);
 
         using (var popup = ImRaii.Popup(ChatChannelPicker))
@@ -588,7 +571,7 @@ public sealed class ChatLogWindow : Window
         var buttonsRight = (showNovice ? 1 : 0) + (Plugin.Config.ShowHideButton ? 1 : 0);
         var inputWidth = ImGui.GetContentRegionAvail().X - buttonWidth * (1 + buttonsRight);
 
-        var inputType = TempChannel?.ToChatType() ?? activeTab?.Channel?.ToChatType() ?? Plugin.Functions.Chat.Channel.Channel.ToChatType();
+        var inputType = activeTab.CurrentChannel.UseTempChannel ? activeTab.CurrentChannel.TempChannel.ToChatType() : activeTab.CurrentChannel.Channel.ToChatType();
         var isCommand = Chat.Trim().StartsWith('/');
         if (isCommand)
         {
@@ -642,10 +625,10 @@ public sealed class ChatLogWindow : Window
                 {
                     Chat = chatCopy;
 
-                    if (Plugin.Functions.Chat.UsesTellTempChannel)
+                    if (activeTab.CurrentChannel.UseTempChannel)
                     {
-                        Plugin.Functions.Chat.UsesTellTempChannel = false;
-                        SetChannel(Plugin.Functions.Chat.PreviousChannel);
+                        activeTab.CurrentChannel.UseTempChannel = false;
+                        SetChannel(activeTab.CurrentChannel.Channel);
                     }
                 }
 
@@ -654,10 +637,10 @@ public sealed class ChatLogWindow : Window
                     Plugin.CommandHelpWindow.IsOpen = false;
                     SendChatBox(activeTab);
 
-                    if (Plugin.Functions.Chat.UsesTellTempChannel)
+                    if (activeTab.CurrentChannel.UseTempChannel)
                     {
-                        Plugin.Functions.Chat.UsesTellTempChannel = false;
-                        SetChannel(Plugin.Functions.Chat.PreviousChannel);
+                        activeTab.CurrentChannel.UseTempChannel = false;
+                        SetChannel(activeTab.CurrentChannel.Channel);
                     }
                 }
             }
@@ -678,14 +661,10 @@ public sealed class ChatLogWindow : Window
                     UIModule.PlaySound(ChatCloseSfx);
                 }
 
-                if (TempChannel is InputChannel.Tell && CurrentTab != null)
-                    CurrentTab.TellTarget = null;
-
-                TempChannel = null;
-                if (Plugin.Functions.Chat.UsesTellTempChannel)
+                if (Plugin.CurrentTab.CurrentChannel.UseTempChannel)
                 {
-                    Plugin.Functions.Chat.UsesTellTempChannel = false;
-                    SetChannel(Plugin.Functions.Chat.PreviousChannel);
+                    Plugin.CurrentTab.CurrentChannel.UseTempChannel = false;
+                    SetChannel(Plugin.CurrentTab.CurrentChannel.Channel);
                 }
             }
 
@@ -729,6 +708,9 @@ public sealed class ChatLogWindow : Window
         var channels = new Dictionary<string, InputChannel>();
         foreach (var channel in Enum.GetValues<InputChannel>())
         {
+            if (!channel.IsValid())
+                continue;
+
             var name = Sheets.LogFilterSheet.FirstOrNull(row => row.LogKind == (byte) channel.ToChatType())?.Name.ExtractText() ?? channel.ToChatType().Name();
             if (channel.IsLinkshell())
             {
@@ -763,32 +745,31 @@ public sealed class ChatLogWindow : Window
         return channels;
     }
 
-    private void DrawChannelName(Tab? activeTab)
+    private void DrawChannelName(Tab activeTab)
     {
         var currentChannel = ReadChannelName(activeTab);
-
         if (!currentChannel.SequenceEqual(PreviousChannel))
         {
             PreviousChannel = currentChannel;
             Plugin.ServerCore?.SendChannelSwitch(currentChannel);
         }
 
-        DrawChunks(ReadChannelName(activeTab));
+        DrawChunks(currentChannel);
     }
 
-    internal Chunk[] ReadChannelName(Tab? activeTab)
+    internal Chunk[] ReadChannelName(Tab activeTab)
     {
         Chunk[] channelNameChunks;
-        if (activeTab?.TellTarget != null)
+        if (activeTab.CurrentChannel.TellTarget != null && activeTab.CurrentChannel.TellTarget.IsSet())
         {
-            var playerName = activeTab.TellTarget.Name;
+            var playerName = activeTab.CurrentChannel.TellTarget.Name;
             if (ScreenshotMode)
                 // Note: don't use HidePlayerInString here because
                 // abbreviation settings do not affect this.
-                playerName = HashPlayer(activeTab.TellTarget.Name, activeTab.TellTarget.World);
+                playerName = HashPlayer(activeTab.CurrentChannel.TellTarget.Name, activeTab.CurrentChannel.TellTarget.World);
 
-            var world = Sheets.WorldSheet.HasRow(activeTab.TellTarget.World)
-                ? Sheets.WorldSheet.GetRow(activeTab.TellTarget.World).Name.ExtractText()
+            var world = Sheets.WorldSheet.TryGetRow(activeTab.CurrentChannel.TellTarget.World, out var worldRow)
+                ? worldRow.Name.ExtractText()
                 : "???";
 
             channelNameChunks =
@@ -799,24 +780,24 @@ public sealed class ChatLogWindow : Window
                 new TextChunk(ChunkSource.None, null, world)
             ];
         }
-        else if (TempChannel != null)
+        else if (activeTab.CurrentChannel.UseTempChannel)
         {
             string name;
-            if (TempChannel.Value.IsLinkshell())
+            if (activeTab.CurrentChannel.TempChannel.IsLinkshell())
             {
-                var idx = (uint) TempChannel.Value - (uint) InputChannel.Linkshell1;
+                var idx = (uint) activeTab.CurrentChannel.TempChannel - (uint) InputChannel.Linkshell1;
                 var lsName = Plugin.Functions.Chat.GetLinkshellName(idx);
                 name = $"LS #{idx + 1}: {lsName}";
             }
-            else if (TempChannel.Value.IsCrossLinkshell())
+            else if (activeTab.CurrentChannel.TempChannel.IsCrossLinkshell())
             {
-                var idx = (uint) TempChannel.Value - (uint) InputChannel.CrossLinkshell1;
+                var idx = (uint) activeTab.CurrentChannel.TempChannel - (uint) InputChannel.CrossLinkshell1;
                 var cwlsName = Plugin.Functions.Chat.GetCrossLinkshellName(idx);
                 name = $"CWLS [{idx + 1}]: {cwlsName}";
             }
             else
             {
-                name = TempChannel.Value.ToChatType().Name();
+                name = activeTab.CurrentChannel.TempChannel.ToChatType().Name();
             }
 
             channelNameChunks = [new TextChunk(ChunkSource.None, null, name)];
@@ -835,15 +816,15 @@ public sealed class ChatLogWindow : Window
         {
             channelNameChunks = [new TextChunk(ChunkSource.None, null, overrideName)];
         }
-        else if (ScreenshotMode && Plugin.Functions.Chat.Channel is (InputChannel.Tell, _, var tellPlayerName, var tellWorldId))
+        else if (ScreenshotMode && activeTab.CurrentChannel.Channel is InputChannel.Tell && activeTab.CurrentChannel.TellTarget != null)
         {
-            if (!string.IsNullOrWhiteSpace(tellPlayerName) && tellWorldId != 0)
+            if (!string.IsNullOrWhiteSpace(activeTab.CurrentChannel.TellTarget.Name) && activeTab.CurrentChannel.TellTarget.World != 0)
             {
                 // Note: don't use HidePlayerInString here because
                 // abbreviation settings do not affect this.
-                var playerName = HashPlayer(tellPlayerName, tellWorldId);
-                var world = Sheets.WorldSheet.HasRow(tellWorldId)
-                    ? Sheets.WorldSheet.GetRow(tellWorldId).Name.ExtractText()
+                var playerName = HashPlayer(activeTab.CurrentChannel.TellTarget.Name, activeTab.CurrentChannel.TellTarget.World);
+                var world = Sheets.WorldSheet.TryGetRow(activeTab.CurrentChannel.TellTarget.World, out var worldRow)
+                    ? worldRow.Name.ExtractText()
                     : "???";
 
                 channelNameChunks =
@@ -863,7 +844,7 @@ public sealed class ChatLogWindow : Window
         }
         else
         {
-            channelNameChunks = Plugin.Functions.Chat.Channel.Name.ToArray();
+            channelNameChunks = activeTab.CurrentChannel.Name.ToArray();
         }
 
         return channelNameChunks;
@@ -872,8 +853,9 @@ public sealed class ChatLogWindow : Window
     internal void SetChannel(InputChannel? channel)
     {
         channel ??= InputChannel.Say;
-        if (CurrentTab != null)
-            CurrentTab.TellTarget = null;
+
+        if (channel != InputChannel.Tell)
+            Plugin.CurrentTab.CurrentChannel.TellTarget = null;
 
         // Instead of calling SetChannel(), we ask the ExtraChat plugin to set a
         // channel override by just calling the command directly.
@@ -893,10 +875,10 @@ public sealed class ChatLogWindow : Window
             return;
         }
 
-        GameFunctions.Chat.SetChannel(channel.Value);
+        Plugin.Functions.Chat.SetChannel(channel.Value, Plugin.CurrentTab.CurrentChannel.TellTarget);
     }
 
-    internal void SendChatBox(Tab? activeTab)
+    internal void SendChatBox(Tab activeTab)
     {
         if (!string.IsNullOrWhiteSpace(Chat))
         {
@@ -912,8 +894,9 @@ public sealed class ChatLogWindow : Window
                 Plugin.Functions.Chat.SendTellUsingCommandInner(tellBytes);
 
                 TellSpecial = false;
-                if (TempChannel is InputChannel.Tell && CurrentTab != null)
-                    CurrentTab.TellTarget = null;
+                activeTab.CurrentChannel.UseTempChannel = false;
+                if (activeTab.CurrentChannel.TempChannel is InputChannel.Tell)
+                    activeTab.CurrentChannel.TellTarget = null;
 
                 Chat = string.Empty;
                 return;
@@ -921,9 +904,22 @@ public sealed class ChatLogWindow : Window
 
             if (!trimmed.StartsWith('/'))
             {
-                if (CurrentTab?.TellTarget != null)
+                var target = activeTab.CurrentChannel.TellTarget;
+                if (target != null)
                 {
-                    var target = CurrentTab.TellTarget;
+                    // ContentId 0 is a case where we can't directly send messages, so we send a /tell formatted message and let the game handle it
+                    if (target.ContentId == 0)
+                    {
+                        trimmed = $"/tell {target.ToTargetString()} {trimmed}";
+                        var tellBytes = Encoding.UTF8.GetBytes(trimmed);
+                        AutoTranslate.ReplaceWithPayload(ref tellBytes);
+
+                        Plugin.Common.SendMessageUnsafe(tellBytes);
+
+                        Chat = string.Empty;
+                        return;
+                    }
+
                     var reason = target.Reason;
                     var world = Sheets.WorldSheet.GetRow(target.World);
                     if (world is { IsPublic: true })
@@ -937,18 +933,17 @@ public sealed class ChatLogWindow : Window
                         Plugin.Functions.Chat.SendTell(reason, target.ContentId, target.Name, (ushort) world.RowId, tellBytes, trimmed);
                     }
 
-                    if (TempChannel is InputChannel.Tell)
-                        CurrentTab.TellTarget = null;
+                    if (activeTab.CurrentChannel.TempChannel is InputChannel.Tell)
+                        activeTab.CurrentChannel.TellTarget = null;
 
                     Chat = string.Empty;
                     return;
                 }
 
-
-                if (TempChannel != null)
-                    trimmed = $"{TempChannel.Value.Prefix()} {trimmed}";
-                else if (activeTab is { Channel: { } channel })
-                    trimmed = $"{channel.Prefix()} {trimmed}";
+                if (activeTab.CurrentChannel.UseTempChannel)
+                    trimmed = $"{activeTab.CurrentChannel.TempChannel.Prefix()} {trimmed}";
+                else // (activeTab is { Channel: { } channel }) TODO Check this channel selection
+                    trimmed = $"{activeTab.CurrentChannel.Channel.Prefix()} {trimmed}";
             }
 
             var bytes = Encoding.UTF8.GetBytes(trimmed);
@@ -1196,23 +1191,22 @@ public sealed class ChatLogWindow : Window
         }
     }
 
-    private int DrawTabBar()
+    private void DrawTabBar()
     {
-        var currentTab = -1;
-
         using var tabBar = ImRaii.TabBar("##chat2-tabs");
         if (!tabBar.Success)
-            return currentTab;
+            return;
 
+        var previousTab = Plugin.CurrentTab;
         for (var tabI = 0; tabI < Plugin.Config.Tabs.Count; tabI++)
         {
             var tab = Plugin.Config.Tabs[tabI];
             if (tab.PopOut)
                 continue;
 
-            var unread = tabI == LastTab || tab.UnreadMode == UnreadMode.None || tab.Unread == 0 ? "" : $" ({tab.Unread})";
+            var unread = tabI == Plugin.LastTab || tab.UnreadMode == UnreadMode.None || tab.Unread == 0 ? "" : $" ({tab.Unread})";
             var flags = ImGuiTabItemFlags.None;
-            if (WantedTab == tabI)
+            if (Plugin.WantedTab == tabI)
                 flags |= ImGuiTabItemFlags.SetSelected;
             using var tabItem = ImRaii.TabItem($"{tab.Name}{unread}###log-tab-{tabI}", flags);
             DrawTabContextMenu(tab, tabI);
@@ -1220,28 +1214,25 @@ public sealed class ChatLogWindow : Window
             if (!tabItem.Success)
                 continue;
 
-            currentTab = tabI;
-            var switchedTab = LastTab != tabI;
+            var switchedTab = Plugin.LastTab != tabI;
+
+            Plugin.LastTab = tabI;
             if (switchedTab)
-                TabChannelSwitch(tab);
+                TabChannelSwitch(tab, previousTab);
 
-            LastTab = tabI;
             tab.Unread = 0;
-
             DrawMessageLog(tab, PayloadHandler, GetRemainingHeightForMessageLog(), switchedTab);
         }
 
-        WantedTab = null;
-        return currentTab;
+        Plugin.WantedTab = null;
     }
 
-    private int DrawTabSidebar()
+    private void DrawTabSidebar()
     {
         var currentTab = -1;
-
         using var tabTable = ImRaii.Table("tabs-table", 2, ImGuiTableFlags.BordersInnerV | ImGuiTableFlags.SizingStretchProp | ImGuiTableFlags.Resizable);
         if (!tabTable.Success)
-            return currentTab;
+            return;
 
         ImGui.TableSetupColumn("tabs", ImGuiTableColumnFlags.None, 1);
         ImGui.TableSetupColumn("chat", ImGuiTableColumnFlags.None, 4);
@@ -1254,41 +1245,41 @@ public sealed class ChatLogWindow : Window
         {
             if (child)
             {
+                var previousTab = Plugin.CurrentTab;
                 for (var tabI = 0; tabI < Plugin.Config.Tabs.Count; tabI++)
                 {
                     var tab = Plugin.Config.Tabs[tabI];
                     if (tab.PopOut)
                         continue;
 
-                    var unread = tabI == LastTab || tab.UnreadMode == UnreadMode.None || tab.Unread == 0 ? "" : $" ({tab.Unread})";
-                    var clicked = ImGui.Selectable($"{tab.Name}{unread}###log-tab-{tabI}", LastTab == tabI || WantedTab == tabI);
+                    var unread = tabI == Plugin.LastTab || tab.UnreadMode == UnreadMode.None || tab.Unread == 0 ? "" : $" ({tab.Unread})";
+                    var clicked = ImGui.Selectable($"{tab.Name}{unread}###log-tab-{tabI}", Plugin.LastTab == tabI || Plugin.WantedTab == tabI);
                     DrawTabContextMenu(tab, tabI);
 
-                    if (!clicked && WantedTab != tabI)
+                    if (!clicked && Plugin.WantedTab != tabI)
                         continue;
 
                     currentTab = tabI;
-                    switchedTab = LastTab != tabI;
+                    switchedTab = Plugin.LastTab != tabI;
+                    Plugin.LastTab = tabI;
                     if (switchedTab)
-                        TabChannelSwitch(tab);
-                    LastTab = tabI;
+                        TabChannelSwitch(tab, previousTab);
                 }
             }
         }
 
         ImGui.TableNextColumn();
 
-        if (currentTab == -1 && LastTab < Plugin.Config.Tabs.Count)
+        if (currentTab == -1 && Plugin.LastTab < Plugin.Config.Tabs.Count)
         {
-            currentTab = LastTab;
+            currentTab = Plugin.LastTab;
             Plugin.Config.Tabs[currentTab].Unread = 0;
         }
 
         if (currentTab > -1)
             DrawMessageLog(Plugin.Config.Tabs[currentTab], PayloadHandler, childHeight, switchedTab);
 
-        WantedTab = null;
-        return currentTab;
+        Plugin.WantedTab = null;
     }
 
     private void DrawTabContextMenu(Tab tab, int i)

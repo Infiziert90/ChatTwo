@@ -66,6 +66,18 @@ public sealed class Plugin : IDalamudPlugin
 
     internal DateTime GameStarted { get; }
 
+    // Tab managed needs to happen outside the chatlog window class for access reasons
+    internal int LastTab { get; set; }
+    internal int? WantedTab { get; set; }
+    internal Tab CurrentTab
+    {
+        get
+        {
+            var i = LastTab;
+            return i > -1 && i < Config.Tabs.Count ? Config.Tabs[i] : new Tab();
+        }
+    }
+
     public Plugin()
     {
         try

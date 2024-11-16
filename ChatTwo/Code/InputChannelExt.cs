@@ -40,6 +40,7 @@ internal static class InputChannelExt
         InputChannel.ExtraChatLinkshell6 => ChatType.ExtraChatLinkshell6,
         InputChannel.ExtraChatLinkshell7 => ChatType.ExtraChatLinkshell7,
         InputChannel.ExtraChatLinkshell8 => ChatType.ExtraChatLinkshell8,
+        InputChannel.Invalid => ChatType.Echo,
         _ => throw new ArgumentOutOfRangeException(nameof(input), input, null),
     };
 
@@ -107,6 +108,7 @@ internal static class InputChannelExt
         InputChannel.ExtraChatLinkshell6 => "/ecl6",
         InputChannel.ExtraChatLinkshell7 => "/ecl7",
         InputChannel.ExtraChatLinkshell8 => "/ecl8",
+        InputChannel.Invalid => "/e",
         _ => "",
     };
 
@@ -186,5 +188,11 @@ internal static class InputChannelExt
         InputChannel.ExtraChatLinkshell7 => true,
         InputChannel.ExtraChatLinkshell8 => true,
         _ => false,
+    };
+
+    internal static bool IsValid(this InputChannel channel) => channel switch
+    {
+        InputChannel.Invalid => false,
+        _ => true,
     };
 }

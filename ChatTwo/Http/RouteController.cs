@@ -154,12 +154,6 @@ public class RouteController
     #region PostAuthRoutes
     private async Task ChatBoxRoute(HttpContextBase ctx)
     {
-        if (Plugin.ChatLogWindow.CurrentTab == null)
-        {
-            await ctx.Response.Send("No valid chat tab!");
-            return;
-        }
-
         await ctx.Response.Send(ChatBoxTemplate);
     }
 
@@ -183,7 +177,7 @@ public class RouteController
         await Plugin.Framework.RunOnFrameworkThread(() =>
         {
             Plugin.ChatLogWindow.Chat = content.Message;
-            Plugin.ChatLogWindow.SendChatBox(Plugin.ChatLogWindow.CurrentTab);
+            Plugin.ChatLogWindow.SendChatBox(Plugin.CurrentTab);
         });
 
         ctx.Response.StatusCode = 201;

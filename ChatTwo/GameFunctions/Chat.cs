@@ -52,15 +52,6 @@ internal sealed unsafe class Chat : IDisposable
 
     private Plugin Plugin { get; }
 
-    /// <summary>
-    /// Holds the current game channel details.
-    /// `TellPlayerName` and `TellWorldId` are only set when the channel is `InputChannel.Tell`.
-    /// </summary>
-    internal (InputChannel Channel, List<Chunk> Name, string? TellPlayerName, ushort TellWorldId) Channel { get; private set; }
-
-    internal bool UsesTellTempChannel { get; set; }
-    internal InputChannel? PreviousChannel { get; private set; }
-
     private enum PlayerNameDisplayType : uint
     {
         FullName = 0,
@@ -171,7 +162,7 @@ internal sealed unsafe class Chat : IDisposable
 
     private byte ChatLogRefreshDetour(nint log, ushort eventId, AtkValue* value)
     {
-        if (Plugin is { ChatLogWindow.CurrentTab.InputDisabled: true })
+        if (Plugin.CurrentTab.InputDisabled)
             return ChatLogRefreshHook!.Original(log, eventId, value);
 
         if (eventId != 0x31 || value == null || value->UInt is not (0x05 or 0x0C))
@@ -263,7 +254,12 @@ internal sealed unsafe class Chat : IDisposable
             Plugin.Log.Debug($"Detected tell target '{playerName}'@{worldId}");
         }
 
-        Channel = ((InputChannel) channel, nameChunks, playerName, worldId);
+        Plugin.CurrentTab.CurrentChannel = new UsedChannel
+        {
+            Channel = (InputChannel) channel,
+            Name = nameChunks,
+            TellTarget = playerName != null ? new TellTarget(playerName, worldId, 0, 0) : null,
+        };
 
         return ret;
     }
@@ -305,11 +301,8 @@ internal sealed unsafe class Chat : IDisposable
 
     private void ContextMenuTellInForayDetour(RaptureShellModule* a1, Utf8String* playerName, Utf8String* worldName, ushort worldId, ulong accountId, ulong contentId, ushort reason)
     {
-        if (!UsesTellTempChannel)
-        {
-            UsesTellTempChannel = true;
-            PreviousChannel = Channel.Channel;
-        }
+        if (!Plugin.CurrentTab.CurrentChannel.UseTempChannel)
+            Plugin.CurrentTab.CurrentChannel.UseTempChannel = true;
 
         if (playerName != null)
         {
@@ -411,7 +404,7 @@ internal sealed unsafe class Chat : IDisposable
         }
     }
 
-    internal static void SetChannel(InputChannel channel, string? tellTarget = null)
+    internal void SetChannel(InputChannel channel, TellTarget? tellTarget = null)
     {
         // ExtraChat linkshells aren't supported in game so we never want to
         // call the ChangeChatChannel function with them.
@@ -421,14 +414,15 @@ internal sealed unsafe class Chat : IDisposable
         if (channel.IsExtraChatLinkshell())
             return;
 
-        var target = Utf8String.FromString(tellTarget ?? "");
+        var target = Utf8String.FromString(tellTarget?.ToTargetString() ?? "");
         var idx = channel.LinkshellIndex();
         if (idx == uint.MaxValue)
             idx = 0;
+
         if (!ValidAnyLinkshell(channel))
             return;
 
-        RaptureShellModule.Instance()->ChangeChatChannel((int) channel, idx, target, true);
+        RaptureShellModule.Instance()->ChangeChatChannel(tellTarget != null ? 17 : (int)channel, idx, target, true);
         target->Dtor(true);
     }
 
@@ -437,11 +431,8 @@ internal sealed unsafe class Chat : IDisposable
         // param6 is 0 for contentId and 1 for objectId
         // param7 is always 0 ?
 
-        if (!UsesTellTempChannel)
-        {
-            UsesTellTempChannel = true;
-            PreviousChannel = Channel.Channel;
-        }
+        if (!Plugin.CurrentTab.CurrentChannel.UseTempChannel)
+            Plugin.CurrentTab.CurrentChannel.UseTempChannel = true;
 
         var utfName = Utf8String.FromString(name);
         var utfWorld = Utf8String.FromString(worldName);
@@ -491,6 +482,16 @@ internal sealed unsafe class Chat : IDisposable
         // // TODO: Remap TellReasons
         if (reason == TellReason.Direct)
             reason = TellReason.Friend;
+
+        if (contentId == 0)
+        {
+            encoded->Dtor(true);
+            uName->Dtor(true);
+            uMessage->Dtor(true);
+
+            Plugin.Log.Warning("Tried to send a tell with content id being 0");
+            return;
+        }
 
         var ok = SendTellNative(networkModule, contentId, homeWorld, uName, encoded, (ushort) reason, homeWorld);
         if (ok == 1)

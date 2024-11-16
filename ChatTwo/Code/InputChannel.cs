@@ -40,4 +40,6 @@ internal enum InputChannel : uint
     ExtraChatLinkshell6 = 1006,
     ExtraChatLinkshell7 = 1007,
     ExtraChatLinkshell8 = 1008,
+
+    Invalid = 9999,
 }

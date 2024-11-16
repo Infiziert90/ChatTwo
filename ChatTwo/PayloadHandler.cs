@@ -585,7 +585,7 @@ public sealed class PayloadHandler {
                             GameFunctions.Party.InviteSameWorld(player.PlayerName, (ushort) world.RowId, chunk.Message?.ContentId ?? 0);
 
                         if (validContentId && ImGui.Selectable(Language.Context_InviteToParty_DifferentWorld))
-                            GameFunctions.Party.InviteOtherWorld(chunk.Message!.ContentId);
+                            GameFunctions.Party.InviteOtherWorld(chunk.Message!.ContentId, (ushort) world.RowId);
 
                         ImGui.EndMenu();
                     }

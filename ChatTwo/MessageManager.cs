@@ -256,11 +256,11 @@ internal class MessageManager : IAsyncDisposable
         if (Plugin.Config.DatabaseBattleMessages || !message.Code.IsBattle())
             Store.UpsertMessage(message);
 
-        var currentTabId = Plugin.ChatLogWindow.CurrentTab?.Identifier ?? Guid.Empty;
-        var currentMatches = Plugin.ChatLogWindow.CurrentTab?.Matches(message) ?? false;
+        var currentTabId = Plugin.CurrentTab.Identifier;
+        var currentMatches = Plugin.CurrentTab.Matches(message);
         foreach (var tab in Plugin.Config.Tabs)
         {
-            var unread = !(tab.UnreadMode == UnreadMode.Unseen && Plugin.ChatLogWindow.CurrentTab != tab && currentMatches);
+            var unread = !(tab.UnreadMode == UnreadMode.Unseen && Plugin.CurrentTab != tab && currentMatches);
 
             if (tab.Matches(message))
             {

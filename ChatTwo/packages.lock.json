@@ -8,15 +8,6 @@
         "resolved": "11.0.0",
         "contentHash": "bjT7XUlhIJSmsE/O76b7weUX+evvGQctbQB8aKXt94o+oPWxHpCepxAGMs7Thow3AzCyqWs7cOpp9/2wcgRRQA=="
       },
-      "EmbedIO": {
-        "type": "Direct",
-        "requested": "[3.5.2, )",
-        "resolved": "3.5.2",
-        "contentHash": "YU4j+3XvuO8/VPkNf7KWOF1TpMhnyVhXnPsG1mvnDhTJ9D5BZOFXVDvCpE/SkQ1AJ0Aa+dXOVSW3ntgmLL7aJg==",
-        "dependencies": {
-          "Unosquare.Swan.Lite": "3.1.0"
-        }
-      },
       "MessagePack": {
         "type": "Direct",
         "requested": "[3.0.238-rc.1, )",
@@ -139,23 +130,10 @@
         "resolved": "8.0.5",
         "contentHash": "0f1B50Ss7rqxXiaBJyzUu9bWFOO2/zSlifZ/UNMdiIpDYe4cY4LQQicP4nirK1OS31I43rn062UIJ1Q9bpmHpg=="
       },
-      "System.ValueTuple": {
-        "type": "Transitive",
-        "resolved": "4.5.0",
-        "contentHash": "okurQJO6NRE/apDIP23ajJ0hpiNmJ+f0BwOlB/cSqTLQlw5upkf+5+96+iG2Jw40G1fCVCyPz/FhIABUjMR+RQ=="
-      },
       "Timestamps": {
         "type": "Transitive",
         "resolved": "1.0.9",
         "contentHash": "xdCVp+T4VFXOT+Ube2Cz527fnFXFUxQK24uPMGcCmICIpIcGCXPtI7vKLnWsJ6Nfc1B92tNBK9e/I8NDq2ee6g=="
-      },
-      "Unosquare.Swan.Lite": {
-        "type": "Transitive",
-        "resolved": "3.1.0",
-        "contentHash": "X3s5QE/KMj3WAPFqFve7St+Ds10BB50u8kW8PmKIn7FVkn7yEXe9Yxr2htt1WV85DRqfFR0MN/BUNHkGHtL4OQ==",
-        "dependencies": {
-          "System.ValueTuple": "4.5.0"
-        }
       },
       "UrlMatcher": {
         "type": "Transitive",

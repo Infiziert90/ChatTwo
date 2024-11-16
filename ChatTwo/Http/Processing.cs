@@ -17,13 +17,13 @@ public class Processing
 
     internal (MessageTemplate[] ChannelName, bool Locked) ReadChannelName(Chunk[] channelName)
     {
-        var locked = Plugin.ChatLogWindow.CurrentTab is not { Channel: null };
+        var locked = Plugin.CurrentTab is not { Channel: null };
         return (channelName.Select(ProcessChunk).ToArray(), locked);
     }
 
     internal async Task<MessageResponse[]> ReadMessageList()
     {
-        var tabMessages = await Plugin.ChatLogWindow.CurrentTab!.Messages.GetCopy();
+        var tabMessages = await Plugin.CurrentTab!.Messages.GetCopy();
         return tabMessages.TakeLast(Plugin.Config.WebinterfaceMaxLinesToSend).Select(ReadMessageContent).ToArray();
     }
 

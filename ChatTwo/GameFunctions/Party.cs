@@ -16,7 +16,7 @@ internal static unsafe class Party
         }
     }
 
-    internal static void InviteOtherWorld(ulong contentId)
+    internal static void InviteOtherWorld(ulong contentId, ushort worldId = 0)
     {
         // third param is world, but it requires a specific world
         // if they're not on that world, it will fail
@@ -28,7 +28,7 @@ internal static unsafe class Party
             return;
         }
 
-        InfoProxyPartyInvite.Instance()->InviteToPartyContentId(contentId, 0);
+        InfoProxyPartyInvite.Instance()->InviteToPartyContentId(contentId, worldId);
     }
 
     internal static void InviteInInstance(ulong contentId)

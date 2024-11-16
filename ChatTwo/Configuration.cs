@@ -241,8 +241,7 @@ internal class Tab
     [NonSerialized] public long LastActivity;
     [NonSerialized] public MessageList Messages = new();
 
-    [NonSerialized] public TellTarget? TellTarget;
-    [NonSerialized] public InputChannel? PreviousChannel;
+    [NonSerialized] public UsedChannel CurrentChannel = new();
 
     [NonSerialized] public Guid Identifier = Guid.NewGuid();
 
@@ -271,6 +270,8 @@ internal class Tab
             ExtraChatChannels = ExtraChatChannels.ToHashSet(),
             UnreadMode = UnreadMode,
             UnhideOnActivity = UnhideOnActivity,
+            Unread = Unread,
+            LastActivity = LastActivity,
             DisplayTimestamp = DisplayTimestamp,
             Channel = Channel,
             PopOut = PopOut,
@@ -278,6 +279,7 @@ internal class Tab
             Opacity = Opacity,
             Identifier = Identifier,
             InputDisabled = InputDisabled,
+            CurrentChannel = CurrentChannel,
         };
     }
 
@@ -420,6 +422,16 @@ internal class Tab
             }
         }
     }
+}
+
+internal class UsedChannel
+{
+    internal InputChannel Channel = InputChannel.Invalid;
+    internal List<Chunk> Name = [];
+    internal TellTarget? TellTarget;
+
+    internal bool UseTempChannel;
+    internal InputChannel TempChannel = InputChannel.Invalid;
 }
 
 [Serializable]
