@@ -19,7 +19,6 @@ using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
 using Dalamud.Memory;
 using FFXIVClientStructs.FFXIV.Client.UI;
-using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using ImGuiNET;
 using Lumina.Excel.Sheets;
 
@@ -133,7 +132,7 @@ public sealed class ChatLogWindow : Window
         Activate = true;
         PlayedClosingSound = false;
         if (Plugin.Config.PlaySounds)
-            UIModule.PlaySound(ChatOpenSfx);
+            UIGlobals.PlaySoundEffect(ChatOpenSfx);
 
         // Don't set the channel or text content when activating a disabled tab.
         if (Plugin.CurrentTab.InputDisabled)
@@ -182,20 +181,21 @@ public sealed class ChatLogWindow : Window
 
             if (info.Channel is InputChannel.Linkshell1 or InputChannel.CrossLinkshell1 && info.Rotate != RotateMode.None)
             {
+                var module = UIModule.Instance();
+
                 // If any of these operations fail, do nothing.
-                targetChannel = null;
                 if (info.Permanent)
                 {
                     // Rotate using the game's code.
                     if (info.Channel == InputChannel.Linkshell1)
                     {
                         GameFunctions.Chat.RotateLinkshellHistory(info.Rotate);
-                        targetChannel = (InputChannel) AgentChatLog.Instance()->CurrentChannel;
+                        targetChannel = info.Channel + (uint)module->LinkshellCycle;
                     }
                     else
                     {
                         GameFunctions.Chat.RotateCrossLinkshellHistory(info.Rotate);
-                        targetChannel = (InputChannel)AgentChatLog.Instance()->CurrentChannel;
+                        targetChannel = info.Channel + (uint)module->CrossWorldLinkshellCycle;
                     }
                 }
                 else
@@ -211,9 +211,7 @@ public sealed class ChatLogWindow : Window
             }
 
             if (info.Permanent)
-            {
                 SetChannel(targetChannel);
-            }
             else
                 Plugin.CurrentTab.CurrentChannel.TempChannel = targetChannel.Value;
         }
@@ -658,7 +656,7 @@ public sealed class ChatLogWindow : Window
                 if (Plugin.Config.PlaySounds && !PlayedClosingSound)
                 {
                     PlayedClosingSound = true;
-                    UIModule.PlaySound(ChatCloseSfx);
+                    UIGlobals.PlaySoundEffect(ChatCloseSfx);
                 }
 
                 if (Plugin.CurrentTab.CurrentChannel.UseTempChannel)
@@ -1529,7 +1527,7 @@ public sealed class ChatLogWindow : Window
         if (Plugin.Config.PlaySounds && PlayedClosingSound)
         {
             PlayedClosingSound = false;
-            UIModule.PlaySound(ChatOpenSfx);
+            UIGlobals.PlaySoundEffect(ChatOpenSfx);
         }
 
         var ptr = new ImGuiInputTextCallbackDataPtr(data);

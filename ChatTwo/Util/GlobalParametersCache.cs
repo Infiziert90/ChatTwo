@@ -36,7 +36,7 @@ public static class GlobalParametersCache
             Cache = new int[gp.MySize];
         for (ulong i = 0; i < gp.MySize; i++)
         {
-            var p = gp.Get(i);
+            var p = gp[(long)i];
             if (p.Type == TextParameterType.Integer)
                 Cache[(int)i] = p.IntValue;
             else

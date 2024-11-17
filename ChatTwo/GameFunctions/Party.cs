@@ -39,7 +39,7 @@ internal static unsafe class Party
             return;
         }
 
-        InfoProxyPartyInvite.Instance()->InviteToPartyInInstance(contentId);
+        InfoProxyPartyInvite.Instance()->InviteToPartyInInstanceByContentId(contentId);
     }
 
     internal static void Kick(string name, ulong contentId)

@@ -20,6 +20,7 @@ using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using ImGuiNET;
 using Lumina.Excel.Sheets;
+
 using Action = System.Action;
 using DalamudPartyFinderPayload = Dalamud.Game.Text.SeStringHandling.Payloads.PartyFinderPayload;
 using ChatTwoPartyFinderPayload = ChatTwo.Util.PartyFinderPayload;
@@ -200,7 +201,7 @@ public sealed class PayloadHandler {
     internal void Click(Chunk chunk, Payload? payload, ImGuiMouseButton button)
     {
         if (Plugin.Config.PlaySounds)
-            UIModule.PlaySound(PopupSfx);
+            UIGlobals.PlaySoundEffect(PopupSfx);
 
         switch (button)
         {
