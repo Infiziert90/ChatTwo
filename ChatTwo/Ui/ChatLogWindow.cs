@@ -631,6 +631,7 @@ public sealed class ChatLogWindow : Window
                     if (activeTab.CurrentChannel.UseTempChannel)
                     {
                         activeTab.CurrentChannel.UseTempChannel = false;
+                        activeTab.CurrentChannel.TempChannel = InputChannel.Invalid;
                         SetChannel(activeTab.CurrentChannel.Channel);
                     }
                 }
@@ -643,6 +644,7 @@ public sealed class ChatLogWindow : Window
                     if (activeTab.CurrentChannel.UseTempChannel)
                     {
                         activeTab.CurrentChannel.UseTempChannel = false;
+                        activeTab.CurrentChannel.TempChannel = InputChannel.Invalid;
                         SetChannel(activeTab.CurrentChannel.Channel);
                     }
                 }
@@ -667,6 +669,7 @@ public sealed class ChatLogWindow : Window
                 if (Plugin.CurrentTab.CurrentChannel.UseTempChannel)
                 {
                     Plugin.CurrentTab.CurrentChannel.UseTempChannel = false;
+                    activeTab.CurrentChannel.TempChannel = InputChannel.Invalid;
                     SetChannel(Plugin.CurrentTab.CurrentChannel.Channel);
                 }
             }
@@ -900,6 +903,7 @@ public sealed class ChatLogWindow : Window
                 activeTab.CurrentChannel.UseTempChannel = false;
                 if (activeTab.CurrentChannel.TempChannel is InputChannel.Tell)
                     activeTab.CurrentChannel.TellTarget = null;
+                activeTab.CurrentChannel.TempChannel = InputChannel.Invalid;
 
                 Chat = string.Empty;
                 return;

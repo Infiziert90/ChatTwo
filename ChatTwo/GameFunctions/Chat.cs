@@ -359,6 +359,7 @@ internal sealed unsafe class Chat : IDisposable
     {
         if (rotate == RotateMode.None)
             return null;
+
         var delta = rotate switch
         {
             RotateMode.Forward => 1,
@@ -382,9 +383,9 @@ internal sealed unsafe class Chat : IDisposable
         {
             case InputChannel.Linkshell1 or InputChannel.CrossLinkshell1 when rotate != RotateMode.None:
             {
-                // If we're activating for the first time, start at the beginning
-                // or end of the linkshell list depending on the rotate mode.
-                var currentIndex = rotate == RotateMode.Forward ? 7u : 0u;
+                var module = UIModule.Instance();
+
+                var currentIndex = channel is InputChannel.Linkshell1 ? (uint) module->LinkshellCycle : (uint) module->CrossWorldLinkshellCycle;
                 if (currentTempChannel != null)
                 {
                     switch (channel)
