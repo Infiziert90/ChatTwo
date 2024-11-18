@@ -211,9 +211,14 @@ public sealed class ChatLogWindow : Window
             }
 
             if (info.Permanent)
+            {
                 SetChannel(targetChannel);
+            }
             else
+            {
+                Plugin.CurrentTab.CurrentChannel.UseTempChannel = true;
                 Plugin.CurrentTab.CurrentChannel.TempChannel = targetChannel.Value;
+            }
         }
 
         if (info.Text != null && Chat.Length == 0)
