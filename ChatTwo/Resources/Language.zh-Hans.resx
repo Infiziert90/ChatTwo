@@ -1088,10 +1088,10 @@
         <value>限制在聊天窗口中显示的日志行数。这可能会稍微提高性能。</value>
     </data>
   <data name="Options_WebinterfaceMaxLinesToSend_Name" xml:space="preserve">
-        <value>Log line limit for the webinterface</value>
+        <value>网页界面日志行数限制</value>
     </data>
   <data name="Options_WebinterfaceMaxLinesToSend_Description" xml:space="preserve">
-        <value>Limits the amount of log lines to show in the webinterface. This will improve loading performance.</value>
+        <value>限制在网页界面中显示的日志行数。可提高加载性能。</value>
     </data>
   <data name="LoadMessages_Error" xml:space="preserve">
         <value>加载聊天记录时发生错误。请查看插件日志以获取更多信息以报告此问题。</value>

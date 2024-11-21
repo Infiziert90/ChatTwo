@@ -2,6 +2,7 @@
 using Dalamud.Interface.Utility;
 using ImGuiNET;
 using System.Collections;
+using Dalamud.Interface.Utility.Raii;
 
 namespace ChatTwo.Util;
 
@@ -58,7 +59,6 @@ public static class SearchSelector
 
     public static bool SelectorPopup(string id, out string selected, SelectorPopupOptions? options = null, bool close = false)
     {
-
         options ??= new SelectorPopupOptions();
         var sheet = options.FilteredSheet;
         selected = string.Empty;
@@ -67,12 +67,15 @@ public static class SearchSelector
             return false;
 
         ImGui.SetNextWindowSize(options.Size ?? new Vector2(0, 250 * ImGuiHelpers.GlobalScale));
-        if (!ImGui.BeginPopupContextItem(id, options.PopupFlags))
+        using var popup = ImRaii.ContextPopupItem(id, options.PopupFlags);
+        if (!popup.Success)
             return false;
 
         SearchInput(id, sheet, options.SearchPredicate ?? ((row, s) => options.FormatRow(row).Contains(s, StringComparison.CurrentCultureIgnoreCase)));
 
-        ImGui.BeginChild("SearchList", Vector2.Zero, true);
+        using var child = ImRaii.Child("SearchList", Vector2.Zero, true);
+        if (!child.Success)
+            return false;
 
         var ret = false;
         var drawSelectable = options.DrawSelectable ?? ((row, selected) => ImGui.Selectable(options.FormatRow(row), selected));
@@ -81,11 +84,12 @@ public static class SearchSelector
             foreach (var i in clipper.Rows)
             {
                 var searched = FilteredSearchSheet[i];
-                ImGui.PushID(id);
-                if (!drawSelectable(searched, options.IsSelected(searched))) continue;
+                using var pushedId = ImRaii.PushId(id);
+                if (!drawSelectable(searched, options.IsSelected(searched)))
+                    continue;
+
                 selected = searched;
                 ret = true;
-                ImGui.PopID();
             }
         }
 
@@ -93,8 +97,6 @@ public static class SearchSelector
         if (ret && options.CloseOnSelection)
             ImGui.CloseCurrentPopup();
 
-        ImGui.EndChild();
-        ImGui.EndPopup();
         return ret;
     }
 }

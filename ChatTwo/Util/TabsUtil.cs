@@ -3,7 +3,8 @@ using ChatTwo.Resources;
 
 namespace ChatTwo.Util;
 
-internal static class TabsUtil {
+internal static class TabsUtil
+{
     internal static Dictionary<ChatType, ChatSource> AllChannels()
     {
         var channels = new Dictionary<ChatType, ChatSource>();
@@ -12,9 +13,11 @@ internal static class TabsUtil {
         return channels;
     }
 
-    internal static Tab VanillaGeneral => new() {
+    internal static Tab VanillaGeneral => new()
+    {
         Name = Language.Tabs_Presets_General,
-        ChatCodes = new Dictionary<ChatType, ChatSource> {
+        ChatCodes = new Dictionary<ChatType, ChatSource>
+        {
             // Special
             [ChatType.Debug] = ChatSourceExt.All,
             [ChatType.Urgent] = ChatSourceExt.All,
@@ -75,11 +78,10 @@ internal static class TabsUtil {
         },
     };
 
-    internal static Tab VanillaEvent => new() {
+    internal static Tab VanillaEvent => new()
+    {
         Name = Language.Tabs_Presets_Event,
-        ChatCodes = new Dictionary<ChatType, ChatSource> {
-            [ChatType.NpcDialogue] = ChatSourceExt.All,
-        },
+        ChatCodes = new Dictionary<ChatType, ChatSource> { [ChatType.NpcDialogue] = ChatSourceExt.All, },
     };
 
     internal static Dictionary<ChatType, ChatSource> MostlyPlayer => new()

@@ -186,15 +186,16 @@ internal static class ImGuiUtil
         Plugin.FontManager.FontAwesome.Push();
         var size = new Vector2(0, 0);
         if (width > 0)
-        {
-            var style = ImGui.GetStyle();
-            size.X = width - 2 * style.CellPadding.X;
-        }
+            size.X = width - 2 * ImGui.GetStyle().CellPadding.X;
+
         var ret = ImGui.Button(label, size);
         Plugin.FontManager.FontAwesome.Pop();
 
         if (tooltip != null && ImGui.IsItemHovered())
-            ImGui.SetTooltip(tooltip);
+        {
+            using var startedTooltip = ImRaii.Tooltip();
+            ImGuiHelpers.SafeTextWrapped(tooltip);
+        }
 
         return ret;
     }
@@ -224,11 +225,8 @@ internal static class ImGuiUtil
         var style = StyleModel.GetConfiguredStyle() ?? StyleModel.GetFromCurrent();
         var dalamudOrange = style.BuiltInColors?.DalamudOrange;
 
-        var push = dalamudOrange != null;
-        var color = dalamudOrange ?? Vector4.Zero;
-
         using (TextWrapPos(wrap))
-        using (ImRaii.PushColor(ImGuiCol.Text, color, push))
+        using (ImRaii.PushColor(ImGuiCol.Text, dalamudOrange ?? Vector4.Zero, dalamudOrange != null))
         {
             ImGui.TextUnformatted(text);
         }
@@ -305,18 +303,17 @@ internal static class ImGuiUtil
         if (combo)
         {
             foreach (var size in FontManager.AxisFontSizeList)
-                if (ImGui.Selectable($"{size:###.##}pt", currentSize == size))
+                if (ImGui.Selectable($"{size:###.##}pt", currentSize.Equals(size)))
                     currentSize = size;
         }
     }
 
     public static bool Button(string id, FontAwesomeIcon icon, bool disabled)
     {
-        var clicked = false;
         using (ImRaii.Disabled(disabled))
-            clicked = ImGuiComponents.IconButton(id, icon);
-
-        return clicked;
+        {
+            return ImGuiComponents.IconButton(id, icon);
+        }
     }
 
     internal static bool CtrlShiftButton(string label, string tooltip = "")
@@ -328,7 +325,10 @@ internal static class ImGuiUtil
             ret = ImGui.Button(label) && ctrlShiftHeld;
 
         if (!string.IsNullOrEmpty(tooltip) && ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
-            ImGui.SetTooltip(tooltip);
+        {
+            using var startedTooltip = ImRaii.Tooltip();
+            ImGuiHelpers.SafeTextWrapped(tooltip);
+        }
 
         return ret;
     }
@@ -345,15 +345,19 @@ internal static class ImGuiUtil
             var ret = ImGui.Button(label) && ctrlShiftHeld;
 
             if (!string.IsNullOrEmpty(tooltip) && ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
-                ImGui.SetTooltip(tooltip);
+            {
+                using var startedTooltip = ImRaii.Tooltip();
+                ImGuiHelpers.SafeTextWrapped(tooltip);
+            }
 
             return ret;
         }
     }
 
-    internal static bool KeybindInput(string id, ref ConfigKeyBind? keybind)
+    internal static void KeybindInput(string id, ref ConfigKeyBind? keybind)
     {
         var idUint = ImGui.GetID(id);
+
         using var pushedId = ImRaii.PushId(id);
         if (ImGui.GetStateStorage().GetBool(idUint))
         {
@@ -387,7 +391,7 @@ internal static class ImGuiUtil
             {
                 keybind = null;
                 ImGui.GetStateStorage().SetBool(idUint, false);
-                return false;
+                return;
             }
 
             foreach (var vk in Enum.GetValues(typeof(VirtualKey)).Cast<VirtualKey>())
@@ -404,7 +408,7 @@ internal static class ImGuiUtil
                     Key = vk
                 };
                 ImGui.GetStateStorage().SetBool(idUint, false);
-                return true;
+                return;
             }
         }
         else
@@ -415,8 +419,6 @@ internal static class ImGuiUtil
             if (ImGui.Button(text, new Vector2(-1, 0)))
                 ImGui.GetStateStorage().SetBool(idUint, true);
         }
-
-        return false;
     }
 
     public static void DrawArrows(ref int selected, int min, int max, float spacing, int id = 0)
@@ -428,13 +430,15 @@ internal static class ImGuiUtil
         ImGui.SameLine(0, spacing);
         using (ImRaii.Disabled(isMin))
         {
-            if (IconButton(FontAwesomeIcon.ArrowLeft, id.ToString())) selected--;
+            if (IconButton(FontAwesomeIcon.ArrowLeft, id.ToString()))
+                selected--;
         }
 
         ImGui.SameLine(0, spacing);
         using (ImRaii.Disabled(isMax))
         {
-            if (IconButton(FontAwesomeIcon.ArrowRight, id+1.ToString())) selected++;
+            if (IconButton(FontAwesomeIcon.ArrowRight, id+1.ToString()))
+                selected++;
         }
     }
 
@@ -447,7 +451,8 @@ internal static class ImGuiUtil
 
     internal static bool TryToImGui(this VirtualKey key, out ImGuiKey result)
     {
-        result = key switch {
+        result = key switch
+        {
             VirtualKey.NO_KEY => ImGuiKey.None,
             VirtualKey.BACK => ImGuiKey.Backspace,
             VirtualKey.TAB => ImGuiKey.Tab,
@@ -561,13 +566,12 @@ internal static class ImGuiUtil
         return result != 0 || key == VirtualKey.NO_KEY;
     }
 
-    private struct EndUnconditionally(Action endAction, bool success) : ImRaii.IEndObject
+    public struct EndUnconditionally(Action endAction, bool success) : ImRaii.IEndObject
     {
-        private Action EndAction { get; } = endAction;
-
         public bool Success { get; } = success;
 
-        public bool Disposed { get; private set; } = false;
+        private bool Disposed { get; set; } = false;
+        private Action EndAction { get; } = endAction;
 
         public void Dispose()
         {
@@ -594,10 +598,15 @@ internal static class ImGuiUtil
         return new EndUnconditionally(ImGui.PopTextWrapPos, true);
     }
 
+    public static ImRaii.IEndObject Menu(string label)
+    {
+        return new EndUnconditionally(ImGui.EndMenu, ImGui.BeginMenu(label));
+    }
+
     public static void ChannelSelector(string headerText, Dictionary<ChatType, ChatSource> chatCodes)
     {
         using var channelNode = ImRaii.TreeNode(headerText);
-        if (!channelNode)
+        if (!channelNode.Success)
             return;
 
         foreach (var (header, types) in ChatTypeExt.SortOrder)

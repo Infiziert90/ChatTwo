@@ -24,17 +24,14 @@ public class ColorPayload
                 payload.Enabled = false;
                 return payload;
             case 0xE9:
-            {
                 var param = stream.ReadByte();
-                var value = (uint) GlobalParametersCache.GetValue(param - 2);
+                var globalValue = (uint) GlobalParametersCache.GetValue(param - 2);
                 payload.Enabled = true;
-                payload.UnshiftedColor = value;
-                payload.Color = ColourUtil.ArgbToRgba(value);
+                payload.UnshiftedColor = globalValue;
+                payload.Color = ColourUtil.ArgbToRgba(globalValue);
 
                 return payload;
-            }
             case >= 0xF0 and <= 0xFE:
-            {
                 // From: https://github.com/NotAdam/Lumina/blob/master/src/Lumina/Text/Expressions/IntegerExpression.cs#L119-L128
                 uint ShiftAndThrowIfZero(int v, int shift)
                 {
@@ -47,21 +44,20 @@ public class ColorPayload
                 }
 
                 typeByte += 1;
-                var value = 0u;
+                var argbValue = 0u;
                 if ((typeByte & 8) != 0)
-                    value |= ShiftAndThrowIfZero(stream.ReadByte(), 24);
+                    argbValue |= ShiftAndThrowIfZero(stream.ReadByte(), 24);
                 else
-                    value |= 0xff000000u;
+                    argbValue |= 0xff000000u;
 
-                if( (typeByte & 4) != 0 ) value |= ShiftAndThrowIfZero( stream.ReadByte(), 16 );
-                if( (typeByte & 2) != 0 ) value |= ShiftAndThrowIfZero( stream.ReadByte(), 8 );
-                if( (typeByte & 1) != 0 ) value |= ShiftAndThrowIfZero( stream.ReadByte(), 0 );
+                if( (typeByte & 4) != 0 ) argbValue |= ShiftAndThrowIfZero( stream.ReadByte(), 16 );
+                if( (typeByte & 2) != 0 ) argbValue |= ShiftAndThrowIfZero( stream.ReadByte(), 8 );
+                if( (typeByte & 1) != 0 ) argbValue |= ShiftAndThrowIfZero( stream.ReadByte(), 0 );
 
                 payload.Enabled = true;
-                payload.Color = ColourUtil.ArgbToRgba(value);
+                payload.Color = ColourUtil.ArgbToRgba(argbValue);
 
                 return payload;
-            }
             default:
                 return null;
         }

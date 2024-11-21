@@ -8,6 +8,7 @@ using MessagePack;
 using MessagePack.Formatters;
 using MessagePack.Resolvers;
 using Microsoft.Data.Sqlite;
+
 using DalamudUtil = Dalamud.Utility.Util;
 using Encoding = System.Text.Encoding;
 
@@ -118,11 +119,7 @@ internal class MessageStore : IDisposable
     private SqliteConnection Connection { get; set; }
 
     internal static readonly MessagePackSerializerOptions MsgPackOptions = MessagePackSerializerOptions.Standard
-        .WithResolver(CompositeResolver.Create(
-            new IMessagePackFormatter[] { new PayloadMessagePackFormatter(), new SeStringMessagePackFormatter(), },
-            new IFormatterResolver[] { StandardResolver.Instance }
-            )
-        );
+        .WithResolver(CompositeResolver.Create([new PayloadMessagePackFormatter(), new SeStringMessagePackFormatter()], [StandardResolver.Instance]));
 
     internal MessageStore(string dbPath)
     {

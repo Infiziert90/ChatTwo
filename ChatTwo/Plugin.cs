@@ -28,7 +28,7 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static ICommandManager CommandManager { get; private set; } = null!;
     [PluginService] internal static ICondition Condition { get; private set; } = null!;
     [PluginService] internal static IDataManager DataManager { get; private set; } = null!;
-    [PluginService] internal static IFramework Framework { get; set; } = null!;
+    [PluginService] internal static IFramework Framework { get; private set; } = null!;
     [PluginService] internal static IGameGui GameGui { get; private set; } = null!;
     [PluginService] internal static IKeyState KeyState { get; private set; } = null!;
     [PluginService] internal static IObjectTable ObjectTable { get; private set; } = null!;
@@ -115,6 +115,7 @@ public sealed class Plugin : IDalamudPlugin
             WindowSystem.AddWindow(CommandHelpWindow);
             WindowSystem.AddWindow(SeStringDebugger);
             WindowSystem.AddWindow(DebuggerWindow);
+
             FontManager.BuildFonts();
 
             Interface.UiBuilder.DisableCutsceneUiHide = true;
@@ -122,7 +123,7 @@ public sealed class Plugin : IDalamudPlugin
 
             MessageManager = new MessageManager(this); // requires Ui
 
-            // let all the other components register, then initialise commands
+            // let all the other components register, then initialize commands
             Commands.Initialise();
 
             if (Interface.Reason is not PluginLoadReason.Boot)
@@ -156,6 +157,7 @@ public sealed class Plugin : IDalamudPlugin
         {
             Log.Error(ex, "Plugin load threw an error, turning off plugin");
             Dispose();
+
             // Re-throw the exception to fail the plugin load.
             throw;
         }

@@ -36,21 +36,21 @@ public static class Tokenizer
 
         static PrecedenceBasedRegexTokenizer()
         {
-            TokenDefinitions = new List<TokenDefinition>
-            {
-                new(TokenType.CloseParenthesis, "\\)", 1),
-                new(TokenType.Comma, ",", 1),
-                new(TokenType.Dot, "\\.", 1),
-                new(TokenType.QuestionMark, "\\?", 1),
-                new(TokenType.ExclamationMark, "!", 1),
-                new(TokenType.Semicolon, ";", 1),
-                new(TokenType.Whitespace, "\\s", 1),
-                new(TokenType.Equals, "=", 1),
-                new(TokenType.OpenParenthesis, "\\(", 1),
-                new(TokenType.UrlString, URLRegex, 1),
-                new(TokenType.StringValue, "\\p{IsBasicLatin}", 2),
-                new(TokenType.Leftover, ".", 3)
-            };
+            TokenDefinitions =
+            [
+                new TokenDefinition(TokenType.CloseParenthesis, "\\)", 1),
+                new TokenDefinition(TokenType.Comma, ",", 1),
+                new TokenDefinition(TokenType.Dot, "\\.", 1),
+                new TokenDefinition(TokenType.QuestionMark, "\\?", 1),
+                new TokenDefinition(TokenType.ExclamationMark, "!", 1),
+                new TokenDefinition(TokenType.Semicolon, ";", 1),
+                new TokenDefinition(TokenType.Whitespace, "\\s", 1),
+                new TokenDefinition(TokenType.Equals, "=", 1),
+                new TokenDefinition(TokenType.OpenParenthesis, "\\(", 1),
+                new TokenDefinition(TokenType.UrlString, URLRegex, 1),
+                new TokenDefinition(TokenType.StringValue, "\\p{IsBasicLatin}", 2),
+                new TokenDefinition(TokenType.Leftover, ".", 3)
+            ];
         }
 
         public static IEnumerable<Token> Tokenize(string lqlText)

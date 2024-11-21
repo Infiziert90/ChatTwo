@@ -103,12 +103,8 @@ internal class MessageManager : IAsyncDisposable
             LastContentId = contentId;
 
         // Drain the PendingSync queue into the PendingAsync queue.
-        while (true)
-        {
-            if (!PendingSync.TryDequeue(out var pending))
-                return;
+        while (PendingSync.TryDequeue(out var pending))
             PendingAsync.Enqueue(pending);
-        }
     }
 
     private void ProcessPendingMessages(CancellationToken token)

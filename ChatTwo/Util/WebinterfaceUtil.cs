@@ -1,6 +1,6 @@
 ﻿namespace ChatTwo.Util;
 
-public class WebinterfaceUtil
+public static class WebinterfaceUtil
 {
     private static readonly Random Rng = new();
 

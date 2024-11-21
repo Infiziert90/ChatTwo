@@ -137,7 +137,7 @@
     <value>Mostrar descripción del ítem</value>
   </data>
   <data name="Options_NativeItemTooltips_Description">
-    <value>Mostrar descripción del ítem cuando el cursor pase sobre el objeto en el {0}.</value>
+    <value>Mostrar información emergente de los objetos del juego al pasar el cursor sobre ellos en {0}.</value>
   </data>
   <data name="Options_SidebarTabView_Name">
     <value>Mostrar pestañas en la barra lateral</value>
@@ -152,10 +152,10 @@
     <value>Mostrar mensajes con un estilo más moderno.</value>
   </data>
   <data name="Options_Use24HourClock_Name">
-    <value>24-hour clock</value>
+    <value>Reloj 24 horas</value>
   </data>
   <data name="Options_Use24HourClock_Description">
-    <value>Display timestamps as their 24-hour clock version.</value>
+    <value>Mostrar las marcas de tiempo en formato de reloj de 24 horas.</value>
   </data>
   <data name="Options_MoreCompactPretty_Name">
     <value>Diseño más moderno y compacto</value>
@@ -227,7 +227,7 @@
     <value>Modo no leído</value>
   </data>
   <data name="Options_Tabs_InactivityBehaviour">
-    <value>Unhide the chat window on activity</value>
+    <value>Mostrar la ventana de chat en la actividad</value>
   </data>
   <data name="Options_Tabs_NoInputChannel">
     <value>&lt;Ninguno&gt;</value>
@@ -347,10 +347,10 @@
     <value>La fuente {0} se utilizará para mostrar el texto japonés.</value>
   </data>
   <data name="Options_ItalicFont_Name">
-    <value>Italic font</value>
+    <value>Fuente en cursiva</value>
   </data>
   <data name="Options_Italic_Description">
-    <value>If enabled, uses the italic font in {0}, else it will use the ingame italic font.</value>
+    <value>Si está activado, utiliza la fuente cursiva en {0}, de lo contrario usará la fuente cursiva del juego.</value>
   </data>
   <data name="Options_Tabs_ChannelTypes_Special">
     <value>Especiales</value>
@@ -443,7 +443,7 @@
     <value>Canales de chat considerados para la actividad</value>
   </data>
   <data name="Options_InactivityHideChannels_Description">
-    <value>Which chat channels should be considered for activity. Other channels will not restore the chat regardless of which tab they occur in.</value>
+    <value>Qué canales de chat deben ser considerados para la actividad. Otros canales no restaurarán el chat sin importar en qué pestaña se encuentren.</value>
   </data>
   <data name="Options_InactivityHideChannels_All_Label">
     <value>Seleccionar Todo</value>
@@ -464,7 +464,7 @@
     <value>Otros</value>
   </data>
   <data name="Options_Webinterface_Tab">
-    <value>Webinterface</value>
+    <value>Interfaz Web</value>
   </data>
   <data name="LanguageOverride_None">
     <value>Usar el idioma por defecto de Dalamud</value>
@@ -551,16 +551,16 @@
     <value>Si esto está habilitado, la lista del Traductor Automático se ordenará alfabéticamente.</value>
   </data>
   <data name="Options_WebinterfaceEnable_Name">
-    <value>Enabled</value>
+    <value>Habilitado</value>
   </data>
   <data name="Options_WebinterfaceEnable_Description">
-    <value>Enables the webinterface that can be accessed with a browser.</value>
+    <value>Habilita la interfaz web a la que se puede acceder con un navegador.</value>
   </data>
   <data name="Options_WebinterfaceAutoStart_Name">
-    <value>Start automatically</value>
+    <value>Iniciar automáticamente</value>
   </data>
   <data name="Options_WebinterfaceAutoStart_Description">
-    <value>Webinterface will start alongside the plugin automatically</value>
+    <value>La interfaz web comenzará junto al plugin automáticamente</value>
   </data>
   <data name="Options_OverrideStyle_Name">
     <value>Sobrescribir estilo</value>
@@ -569,22 +569,22 @@
     <value>Estilos</value>
   </data>
   <data name="Options_ChatTabForwardKeybind_Name">
-    <value>Cycle chat tab forwards keybind</value>
+    <value>Ciclo de la pestaña de chat hacia adelante</value>
   </data>
   <data name="Options_ChatTabBackwardKeybind_Name">
-    <value>Cycle chat tab backwards keybind</value>
+    <value>Ciclo de la pestaña de chat hacia atrás</value>
   </data>
   <data name="Webinterface_CurrentPassword">
-    <value>Authcode:</value>
+    <value>Código de autor:</value>
   </data>
   <data name="Webinterface_PasswordReset_Tooltip">
-    <value>Reset your password and invalidate all session tokens.</value>
+    <value>Restablecer su contraseña e invalidar todos los tokens de sesión.</value>
   </data>
   <data name="Webinterface_Controls">
-    <value>Control Panel:</value>
+    <value>Panel de control:</value>
   </data>
   <data name="Webinterface_Controls_Active">
-    <value>Active:</value>
+    <value>Activo:</value>
   </data>
   <data name="Webinterface_Controls_Url">
     <value>URL:</value>
@@ -995,7 +995,7 @@
     <value>Mensaje copiado al portapapeles</value>
   </data>
   <data name="PartyInvite_NoId">
-    <value>Unable to find ID for this message, please try another one.</value>
+    <value>No se puede encontrar el ID de este mensaje, por favor prueba con otro.</value>
   </data>
   <data name="Context_CopyLink" xml:space="preserve">
         <value>Copiar enlace al portapapeles</value>
@@ -1088,10 +1088,10 @@
         <value>Limita la cantidad de líneas de registro que se pueden mostrar en la ventana de chat. Esto puede mejorar ligeramente el rendimiento.</value>
     </data>
   <data name="Options_WebinterfaceMaxLinesToSend_Name" xml:space="preserve">
-        <value>Log line limit for the webinterface</value>
+        <value>Límite de líneas de registro para la interfaz web</value>
     </data>
   <data name="Options_WebinterfaceMaxLinesToSend_Description" xml:space="preserve">
-        <value>Limits the amount of log lines to show in the webinterface. This will improve loading performance.</value>
+        <value>Limita la cantidad de líneas de registro a mostrar en la interfaz web. Esto mejorará el rendimiento de la carga.</value>
     </data>
   <data name="LoadMessages_Error" xml:space="preserve">
         <value>Ha ocurrido un error al cargar el historial del chat. Por favor comprueba los registros del plugin para más informacion para reportar este problema.</value>
@@ -1319,57 +1319,57 @@
         <value>Se produjo un error al enviar este mensaje privado</value>
     </data>
   <data name="Webinterface_Stop_Success" xml:space="preserve">
-        <value>Webinterface was stopped.</value>
+        <value>Interfaz web detenida.</value>
     </data>
   <data name="Webinterface_Stop_Failed" xml:space="preserve">
-        <value>Webinterface failed to stop. Check /xllog for more information.</value>
+        <value>La interfaz web no se ha detenido. Revisa /xllog para más información.</value>
     </data>
   <data name="Webinterface_Button_Stop" xml:space="preserve">
-        <value>Stop</value>
+        <value>Detener</value>
     </data>
   <data name="Webinterface_Button_Start" xml:space="preserve">
-        <value>Start</value>
+        <value>Iniciar</value>
     </data>
   <data name="Webinterface_Start_Success" xml:space="preserve">
-        <value>Webinterface was started.</value>
+        <value>Interfaz web iniciada.</value>
     </data>
   <data name="Webinterface_Start_Failed" xml:space="preserve">
-        <value>Webinterface failed to start. Check /xllog for more information.</value>
+        <value>La interfaz web no pudo iniciarse. Revisa /xllog para más información.</value>
     </data>
   <data name="Webinterface_Option_Port_Name" xml:space="preserve">
-        <value>Port</value>
+        <value>Puerto</value>
     </data>
   <data name="Webinterface_Option_Port_Description" xml:space="preserve">
-        <value>The port this webinterface will be running on.</value>
+        <value>Puerto en el que se ejecutará esta interfaz web.</value>
     </data>
   <data name="Options_Webinterface_Warning_Header" xml:space="preserve">
-        <value>After checking 'Enabled' and clicking 'Start' this will load up Chat2's built-in web interface, which will allow devices on your network to access in-game chat. This feature may be used to allow a phone or another computer to see Chat2 activity, switch channels, and send messages as though you were typing in FFXIV itself.</value>
+        <value>Después de marcar 'Activado' y hacer clic en 'Iniciar', se cargará la interfaz web integrada de Chat2, que permitirá a los dispositivos de tu red acceder al chat en el juego. Esta función se puede utilizar para permitir que un teléfono u otro equipo vea la actividad de Chat2, cambie de canal, y envíe mensajes como si estuvieras escribiendo en FFXIV.</value>
     </data>
   <data name="Options_Webinterface_Warning_Reason" xml:space="preserve">
-        <value>For reasons of account security, this feature is not intended for use outside of your local network, you have been warned!</value>
+        <value>Por razones de seguridad de la cuenta, esta característica no está pensada para su uso fuera de su red local, ¡usted ha sido advertido!</value>
     </data>
   <data name="Options_Webinterface_Warning_DoNot" xml:space="preserve">
-        <value>Do Not:</value>
+        <value>No:</value>
     </data>
   <data name="Options_Webinterface_DoNot_Port" xml:space="preserve">
-        <value>- Forward the port used (9000)</value>
+        <value>Redirijas el puerto usado (9000)</value>
     </data>
   <data name="Options_Webinterface_DoNot_Share" xml:space="preserve">
-        <value>- Share your authentication code with anyone else</value>
+        <value>Compartas tu código con nadie más</value>
     </data>
   <data name="Options_Webinterface_DoNot_Multibox" xml:space="preserve">
-        <value>- Expect multi-boxing to work with this (only first client works)</value>
+        <value>Esperes que el multi-Boeing funcione con esto (solo el primer cliente funciona).</value>
     </data>
   <data name="Options_Webinterface_Warning_Support" xml:space="preserve">
-        <value>No support will be provided if any of the 'Do Not' clauses aren't respected and adhered to appropriately.</value>
+        <value>No se proporcionará ningún soporte a las cláusulas de "NO" que no sean respetadas y adheridas apropiadamente.</value>
     </data>
   <data name="Options_Webinterface_Hostname_Fail" xml:space="preserve">
-        <value>Unable to resolve hostname.</value>
+        <value>Incapaz de resolver nombre del host.</value>
     </data>
   <data name="Options_Webinterface_Note" xml:space="preserve">
-        <value>Note: This will require at least a semi-modern browser in order to function correctly.</value>
+        <value>Nota: Esto requerirá al menos un navegador semi moderno para funcionar correctamente</value>
     </data>
   <data name="Webinterface_UsageNotice" xml:space="preserve">
-        <value>Usage Notice</value>
+        <value>Aviso de Uso</value>
     </data>
 </root>

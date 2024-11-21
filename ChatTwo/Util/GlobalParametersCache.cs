@@ -12,6 +12,7 @@ public static class GlobalParametersCache
     {
         if (index < 0 || index >= Cache.Length)
             return 0;
+
         return Cache[index];
     }
 
@@ -31,9 +32,9 @@ public static class GlobalParametersCache
             return;
 
         ref var gp = ref rtm->TextModule.MacroDecoder.GlobalParameters;
-
         if (Cache.Length != (int)gp.MySize)
             Cache = new int[gp.MySize];
+
         for (ulong i = 0; i < gp.MySize; i++)
         {
             var p = gp[(long)i];

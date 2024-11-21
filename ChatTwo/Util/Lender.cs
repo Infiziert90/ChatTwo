@@ -1,23 +1,26 @@
 namespace ChatTwo.Util;
 
-internal class Lender<T> {
-    private readonly Func<T> _ctor;
-    private readonly List<T> _items = new();
-    private int _counter;
+internal class Lender<T>
+{
+    private readonly Func<T> Ctor;
+    private readonly List<T> Items = [];
+    private int Counter;
 
-    internal Lender(Func<T> ctor) {
-        _ctor = ctor;
+    internal Lender(Func<T> ctor)
+    {
+        Ctor = ctor;
     }
 
-    internal void ResetCounter() {
-        _counter = 0;
+    internal void ResetCounter()
+    {
+        Counter = 0;
     }
 
-    internal T Borrow() {
-        if (_items.Count <= _counter) {
-            _items.Add(_ctor());
-        }
+    internal T Borrow()
+    {
+        if (Items.Count <= Counter)
+            Items.Add(Ctor());
 
-        return _items[_counter++];
+        return Items[Counter++];
     }
 }

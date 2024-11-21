@@ -12,7 +12,6 @@ using Lumina.Text.ReadOnly;
 using Pidgin;
 using static Pidgin.Parser;
 using static Pidgin.Parser<char>;
-using TextPayload = Lumina.Text.Payloads.TextPayload;
 
 namespace ChatTwo.Util;
 
@@ -27,71 +26,28 @@ internal static class AutoTranslate
             .AtLeastOnceUntil(Lookahead(Char('[').IgnoreResult().Or(End)))
             .Select(string.Concat)
             .Labelled("sheetName");
-        var numPair = Map(
-                (first, second) => (ISelectorPart) new IndexRange(
-                    uint.Parse(string.Concat(first)),
-                    uint.Parse(string.Concat(second))
-                ),
+        var numPair = Map(ISelectorPart (first, second) =>
+                    new IndexRange(uint.Parse(string.Concat(first)), uint.Parse(string.Concat(second))),
                 Digit.AtLeastOnce().Before(Char('-')),
-                Digit.AtLeastOnce()
-            )
+                Digit.AtLeastOnce())
             .Labelled("numPair");
         var singleRow = Digit
             .AtLeastOnce()
             .Select(string.Concat)
-            .Select(num => (ISelectorPart) new SingleRow(uint.Parse(num)));
+            .Select(ISelectorPart (num) => new SingleRow(uint.Parse(num)));
         var column = String("col-")
             .Then(Digit.AtLeastOnce())
             .Select(string.Concat)
-            .Select(num => (ISelectorPart) new ColumnSpecifier(uint.Parse(num)));
+            .Select(ISelectorPart (num) => new ColumnSpecifier(uint.Parse(num)));
         var noun = String("noun")
-            .Select(_ => (ISelectorPart) new NounMarker());
-        var selectorItems = OneOf(
-                Try(numPair),
-                singleRow,
-                column,
-                noun
-            )
+            .Select(ISelectorPart (_) => new NounMarker());
+        var selectorItems = OneOf(Try(numPair), singleRow, column, noun)
             .Separated(Char(','))
             .Labelled("selectorItems");
         var selector = selectorItems
             .Between(Char('['), Char(']'))
             .Labelled("selector");
-        return Map(
-            (name, sel) => (name, sel),
-            sheetName,
-            selector.Optional()
-        );
-    }
-
-    private static string TextValue(this Lumina.Text.SeString str)
-    {
-        var payloads = str.Payloads
-            .Select(p => {
-                if (p is TextPayload text) {
-                    return p.Data[0] == 0x03
-                        ? text.RawString[1..]
-                        : text.RawString;
-                }
-
-                if (p.Data.Length <= 1) {
-                    return "";
-                }
-
-                if (p.Data[1] == 0x1F) {
-                    return "-";
-                }
-
-                if (p.Data.Length > 2 && p.Data[1] == 0x20) {
-                    var value = p.Data.Length > 4
-                        ? p.Data[3] - 1
-                        : p.Data[2];
-                    return ((char) (48 + value)).ToString();
-                }
-
-                return "";
-            });
-        return string.Join("", payloads);
+        return Map((name, sel) => (name, sel), sheetName, selector.Optional());
     }
 
     /// <summary>
@@ -131,7 +87,7 @@ internal static class AutoTranslate
                     var sheet = Plugin.DataManager.Excel.GetSheet<WorkingRawRow>(name: sheetName);
 
                     var columns = new List<int>();
-                    var rows    = new List<Range>();
+                    var rows = new List<Range>();
                     if (selector.HasValue)
                     {
                         columns.Clear();
@@ -179,21 +135,17 @@ internal static class AutoTranslate
                         // See above.
                         for (var i = range.Start.Value; i < range.End.Value; i++)
                         {
-                            if (!sheet.TryGetRow((uint)i, out var rowParser)) continue;
+                            if (!sheet.TryGetRow((uint)i, out var rowParser))
+                                continue;
 
                             foreach (var col in columns)
                             {
-                                var rawName = rowParser.RawRow.ReadStringColumn(col)!;
-                                var name    = rawName.ToDalamudString();
-                                var text    = name.TextValue;
+                                var rawName = rowParser.RawRow.ReadStringColumn(col);
+                                var name = rawName.ToDalamudString();
+                                var text = name.TextValue;
                                 if (text.Length > 0)
                                 {
-                                    list.Add(new AutoTranslateEntry(
-                                        row.Group,
-                                        (uint)i,
-                                        text,
-                                        name
-                                    ));
+                                    list.Add(new AutoTranslateEntry(row.Group, (uint)i, text, name));
 
                                     if (shouldAdd)
                                         ValidEntries.Add((row.Group, (uint)i));
@@ -205,12 +157,7 @@ internal static class AutoTranslate
                 else if (lookup is not "@")
                 {
                     var text = row.Text.ToDalamudString();
-                    list.Add(new AutoTranslateEntry(
-                        row.Group,
-                        row.RowId,
-                        text.TextValue,
-                        text
-                    ));
+                    list.Add(new AutoTranslateEntry(row.Group, row.RowId, text.TextValue, text));
 
                     if (shouldAdd)
                         ValidEntries.Add((row.Group, row.RowId));
@@ -271,33 +218,30 @@ internal static class AutoTranslate
         var start = -1;
         for (var i = 0; i < bytes.Length; i++)
         {
-            if (start != -1) {
-                if (bytes[i] == '>')
-                {
-                    var tag = Encoding.UTF8.GetString(bytes[start..(i + 1)]);
-                    var parts = tag[4..^1].Split(',', 2);
-                    if (parts.Length == 2 && uint.TryParse(parts[0], out var group) && uint.TryParse(parts[1], out var key))
-                    {
-                        var payload = ValidEntries.Contains((group, key))
-                            ? new AutoTranslatePayload(group, key).Encode()
-                            : [];
-
-                        var oldBytes = bytes.ToArray();
-                        var lengthDiff = payload.Length - (i - start);
-                        bytes = new byte[oldBytes.Length + lengthDiff];
-                        Array.Copy(oldBytes, bytes, start);
-                        Array.Copy(payload, 0, bytes, start, payload.Length);
-                        Array.Copy(oldBytes, i + 1, bytes, start + payload.Length, oldBytes.Length - (i + 1));
-
-                        i += lengthDiff;
-                    }
-
-                    start = -1;
-                }
-                else
-                {
+            if (start != -1)
+            {
+                if (bytes[i] != '>')
                     continue;
+
+                var tag = Encoding.UTF8.GetString(bytes[start..(i + 1)]);
+                var parts = tag[4..^1].Split(',', 2);
+                if (parts.Length == 2 && uint.TryParse(parts[0], out var group) && uint.TryParse(parts[1], out var key))
+                {
+                    var payload = ValidEntries.Contains((group, key))
+                        ? new AutoTranslatePayload(group, key).Encode()
+                        : [];
+
+                    var oldBytes = bytes.ToArray();
+                    var lengthDiff = payload.Length - (i - start);
+                    bytes = new byte[oldBytes.Length + lengthDiff];
+                    Array.Copy(oldBytes, bytes, start);
+                    Array.Copy(payload, 0, bytes, start, payload.Length);
+                    Array.Copy(oldBytes, i + 1, bytes, start + payload.Length, oldBytes.Length - (i + 1));
+
+                    i += lengthDiff;
                 }
+
+                start = -1;
             }
 
             if (i + search.Length < bytes.Length && memcmp(bytes[i..], search, (nuint) search.Length) == 0)
@@ -311,9 +255,9 @@ public readonly struct WorkingRawRow(RawRow row) : IExcelRow<WorkingRawRow>
 {
     public uint RowId => row.RowId;
     public RawRow RawRow => row;
-    
+
     static WorkingRawRow IExcelRow<WorkingRawRow>.Create(ExcelPage page, uint offset, uint row) =>
-        new(new(page, offset, row));
+        new(new RawRow(page, offset, row));
 }
 
 internal interface ISelectorPart { }

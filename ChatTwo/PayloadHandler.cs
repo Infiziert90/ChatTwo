@@ -27,7 +27,8 @@ using ChatTwoPartyFinderPayload = ChatTwo.Util.PartyFinderPayload;
 
 namespace ChatTwo;
 
-public sealed class PayloadHandler {
+public sealed class PayloadHandler
+{
     private const string PopupId = "chat2-context-popup";
 
     private ChatLogWindow LogWindow { get; }
@@ -105,35 +106,33 @@ public sealed class PayloadHandler {
         var contentId = chunk.Message?.ContentId ?? 0;
         var sender = chunk.Message?.Sender.Select(c => c.Link).FirstOrDefault(p => p is PlayerPayload) as PlayerPayload;
 
-        if (ImGui.BeginMenu(Language.Context_Integrations))
+        using var menu = ImGuiUtil.Menu(Language.Context_Integrations);
+        if (!menu.Success)
+            return;
+
+        var cursor = ImGui.GetCursorPos();
+        foreach (var id in registered)
         {
-            var cursor = ImGui.GetCursorPos();
-
-            foreach (var id in registered)
+            try
             {
-                try
-                {
-                    LogWindow.Plugin.Ipc.Invoke(id, sender, contentId, payload, chunk.Message?.SenderSource, chunk.Message?.ContentSource);
-                }
-                catch (Exception ex)
-                {
-                    Plugin.Log.Error(ex, "Error executing integration");
-                }
+                LogWindow.Plugin.Ipc.Invoke(id, sender, contentId, payload, chunk.Message?.SenderSource, chunk.Message?.ContentSource);
             }
-
-            if (cursor == ImGui.GetCursorPos())
+            catch (Exception ex)
             {
-                ImGui.PushStyleColor(ImGuiCol.Text, ImGui.GetStyle().Colors[(int) ImGuiCol.TextDisabled]);
-                ImGui.Text("No integrations available");
-                ImGui.PopStyleColor();
+                Plugin.Log.Error(ex, "Error executing integration");
             }
+        }
 
-            ImGui.EndMenu();
+        if (cursor == ImGui.GetCursorPos())
+        {
+            using var pushedColor = ImRaii.PushColor(ImGuiCol.Text, ImGui.GetStyle().Colors[(int)ImGuiCol.TextDisabled]);
+            ImGui.Text("No integrations available");
         }
     }
 
     private void ContextFooter(bool didCustomContext, Chunk chunk)
     {
+        ImRaii.IEndObject? menu = null;
         if (didCustomContext)
         {
             ImGui.Separator();
@@ -143,7 +142,8 @@ public sealed class PayloadHandler {
             //
             // It makes it much more convenient in the majority of cases to
             // copy the message content without having to open a submenu.
-            if (!ImGui.BeginMenu(Plugin.PluginName))
+            menu = ImGuiUtil.Menu(Plugin.PluginName);
+            if (!menu.Success)
                 return;
         }
 
@@ -170,19 +170,11 @@ public sealed class PayloadHandler {
                 WrapperUtil.AddNotification(Language.Context_CopyContentSuccess, NotificationType.Info);
             }
 
-            var col = ImGui.GetStyle().Colors[(int) ImGuiCol.TextDisabled];
-            ImGui.PushStyleColor(ImGuiCol.Text, col);
-            try
-            {
-                ImGui.TextUnformatted(message.Code.Type.Name());
-            }
-            finally
-            {
-                ImGui.PopStyleColor();
-            }
+            using var pushedColor = ImRaii.PushColor(ImGuiCol.Text, ImGui.GetStyle().Colors[(int) ImGuiCol.TextDisabled]);
+            ImGui.TextUnformatted(message.Code.Type.Name());
         }
 
-        if (didCustomContext) ImGui.EndMenu();
+        menu?.Dispose();
     }
 
     private static string StringifyMessage(Message? message, bool withSender = false)
@@ -191,8 +183,7 @@ public sealed class PayloadHandler {
             return string.Empty;
 
         var chunks = withSender ? message.Sender.Concat(message.Content) : message.Content;
-        return chunks
-            .Where(chunk => chunk is TextChunk)
+        return chunks.Where(chunk => chunk is TextChunk)
             .Cast<TextChunk>()
             .Select(text => text.Content)
             .Aggregate(string.Concat);
@@ -214,7 +205,8 @@ public sealed class PayloadHandler {
         }
     }
 
-    internal void Hover(Payload payload) {
+    internal void Hover(Payload payload)
+    {
         var hoverSize = 350f * ImGuiHelpers.GlobalScale;
 
         switch (payload)
@@ -253,11 +245,12 @@ public sealed class PayloadHandler {
     {
         ImGui.SetNextWindowSize(new Vector2(width, -1f));
 
-        using var tooltip = ImRaii.Tooltip();
-        using var color = ImRaii.PushColor(ImGuiCol.Text, LogWindow.DefaultText);
-        using var wrap = ImGuiUtil.TextWrapPos();
-
-        inside();
+        using (ImRaii.Tooltip())
+        using (ImGuiUtil.TextWrapPos())
+        using (ImRaii.PushColor(ImGuiCol.Text, LogWindow.DefaultText))
+        {
+            inside();
+        }
     }
 
     public unsafe void MoveTooltip(AddonEvent type, AddonArgs args)
@@ -348,22 +341,20 @@ public sealed class PayloadHandler {
 
     private void HoverEventItem(ItemPayload payload)
     {
-        if (!Sheets.EventItemSheet.HasRow(payload.RawItemId))
+        if (!Sheets.EventItemSheet.TryGetRow(payload.RawItemId, out var itemRow))
             return;
 
-        var item = Sheets.EventItemSheet.GetRow(payload.RawItemId);
-        if (Plugin.TextureProvider.GetFromGameIcon(new GameIconLookup(item.Icon)).GetWrapOrDefault() is { } icon)
+        if (Plugin.TextureProvider.GetFromGameIcon(new GameIconLookup(itemRow.Icon)).GetWrapOrDefault() is { } icon)
             InlineIcon(icon);
 
-        var name = ChunkUtil.ToChunks(item.Name.ToDalamudString(), ChunkSource.None, null);
+        var name = ChunkUtil.ToChunks(itemRow.Name.ToDalamudString(), ChunkSource.None, null);
         LogWindow.DrawChunks(name.ToList());
         ImGui.Separator();
 
-        if (!Sheets.EventItemHelpSheet.HasRow(payload.RawItemId))
+        if (!Sheets.EventItemHelpSheet.TryGetRow(payload.RawItemId, out var itemHelpRow))
             return;
 
-        var help = Sheets.EventItemHelpSheet.GetRow(payload.RawItemId);
-        LogWindow.DrawChunks(ChunkUtil.ToChunks(help.Description.ToDalamudString(), ChunkSource.None, null).ToList());
+        LogWindow.DrawChunks(ChunkUtil.ToChunks(itemHelpRow.Description.ToDalamudString(), ChunkSource.None, null).ToList());
     }
 
     private void HoverURI(UriPayload uri)
@@ -452,15 +443,14 @@ public sealed class PayloadHandler {
             return;
         }
 
-        if (!Sheets.ItemSheet.HasRow(payload.ItemId))
+        if (!Sheets.ItemSheet.TryGetRow(payload.ItemId, out var itemRow))
             return;
 
-        var item = Sheets.ItemSheet.GetRow(payload.ItemId);
         var hq = payload.Kind == ItemPayload.ItemKind.Hq;
-        if (Plugin.TextureProvider.GetFromGameIcon(new GameIconLookup(item.Icon, hq)).GetWrapOrDefault() is { } icon)
+        if (Plugin.TextureProvider.GetFromGameIcon(new GameIconLookup(itemRow.Icon, hq)).GetWrapOrDefault() is { } icon)
             InlineIcon(icon);
 
-        var name = item.Name.ToDalamudString();
+        var name = itemRow.Name.ToDalamudString();
         // hq symbol
         if (hq)
             name.Payloads.Add(new TextPayload(" "));
@@ -471,7 +461,7 @@ public sealed class PayloadHandler {
         ImGui.Separator();
 
         var realItemId = payload.RawItemId;
-        if (item.EquipSlotCategory.RowId != 0)
+        if (itemRow.EquipSlotCategory.RowId != 0)
         {
             if (ImGui.Selectable(Language.Context_TryOn))
                 GameFunctions.Context.TryOn(realItemId, 0);
@@ -480,7 +470,7 @@ public sealed class PayloadHandler {
                 GameFunctions.Context.OpenItemComparison(realItemId);
         }
 
-        if (item.ItemSearchCategory.Value.Category == 3)
+        if (itemRow.ItemSearchCategory.Value.Category == 3)
             if (ImGui.Selectable(Language.Context_SearchRecipes))
                 GameFunctions.Context.SearchForRecipesUsingItem(payload.ItemId);
 
@@ -580,15 +570,17 @@ public sealed class PayloadHandler {
                         if (validContentId && ImGui.Selectable(Language.Context_InviteToParty))
                             GameFunctions.Party.InviteInInstance(chunk.Message!.ContentId);
                     }
-                    else if (!inInstance && ImGui.BeginMenu(Language.Context_InviteToParty))
+                    else if (!inInstance)
                     {
-                        if (ImGui.Selectable(Language.Context_InviteToParty_SameWorld))
-                            GameFunctions.Party.InviteSameWorld(player.PlayerName, (ushort) world.RowId, chunk.Message?.ContentId ?? 0);
+                        using var menu = ImGuiUtil.Menu(Language.Context_InviteToParty);
+                        if (menu.Success)
+                        {
+                            if (ImGui.Selectable(Language.Context_InviteToParty_SameWorld))
+                                GameFunctions.Party.InviteSameWorld(player.PlayerName, (ushort)world.RowId, chunk.Message?.ContentId ?? 0);
 
-                        if (validContentId && ImGui.Selectable(Language.Context_InviteToParty_DifferentWorld))
-                            GameFunctions.Party.InviteOtherWorld(chunk.Message!.ContentId, (ushort) world.RowId);
-
-                        ImGui.EndMenu();
+                            if (validContentId && ImGui.Selectable(Language.Context_InviteToParty_DifferentWorld))
+                                GameFunctions.Party.InviteOtherWorld(chunk.Message!.ContentId, (ushort)world.RowId);
+                        }
                     }
                 }
 
@@ -626,8 +618,6 @@ public sealed class PayloadHandler {
         if (validContentId && ImGui.Selectable(Language.Context_AdventurerPlate))
             if (!GameFunctions.GameFunctions.TryOpenAdventurerPlate(chunk.Message!.ContentId))
                 WrapperUtil.AddNotification(Language.Context_AdventurerPlateError, NotificationType.Warning);
-
-        // View Party Finder 0x2E
     }
 
     private IPlayerCharacter? FindCharacterForPayload(PlayerPayload payload)

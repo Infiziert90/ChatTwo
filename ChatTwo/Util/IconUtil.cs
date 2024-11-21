@@ -137,7 +137,8 @@ public readonly unsafe ref struct GfdFileView
 
 
 
-internal static class IconUtil {
+internal static class IconUtil
+{
     private static byte[]? GfdFile;
     public static unsafe GfdFileView GfdFileView
     {
