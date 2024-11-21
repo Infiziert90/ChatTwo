@@ -877,7 +877,7 @@ public sealed class ChatLogWindow : Window
             // registers stub handlers and actually processes its commands in a
             // SendMessage detour.
             var bytes = Encoding.UTF8.GetBytes(channel.Value.Prefix());
-            Plugin.Common.SendMessageUnsafe(bytes);
+            ChatBox.SendMessageUnsafe(bytes);
             return;
         }
 
@@ -921,7 +921,7 @@ public sealed class ChatLogWindow : Window
                         var tellBytes = Encoding.UTF8.GetBytes(trimmed);
                         AutoTranslate.ReplaceWithPayload(ref tellBytes);
 
-                        Plugin.Common.SendMessageUnsafe(tellBytes);
+                        ChatBox.SendMessageUnsafe(tellBytes);
 
                         Chat = string.Empty;
                         return;
@@ -949,14 +949,14 @@ public sealed class ChatLogWindow : Window
 
                 if (activeTab.CurrentChannel.UseTempChannel)
                     trimmed = $"{activeTab.CurrentChannel.TempChannel.Prefix()} {trimmed}";
-                else // (activeTab is { Channel: { } channel }) TODO Check this channel selection
+                else
                     trimmed = $"{activeTab.CurrentChannel.Channel.Prefix()} {trimmed}";
             }
 
             var bytes = Encoding.UTF8.GetBytes(trimmed);
             AutoTranslate.ReplaceWithPayload(ref bytes);
 
-            Plugin.Common.SendMessageUnsafe(bytes);
+            ChatBox.SendMessageUnsafe(bytes);
         }
 
         Chat = string.Empty;

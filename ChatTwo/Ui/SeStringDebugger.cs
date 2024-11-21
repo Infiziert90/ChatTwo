@@ -1,12 +1,13 @@
-﻿using System.Numerics;
+﻿using System.Globalization;
+using System.Numerics;
 using System.Text;
 using ChatTwo.Util;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
+using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
-using Lumina.Excel;
-using Lumina.Excel.Sheets;
+
 using DalamudPartyFinderPayload = Dalamud.Game.Text.SeStringHandling.Payloads.PartyFinderPayload;
 
 namespace ChatTwo.Ui;
@@ -15,7 +16,7 @@ public class SeStringDebugger : Window
 {
     private readonly Plugin Plugin;
 
-    public SeStringDebugger(Plugin plugin) : base($"SeString Debugger###chat2-sestringdebugger")
+    public SeStringDebugger(Plugin plugin) : base("SeString Debugger###chat2-sestringdebugger")
     {
         Plugin = plugin;
 
@@ -92,8 +93,8 @@ public class SeStringDebugger : Window
                         { "TerritoryType.RowId", map.TerritoryType.RowId.ToString() },
                         { "RawX", map.RawX.ToString() },
                         { "RawY", map.RawY.ToString() },
-                        { "XCoord", map.XCoord.ToString() },
-                        { "YCoord", map.YCoord.ToString() },
+                        { "XCoord", map.XCoord.ToString(CultureInfo.InvariantCulture) },
+                        { "YCoord", map.YCoord.ToString(CultureInfo.InvariantCulture) },
                         { "CoordinateString", map.CoordinateString },
                         { "DataString", map.DataString },
                     });
@@ -160,7 +161,7 @@ public class SeStringDebugger : Window
                 }
                 case IconPayload icon:
                 {
-                    var found = IconUtil.GfdFileView.TryGetEntry((uint) icon.Icon, out var entry);
+                    var found = IconUtil.GfdFileView.TryGetEntry((uint) icon.Icon, out _);
                     RenderMetadataDictionary("Link IconPayload", new Dictionary<string, string?>
                     {
                         { "Found", found.ToString() },
@@ -173,15 +174,12 @@ public class SeStringDebugger : Window
                     var colorPayload = ColorPayload.From(raw.Data);
                     if (colorPayload != null)
                     {
-                        var push = colorPayload.Enabled && colorPayload.Color != 0;
-                        // if (push) ImGui.PushStyleColor(ImGuiCol.Text, ColourUtil.RgbaToAbgr(colorPayload.U));
                         RenderMetadataDictionary("Link ColorPayload", new Dictionary<string, string?>
                         {
                             { "Unshifted", colorPayload.UnshiftedColor.ToString("X8") },
                             { "Color", colorPayload.Color.ToString("X8") },
                             { "Enabled?", colorPayload.Enabled.ToString() },
                         });
-                        // if (push) ImGui.PopStyleColor();
                     }
                     else
                     {
@@ -289,10 +287,8 @@ public class SeStringDebugger : Window
     {
         if (string.IsNullOrEmpty(original))
         {
-            var str = original == null ? "(null)" : "(empty)";
-            ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1, 1, 1, 0.5f));
-            ImGui.TextUnformatted(str);
-            ImGui.PopStyleColor();
+            using var pushedColor = ImRaii.PushColor(ImGuiCol.Text, new Vector4(1, 1, 1, 0.5f));
+            ImGui.TextUnformatted(original == null ? "(null)" : "(empty)");
             return;
         }
 
@@ -300,46 +296,35 @@ public class SeStringDebugger : Window
         var start = 0;
         var end = text.Length;
 
-        ImGui.PushStyleVar(ImGuiStyleVar.ItemSpacing, new Vector2(0, 0));
+        using var pushedStyle = ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, new Vector2(0, 0));
 
-        void WriteText(string text)
+        void WriteText(string wText)
         {
             if (wrap)
-            {
-                ImGui.TextWrapped(text);
-            }
+                ImGui.TextWrapped(wText);
             else
-            {
-                ImGui.TextUnformatted(text);
-            }
+                ImGui.TextUnformatted(wText);
         }
 
         while (start < end && char.IsWhiteSpace(text[start]))
-        {
             start++;
-        }
+
         if (start > 0)
         {
-            ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1, 1, 1, 0.5f));
+            using var pushedColor = ImRaii.PushColor(ImGuiCol.Text, new Vector4(1, 1, 1, 0.5f));
             WriteText(new string('_', start));
-            ImGui.PopStyleColor();
             ImGui.SameLine();
         }
 
         while (end > start && char.IsWhiteSpace(text[end - 1]))
-        {
             end--;
-        }
 
         WriteText(text[start..end]);
         if (end < text.Length)
         {
             ImGui.SameLine();
-            ImGui.PushStyleColor(ImGuiCol.Text, new Vector4(1, 1, 1, 0.5f));
+            using var pushedColor = ImRaii.PushColor(ImGuiCol.Text, new Vector4(1, 1, 1, 0.5f));
             WriteText(new string('_', text.Length - end));
-            ImGui.PopStyleColor();
         }
-
-        ImGui.PopStyleVar();
     }
 }

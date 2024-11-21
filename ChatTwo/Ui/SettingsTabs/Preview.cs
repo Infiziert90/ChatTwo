@@ -6,14 +6,12 @@ namespace ChatTwo.Ui.SettingsTabs;
 
 internal sealed class Preview : ISettingsTab
 {
-    private readonly Plugin Plugin;
     private Configuration Mutable { get; }
 
-    public string Name => Language.Options_Preview_Tab + "###tabs-preview";
+    public string Name => $"{Language.Options_Preview_Tab}###tabs-preview";
 
-    internal Preview(Plugin plugin, Configuration mutable)
+    internal Preview(Configuration mutable)
     {
-        Plugin = plugin;
         Mutable = mutable;
     }
 

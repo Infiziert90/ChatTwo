@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using ChatTwo.GameFunctions;
 using ChatTwo.Http;
 using ChatTwo.Ipc;
 using ChatTwo.Resources;
@@ -53,7 +52,6 @@ public sealed class Plugin : IDalamudPlugin
     public DebuggerWindow DebuggerWindow { get; }
 
     internal Commands Commands { get; }
-    internal ChatCommon Common { get; }
     internal GameFunctions.GameFunctions Functions { get; }
     internal MessageManager MessageManager { get; }
     internal IpcManager Ipc { get; }
@@ -97,7 +95,6 @@ public sealed class Plugin : IDalamudPlugin
             ServerCore = new ServerCore(this);
 
             Commands = new Commands(this);
-            Common = new ChatCommon();
             Functions = new GameFunctions.GameFunctions(this);
             Ipc = new IpcManager();
             ExtraChat = new ExtraChat(this);

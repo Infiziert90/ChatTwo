@@ -13,7 +13,7 @@ internal sealed class About : ISettingsTab
 {
     public string Name => string.Format(Language.Options_About_Tab, Plugin.PluginName) + "###tabs-about";
 
-    private readonly List<string> _translators =
+    private readonly List<string> Translators =
     [
         "q673135110", "Akizem", "d0tiKs",
         "Moonlight_Everlit", "Dark32", "andreycout",
@@ -28,7 +28,7 @@ internal sealed class About : ISettingsTab
 
     internal About()
     {
-        _translators.Sort((a, b) => string.Compare(a.ToLowerInvariant(), b.ToLowerInvariant(), StringComparison.Ordinal));
+        Translators.Sort((a, b) => string.Compare(a.ToLowerInvariant(), b.ToLowerInvariant(), StringComparison.Ordinal));
     }
 
     public void Draw(bool changed)
@@ -85,10 +85,8 @@ internal sealed class About : ISettingsTab
                     using var translatorChild = ImRaii.Child("translators");
                     if (translatorChild)
                     {
-                        foreach (var translator in _translators)
-                        {
+                        foreach (var translator in Translators)
                             ImGui.TextUnformatted(translator);
-                        }
                     }
                 }
             }

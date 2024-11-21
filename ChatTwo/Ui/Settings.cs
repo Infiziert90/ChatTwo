@@ -31,21 +31,21 @@ public sealed class SettingsWindow : Window
         Plugin = plugin;
         Mutable = new Configuration();
 
-        Tabs = new List<ISettingsTab>
-        {
+        Tabs =
+        [
             new Display(Mutable),
             new ChatLog(Plugin, Mutable),
             new Emote(Plugin, Mutable),
-            new Preview(Plugin, Mutable),
+            new Preview(Mutable),
             new Fonts(Mutable),
             new ChatColours(Plugin, Mutable),
-            new Tabs(Plugin, Mutable),
+            new Tabs(Mutable),
             new Database(Plugin, Mutable),
             new Webinterface(Plugin, Mutable),
             new Miscellaneous(Mutable),
             new Changelog(Mutable),
-            new About(),
-        };
+            new About()
+        ];
 
         RespectCloseHotkey = false;
         DisableWindowSounds = true;

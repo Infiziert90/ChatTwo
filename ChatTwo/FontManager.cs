@@ -20,7 +20,6 @@ public class FontManager
 
     private ushort[] Ranges;
     private ushort[] JpRange;
-    private readonly ushort[] SymRange = [0xE020, 0xE0DB, 0];
 
 
     public static readonly HashSet<float> AxisFontSizeList =
@@ -123,8 +122,7 @@ public class FontManager
                     Plugin.Config.JapaneseFontV2.FontId.AddToBuildToolkit(tk, config);
 
                     config.SizePt = Plugin.Config.SymbolsFontSizeV2;
-                    config.GlyphRanges = SymRange;
-                    tk.AddFontFromMemory(GameSymFont, config, "ChatTwo2 Sym Font");
+                    tk.AddGameSymbol(config);
 
                     tk.Font = config.MergeFont;
                 }
@@ -144,8 +142,7 @@ public class FontManager
                         Plugin.Config.JapaneseFontV2.FontId.AddToBuildToolkit(tk, config);
 
                         config.SizePt = Plugin.Config.SymbolsFontSizeV2;
-                        config.GlyphRanges = SymRange;
-                        tk.AddFontFromMemory(GameSymFont, config, "ChatTwo2 Sym Font");
+                        tk.AddGameSymbol(config);
 
                         tk.Font = config.MergeFont;
                     }

@@ -12,6 +12,7 @@ using FFXIVClientStructs.FFXIV.Client.UI.Info;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using Lumina.Excel;
 using Lumina.Excel.Sheets;
+
 using ValueType = FFXIVClientStructs.FFXIV.Component.GUI.ValueType;
 
 namespace ChatTwo.GameFunctions;
@@ -66,10 +67,10 @@ internal unsafe class GameFunctions : IDisposable
 
         var worldName = row.Name.ExtractText();
         ReplacementName = $"{name}@{worldName}";
-        Plugin.Common.SendMessage($"/{commandName} add {Placeholder}");
+        ChatBox.SendMessage($"/{commandName} add {Placeholder}");
     }
 
-    internal static T* GetAddon<T>(string name) where T : unmanaged
+    private static T* GetAddon<T>(string name) where T : unmanaged
     {
         var addon = RaptureAtkModule.Instance()->RaptureAtkUnitManager.GetAddonByName(name);
         return addon != null && addon->IsReady ? (T*)addon : null;

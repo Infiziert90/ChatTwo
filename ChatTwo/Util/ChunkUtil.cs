@@ -2,6 +2,9 @@ using ChatTwo.Code;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using System.Text;
+using Lumina.Text.Payloads;
+
+using PayloadType = Dalamud.Game.Text.SeStringHandling.PayloadType;
 
 namespace ChatTwo.Util;
 
@@ -111,6 +114,11 @@ internal static class ChunkUtil
                         var reader = new BinaryReader(new MemoryStream(rawPayload.Data[4..]));
                         var id = GetInteger(reader);
                         link = new AchievementPayload(id);
+                    }
+                    else if (rawPayload.Data is [_, (byte)MacroCode.NonBreakingSpace, _, _])
+                    {
+                        // NonBreakingSpace payload
+                        Append(" ");
                     }
                     // NOTE: no URIPayload because it originates solely from
                     // new Message(). The game doesn't have a URI payload type.

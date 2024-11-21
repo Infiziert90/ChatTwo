@@ -1,8 +1,4 @@
-﻿using Dalamud.Utility;
-using FFXIVClientStructs.FFXIV.Client.UI.Misc;
-using FFXIVClientStructs.FFXIV.Component.Text;
-
-namespace ChatTwo.Util;
+﻿namespace ChatTwo.Util;
 
 public class ColorPayload
 {

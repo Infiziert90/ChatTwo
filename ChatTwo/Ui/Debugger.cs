@@ -1,6 +1,5 @@
 ﻿using System.Numerics;
 using Dalamud.Interface.Windowing;
-using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using ImGuiNET;
 

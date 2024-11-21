@@ -9,16 +9,14 @@ namespace ChatTwo.Ui.SettingsTabs;
 
 internal sealed class Tabs : ISettingsTab
 {
-    private Plugin Plugin { get; }
     private Configuration Mutable { get; }
 
     public string Name => Language.Options_Tabs_Tab + "###tabs-tabs";
 
-    private int _toOpen = -2;
+    private int ToOpen = -2;
 
-    internal Tabs(Plugin plugin, Configuration mutable)
+    internal Tabs(Configuration mutable)
     {
-        Plugin = plugin;
         Mutable = mutable;
     }
 
@@ -47,13 +45,13 @@ internal sealed class Tabs : ISettingsTab
         }
 
         var toRemove = -1;
-        var doOpens = _toOpen > -2;
+        var doOpens = ToOpen > -2;
         for (var i = 0; i < Mutable.Tabs.Count; i++)
         {
             var tab = Mutable.Tabs[i];
 
             if (doOpens)
-                ImGui.SetNextItemOpen(i == _toOpen);
+                ImGui.SetNextItemOpen(i == ToOpen);
 
             using var treeNode = ImRaii.TreeNode($"{tab.Name}###tab-{i}");
             if (!treeNode.Success)
@@ -64,7 +62,7 @@ internal sealed class Tabs : ISettingsTab
             if (ImGuiUtil.IconButton(FontAwesomeIcon.TrashAlt, tooltip: Language.Options_Tabs_Delete))
             {
                 toRemove = i;
-                _toOpen = -1;
+                ToOpen = -1;
             }
 
             ImGui.SameLine();
@@ -72,7 +70,7 @@ internal sealed class Tabs : ISettingsTab
             if (ImGuiUtil.IconButton(FontAwesomeIcon.ArrowUp, tooltip: Language.Options_Tabs_MoveUp) && i > 0)
             {
                 (Mutable.Tabs[i - 1], Mutable.Tabs[i]) = (Mutable.Tabs[i], Mutable.Tabs[i - 1]);
-                _toOpen = i - 1;
+                ToOpen = i - 1;
             }
 
             ImGui.SameLine();
@@ -80,7 +78,7 @@ internal sealed class Tabs : ISettingsTab
             if (ImGuiUtil.IconButton(FontAwesomeIcon.ArrowDown, tooltip: Language.Options_Tabs_MoveDown) && i < Mutable.Tabs.Count - 1)
             {
                 (Mutable.Tabs[i + 1], Mutable.Tabs[i]) = (Mutable.Tabs[i], Mutable.Tabs[i + 1]);
-                _toOpen = i + 1;
+                ToOpen = i + 1;
             }
 
             ImGui.InputText(Language.Options_Tabs_Name, ref tab.Name, 512, ImGuiInputTextFlags.EnterReturnsTrue);
@@ -135,6 +133,6 @@ internal sealed class Tabs : ISettingsTab
             Mutable.Tabs.RemoveAt(toRemove);
 
         if (doOpens)
-            _toOpen = -2;
+            ToOpen = -2;
     }
 }

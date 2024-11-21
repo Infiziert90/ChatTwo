@@ -1,32 +1,20 @@
 ﻿using System.Text;
-using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Client.UI;
 
 namespace ChatTwo.GameFunctions;
 
 // From: https://git.anna.lgbt/anna/XivCommon/src/branch/main/XivCommon/Functions/Chat.cs
-public unsafe class ChatCommon
+public unsafe class ChatBox
 {
-    [Signature("48 89 5C 24 ?? 48 89 74 24 ?? 57 48 83 EC ?? 48 8B F2 48 8B F9 45 84 C9")]
-    private readonly delegate* unmanaged<UIModule*, Utf8String*, nint, byte, void> ProcessChatBox = null!;
-
-    internal ChatCommon()
+    public static void SendMessageUnsafe(byte[] message)
     {
-        Plugin.GameInteropProvider.InitializeFromAttributes(this);
-    }
-
-    public void SendMessageUnsafe(byte[] message)
-    {
-        if (ProcessChatBox == null)
-            throw new InvalidOperationException("Could not find signature for chat sending");
-
         var mes = Utf8String.FromSequence(message);
-        ProcessChatBox(UIModule.Instance(), mes, IntPtr.Zero, 0);
+        UIModule.Instance()->ProcessChatBoxEntry(mes);
         mes->Dtor(true);
     }
 
-    public void SendMessage(string message)
+    public static void SendMessage(string message)
     {
         var bytes = Encoding.UTF8.GetBytes(message);
         if (bytes.Length == 0)
@@ -45,7 +33,7 @@ public unsafe class ChatCommon
     {
         var uText = Utf8String.FromString(text);
 
-        uText->SanitizeString( 0x27F, (Utf8String*)nint.Zero);
+        uText->SanitizeString(0x27F, (Utf8String*)nint.Zero);
         var sanitised = uText->ToString();
         uText->Dtor(true);
 
