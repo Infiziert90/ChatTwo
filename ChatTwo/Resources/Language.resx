@@ -1286,7 +1286,7 @@
         <value>Date</value>
     </data>
     <data name="DbViewer_TableField_Type" xml:space="preserve">
-        <value>Chat Type</value>
+        <value>Channel</value>
     </data>
     <data name="DbViewer_TableField_Sender" xml:space="preserve">
         <value>Sender</value>

@@ -101,7 +101,7 @@ internal sealed class Tabs : ISettingsTab
                             tab.UnreadMode = mode;
 
                         if (mode.Tooltip() is { } tooltip && ImGui.IsItemHovered())
-                            ImGui.SetTooltip(tooltip);
+                            ImGuiUtil.Tooltip(tooltip);
                     }
                 }
             }

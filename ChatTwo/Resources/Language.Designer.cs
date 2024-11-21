@@ -1644,7 +1644,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Chat Type.
+        ///   Looks up a localized string similar to Channel.
         /// </summary>
         internal static string DbViewer_TableField_Type {
             get {

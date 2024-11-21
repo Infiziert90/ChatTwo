@@ -553,7 +553,7 @@ public sealed class ChatLogWindow : Window
             ImGui.OpenPopup(ChatChannelPicker);
 
         if (activeTab.Channel is not null && ImGui.IsItemHovered())
-            ImGui.SetTooltip(Language.ChatLog_SwitcherDisabled);
+            ImGuiUtil.Tooltip(Language.ChatLog_SwitcherDisabled);
 
         using (var popup = ImRaii.Popup(ChatChannelPicker))
         {
@@ -1148,11 +1148,11 @@ public sealed class ChatLogWindow : Window
                             ImGui.TextUnformatted(timestamp);
 
                             // We use an IsItemHovered() check here instead of
-                            // just calling SetTooltip() to avoid computing the
+                            // just calling Tooltip() to avoid computing the
                             // tooltip string for all visible items on every
                             // frame.
                             if (ImGui.IsItemHovered())
-                                ImGui.SetTooltip(message.Date.ToLocalTime().ToString("F"));
+                                ImGuiUtil.Tooltip(message.Date.ToLocalTime().ToString("F"));
                         }
                         else
                         {
@@ -1704,7 +1704,7 @@ public sealed class ChatLogWindow : Window
                     ImGui.Dummy(emoteSize);
 
                 if (ImGui.IsItemHovered())
-                    ImGui.SetTooltip(emotePayload.Code);
+                    ImGuiUtil.Tooltip(emotePayload.Code);
 
                 return;
             }

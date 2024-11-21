@@ -47,7 +47,7 @@ public class DbViewer : Window
         ChatCodes = TabsUtil.MostlyPlayer;
 
         DateFormat = CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern;
-        DateTimeFormat = CultureInfo.CurrentCulture.DateTimeFormat.FullDateTimePattern;
+        DateTimeFormat = "ddd, dd MMM yyy HH:mm:ss";
 
         LastProcessed = (AfterDate, BeforeDate, CurrentPage, OnlyCurrentCharacter, ChatCodes.Count);
         DateReset();
@@ -181,7 +181,7 @@ public class DbViewer : Window
             ImGui.SetCursorPos(pos);
             ImGui.Dummy(columnWidth);
             if (ImGui.IsItemHovered())
-                ImGui.SetTooltip(message.Code.Type.Name());
+                ImGuiUtil.Tooltip(message.Code.Type.Name());
 
             ImGui.TableNextColumn();
             Plugin.ChatLogWindow.DrawChunks(message.Sender);

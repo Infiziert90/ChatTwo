@@ -107,16 +107,16 @@ internal sealed class Database : ISettingsTab
             if (ImGui.IsItemHovered())
             {
                 ImGui.SetMouseCursor(ImGuiMouseCursor.Hand);
-                ImGui.SetTooltip(Language.Options_Database_Metadata_CopyConfigPath);
+                ImGuiUtil.Tooltip(Language.Options_Database_Metadata_CopyConfigPath);
             }
 
             ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_Size, StringUtil.BytesToString(DatabaseSize)));
             if (ImGui.IsItemHovered())
-                ImGui.SetTooltip(StringUtil.BytesToString(DatabaseSize));
+                ImGuiUtil.Tooltip(StringUtil.BytesToString(DatabaseSize));
 
             ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_LogSize, StringUtil.BytesToString(DatabaseLogSize)));
             if (ImGui.IsItemHovered())
-                ImGui.SetTooltip(StringUtil.BytesToString(DatabaseLogSize));
+                ImGuiUtil.Tooltip(StringUtil.BytesToString(DatabaseLogSize));
 
             ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_MessageCount, DatabaseMessageCount));
 

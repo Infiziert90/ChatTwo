@@ -13,7 +13,7 @@ internal sealed class Miscellaneous(Configuration mutable) : ISettingsTab
     {
         using (var combo = ImGuiUtil.BeginComboVertical(Language.Options_Language_Name, Mutable.LanguageOverride.Name()))
         {
-            if (combo)
+            if (combo.Success)
             {
                 foreach (var language in Enum.GetValues<LanguageOverride>())
                     if (ImGui.Selectable(language.Name()))
@@ -26,7 +26,7 @@ internal sealed class Miscellaneous(Configuration mutable) : ISettingsTab
 
         using (var combo = ImGuiUtil.BeginComboVertical(Language.Options_CommandHelpSide_Name, Mutable.CommandHelpSide.Name()))
         {
-            if (combo)
+            if (combo.Success)
             {
                 foreach (var side in Enum.GetValues<CommandHelpSide>())
                     if (ImGui.Selectable(side.Name(), Mutable.CommandHelpSide == side))
@@ -39,7 +39,7 @@ internal sealed class Miscellaneous(Configuration mutable) : ISettingsTab
 
         using (var combo = ImGuiUtil.BeginComboVertical(Language.Options_KeybindMode_Name, Mutable.KeybindMode.Name()))
         {
-            if (combo)
+            if (combo.Success)
             {
                 foreach (var mode in Enum.GetValues<KeybindMode>())
                 {
@@ -47,7 +47,7 @@ internal sealed class Miscellaneous(Configuration mutable) : ISettingsTab
                         Mutable.KeybindMode = mode;
 
                     if (ImGui.IsItemHovered())
-                        ImGui.SetTooltip(mode.Tooltip());
+                        ImGuiUtil.Tooltip(mode.Tooltip() ?? "");
                 }
             }
         }

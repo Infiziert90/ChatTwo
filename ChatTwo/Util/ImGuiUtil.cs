@@ -191,11 +191,8 @@ internal static class ImGuiUtil
         var ret = ImGui.Button(label, size);
         Plugin.FontManager.FontAwesome.Pop();
 
-        if (tooltip != null && ImGui.IsItemHovered())
-        {
-            using var startedTooltip = ImRaii.Tooltip();
-            ImGuiHelpers.SafeTextWrapped(tooltip);
-        }
+        if (!string.IsNullOrEmpty(tooltip) && ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
+            Tooltip(tooltip);
 
         return ret;
     }
@@ -266,6 +263,15 @@ internal static class ImGuiUtil
         return r;
     }
 
+    internal static void Tooltip(string tooltip)
+    {
+        using (ImRaii.Tooltip())
+        using (ImRaii.TextWrapPos(ImGui.GetFontSize() * 35.0f))
+        {
+            ImGui.TextUnformatted(tooltip);
+        }
+    }
+
     public static SingleFontChooserDialog? FontChooser(string label, SingleFontSpec font, bool checkbox, ref bool checkboxValue, Predicate<IFontFamilyId>? exclusion = null, string? preview = null)
     {
         using var id = ImRaii.PushId(label);
@@ -325,10 +331,7 @@ internal static class ImGuiUtil
             ret = ImGui.Button(label) && ctrlShiftHeld;
 
         if (!string.IsNullOrEmpty(tooltip) && ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
-        {
-            using var startedTooltip = ImRaii.Tooltip();
-            ImGuiHelpers.SafeTextWrapped(tooltip);
-        }
+            Tooltip(tooltip);
 
         return ret;
     }
@@ -345,10 +348,7 @@ internal static class ImGuiUtil
             var ret = ImGui.Button(label) && ctrlShiftHeld;
 
             if (!string.IsNullOrEmpty(tooltip) && ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
-            {
-                using var startedTooltip = ImRaii.Tooltip();
-                ImGuiHelpers.SafeTextWrapped(tooltip);
-            }
+                Tooltip(tooltip);
 
             return ret;
         }
