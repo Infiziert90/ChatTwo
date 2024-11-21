@@ -432,6 +432,14 @@ internal class UsedChannel
 
     internal bool UseTempChannel;
     internal InputChannel TempChannel = InputChannel.Invalid;
+    internal TellTarget? TempTellTarget;
+
+    internal void ResetTempChannel()
+    {
+        UseTempChannel = false;
+        TempTellTarget = null;
+        TempChannel = InputChannel.Invalid;
+    }
 }
 
 [Serializable]

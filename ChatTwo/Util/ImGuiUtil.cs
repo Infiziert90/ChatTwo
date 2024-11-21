@@ -583,6 +583,26 @@ internal static class ImGuiUtil
         }
     }
 
+    // Use end-function only on success.
+    private struct EndConditionally(Action endAction, bool success) : ImRaii.IEndObject
+    {
+        public bool Success { get; } = success;
+
+        private bool Disposed { get; set; } = false;
+        private Action EndAction { get; } = endAction;
+
+        public void Dispose()
+        {
+            if (Disposed)
+                return;
+
+            if (Success)
+                EndAction();
+
+            Disposed = true;
+        }
+    }
+
     public static ImRaii.IEndObject TextWrapPos()
     {
         ImGui.PushTextWrapPos();
@@ -600,7 +620,7 @@ internal static class ImGuiUtil
 
     public static ImRaii.IEndObject Menu(string label)
     {
-        return new EndUnconditionally(ImGui.EndMenu, ImGui.BeginMenu(label));
+        return new EndConditionally(ImGui.EndMenu, ImGui.BeginMenu(label));
     }
 
     public static void ChannelSelector(string headerText, Dictionary<ChatType, ChatSource> chatCodes)

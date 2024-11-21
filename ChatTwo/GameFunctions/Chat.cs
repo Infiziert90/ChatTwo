@@ -258,7 +258,7 @@ internal sealed unsafe class Chat : IDisposable
         {
             Channel = (InputChannel) channel,
             Name = nameChunks,
-            TellTarget = playerName != null ? new TellTarget(playerName, worldId, 0, 0) : null,
+            TellTarget = playerName != null ? new TellTarget(playerName, worldId, 0, 0) : null
         };
 
         return ret;
@@ -284,7 +284,7 @@ internal sealed unsafe class Chat : IDisposable
             try
             {
                 var target = new TellTarget(playerName->ToString(), worldId, contentId, (TellReason) reason);
-                Plugin.ChatLogWindow.Activated(new ChatActivatedArgs(new ChannelSwitchInfo(InputChannel.Tell))
+                Plugin.ChatLogWindow.Activated(new ChatActivatedArgs(new ChannelSwitchInfo(InputChannel.Tell, permanent: setChatType))
                 {
                     TellReason = (TellReason) reason,
                     TellTarget = target,
