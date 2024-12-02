@@ -867,6 +867,8 @@ public sealed class ChatLogWindow : Window
             // SendMessage detour.
             var bytes = Encoding.UTF8.GetBytes(channel.Value.Prefix());
             ChatBox.SendMessageUnsafe(bytes);
+
+            Plugin.CurrentTab.CurrentChannel.Channel = channel.Value;
             return;
         }
 
