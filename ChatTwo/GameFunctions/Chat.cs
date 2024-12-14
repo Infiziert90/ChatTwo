@@ -561,4 +561,14 @@ internal sealed unsafe class Chat : IDisposable
             _ => playerName
         };
     }
+
+    internal bool CheckHideFlags()
+    {
+        // Only hide the chat in a cutscene when the vanilla chat would've
+        // also been hidden. This prevents Chat 2 from hiding for a split
+        // second before the cutscene actually starts, because the game sets
+        // the cutscene conditions before processing the skip.
+        var raptureAtkUnitManager = RaptureAtkUnitManager.Instance();
+        return raptureAtkUnitManager == null || raptureAtkUnitManager->UiFlags.HasFlag(UIModule.UiFlags.Chat);
+    }
 }

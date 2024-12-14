@@ -541,6 +541,9 @@
     <data name="Options_Tabs_Opacity">
         <value>Opacity</value>
     </data>
+    <data name="Options_Tabs_IndependentHide">
+        <value>Use different hide condition than main window</value>
+    </data>
     <data name="Options_FontsEnabled">
         <value>Enable custom fonts</value>
     </data>

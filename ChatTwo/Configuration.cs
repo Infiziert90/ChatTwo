@@ -240,6 +240,14 @@ internal class Tab
     public bool CanMove = true;
     public bool CanResize = true;
 
+    public bool IndependentHide;
+    public bool HideDuringCutscenes = true;
+    public bool HideWhenNotLoggedIn = true;
+    public bool HideWhenUiHidden = true;
+    public bool HideInLoadingScreens;
+    public bool HideInBattle;
+    public bool HideWhenInactive;
+
     [NonSerialized] public uint Unread;
     [NonSerialized] public long LastActivity;
     [NonSerialized] public MessageList Messages = new();
@@ -285,6 +293,13 @@ internal class Tab
             CurrentChannel = CurrentChannel,
             CanMove = CanMove,
             CanResize = CanResize,
+            IndependentHide = IndependentHide,
+            HideDuringCutscenes = HideDuringCutscenes,
+            HideWhenNotLoggedIn = HideWhenNotLoggedIn,
+            HideWhenUiHidden = HideWhenUiHidden,
+            HideInLoadingScreens = HideInLoadingScreens,
+            HideInBattle = HideInBattle,
+            HideWhenInactive = HideWhenInactive,
         };
     }
 

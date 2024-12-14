@@ -242,4 +242,8 @@ public sealed class Plugin : IDalamudPlugin
             if (GameFunctions.GameFunctions.IsAddonInteractable(name))
                 GameFunctions.GameFunctions.SetAddonInteractable(name, false);
     }
+
+    public static bool InBattle => Condition[ConditionFlag.InCombat];
+    public static bool GposeActive => Condition[ConditionFlag.WatchingCutscene];
+    public static bool CutsceneActive => Condition[ConditionFlag.OccupiedInCutSceneEvent] || Condition[ConditionFlag.WatchingCutscene78];
 }

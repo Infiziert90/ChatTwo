@@ -38,10 +38,10 @@ internal class Popout : Window
     public override bool DrawConditions()
     {
         FrameTime = Environment.TickCount64;
-        if (ChatLogWindow.IsHidden)
+        if (Tab.IndependentHide ? HideStateCheck() : ChatLogWindow.IsHidden)
             return false;
 
-        if (!Plugin.Config.HideWhenInactive || (!Plugin.Config.InactivityHideActiveDuringBattle && ChatLogWindow.InBattle) || !Tab.UnhideOnActivity)
+        if (!Plugin.Config.HideWhenInactive || (!Plugin.Config.InactivityHideActiveDuringBattle && Plugin.InBattle) || !Tab.UnhideOnActivity)
         {
             LastActivityTime = FrameTime;
             return true;
@@ -107,5 +107,48 @@ internal class Popout : Window
 
         Tab.PopOut = false;
         ChatLogWindow.Plugin.SaveConfig();
+    }
+
+    private enum HideState
+    {
+        None,
+        Cutscene,
+        CutsceneOverride,
+        User,
+        Battle
+    }
+
+    private HideState CurrentHideState = HideState.None;
+
+    private bool HideStateCheck()
+    {
+        // if the chat has no hide state set, and the player has entered battle, we hide chat if they have configured it
+        if (Tab.HideInBattle && CurrentHideState == HideState.None && Plugin.InBattle)
+            CurrentHideState = HideState.Battle;
+
+        // If the chat is hidden because of battle, we reset it here
+        if (CurrentHideState is HideState.Battle && !Plugin.InBattle)
+            CurrentHideState = HideState.None;
+
+        // if the chat has no hide state and in a cutscene, set the hide state to cutscene
+        if (Tab.HideDuringCutscenes && CurrentHideState == HideState.None && (Plugin.CutsceneActive || Plugin.GposeActive))
+        {
+            if (ChatLogWindow.Plugin.Functions.Chat.CheckHideFlags())
+                CurrentHideState = HideState.Cutscene;
+        }
+
+        // if the chat is hidden because of a cutscene and no longer in a cutscene, set the hide state to none
+        if (CurrentHideState is HideState.Cutscene or HideState.CutsceneOverride && !Plugin.CutsceneActive && !Plugin.GposeActive)
+            CurrentHideState = HideState.None;
+
+        // if the chat is hidden because of a cutscene and the chat has been activated, show chat
+        if (CurrentHideState == HideState.Cutscene && ChatLogWindow.Activate)
+            CurrentHideState = HideState.CutsceneOverride;
+
+        // if the user hid the chat and is now activating chat, reset the hide state
+        if (CurrentHideState == HideState.User && ChatLogWindow.Activate)
+            CurrentHideState = HideState.None;
+
+        return CurrentHideState is HideState.Cutscene or HideState.User or HideState.Battle || (Tab.HideWhenNotLoggedIn && !Plugin.ClientState.IsLoggedIn);
     }
 }

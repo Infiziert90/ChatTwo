@@ -3237,6 +3237,15 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Use different hide condition than main window.
+        /// </summary>
+        internal static string Options_Tabs_IndependentHide {
+            get {
+                return ResourceManager.GetString("Options_Tabs_IndependentHide", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use different opacity than main window.
         /// </summary>
         internal static string Options_Tabs_IndependentOpacity {

@@ -88,9 +88,30 @@ internal sealed class Tabs : ISettingsTab
             ImGui.Checkbox(Language.Options_Tabs_PopOut, ref tab.PopOut);
             if (tab.PopOut)
             {
+                using var _ = ImRaii.PushIndent(10.0f);
                 ImGui.Checkbox(Language.Options_Tabs_IndependentOpacity, ref tab.IndependentOpacity);
                 if (tab.IndependentOpacity)
                     ImGuiUtil.DragFloatVertical(Language.Options_Tabs_Opacity, ref tab.Opacity, 0.25f, 0f, 100f, $"{tab.Opacity:N2}%%", ImGuiSliderFlags.AlwaysClamp);
+
+                ImGui.Checkbox(Language.Options_Tabs_IndependentHide, ref tab.IndependentHide);
+                if (tab.IndependentHide)
+                {
+                    using var __ = ImRaii.PushIndent(10.0f);
+                    ImGuiUtil.OptionCheckbox(ref tab.HideDuringCutscenes, Language.Options_HideDuringCutscenes_Name);
+                    ImGui.Spacing();
+
+                    ImGuiUtil.OptionCheckbox(ref tab.HideWhenNotLoggedIn, Language.Options_HideWhenNotLoggedIn_Name);
+                    ImGui.Spacing();
+
+                    ImGuiUtil.OptionCheckbox(ref tab.HideWhenUiHidden, Language.Options_HideWhenUiHidden_Name);
+                    ImGui.Spacing();
+
+                    ImGuiUtil.OptionCheckbox(ref tab.HideInLoadingScreens, Language.Options_HideInLoadingScreens_Name);
+                    ImGui.Spacing();
+
+                    ImGuiUtil.OptionCheckbox(ref tab.HideInBattle, Language.Options_HideInBattle_Name);
+                    ImGui.Spacing();
+                }
 
                 ImGuiUtil.OptionCheckbox(ref tab.CanMove, Language.Popout_CanMove_Name);
                 ImGui.Spacing();
