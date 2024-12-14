@@ -1914,7 +1914,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Allow moving window.
+        ///   Looks up a localized string similar to Allow moving chat.
         /// </summary>
         internal static string Options_CanMove_Name {
             get {
@@ -1923,7 +1923,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Allow resizing window.
+        ///   Looks up a localized string similar to Allow resizing chat.
         /// </summary>
         internal static string Options_CanResize_Name {
             get {
@@ -3566,6 +3566,24 @@ namespace ChatTwo.Resources {
         internal static string PartyInvite_NoId {
             get {
                 return ResourceManager.GetString("PartyInvite_NoId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allow moving window.
+        /// </summary>
+        internal static string Popout_CanMove_Name {
+            get {
+                return ResourceManager.GetString("Popout_CanMove_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Allow resizing window.
+        /// </summary>
+        internal static string Popout_CanResize_Name {
+            get {
+                return ResourceManager.GetString("Popout_CanResize_Name", resourceCulture);
             }
         }
         

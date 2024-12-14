@@ -187,10 +187,10 @@
   <data name="Options_CanResize_Name">
     <value>채팅창 크기 조절 허용</value>
   </data>
-  <data name="Options_CanMove_Name">
+  <data name="Popout_CanMove_Name">
     <value>Allow moving window</value>
   </data>
-  <data name="Options_CanResize_Name">
+  <data name="Popout_CanResize_Name">
     <value>Allow resizing window</value>
   </data>
   <data name="Options_ShowTitleBar_Name">

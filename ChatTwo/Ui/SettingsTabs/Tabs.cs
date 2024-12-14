@@ -92,10 +92,10 @@ internal sealed class Tabs : ISettingsTab
                 if (tab.IndependentOpacity)
                     ImGuiUtil.DragFloatVertical(Language.Options_Tabs_Opacity, ref tab.Opacity, 0.25f, 0f, 100f, $"{tab.Opacity:N2}%%", ImGuiSliderFlags.AlwaysClamp);
 
-                ImGuiUtil.OptionCheckbox(ref tab.CanMove, Language.Options_CanMove_Name);
+                ImGuiUtil.OptionCheckbox(ref tab.CanMove, Language.Popout_CanMove_Name);
                 ImGui.Spacing();
 
-                ImGuiUtil.OptionCheckbox(ref tab.CanResize, Language.Options_CanResize_Name);
+                ImGuiUtil.OptionCheckbox(ref tab.CanResize, Language.Popout_CanResize_Name);
                 ImGui.Spacing();
             }
 
