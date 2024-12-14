@@ -187,6 +187,12 @@
   <data name="Options_CanResize_Name">
     <value>채팅창 크기 조절 허용</value>
   </data>
+  <data name="Options_CanMove_Name">
+    <value>Allow moving window</value>
+  </data>
+  <data name="Options_CanResize_Name">
+    <value>Allow resizing window</value>
+  </data>
   <data name="Options_ShowTitleBar_Name">
     <value>채팅창에 타이틀바 표시</value>
   </data>
@@ -1286,7 +1292,7 @@
         <value>Date</value>
     </data>
   <data name="DbViewer_TableField_Type" xml:space="preserve">
-        <value>Chat Type</value>
+        <value>Channel</value>
     </data>
   <data name="DbViewer_TableField_Sender" xml:space="preserve">
         <value>Sender</value>

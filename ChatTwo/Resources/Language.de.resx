@@ -187,6 +187,12 @@
   <data name="Options_CanResize_Name">
     <value>Chatfenstergröße anpassen erlauben</value>
   </data>
+  <data name="Options_CanMove_Name">
+    <value>Allow moving window</value>
+  </data>
+  <data name="Options_CanResize_Name">
+    <value>Allow resizing window</value>
+  </data>
   <data name="Options_ShowTitleBar_Name">
     <value>Titelleiste für den Chat anzeigen</value>
   </data>
@@ -1287,7 +1293,7 @@ Sie wurden gewarnt.</value>
         <value>Datum / Uhrzeit</value>
     </data>
   <data name="DbViewer_TableField_Type" xml:space="preserve">
-        <value>Chat Typ</value>
+        <value>Channel</value>
     </data>
   <data name="DbViewer_TableField_Sender" xml:space="preserve">
         <value>Absender</value>

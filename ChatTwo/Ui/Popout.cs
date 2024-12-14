@@ -62,6 +62,12 @@ internal class Popout : Window
         if (!Plugin.Config.ShowPopOutTitleBar)
             Flags |= ImGuiWindowFlags.NoTitleBar;
 
+        if (!Tab.CanMove)
+            Flags |= ImGuiWindowFlags.NoMove;
+
+        if (!Tab.CanResize)
+            Flags |= ImGuiWindowFlags.NoResize;
+
         if (!ChatLogWindow.PopOutDocked[Idx])
         {
             var alpha = Tab.IndependentOpacity ? Tab.Opacity : Plugin.Config.WindowAlpha;

@@ -187,6 +187,12 @@
     <data name="Options_CanResize_Name">
         <value>Allow resizing chat</value>
     </data>
+    <data name="Options_CanMove_Name">
+        <value>Allow moving window</value>
+    </data>
+    <data name="Options_CanResize_Name">
+        <value>Allow resizing window</value>
+    </data>
     <data name="Options_ShowTitleBar_Name">
         <value>Show title bar for chat</value>
     </data>

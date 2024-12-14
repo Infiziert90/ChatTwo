@@ -187,6 +187,12 @@
   <data name="Options_CanResize_Name">
     <value>Permite redimensionarea chat-ului</value>
   </data>
+  <data name="Options_CanMove_Name">
+    <value>Allow moving window</value>
+  </data>
+  <data name="Options_CanResize_Name">
+    <value>Allow resizing window</value>
+  </data>
   <data name="Options_ShowTitleBar_Name">
     <value>Afișează bara de titlu pentru chat</value>
   </data>
@@ -1286,7 +1292,7 @@
         <value>Date</value>
     </data>
   <data name="DbViewer_TableField_Type" xml:space="preserve">
-        <value>Chat Type</value>
+        <value>Channel</value>
     </data>
   <data name="DbViewer_TableField_Sender" xml:space="preserve">
         <value>Sender</value>

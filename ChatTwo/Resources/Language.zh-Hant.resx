@@ -187,6 +187,12 @@
   <data name="Options_CanResize_Name">
     <value>允許調整聊天窗口大小</value>
   </data>
+  <data name="Options_CanMove_Name">
+    <value>Allow moving window</value>
+  </data>
+  <data name="Options_CanResize_Name">
+    <value>Allow resizing window</value>
+  </data>
   <data name="Options_ShowTitleBar_Name">
     <value>顯示聊天視窗標題欄</value>
   </data>
@@ -1287,7 +1293,7 @@
         <value>日期</value>
     </data>
   <data name="DbViewer_TableField_Type" xml:space="preserve">
-        <value>Chat Type</value>
+        <value>Channel</value>
     </data>
   <data name="DbViewer_TableField_Sender" xml:space="preserve">
         <value>發送者</value>

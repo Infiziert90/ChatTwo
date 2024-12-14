@@ -9,14 +9,16 @@ namespace ChatTwo.Ui.SettingsTabs;
 
 internal sealed class Tabs : ISettingsTab
 {
+    private readonly Plugin Plugin;
     private Configuration Mutable { get; }
 
     public string Name => Language.Options_Tabs_Tab + "###tabs-tabs";
 
     private int ToOpen = -2;
 
-    internal Tabs(Configuration mutable)
+    internal Tabs(Plugin plugin, Configuration mutable)
     {
+        Plugin = plugin;
         Mutable = mutable;
     }
 
@@ -89,6 +91,12 @@ internal sealed class Tabs : ISettingsTab
                 ImGui.Checkbox(Language.Options_Tabs_IndependentOpacity, ref tab.IndependentOpacity);
                 if (tab.IndependentOpacity)
                     ImGuiUtil.DragFloatVertical(Language.Options_Tabs_Opacity, ref tab.Opacity, 0.25f, 0f, 100f, $"{tab.Opacity:N2}%%", ImGuiSliderFlags.AlwaysClamp);
+
+                ImGuiUtil.OptionCheckbox(ref tab.CanMove, Language.Options_CanMove_Name);
+                ImGui.Spacing();
+
+                ImGuiUtil.OptionCheckbox(ref tab.CanResize, Language.Options_CanResize_Name);
+                ImGui.Spacing();
             }
 
             using (var combo = ImGuiUtil.BeginComboVertical(Language.Options_Tabs_UnreadMode, tab.UnreadMode.Name()))
@@ -130,7 +138,10 @@ internal sealed class Tabs : ISettingsTab
         }
 
         if (toRemove > -1)
+        {
             Mutable.Tabs.RemoveAt(toRemove);
+            Plugin.WantedTab = 0;
+        }
 
         if (doOpens)
             ToOpen = -2;

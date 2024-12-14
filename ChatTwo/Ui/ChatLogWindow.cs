@@ -813,8 +813,7 @@ public sealed class ChatLogWindow : Window
         {
             if (!string.IsNullOrWhiteSpace(activeTab.CurrentChannel.TellTarget.Name) && activeTab.CurrentChannel.TellTarget.World != 0)
             {
-                // Note: don't use HidePlayerInString here because
-                // abbreviation settings do not affect this.
+                // Note: don't use HidePlayerInString here because abbreviation settings do not affect this.
                 var playerName = HashPlayer(activeTab.CurrentChannel.TellTarget.Name, activeTab.CurrentChannel.TellTarget.World);
                 var world = Sheets.WorldSheet.TryGetRow(activeTab.CurrentChannel.TellTarget.World, out var worldRow)
                     ? worldRow.Name.ExtractText()
@@ -830,14 +829,15 @@ public sealed class ChatLogWindow : Window
             }
             else
             {
-                // We still need to censor the name if we couldn't read
-                // valid data.
+                // We still need to censor the name if we couldn't read valid data.
                 channelNameChunks = [new TextChunk(ChunkSource.None, null, "Tell")];
             }
         }
         else
         {
-            channelNameChunks = activeTab.CurrentChannel.Name.ToArray();
+            channelNameChunks = activeTab.CurrentChannel.Name.Count > 0
+                ? activeTab.CurrentChannel.Name.ToArray()
+                : [new TextChunk(ChunkSource.None, null, activeTab.CurrentChannel.Channel.ToChatType().Name())];
         }
 
         return channelNameChunks;
@@ -913,8 +913,8 @@ public sealed class ChatLogWindow : Window
                 Plugin.Functions.Chat.SendTellUsingCommandInner(tellBytes);
 
                 TellSpecial = false;
-                activeTab.CurrentChannel.ResetTempChannel();
 
+                activeTab.CurrentChannel.ResetTempChannel();
                 Chat = string.Empty;
                 return;
             }
@@ -933,6 +933,7 @@ public sealed class ChatLogWindow : Window
 
                         ChatBox.SendMessageUnsafe(tellBytes);
 
+                        activeTab.CurrentChannel.ResetTempChannel();
                         Chat = string.Empty;
                         return;
                     }
@@ -950,9 +951,7 @@ public sealed class ChatLogWindow : Window
                         Plugin.Functions.Chat.SendTell(reason, target.ContentId, target.Name, (ushort) world.RowId, tellBytes, trimmed);
                     }
 
-                    if (activeTab.CurrentChannel.TempChannel is InputChannel.Tell)
-                        activeTab.CurrentChannel.TempTellTarget = null;
-
+                    activeTab.CurrentChannel.ResetTempChannel();
                     Chat = string.Empty;
                     return;
                 }
@@ -969,6 +968,7 @@ public sealed class ChatLogWindow : Window
             ChatBox.SendMessageUnsafe(bytes);
         }
 
+        activeTab.CurrentChannel.ResetTempChannel();
         Chat = string.Empty;
     }
 
@@ -1315,6 +1315,8 @@ public sealed class ChatLogWindow : Window
         if (ImGuiUtil.IconButton(FontAwesomeIcon.TrashAlt, tooltip: Language.ChatLog_Tabs_Delete))
         {
             tabs.RemoveAt(i);
+            Plugin.WantedTab = 0;
+
             anyChanged = true;
         }
 
@@ -1746,10 +1748,6 @@ public sealed class ChatLogWindow : Window
         var content = text.Content ?? "";
         if (ScreenshotMode)
         {
-            // TODO: the result of hashing the player name should be cached.
-            //       Currently we recalculate the abbreviated player names, the
-            //       hashes and the string replacements every frame when they
-            //       never change.
             if (chunk.Link is PlayerPayload playerPayload)
                 content = HidePlayerInString(content, playerPayload.PlayerName, playerPayload.World.RowId);
             else if (Plugin.ClientState.LocalPlayer is { } player)

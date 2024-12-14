@@ -1914,7 +1914,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Allow moving chat.
+        ///   Looks up a localized string similar to Allow moving window.
         /// </summary>
         internal static string Options_CanMove_Name {
             get {
@@ -1923,7 +1923,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Allow resizing chat.
+        ///   Looks up a localized string similar to Allow resizing window.
         /// </summary>
         internal static string Options_CanResize_Name {
             get {

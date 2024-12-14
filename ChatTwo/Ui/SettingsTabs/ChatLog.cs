@@ -86,8 +86,8 @@ internal sealed class ChatLog : ISettingsTab
             ImGui.Spacing();
 
             ImGui.TextUnformatted(Language.Options_AdjustPosition_Name);
-            var pos = Plugin.ChatLogWindow.LastWindowPos;
             ImGui.SetNextItemWidth(-1);
+            var pos = Plugin.ChatLogWindow.LastWindowPos;
             if (ImGui.DragFloat2($"##{Language.Options_AdjustPosition_Name}", ref pos, 1, 0, float.MaxValue, "%.0fpx"))
                 Plugin.ChatLogWindow.Position = pos;
             ImGuiUtil.WarningText(Language.Options_AdjustPosition_Warning);

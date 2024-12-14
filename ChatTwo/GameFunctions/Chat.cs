@@ -540,7 +540,7 @@ internal sealed unsafe class Chat : IDisposable
 
     internal string AbbreviatePlayerName(string playerName)
     {
-        if (LastPlayerNameDisplayTypeRefresh + 5 * 1000 < Environment.TickCount64)
+        if (LastPlayerNameDisplayTypeRefresh + 5_000 < Environment.TickCount64)
         {
             LastPlayerNameDisplayTypeRefresh = Environment.TickCount64;
             CurrentPlayerNameDisplayType = GetNameDisplayType();
@@ -552,14 +552,12 @@ internal sealed unsafe class Chat : IDisposable
         var split = playerName.Split(' ');
         if (split.Length != 2)
             return playerName;
+
         return CurrentPlayerNameDisplayType switch
         {
-            PlayerNameDisplayType.SurnameAbbreviated =>
-                $"{split.First()} {split.Last().FirstOrDefault('A')}.",
-            PlayerNameDisplayType.ForenameAbbreviated =>
-                $"{split.First().FirstOrDefault('A')}. {split.Last()}",
-            PlayerNameDisplayType.Initials =>
-                $"{split.First().FirstOrDefault('A')}. {split.Last().FirstOrDefault('A')}.",
+            PlayerNameDisplayType.SurnameAbbreviated => $"{split.First()} {split.Last().FirstOrDefault('A')}.",
+            PlayerNameDisplayType.ForenameAbbreviated => $"{split.First().FirstOrDefault('A')}. {split.Last()}",
+            PlayerNameDisplayType.Initials => $"{split.First().FirstOrDefault('A')}. {split.Last().FirstOrDefault('A')}.",
             _ => playerName
         };
     }

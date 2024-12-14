@@ -237,6 +237,9 @@ internal class Tab
     public float Opacity = 100f;
     public bool InputDisabled;
 
+    public bool CanMove = true;
+    public bool CanResize = true;
+
     [NonSerialized] public uint Unread;
     [NonSerialized] public long LastActivity;
     [NonSerialized] public MessageList Messages = new();
@@ -280,6 +283,8 @@ internal class Tab
             Identifier = Identifier,
             InputDisabled = InputDisabled,
             CurrentChannel = CurrentChannel,
+            CanMove = CanMove,
+            CanResize = CanResize,
         };
     }
 

@@ -187,6 +187,12 @@
   <data name="Options_CanResize_Name">
     <value>Permitir cambiar el tamaño del chat</value>
   </data>
+  <data name="Options_CanMove_Name">
+    <value>Allow moving window</value>
+  </data>
+  <data name="Options_CanResize_Name">
+    <value>Allow resizing window</value>
+  </data>
   <data name="Options_ShowTitleBar_Name">
     <value>Mostrar la barra de título en la parte superior izquierda del chat</value>
   </data>
@@ -1286,7 +1292,7 @@
         <value>Fecha</value>
     </data>
   <data name="DbViewer_TableField_Type" xml:space="preserve">
-        <value>Tipo de chat</value>
+        <value>Channel</value>
     </data>
   <data name="DbViewer_TableField_Sender" xml:space="preserve">
         <value>Remitente</value>
