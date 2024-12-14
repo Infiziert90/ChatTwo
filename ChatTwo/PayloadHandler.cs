@@ -287,7 +287,7 @@ public sealed class PayloadHandler
     private static void InlineIcon(IDalamudTextureWrap icon)
     {
         var cursor = ImGui.GetCursorPos();
-        var size = new Vector2(32, 32) * ImGuiHelpers.GlobalScale;
+        var size = ImGuiHelpers.ScaledVector2(32, 32);
         ImGui.Image(icon.ImGuiHandle, size);
         ImGui.SameLine();
         ImGui.SetCursorPos(cursor + new Vector2(size.X + 4, size.Y - ImGui.GetTextLineHeightWithSpacing()));
@@ -445,7 +445,6 @@ public sealed class PayloadHandler
             return;
 
         var hq = payload.Kind == ItemPayload.ItemKind.Hq;
-
         if (Plugin.TextureProvider.GetFromGameIcon(new GameIconLookup(itemRow.Icon, hq)).GetWrapOrDefault() is { } icon)
             InlineIcon(icon);
 
