@@ -5,6 +5,7 @@ using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using System.Text.RegularExpressions;
 using Dalamud.Game.Text;
+using Dalamud.Utility;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using Lumina.Excel.Sheets;
 
@@ -265,14 +266,15 @@ internal partial class Message
                 continue;
             }
 
-            if (!text.Content.Contains("<item>") && !text.Content.Contains("<flag>"))
+            var splits = TextParamRegex().Split(text.Content);
+            if (splits.Length == 1)
             {
                 newChunks.Add(chunk);
                 continue;
             }
 
             var nextIsMatch = false;
-            foreach (var split in TextParamRegex().Split(text.Content))
+            foreach (var split in splits)
             {
                 if (split == "" || !nextIsMatch)
                 {
@@ -304,13 +306,33 @@ internal partial class Message
                         };
 
                         var name = kind != ItemPayload.ItemKind.EventItem
-                            ? Plugin.DataManager.GetExcelSheet<Item>()!.GetRow(item.ItemId)!.Name.ToString()
-                            : Plugin.DataManager.GetExcelSheet<EventItem>()!.GetRow(item.ItemId)!.Name.ToString();
+                            ? Plugin.DataManager.GetExcelSheet<Item>().GetRow(item.ItemId).Name.ToString()
+                            : Plugin.DataManager.GetExcelSheet<EventItem>().GetRow(item.ItemId).Name.ToString();
 
                         var link = new ItemPayload(item.ItemId, kind, $"{SeIconChar.LinkMarker.ToIconChar()}{name}");
                         AddChunkWithMessage(text.NewWithStyle(chunk.Source, link, link.DisplayName ?? "Unknown"));
                     }
-                    else
+                    else if (split == "<status>")
+                    {
+                        var statusId = AgentChatLog.Instance()->ContextStatusId;
+                        if (statusId == 0 || !Sheets.StatusSheet.TryGetRow(statusId, out var statusRow))
+                        {
+                            AddChunkWithMessage(text.NewWithStyle(chunk.Source, chunk.Link, split));
+                            continue;
+                        }
+
+                        var nameValue = statusRow.Name.ToDalamudString().TextValue;
+                        var content = statusRow.StatusCategory switch
+                        {
+                            1 => $"{SeIconChar.Buff.ToIconString()}{nameValue}",
+                            2 => $"{SeIconChar.Debuff.ToIconString()}{nameValue}",
+                            _ => nameValue
+                        };
+
+                        var link = new StatusPayload(statusId);
+                        AddChunkWithMessage(text.NewWithStyle(chunk.Source, link, content));
+                    }
+                    else if (split == "<flag>")
                     {
                         var agentMap = AgentMap.Instance();
                         if (agentMap->IsFlagMarkerSet == 0)
@@ -339,6 +361,6 @@ internal partial class Message
         Content = newChunks;
     }
 
-    [GeneratedRegex("(<item>|<flag>)")]
+    [GeneratedRegex("(<item>|<flag>|<status>)")]
     private static partial Regex TextParamRegex();
 }

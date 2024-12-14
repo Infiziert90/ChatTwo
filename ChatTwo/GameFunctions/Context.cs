@@ -25,6 +25,11 @@ internal sealed unsafe class Context
         AgentChatLog.Instance()->LinkItem(itemId);
     }
 
+    internal static void LinkStatus(uint statusId)
+    {
+        AgentChatLog.Instance()->ContextStatusId = statusId;
+    }
+
     internal static void OpenItemComparison(uint itemId)
     {
         AgentItemComp.Instance()->CompareItem(0x4D, itemId, 0, 0);

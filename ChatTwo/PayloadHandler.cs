@@ -7,6 +7,7 @@ using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Game.Config;
+using Dalamud.Game.Text;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface.ImGuiNotification;
@@ -15,7 +16,6 @@ using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Utility;
-using FFXIVClientStructs.FFXIV.Client.LayoutEngine;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using ImGuiNET;
@@ -87,6 +87,10 @@ public sealed class PayloadHandler
                 break;
             case UriPayload uri:
                 DrawUriPopup(uri);
+                drawn = true;
+                break;
+            case StatusPayload status:
+                DrawStatusPopup(status);
                 drawn = true;
                 break;
         }
@@ -293,26 +297,31 @@ public sealed class PayloadHandler
         ImGui.SetCursorPos(cursor + new Vector2(size.X + 4, size.Y - ImGui.GetTextLineHeightWithSpacing()));
     }
 
-    private static unsafe SeString ResolveRsv(SeString input)
-    {
-        var txt = input.TextValue;
-        if (txt.StartsWith("_rsv_"))
-            input = SeString.Parse(LayoutWorld.Instance()->ResolveRsvString(txt));
-
-        return input;
-    }
-
     private void HoverStatus(StatusPayload status)
     {
         if (Plugin.TextureProvider.GetFromGameIcon(status.Status.Value.Icon).GetWrapOrDefault() is { } icon)
             InlineIcon(icon);
 
-        var nameString = ResolveRsv(status.Status.Value.Name.ToDalamudString());
-        var name = ChunkUtil.ToChunks(nameString, ChunkSource.None, null);
+        var builder = new SeStringBuilder();
+        var nameValue = status.Status.Value.Name.ToDalamudString().TextValue;
+        switch (status.Status.Value.StatusCategory)
+        {
+            case 1:
+                builder.AddUiForeground($"{SeIconChar.Buff.ToIconString()}{nameValue}", 517);
+                break;
+            case 2:
+                builder.AddUiForeground($"{SeIconChar.Debuff.ToIconString()}{nameValue}", 518);
+                break;
+            default:
+                builder.AddUiForeground(nameValue, 1);
+                break;
+        };
+
+        var name = ChunkUtil.ToChunks(builder.BuiltString, ChunkSource.None, null);
         LogWindow.DrawChunks(name.ToList());
         ImGui.Separator();
 
-        var descString = ResolveRsv(status.Status.Value.Description.ToDalamudString());
+        var descString = status.Status.Value.Description.ToDalamudString();
         var desc = ChunkUtil.ToChunks(descString, ChunkSource.None, null);
         LogWindow.DrawChunks(desc.ToList());
     }
@@ -650,6 +659,36 @@ public sealed class PayloadHandler
         {
             ImGui.SetClipboardText(uri.Uri.ToString());
             WrapperUtil.AddNotification(Language.Context_CopyLinkNotification, NotificationType.Info);
+        }
+    }
+
+    private void DrawStatusPopup(StatusPayload status)
+    {
+        if (Plugin.TextureProvider.GetFromGameIcon(new GameIconLookup(status.Status.Value.Icon)).GetWrapOrDefault() is { } icon)
+            InlineIcon(icon);
+
+        var builder = new SeStringBuilder();
+        var nameValue = status.Status.Value.Name.ToDalamudString().TextValue;
+        switch (status.Status.Value.StatusCategory)
+        {
+            case 1:
+                builder.AddUiForeground($"{SeIconChar.Buff.ToIconString()}{nameValue}", 517);
+                break;
+            case 2:
+                builder.AddUiForeground($"{SeIconChar.Debuff.ToIconString()}{nameValue}", 518);
+                break;
+            default:
+                builder.AddUiForeground(nameValue, 1);
+                break;
+        };
+
+        LogWindow.DrawChunks(ChunkUtil.ToChunks(builder.BuiltString, ChunkSource.None, null).ToList(), false);
+        ImGui.Separator();
+
+        if (ImGui.Selectable(Language.Context_Link))
+        {
+            GameFunctions.Context.LinkStatus(status.Status.RowId);
+            LogWindow.Chat += " <status>";
         }
     }
 }
