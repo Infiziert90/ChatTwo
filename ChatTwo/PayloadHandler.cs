@@ -286,13 +286,11 @@ public sealed class PayloadHandler
 
     private static void InlineIcon(IDalamudTextureWrap icon)
     {
-        var lineHeight = ImGui.CalcTextSize("A").Y;
-
         var cursor = ImGui.GetCursorPos();
-        var size = new Vector2(icon.Width, icon.Height) * ImGuiHelpers.GlobalScale;
+        var size = new Vector2(32, 32) * ImGuiHelpers.GlobalScale;
         ImGui.Image(icon.ImGuiHandle, size);
         ImGui.SameLine();
-        ImGui.SetCursorPos(cursor + new Vector2(size.X + 4, size.Y / 2 - lineHeight / 2));
+        ImGui.SetCursorPos(cursor + new Vector2(size.X + 4, size.Y - ImGui.GetTextLineHeightWithSpacing()));
     }
 
     private static unsafe SeString ResolveRsv(SeString input)
@@ -447,6 +445,7 @@ public sealed class PayloadHandler
             return;
 
         var hq = payload.Kind == ItemPayload.ItemKind.Hq;
+
         if (Plugin.TextureProvider.GetFromGameIcon(new GameIconLookup(itemRow.Icon, hq)).GetWrapOrDefault() is { } icon)
             InlineIcon(icon);
 
