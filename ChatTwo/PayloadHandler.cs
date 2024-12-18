@@ -565,7 +565,7 @@ public sealed class PayloadHandler
             var leader = (ulong?) party[(int) party.PartyLeaderIndex]?.ContentId;
             var isLeader = party.Length == 0 || Plugin.ClientState.LocalContentId == leader;
             var member = party.FirstOrDefault(member => member.Name.TextValue == player.PlayerName && member.World.RowId == world.RowId);
-            var isInParty = member != default;
+            var isInParty = member != null;
             var inInstance = GameFunctions.GameFunctions.IsInInstance();
             var inPartyInstance = Sheets.TerritorySheet.GetRow(Plugin.ClientState.TerritoryType).TerritoryIntendedUse.RowId is (41 or 47 or 48 or 52 or 53);
             if (isLeader)
@@ -605,8 +605,22 @@ public sealed class PayloadHandler
             if (!isFriend && ImGui.Selectable(Language.Context_SendFriendRequest))
                 LogWindow.Plugin.Functions.SendFriendRequest(player.PlayerName, (ushort) world.RowId);
 
-            if (ImGui.Selectable(Language.Context_AddToBlacklist))
-                LogWindow.Plugin.Functions.AddToBlacklist(player.PlayerName, (ushort) world.RowId);
+            using var menuBlockFunctions = ImGuiUtil.Menu(Language.Context_BlockFunctions);
+            if (menuBlockFunctions.Success)
+            {
+                if (ImGui.Selectable(Language.Context_AddToBlacklist))
+                    LogWindow.Plugin.Functions.AddToBlacklist(player.PlayerName, (ushort)world.RowId);
+
+                if (chunk.Message != null)
+                {
+                    var message = chunk.Message;
+                    if (ImGui.Selectable(Language.Context_AddToMuteList))
+                        LogWindow.Plugin.Functions.AddToMuteList(message.AccountId, message.ContentId, player.PlayerName, (short) world.RowId);
+
+                    if (ImGui.Selectable(Language.Context_AddToTermsFilter))
+                        LogWindow.Plugin.Functions.AddToTermsList(message.ContentSource);
+                }
+            }
 
             if (GameFunctions.GameFunctions.IsMentor() && ImGui.Selectable(Language.Context_InviteToNoviceNetwork))
                 GameFunctions.Context.InviteToNoviceNetwork(player.PlayerName, (ushort) world.RowId);

@@ -1095,6 +1095,24 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Register to Mute List.
+        /// </summary>
+        internal static string Context_AddToMuteList {
+            get {
+                return ResourceManager.GetString("Context_AddToMuteList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add to Term Filters.
+        /// </summary>
+        internal static string Context_AddToTermsFilter {
+            get {
+                return ResourceManager.GetString("Context_AddToTermsFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to View Adventurer Plate.
         /// </summary>
         internal static string Context_AdventurerPlate {
@@ -1109,6 +1127,15 @@ namespace ChatTwo.Resources {
         internal static string Context_AdventurerPlateError {
             get {
                 return ResourceManager.GetString("Context_AdventurerPlateError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Block Functions.
+        /// </summary>
+        internal static string Context_BlockFunctions {
+            get {
+                return ResourceManager.GetString("Context_BlockFunctions", resourceCulture);
             }
         }
         

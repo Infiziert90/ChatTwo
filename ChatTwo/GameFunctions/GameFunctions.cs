@@ -1,6 +1,7 @@
 using System.Globalization;
 using System.Runtime.InteropServices;
 using Dalamud.Game.ClientState.Conditions;
+using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Hooking;
 using Dalamud.Memory;
@@ -59,6 +60,16 @@ internal unsafe class GameFunctions : IDisposable
     internal void AddToBlacklist(string name, ushort world)
     {
         ListCommand(name, world, "blist");
+    }
+
+    internal void AddToMuteList(ulong accountId, ulong contentId, string name, short worldId)
+    {
+        AgentMutelist.Instance()->Add(accountId, contentId, name, worldId);
+    }
+
+    internal void AddToTermsList(SeString content)
+    {
+        AgentTermFilter.Instance()->OpenNewFilterWindow(content.EncodeWithNullTerminator());
     }
 
     private void ListCommand(string name, ushort world, string commandName)

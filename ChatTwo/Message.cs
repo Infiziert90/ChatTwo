@@ -60,6 +60,7 @@ internal partial class Message
     internal Guid Id { get; } = Guid.NewGuid();
     internal ulong Receiver { get; }
     internal ulong ContentId { get; set; }
+    internal ulong AccountId { get; set; } // 0 if not set
 
     internal DateTimeOffset Date { get; }
     internal ChatCode Code { get; }
@@ -77,11 +78,12 @@ internal partial class Message
     internal Dictionary<Guid, float?> Height { get; } = new();
     internal Dictionary<Guid, bool> IsVisible { get; } = new();
 
-    internal Message(ulong receiver, ulong contentId, ChatCode code, List<Chunk> sender, List<Chunk> content, SeString senderSource, SeString contentSource)
+    internal Message(ulong receiver, ulong contentId, ulong accountId, ChatCode code, List<Chunk> sender, List<Chunk> content, SeString senderSource, SeString contentSource)
     {
         var extraChatChannel = ExtractExtraChatChannel(contentSource);
         Receiver = receiver;
         ContentId = contentId;
+        AccountId = accountId;
         Date = DateTimeOffset.UtcNow;
         Code = code;
         Sender = sender;
@@ -119,7 +121,7 @@ internal partial class Message
 
     internal static Message FakeMessage(List<Chunk> content, ChatCode code)
     {
-        return new Message(0, 0, code, [], content, new SeString(), new SeString());
+        return new Message(0, 0, 0, code, [], content, new SeString(), new SeString());
     }
 
     internal bool Matches(Dictionary<ChatType, ChatSource> channels, bool allExtraChatChannels, HashSet<Guid> extraChatChannels)

@@ -196,6 +196,7 @@ internal class MessageManager : IAsyncDisposable
         {
             ReceiverId = CurrentContentId,
             ContentId = 0,
+            AccountId = 0,
             Type = type,
             Timestamp = timestamp,
             Sender = sender,
@@ -222,6 +223,7 @@ internal class MessageManager : IAsyncDisposable
             return;
 
         PendingSync.Last().ContentId = contentId;
+        PendingSync.Last().AccountId = accountId;
     }
 
     private void ProcessMessage(PendingMessage pendingMessage)
@@ -247,7 +249,7 @@ internal class MessageManager : IAsyncDisposable
         }
 
         var contentChunks = ChunkUtil.ToChunks(pendingMessage.Content, ChunkSource.Content, chatCode.Type).ToList();
-        var message = new Message(CurrentContentId, pendingMessage.ContentId, chatCode, senderChunks, contentChunks, pendingMessage.Sender, pendingMessage.Content);
+        var message = new Message(CurrentContentId, pendingMessage.ContentId, pendingMessage.AccountId, chatCode, senderChunks, contentChunks, pendingMessage.Sender, pendingMessage.Content);
 
         if (Plugin.Config.DatabaseBattleMessages || !message.Code.IsBattle())
             Store.UpsertMessage(message);
@@ -331,6 +333,7 @@ internal class MessageManager : IAsyncDisposable
     {
         internal ulong ReceiverId { get; set; }
         internal ulong ContentId { get; set; } // 0 if unknown
+        internal ulong AccountId { get; set; } // 0 if unknown
         internal XivChatType Type { get; set; }
         internal int Timestamp { get; set; }
         internal SeString Sender { get; set; }
