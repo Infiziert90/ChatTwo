@@ -169,7 +169,17 @@ public sealed class ChatLogWindow : Window
                 {
                     Plugin.CurrentTab.CurrentChannel.TellTarget = null;
                     if (target != null)
-                        Plugin.CurrentTab.CurrentChannel.TellTarget = target;
+                    {
+                        if (info.Permanent)
+                        {
+                            Plugin.CurrentTab.CurrentChannel.TellTarget = target;
+                        }
+                        else
+                        {
+                            Plugin.CurrentTab.CurrentChannel.UseTempChannel = true;
+                            Plugin.CurrentTab.CurrentChannel.TempTellTarget = target;
+                        }
+                    }
                 }
             }
             else
@@ -356,6 +366,7 @@ public sealed class ChatLogWindow : Window
 
     private void TabChannelSwitch(Tab newTab, Tab previousTab)
     {
+        Plugin.Log.Information("Channel switch");
         // Use the fixed channel if set by the user, or set it to the current tabs channel if this tab wasn't accessed before
         if (newTab.Channel is not null)
             newTab.CurrentChannel.Channel = newTab.Channel.Value;

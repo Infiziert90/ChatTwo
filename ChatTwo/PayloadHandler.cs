@@ -605,20 +605,23 @@ public sealed class PayloadHandler
             if (!isFriend && ImGui.Selectable(Language.Context_SendFriendRequest))
                 LogWindow.Plugin.Functions.SendFriendRequest(player.PlayerName, (ushort) world.RowId);
 
-            using var menuBlockFunctions = ImGuiUtil.Menu(Language.Context_BlockFunctions);
-            if (menuBlockFunctions.Success)
+            using (var menuBlockFunctions = ImGuiUtil.Menu(Language.Context_BlockFunctions))
             {
-                if (ImGui.Selectable(Language.Context_AddToBlacklist))
-                    LogWindow.Plugin.Functions.AddToBlacklist(player.PlayerName, (ushort)world.RowId);
-
-                if (chunk.Message != null)
+                if (menuBlockFunctions.Success)
                 {
-                    var message = chunk.Message;
-                    if (ImGui.Selectable(Language.Context_AddToMuteList))
-                        LogWindow.Plugin.Functions.AddToMuteList(message.AccountId, message.ContentId, player.PlayerName, (short) world.RowId);
+                    if (ImGui.Selectable(Language.Context_AddToBlacklist))
+                        LogWindow.Plugin.Functions.AddToBlacklist(player.PlayerName, (ushort)world.RowId);
 
-                    if (ImGui.Selectable(Language.Context_AddToTermsFilter))
-                        LogWindow.Plugin.Functions.AddToTermsList(message.ContentSource);
+                    if (chunk.Message != null)
+                    {
+                        var message = chunk.Message;
+
+                        if (message.AccountId != 0 && ImGui.Selectable(Language.Context_AddToMuteList))
+                            LogWindow.Plugin.Functions.AddToMuteList(message.AccountId, message.ContentId, player.PlayerName, (short) world.RowId);
+
+                        if (ImGui.Selectable(Language.Context_AddToTermsFilter))
+                            LogWindow.Plugin.Functions.AddToTermsList(message.ContentSource);
+                    }
                 }
             }
 
