@@ -14,7 +14,7 @@ public class DebuggerWindow : Window
     private readonly Plugin Plugin;
     private readonly ChatLogWindow ChatLogWindow;
 
-    public DebuggerWindow(Plugin plugin) : base($"Debugger###chat2-debugger")
+    public DebuggerWindow(Plugin plugin) : base("Debugger###chat2-debugger")
     {
         Plugin = plugin;
         ChatLogWindow = plugin.ChatLogWindow;
@@ -28,16 +28,12 @@ public class DebuggerWindow : Window
         RespectCloseHotkey = false;
         DisableWindowSounds = true;
 
-        #if DEBUG
         Plugin.Commands.Register("/chat2Debugger", showInHelp: false).Execute += Toggle;
-        #endif
     }
 
     public void Dispose()
     {
-        #if DEBUG
         Plugin.Commands.Register("/chat2Debugger", showInHelp: false).Execute -= Toggle;
-        #endif
     }
 
     private void Toggle(string _, string __) => Toggle();

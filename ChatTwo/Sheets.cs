@@ -27,4 +27,7 @@ public static class Sheets
         TextCommandSheet = Plugin.DataManager.GetExcelSheet<TextCommand>();
         EventItemHelpSheet = Plugin.DataManager.GetExcelSheet<EventItemHelp>();
     }
+
+    public static bool IsInForay() => TerritorySheet.TryGetRow(Plugin.ClientState.TerritoryType, out var row) &&
+                               row.TerritoryIntendedUse.RowId == 41;
 }

@@ -211,7 +211,10 @@ internal sealed unsafe class Chat : IDisposable
             // We already called this function once, so we skip the duplicated call
             // Also return the original value here so that vanilla chat receives all information
             if (Plugin.ChatLogWindow.TellSpecial)
+            {
+                Plugin.Log.Information("Return early to prevent duplicated call...");
                 return ChatLogRefreshHook!.Original(log, eventId, value);
+            }
 
             Plugin.ChatLogWindow.Activated(new ChatActivatedArgs(new ChannelSwitchInfo(null)) { AddIfNotPresent = addIfNotPresent, });
         }
@@ -313,7 +316,7 @@ internal sealed unsafe class Chat : IDisposable
                 {
                     TellReason = (TellReason) reason,
                     TellTarget = target,
-                    TellSpecial = true,
+                    TellSpecial = Sheets.IsInForay(), // Handle Eureka/Bozja special
                 });
             }
             catch (Exception ex)

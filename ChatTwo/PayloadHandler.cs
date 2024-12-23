@@ -543,7 +543,7 @@ public sealed class PayloadHandler
         if (ImGui.Selectable(Language.Context_SendTell))
         {
             // Eureka and Bozja need special handling as tells work different
-            if (Sheets.TerritorySheet.GetRow(Plugin.ClientState.TerritoryType).TerritoryIntendedUse.RowId != 41)
+            if (!Sheets.IsInForay())
             {
                 LogWindow.Chat = $"/tell {player.PlayerName}";
                 if (world.Value.IsPublic)
