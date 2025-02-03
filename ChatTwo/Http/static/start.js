@@ -57,6 +57,9 @@
         this.elements.inputForm.addEventListener('submit', async (event) => {
             event.preventDefault();
             const message = this.elements.chatInput.value;
+            if (message.length > 500) {
+                return;
+            }
 
             const rawResponse = await fetch('/send', {
                 method: 'POST',
