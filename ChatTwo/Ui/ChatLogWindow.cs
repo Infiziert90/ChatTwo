@@ -814,11 +814,11 @@ public sealed class ChatLogWindow : Window
         else if (Plugin.ExtraChat.ChannelOverride is var (overrideName, _))
         {
             // If the current channel is not an ExtraChat Linkshell add a warning for the user
-            var warning = new TextChunk(ChunkSource.None, null, activeTab.CurrentChannel.Channel.IsExtraChatLinkshell()
-                    ? ""
-                    : $"(Warning: {activeTab.CurrentChannel.Channel.ToChatType().Name()})");
+            var warning = activeTab.CurrentChannel.Channel.IsExtraChatLinkshell()
+                ? ""
+                : $" (Warning: {activeTab.CurrentChannel.Channel.ToChatType().Name()})";
 
-            channelNameChunks = [new TextChunk(ChunkSource.None, null, overrideName), warning];
+            channelNameChunks = [new TextChunk(ChunkSource.None, null, $"{overrideName}{warning}")];
         }
         else if (ScreenshotMode && activeTab.CurrentChannel.Channel is InputChannel.Tell && activeTab.CurrentChannel.TellTarget != null)
         {
