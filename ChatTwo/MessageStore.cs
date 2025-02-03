@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Data.Common;
 using ChatTwo.Code;
+using ChatTwo.Ui;
 using ChatTwo.Util;
 using Dalamud.Game.Text.SeStringHandling;
 using MessagePack;
@@ -444,7 +445,7 @@ internal class MessageStore : IDisposable
                 ExtraChatChannel
             FROM messages
             " + whereClause + @"
-            LIMIT $Offset, 500;
+            LIMIT $Offset, $OffsetCount;
         ";
         cmd.CommandTimeout = 120; // this could take a while on slow computers
 
@@ -453,7 +454,8 @@ internal class MessageStore : IDisposable
 
         cmd.Parameters.AddWithValue("$After", ((DateTimeOffset) after).ToUnixTimeMilliseconds());
         cmd.Parameters.AddWithValue("$Before", ((DateTimeOffset) before).ToUnixTimeMilliseconds());
-        cmd.Parameters.AddWithValue("$Offset", 500 * page);
+        cmd.Parameters.AddWithValue("$Offset", DbViewer.RowPerPage * page);
+        cmd.Parameters.AddWithValue("OffsetCount", DbViewer.RowPerPage);
 
         return new MessageEnumerator(cmd.ExecuteReader());
     }

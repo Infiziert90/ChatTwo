@@ -109,7 +109,7 @@ internal static class InputChannelExt
         InputChannel.ExtraChatLinkshell7 => "/ecl7",
         InputChannel.ExtraChatLinkshell8 => "/ecl8",
         InputChannel.Invalid => "/e",
-        _ => "",
+        _ => "/e",
     };
 
     public static IEnumerable<TextCommand>? TextCommands(this InputChannel channel, IDataManager data)

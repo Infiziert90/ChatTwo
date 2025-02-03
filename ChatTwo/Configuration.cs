@@ -460,6 +460,13 @@ internal class UsedChannel
         TempTellTarget = null;
         TempChannel = InputChannel.Invalid;
     }
+
+    internal void SetChannel(InputChannel channel)
+    {
+        UseTempChannel = false;
+        TempTellTarget = null;
+        Channel = channel;
+    }
 }
 
 [Serializable]

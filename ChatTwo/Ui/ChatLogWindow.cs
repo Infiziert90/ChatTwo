@@ -505,9 +505,9 @@ public sealed class ChatLogWindow : Window
             AddPopOutsToDraw();
             DrawAutoComplete();
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Plugin.Log.Error($"Error drawing Chat Log window: {e}");
+            Plugin.Log.Error(ex, "Error drawing Chat Log window");
             // Prevent recurring draw failures from constantly trying to grab
             // input focus, which breaks every other ImGui window.
             Activate = false;
@@ -540,6 +540,11 @@ public sealed class ChatLogWindow : Window
             DrawTabBar();
 
         var activeTab = Plugin.CurrentTab;
+
+        // This tab has a fixed channel, so we force this channel to be always set as current
+        if (activeTab.Channel is not null)
+            activeTab.CurrentChannel.SetChannel(activeTab.Channel.Value);
+
         if (Plugin.Config.PreviewPosition is PreviewPosition.Inside && Plugin.InputPreview.IsDrawable)
             Plugin.InputPreview.DrawPreview();
 
@@ -793,15 +798,14 @@ public sealed class ChatLogWindow : Window
                 channelNameChunks = [new TextChunk(ChunkSource.None, null, name)];
             }
         }
-        else if (activeTab.CurrentChannel.TellTarget != null && activeTab.CurrentChannel.TellTarget.IsSet())
+        else if (activeTab.CurrentChannel.TellTarget?.IsSet() == true)
         {
             channelNameChunks = GenerateTellTargetName(activeTab.CurrentChannel.TellTarget);
         }
         else if (activeTab is { Channel: { } channel })
         {
             // We cannot lookup ExtraChat channel names from index over
-            // IPC so we just don't show the name if it's the tabs
-            // channel.
+            // IPC so we just don't show the name if it's the tabs channel.
             //
             // We don't call channel.ToChatType().Name() as it has the
             // long name as used in the settings window.
@@ -809,7 +813,12 @@ public sealed class ChatLogWindow : Window
         }
         else if (Plugin.ExtraChat.ChannelOverride is var (overrideName, _))
         {
-            channelNameChunks = [new TextChunk(ChunkSource.None, null, overrideName)];
+            // If the current channel is not an ExtraChat Linkshell add a warning for the user
+            var warning = new TextChunk(ChunkSource.None, null, activeTab.CurrentChannel.Channel.IsExtraChatLinkshell()
+                    ? ""
+                    : $"(Warning: {activeTab.CurrentChannel.Channel.ToChatType().Name()})");
+
+            channelNameChunks = [new TextChunk(ChunkSource.None, null, overrideName), warning];
         }
         else if (ScreenshotMode && activeTab.CurrentChannel.Channel is InputChannel.Tell && activeTab.CurrentChannel.TellTarget != null)
         {

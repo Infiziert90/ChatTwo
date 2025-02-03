@@ -15,6 +15,8 @@ namespace ChatTwo.Ui;
 
 public class DbViewer : Window
 {
+    public const float RowPerPage = 1000.0f;
+
     private readonly Plugin Plugin;
 
     private static readonly DateTime MinimalDate = new(2021, 1, 1);
@@ -73,7 +75,7 @@ public class DbViewer : Window
 
     public override void Draw()
     {
-        var totalPages = (int)Math.Ceiling(Count / 500.0f);
+        var totalPages = (int)Math.Ceiling(Count / RowPerPage);
         if (totalPages < 1)
             totalPages = 1;
 
@@ -236,7 +238,7 @@ public class DbViewer : Window
     {
         if (SimpleSearchTerm == "")
         {
-            Filtered = new ConcurrentStack<Message>(Messages.Reverse());
+            Filtered = new ConcurrentStack<Message>(Messages.Reverse().OrderByDescending(m => m.Date));
             return;
         }
 
@@ -244,7 +246,7 @@ public class DbViewer : Window
             Messages.Reverse().Where(m =>
                 ChunkUtil.ToRawString(m.Sender).Contains(SimpleSearchTerm, StringComparison.InvariantCultureIgnoreCase) ||
                 ChunkUtil.ToRawString(m.Content).Contains(SimpleSearchTerm, StringComparison.InvariantCultureIgnoreCase)
-                ));
+                ).OrderByDescending(m => m.Date));
     }
 
     private void DateRefresh()
