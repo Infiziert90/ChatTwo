@@ -188,10 +188,10 @@
     <value>Permettre le redimensionnement du chat</value>
   </data>
   <data name="Popout_CanMove_Name">
-    <value>Allow moving window</value>
+    <value>Autoriser le déplacement de la fenêtre</value>
   </data>
   <data name="Popout_CanResize_Name">
-    <value>Allow resizing window</value>
+    <value>Autoriser le redimensionnement de la fenêtre</value>
   </data>
   <data name="Options_ShowTitleBar_Name">
     <value>Afficher la barre de titre du chat</value>
@@ -1292,7 +1292,7 @@
         <value>Date</value>
     </data>
   <data name="DbViewer_TableField_Type" xml:space="preserve">
-        <value>Channel</value>
+        <value>Canal</value>
     </data>
   <data name="DbViewer_TableField_Sender" xml:space="preserve">
         <value>Expéditeur</value>

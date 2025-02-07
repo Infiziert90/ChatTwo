@@ -188,10 +188,10 @@
     <value>允许调整聊天窗口大小</value>
   </data>
   <data name="Popout_CanMove_Name">
-    <value>Allow moving window</value>
+    <value>允许移动窗口</value>
   </data>
   <data name="Popout_CanResize_Name">
-    <value>Allow resizing window</value>
+    <value>允许调整窗口大小</value>
   </data>
   <data name="Options_ShowTitleBar_Name">
     <value>显示聊天窗口标题栏</value>
@@ -1292,7 +1292,7 @@
         <value>日期</value>
     </data>
   <data name="DbViewer_TableField_Type" xml:space="preserve">
-        <value>Channel</value>
+        <value>频道</value>
     </data>
   <data name="DbViewer_TableField_Sender" xml:space="preserve">
         <value>发送人</value>

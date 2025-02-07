@@ -9,7 +9,6 @@ using ChatTwo.GameFunctions.Types;
 using ChatTwo.Resources;
 using ChatTwo.Util;
 using Dalamud.Game.Addon.Lifecycle;
-using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface;
@@ -485,8 +484,9 @@ public sealed class ChatLogWindow : Window
         // the text input in a tab with input disabled. The usual way that
         // Activate gets disabled is via the text input callback, but that
         // doesn't get called if the input is disabled.
-        if (Plugin.CurrentTab.InputDisabled == true)
+        if (Plugin.CurrentTab.InputDisabled)
             Activate = false;
+
         if (Plugin.Config is { OverrideStyle: true, ChosenStyle: not null })
             StyleModel.GetConfiguredStyles()?.FirstOrDefault(style => style.Name == Plugin.Config.ChosenStyle)?.Pop();
     }

@@ -463,8 +463,6 @@ internal class UsedChannel
 
     internal void SetChannel(InputChannel channel)
     {
-        UseTempChannel = false;
-        TempTellTarget = null;
         Channel = channel;
     }
 }
