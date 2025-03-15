@@ -259,9 +259,6 @@ public sealed class PayloadHandler
 
     public unsafe void MoveTooltip(AddonEvent type, AddonArgs args)
     {
-        if (!HandleTooltips)
-            return;
-
         // Only move if user has "Next to Cursor" option selected
         if (!Plugin.GameConfig.TryGet(UiControlOption.DetailTrackingType, out uint selected) || selected != 0)
             return;
@@ -273,16 +270,25 @@ public sealed class PayloadHandler
         if (atk->WindowNode == null)
             return;
 
+        if (!atk->IsVisible)
+            return;
+
         var component = atk->WindowNode->AtkResNode;
+        var atkPos = new Vector2(component.ScreenX, component.ScreenY);
+        var atkSize = new Vector2(component.GetWidth() * component.ScaleX, component.GetHeight() * component.GetScaleY());
 
-        var atkSize = (X: component.GetWidth() * component.ScaleX, Y: component.GetHeight() * component.GetScaleY());
+        var chatRect = MathUtil.Rectangle.FromPosAndSize(LogWindow.LastWindowPos, LogWindow.LastWindowSize);
+        var addonRect = MathUtil.Rectangle.FromPosAndSize(atkPos, atkSize);
+
+        if (!MathUtil.CheckRectOverlap(chatRect, addonRect))
+            return;
+
         var viewportSize = ImGuiHelpers.MainViewport.Size;
-        var window = LogWindow.LastWindowPos + LogWindow.LastWindowSize;
-        var isLeft = window.X < viewportSize.X / 2;
-        var isTop = window.Y < viewportSize.Y / 2;
+        var isLeft = chatRect.SizeX < viewportSize.X / 2;
+        var isTop = chatRect.SizeY < viewportSize.Y / 2;
 
-        var x = isLeft ? window.X : LogWindow.LastWindowPos.X - atkSize.X;
-        var y = Math.Clamp(window.Y - atkSize.Y, 0, float.MaxValue);
+        var x = isLeft ? chatRect.SizeX : LogWindow.LastWindowPos.X - atkSize.X;
+        var y = Math.Clamp(chatRect.SizeY - atkSize.Y, 0, float.MaxValue);
         y -= isTop ? 0 : Plugin.Config.TooltipOffset; // offset to prevent cut-off on the bottom
 
         atk->SetPosition((short) x, (short) y);

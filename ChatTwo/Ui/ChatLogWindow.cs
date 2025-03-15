@@ -102,12 +102,14 @@ public sealed class ChatLogWindow : Window
         Plugin.ClientState.Login += Login;
         Plugin.ClientState.Logout += Logout;
 
-        Plugin.AddonLifecycle.RegisterListener(AddonEvent.PostRequestedUpdate, "ItemDetail", PayloadHandler.MoveTooltip);
+        Plugin.AddonLifecycle.RegisterListener(AddonEvent.PostUpdate, "ItemDetail", PayloadHandler.MoveTooltip);
+        Plugin.AddonLifecycle.RegisterListener(AddonEvent.PostUpdate, "ActionDetail", PayloadHandler.MoveTooltip);
     }
 
     public void Dispose()
     {
-        Plugin.AddonLifecycle.UnregisterListener(AddonEvent.PostRequestedUpdate, "ItemDetail", PayloadHandler.MoveTooltip);
+        Plugin.AddonLifecycle.UnregisterListener(AddonEvent.PostUpdate, "ItemDetail", PayloadHandler.MoveTooltip);
+        Plugin.AddonLifecycle.UnregisterListener(AddonEvent.PostUpdate, "ActionDetail", PayloadHandler.MoveTooltip);
         Plugin.ClientState.Logout -= Logout;
         Plugin.ClientState.Login -= Login;
         Plugin.Commands.Register("/chat2").Execute -= ToggleChat;

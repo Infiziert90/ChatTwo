@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <Version>1.29.19</Version>
+        <Version>1.29.20</Version>
         <TargetFramework>net8.0-windows</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
@@ -54,10 +54,10 @@
 
     <ItemGroup>
         <PackageReference Include="DalamudPackager" Version="11.0.0" />
-        <PackageReference Include="MessagePack" Version="3.0.238-rc.1" />
+        <PackageReference Include="MessagePack" Version="3.1.3" />
         <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.0" />
         <PackageReference Include="Pidgin" Version="3.3.0" />
-        <PackageReference Include="SixLabors.ImageSharp" Version="3.1.5" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="3.1.7" />
         <PackageReference Include="Watson.Lite" Version="6.2.3" />
     </ItemGroup>
 
