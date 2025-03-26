@@ -54,7 +54,7 @@ public enum ChunkSource
     Content,
 }
 
-[MessagePackObject]
+[MessagePackObject(AllowPrivate = true)]
 public class TextChunk : Chunk
 {
     [Key(2)]
@@ -121,7 +121,7 @@ public class TextChunk : Chunk
     }
 }
 
-[MessagePackObject]
+[MessagePackObject(AllowPrivate = true)]
 public class IconChunk : Chunk
 {
     [Key(2)]

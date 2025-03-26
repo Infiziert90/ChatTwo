@@ -80,7 +80,7 @@ public sealed class SettingsWindow : Window
 
         using (var table = ImRaii.Table("##chat2-settings-table", 2))
         {
-            if (table)
+            if (table.Success)
             {
                 ImGui.TableSetupColumn("tab", ImGuiTableColumnFlags.WidthFixed);
                 ImGui.TableSetupColumn("settings", ImGuiTableColumnFlags.WidthStretch);
@@ -99,10 +99,11 @@ public sealed class SettingsWindow : Window
 
                 ImGui.TableNextColumn();
 
-                var height = ImGui.GetContentRegionAvail().Y - ImGui.GetStyle().FramePadding.Y * 2 - ImGui.GetStyle().ItemSpacing.Y
-                             - ImGui.GetStyle().ItemInnerSpacing.Y * 2 - ImGui.CalcTextSize("A").Y;
+                var style = ImGui.GetStyle();
+                var height = ImGui.GetContentRegionAvail().Y - style.FramePadding.Y * 2 - style.ItemSpacing.Y - style.ItemInnerSpacing.Y * 2 - ImGui.CalcTextSize("A").Y;
+
                 using var child = ImRaii.Child("##chat2-settings", new Vector2(-1, height));
-                if (child)
+                if (child.Success)
                     Tabs[CurrentTab].Draw(changed);
             }
         }

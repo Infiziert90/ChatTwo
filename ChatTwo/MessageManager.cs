@@ -267,7 +267,6 @@ internal class MessageManager : IAsyncDisposable
                 if (tab.Identifier == currentTabId)
                     Plugin.ServerCore.SendNewMessage(message);
             }
-
         }
     }
 

@@ -1,59 +1,19 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Dalamud.NET.SDK/12.0.2">
     <PropertyGroup>
-        <Version>1.29.20</Version>
-        <TargetFramework>net8.0-windows</TargetFramework>
+        <Version>1.30.0</Version>
+        <TargetFramework>net9.0-windows</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-        <LangVersion>preview</LangVersion>
+        <LangVersion>latest</LangVersion>
         <DebugSymbols>true</DebugSymbols>
         <DebugType>full</DebugType>
     </PropertyGroup>
 
-    <PropertyGroup>
-        <DalamudLibPath>$(AppData)\XIVLauncher\addon\Hooks\dev</DalamudLibPath>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))'">
-        <DalamudLibPath>$(DALAMUD_HOME)</DalamudLibPath>
-    </PropertyGroup>
-
-    <PropertyGroup Condition="'$(IsCI)' == 'true'">
-        <DalamudLibPath>$(HOME)/dalamud</DalamudLibPath>
-    </PropertyGroup>
-
     <ItemGroup>
-        <Reference Include="Dalamud">
-            <HintPath>$(DalamudLibPath)\Dalamud.dll</HintPath>
-            <Private>false</Private>
-        </Reference>
-        <Reference Include="FFXIVClientStructs">
-            <HintPath>$(DalamudLibPath)\FFXIVClientStructs.dll</HintPath>
-            <Private>false</Private>
-        </Reference>
-        <Reference Include="ImGui.NET">
-            <HintPath>$(DalamudLibPath)\ImGui.NET.dll</HintPath>
-            <Private>false</Private>
-        </Reference>
-        <Reference Include="Lumina">
-            <HintPath>$(DalamudLibPath)\Lumina.dll</HintPath>
-            <Private>false</Private>
-        </Reference>
-        <Reference Include="Lumina.Excel">
-            <HintPath>$(DalamudLibPath)\Lumina.Excel.dll</HintPath>
-            <Private>false</Private>
-        </Reference>
-        <Reference Include="Newtonsoft.Json">
-            <HintPath>$(DalamudLibPath)\Newtonsoft.Json.dll</HintPath>
-            <Private>false</Private>
-        </Reference>
-    </ItemGroup>
-
-    <ItemGroup>
-        <PackageReference Include="DalamudPackager" Version="11.0.0" />
         <PackageReference Include="MessagePack" Version="3.1.3" />
         <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.0" />
         <PackageReference Include="Pidgin" Version="3.3.0" />

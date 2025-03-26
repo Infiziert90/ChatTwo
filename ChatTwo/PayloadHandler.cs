@@ -277,10 +277,10 @@ public sealed class PayloadHandler
         var atkPos = new Vector2(component.ScreenX, component.ScreenY);
         var atkSize = new Vector2(component.GetWidth() * component.ScaleX, component.GetHeight() * component.GetScaleY());
 
-        var chatRect = MathUtil.Rectangle.FromPosAndSize(LogWindow.LastWindowPos, LogWindow.LastWindowSize);
-        var addonRect = MathUtil.Rectangle.FromPosAndSize(atkPos, atkSize);
+        var chatRect = new MathUtil.Rectangle(LogWindow.LastWindowPos, LogWindow.LastWindowSize);
+        var addonRect = new MathUtil.Rectangle(atkPos, atkSize);
 
-        if (!MathUtil.CheckRectOverlap(chatRect, addonRect))
+        if (!chatRect.HasOverlap(addonRect))
             return;
 
         var viewportSize = ImGuiHelpers.MainViewport.Size;

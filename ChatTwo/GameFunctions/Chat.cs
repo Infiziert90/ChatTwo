@@ -17,6 +17,7 @@ using FFXIVClientStructs.FFXIV.Client.UI.Info;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Client.UI.Shell;
 using FFXIVClientStructs.FFXIV.Component.GUI;
+using InteropGenerator.Runtime;
 using Lumina.Text.ReadOnly;
 
 using ValueType = FFXIVClientStructs.FFXIV.Component.GUI.ValueType;
@@ -98,7 +99,7 @@ internal sealed unsafe class Chat : IDisposable
     internal string? GetLinkshellName(uint idx)
     {
         var utf = InfoProxyChat.Instance()->GetLinkShellName(idx);
-        return utf == null ? null : MemoryHelper.ReadStringNullTerminated((nint) utf);
+        return utf.HasValue ? utf.ToString() : null;
     }
 
     internal string? GetCrossLinkshellName(uint idx)
@@ -199,9 +200,9 @@ internal sealed unsafe class Chat : IDisposable
         string? addIfNotPresent = null;
 
         var str = value + 2;
-        if (str != null && ((int) str->Type & 0xF) == (int) ValueType.String && str->String != null)
+        if (str != null && ((int) str->Type & 0xF) == (int) ValueType.String && str->String.HasValue)
         {
-            var add = MemoryHelper.ReadStringNullTerminated((nint) str->String);
+            var add = str->String.ToString();
             if (add.Length > 0)
                 addIfNotPresent = add;
         }
@@ -227,7 +228,7 @@ internal sealed unsafe class Chat : IDisposable
         return 1;
     }
 
-    private byte* ChangeChannelNameDetour(AgentChatLog* agent)
+    private CStringPointer ChangeChannelNameDetour(AgentChatLog* agent)
     {
         var ret = ChangeChannelNameHook.Original(agent);
         if (agent == null)
@@ -525,7 +526,7 @@ internal sealed unsafe class Chat : IDisposable
     {
         var uC = Utf8String.FromString(c.ToString());
 
-        uC->SanitizeString(0x27F, Utf8String.CreateEmpty());
+        uC->SanitizeString((AllowedEntities) 0x27F);
         var wasValid = uC->ToString().Length > 0;
 
         uC->Dtor(true);

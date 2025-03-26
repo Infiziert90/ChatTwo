@@ -337,7 +337,7 @@ internal partial class Message
                     else if (split == "<flag>")
                     {
                         var agentMap = AgentMap.Instance();
-                        if (agentMap->IsFlagMarkerSet == 0)
+                        if (!agentMap->IsFlagMarkerSet)
                         {
                             AddChunkWithMessage(text.NewWithStyle(chunk.Source, chunk.Link, split));
                             continue;
