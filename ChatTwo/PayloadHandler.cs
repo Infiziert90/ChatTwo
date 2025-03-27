@@ -287,6 +287,45 @@ public sealed class PayloadHandler
         var isLeft = chatRect.SizeX < viewportSize.X / 2;
         var isTop = chatRect.SizeY < viewportSize.Y / 2;
 
+        var mousePos = ImGui.GetMousePos();
+
+        // addon spawned left of mouse cursor
+        if (addonRect.X < mousePos.X)
+        {
+            if (isLeft)
+                addonRect.X = (short)mousePos.X + 5;
+        }
+        else
+        {
+            if (!isLeft)
+                addonRect.X = Math.Max(0, (short)mousePos.X - 5 - addonRect.Width);
+        }
+
+        if (!chatRect.HasOverlap(addonRect))
+        {
+            atk->SetPosition((short) addonRect.X, (short) addonRect.Y);
+            return;
+        }
+
+        // addon spawned above mouse cursor
+        if (addonRect.Y < mousePos.Y)
+        {
+            if (isTop)
+                addonRect.Y = (short)mousePos.Y + 5;
+        }
+        else
+        {
+            if (!isTop)
+                addonRect.Y = Math.Max(0, (short)mousePos.Y - 5 - addonRect.Height); // prevent it going below 0
+        }
+
+        if (!chatRect.HasOverlap(addonRect))
+        {
+            atk->SetPosition((short) addonRect.X, (short) addonRect.Y);
+            return;
+        }
+
+        // Spawning right/bottom of mouse cursor didn't solve the overlap, so we spawn it next to the chat
         var x = isLeft ? chatRect.SizeX : LogWindow.LastWindowPos.X - atkSize.X;
         var y = Math.Clamp(chatRect.SizeY - atkSize.Y, 0, float.MaxValue);
         y -= isTop ? 0 : Plugin.Config.TooltipOffset; // offset to prevent cut-off on the bottom

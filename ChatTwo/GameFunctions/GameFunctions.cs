@@ -124,8 +124,11 @@ internal unsafe class GameFunctions : IDisposable
         agent->Index = 0;
         agent->Flag1 &= 0xEF;
         agent->ItemId = id;
-        agent->Flag2 = 1;
-        agent->Flag3 = 0;
+        // agent->Flag2 = 1;
+        // agent->Flag3 = 0;
+        // TODO: Revert whenever CS is merged
+        *(byte*)((nint)agent + 0x21A) = 1;
+        *(byte*)((nint)agent + 0x21E) = 0;
 
         // This just probably needs to be set
         agent->AddonId = addon->Id;
