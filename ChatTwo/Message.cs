@@ -140,7 +140,10 @@ internal partial class Message
         return SortCode.GetHashCode()
                ^ ExtraChatChannel.GetHashCode()
                ^ string.Join("", Sender.Select(c => c.StringValue())).GetHashCode()
-               ^ string.Join("", Content.Select(c => c.StringValue())).GetHashCode();
+               ^ string.Join("", Content.Select(c => c.StringValue())).GetHashCode()
+               // Hash the link too for something like DeathRecap where the message is the same
+               // but the link is different
+               ^ string.Join("", Content.Select(c => c.Link?.GetHashCode())).GetHashCode();
     }
 
     private static Guid ExtractExtraChatChannel(SeString contentSource)
