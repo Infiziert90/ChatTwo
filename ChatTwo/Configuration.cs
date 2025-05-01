@@ -73,6 +73,7 @@ internal class Configuration : IPluginConfiguration
     public bool FilterIncludePreviousSessions;
     public bool SortAutoTranslate;
     public bool CollapseDuplicateMessages;
+    public bool CollapseKeepUniqueLinks;
     public bool PlaySounds = true;
     public bool KeepInputFocus = true;
     public int MaxLinesToRender = 10_000; // 1-10000
@@ -163,6 +164,7 @@ internal class Configuration : IPluginConfiguration
         FilterIncludePreviousSessions = other.FilterIncludePreviousSessions;
         SortAutoTranslate = other.SortAutoTranslate;
         CollapseDuplicateMessages = other.CollapseDuplicateMessages;
+        CollapseKeepUniqueLinks = other.CollapseKeepUniqueLinks;
         PlaySounds = other.PlaySounds;
         KeepInputFocus = other.KeepInputFocus;
         MaxLinesToRender = other.MaxLinesToRender;
