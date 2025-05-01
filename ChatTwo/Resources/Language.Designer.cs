@@ -2076,6 +2076,24 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Don't collapse messages if they link to different things with the same text.
+        /// </summary>
+        internal static string Options_CollapseDuplicateMsgUniqueLink_Description {
+            get {
+                return ResourceManager.GetString("Options_CollapseDuplicateMsgUniqueLink_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keep unique links seperate
+        /// </summary>
+        internal static string Options_CollapseDuplicateMsgUniqueLink_Name {
+            get {
+                return ResourceManager.GetString("Options_CollapseDuplicateMsgUniqueLink_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The side of {0} to display help for commands on..
         /// </summary>
         internal static string Options_CommandHelpSide_Description {
@@ -3867,3 +3885,4 @@ namespace ChatTwo.Resources {
         }
     }
 }
+

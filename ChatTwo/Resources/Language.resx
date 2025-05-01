@@ -961,6 +961,12 @@
     <data name="Options_CollapseDuplicateMessages_Description">
         <value>Replace consecutive duplicate messages with a counter appended to the first instance of the message.</value>
     </data>
+    <data name="Options_CollapseDuplicateMsgUniqueLink_Name">
+        <value>Keep unique links seperate</value>
+    </data>
+    <data name="Options_CollapseDuplicateMsgUniqueLink_Description">
+        <value>Don't collapse messages if they link to different things with the same text.</value>
+    </data>
     <data name="Options_Tabs_ExtraChatChannels">
         <value>ExtraChat channels</value>
     </data>
