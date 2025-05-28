@@ -612,7 +612,7 @@ public sealed class PayloadHandler
             var member = party.FirstOrDefault(member => member.Name.TextValue == player.PlayerName && member.World.RowId == world.RowId);
             var isInParty = member != null;
             var inInstance = GameFunctions.GameFunctions.IsInInstance();
-            var inPartyInstance = Sheets.TerritorySheet.GetRow(Plugin.ClientState.TerritoryType).TerritoryIntendedUse.RowId is (41 or 47 or 48 or 52 or 53);
+            var inPartyInstance = Sheets.TerritorySheet.GetRow(Plugin.ClientState.TerritoryType).TerritoryIntendedUse.RowId is (41 or 47 or 48 or 52 or 53 or 61);
             if (isLeader)
             {
                 if (!isInParty)
