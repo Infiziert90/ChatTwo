@@ -950,6 +950,12 @@ Sie wurden gewarnt.</value>
   <data name="Options_CollapseDuplicateMessages_Description">
     <value>Ersetzt sich wiederholende Nachrichten mit einem Zähler, der der originalen Nachricht angehängt wird.</value>
   </data>
+  <data name="Options_CollapseDuplicateMsgUniqueLink_Name">
+      <value>Trenne seperate Verlinkungen</value>
+  </data>
+  <data name="Options_CollapseDuplicateMsgUniqueLink_Description">
+      <value>Trenne Nachrichten die den gleichen text mit verschieden Verlinkungen haben.</value>
+  </data>
   <data name="Options_Tabs_ExtraChatChannels">
     <value>ExtraChat-Kanäle</value>
   </data>
