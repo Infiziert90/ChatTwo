@@ -160,7 +160,7 @@ internal class MessageStore : IDisposable
     private void Migrate()
     {
         // Get current user_version.
-        var cmd = Connection.CreateCommand();
+        using var cmd = Connection.CreateCommand();
         cmd.CommandText = "PRAGMA user_version;";
         var userVersion = Convert.ToInt32(cmd.ExecuteScalar());
 
@@ -229,7 +229,7 @@ internal class MessageStore : IDisposable
 
     private void SetMigrationVersion(int version)
     {
-        var cmd = Connection.CreateCommand();
+        using var cmd = Connection.CreateCommand();
         // Parameters aren't supported for PRAGMA queries, and you can't set the
         // version with a pragma_ function.
         cmd.CommandText = $"PRAGMA user_version = {version};";
@@ -257,14 +257,14 @@ internal class MessageStore : IDisposable
 
     internal int MessageCount()
     {
-        var cmd = Connection.CreateCommand();
+        using var cmd = Connection.CreateCommand();
         cmd.CommandText = "SELECT COUNT(*) FROM messages;";
         return Convert.ToInt32(cmd.ExecuteScalar());
     }
 
     internal void UpsertMessage(Message message)
     {
-        var cmd = Connection.CreateCommand();
+        using var cmd = Connection.CreateCommand();
         cmd.CommandText = @"
             INSERT INTO messages (
                 Id,
@@ -381,7 +381,7 @@ internal class MessageStore : IDisposable
     /// </summary>
     internal void DeleteMessage(Guid id)
     {
-        var cmd = Connection.CreateCommand();
+        using var cmd = Connection.CreateCommand();
         cmd.CommandText = "UPDATE messages SET Deleted = true WHERE Id = $Id;";
         cmd.Parameters.AddWithValue("$Id", id);
         cmd.ExecuteNonQuery();
@@ -398,7 +398,7 @@ internal class MessageStore : IDisposable
 
         var whereClause = "WHERE " + string.Join(" AND ", whereClauses);
 
-        var cmd = Connection.CreateCommand();
+        using var cmd = Connection.CreateCommand();
         // Select last N messages by date DESC, but reverse the order to get
         // them in ascending order.
         cmd.CommandText = @"
@@ -461,7 +461,7 @@ internal class MessageStore : IDisposable
     }
 }
 
-internal class MessageEnumerator(DbDataReader reader) : IEnumerable<Message>
+internal class MessageEnumerator(DbDataReader reader) : IEnumerable<Message>, IDisposable, IAsyncDisposable
 {
     private const int MaxErrorLogs = 10;
 
@@ -519,5 +519,14 @@ internal class MessageEnumerator(DbDataReader reader) : IEnumerable<Message>
     public IReadOnlyList<Guid> FailedMessageIds()
     {
         return FailedIds;
+    }
+
+    public void Dispose()
+    {
+        reader.Dispose();
+    }
+    public async ValueTask DisposeAsync()
+    {
+        await reader.DisposeAsync();
     }
 }
