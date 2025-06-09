@@ -574,11 +574,10 @@ public sealed class PayloadHandler
         var name = new List<Chunk> { new TextChunk(ChunkSource.None, null, player.PlayerName) };
         if (world.Value.IsPublic)
         {
-            name.AddRange(new Chunk[]
-            {
+            name.AddRange([
                 new IconChunk(ChunkSource.None, null, BitmapFontIcon.CrossWorld),
-                new TextChunk(ChunkSource.None, null, world.Value.Name.ExtractText()),
-            });
+                new TextChunk(ChunkSource.None, null, world.Value.Name.ExtractText())
+            ]);
         }
 
         LogWindow.DrawChunks(name, false);
@@ -587,7 +586,7 @@ public sealed class PayloadHandler
         var validContentId = chunk.Message?.ContentId is not (null or 0);
         if (ImGui.Selectable(Language.Context_SendTell))
         {
-            // Eureka and Bozja need special handling as tells work different
+            // Eureka, Bozja and Occult need special handling as tells work different
             if (!Sheets.IsInForay())
             {
                 LogWindow.Chat = $"/tell {player.PlayerName}";

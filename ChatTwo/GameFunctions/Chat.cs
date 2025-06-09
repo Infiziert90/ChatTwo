@@ -439,6 +439,10 @@ internal sealed unsafe class Chat : IDisposable
         if (!Plugin.CurrentTab.CurrentChannel.UseTempChannel)
             Plugin.CurrentTab.CurrentChannel.UseTempChannel = true;
 
+        // Send tell via CommandInner later and let the game handle it
+        // Only works because we use the SetTellTargetInForay function to set all required information
+        Plugin.ChatLogWindow.TellSpecial = true;
+
         var utfName = Utf8String.FromString(name);
         var utfWorld = Utf8String.FromString(worldName);
 
