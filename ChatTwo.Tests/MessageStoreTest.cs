@@ -47,7 +47,8 @@ public class MessageStoreTest {
         store.UpsertMessage(input);
 
         // Read the message back.
-        var messages = store.GetMostRecentMessages().ToList();
+        using var messageEnumerator = store.GetMostRecentMessages();
+        var messages = messageEnumerator.ToList();
         Assert.AreEqual(1, messages.Count);
         AssertMessagesEqual(input, messages.First());
     }
@@ -80,7 +81,8 @@ public class MessageStoreTest {
         // Query the most recent 5 messages. Should return the 4 newest messages
         // from the list, as well as the different receiver message because we
         // aren't filtering.
-        var outputMessages = store.GetMostRecentMessages(count: 5).ToList();
+        using var unfilteredMessageEnumerator = store.GetMostRecentMessages(count: 5);
+        var outputMessages = unfilteredMessageEnumerator.ToList();
         var gotIds = outputMessages.Select(m => m.Id).ToList();
         TestContext.WriteLine($"Query 1 got IDs: {string.Join(", ", gotIds)}");
         AssertGuidsEqual(new List<Guid> {
@@ -92,7 +94,8 @@ public class MessageStoreTest {
         }, gotIds);
 
         // Query the most recent 5 messages but filter by receiver ID.
-        outputMessages = store.GetMostRecentMessages(receiver: receiver, count: 5).ToList();
+        using var filteredByReceiverMessageEnumerator = store.GetMostRecentMessages(receiver: receiver, count: 5);
+        outputMessages = filteredByReceiverMessageEnumerator.ToList();
         gotIds = outputMessages.Select(m => m.Id).ToList();
         TestContext.WriteLine($"Query 2 got IDs: {string.Join(", ", gotIds)}");
         AssertGuidsEqual(new List<Guid> {
@@ -104,7 +107,8 @@ public class MessageStoreTest {
         }, gotIds);
 
         // Query the most recent 5 messages but only since a specific date.
-        outputMessages = store.GetMostRecentMessages(receiver, since: messages[1].Date, count: 5).ToList();
+        using var filteredByReceiverAndDateMessageEnumerator = store.GetMostRecentMessages(receiver, since: messages[1].Date, count: 5);
+        outputMessages = filteredByReceiverAndDateMessageEnumerator.ToList();
         gotIds = outputMessages.Select(m => m.Id).ToList();
         TestContext.WriteLine($"Query 3 got IDs: {string.Join(", ", gotIds)}");
         AssertGuidsEqual(new List<Guid> {
@@ -132,7 +136,8 @@ public class MessageStoreTest {
         */
 
         using var store = new MessageStore(dbPath);
-        var output = store.GetMostRecentMessages().ToList();
+        using var existingMessageEnumerator = store.GetMostRecentMessages();
+        var output = existingMessageEnumerator.ToList();
         Assert.AreEqual(1, output.Count);
         AssertMessagesEqual(input, output[0]);
     }
@@ -152,7 +157,8 @@ public class MessageStoreTest {
             store.UpsertMessage(message);
         }
 
-        var messages = store.GetMostRecentMessages(count: count).ToList();
+        using var messageEnumerator = store.GetMostRecentMessages(count: count);
+        var messages = messageEnumerator.ToList();
         Assert.AreEqual(count, messages.Count);
         foreach (var message in messages) {
             // Load the message because they are lazily parsed.
