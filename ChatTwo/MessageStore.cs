@@ -405,13 +405,13 @@ internal class MessageStore : IDisposable
             SELECT COUNT(*)
             FROM messages
             " + whereClause;
-        cmd.CommandTimeout = 120; // this could take a while on slow computers
 
         if (receiver != null)
             cmd.Parameters.AddWithValue("$Receiver", receiver);
 
         cmd.Parameters.AddWithValue("$After", ((DateTimeOffset) after).ToUnixTimeMilliseconds());
         cmd.Parameters.AddWithValue("$Before", ((DateTimeOffset) before).ToUnixTimeMilliseconds());
+        cmd.CommandTimeout = 120; // this could take a while on slow computers
 
         return (long) cmd.ExecuteScalar()!;
     }
@@ -425,7 +425,7 @@ internal class MessageStore : IDisposable
         whereClauses.Add("Date BETWEEN $After AND $Before");
         whereClauses.Add($"Channel IN ({string.Join(", ", channels)})");
 
-        var whereClause = "WHERE " + string.Join(" AND ", whereClauses);
+        var whereClause = $"WHERE {string.Join(" AND ", whereClauses)}";
 
         var cmd = Connection.CreateCommand();
         // Select last N messages by date DESC, but reverse the order to get
@@ -467,7 +467,7 @@ internal class MessageEnumerator(DbDataReader reader) : IEnumerable<Message>, ID
 
     // FailedIds and FailedCount are separate, because messages might fail to
     // even parse the ID field.
-    private readonly List<Guid> FailedIds = new();
+    private readonly List<Guid> FailedIds = [];
     private int FailedCount;
     public bool DidError => FailedCount > 0;
 
