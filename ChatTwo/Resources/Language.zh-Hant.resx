@@ -542,6 +542,9 @@
   <data name="Options_Tabs_Opacity">
     <value>視窗不透明度</value>
   </data>
+  <data name="Options_Tabs_IndependentHide">
+    <value>Use different hide condition than main window</value>
+  </data>
   <data name="Options_FontsEnabled">
     <value>啓用自定義字型</value>
   </data>
@@ -677,6 +680,9 @@
   <data name="Context_InviteToParty">
     <value>傳送組隊邀請</value>
   </data>
+  <data name="Context_BlockFunctions">
+    <value>Block Functions</value>
+  </data>
   <data name="Context_InviteToParty_SameWorld">
     <value>同服</value>
   </data>
@@ -694,6 +700,12 @@
   </data>
   <data name="Context_AddToBlacklist">
     <value>加入到黒名單</value>
+  </data>
+  <data name="Context_AddToMuteList">
+    <value>Register to Mute List</value>
+  </data>
+  <data name="Context_AddToTermsFilter">
+    <value>Add to Term Filters</value>
   </data>
   <data name="Context_InviteToNoviceNetwork">
     <value>邀請到新人頻道中</value>
@@ -949,6 +961,12 @@
   </data>
   <data name="Options_CollapseDuplicateMessages_Description">
     <value>摺疊連續重複的訊息並顯示摺疊數量。</value>
+  </data>
+  <data name="Options_CollapseDuplicateMsgUniqueLink_Name">
+    <value>Keep unique links seperate</value>
+  </data>
+  <data name="Options_CollapseDuplicateMsgUniqueLink_Description">
+    <value>Don't collapse messages if they link to different things with the same text.</value>
   </data>
   <data name="Options_Tabs_ExtraChatChannels">
     <value>ExtraChat頻道</value>

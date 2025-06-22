@@ -541,6 +541,9 @@
   <data name="Options_Tabs_Opacity">
     <value>Transparență</value>
   </data>
+  <data name="Options_Tabs_IndependentHide">
+    <value>Use different hide condition than main window</value>
+  </data>
   <data name="Options_FontsEnabled">
     <value>Activează fonturi personalizate</value>
   </data>
@@ -676,6 +679,9 @@
   <data name="Context_InviteToParty">
     <value>Invite to Party</value>
   </data>
+  <data name="Context_BlockFunctions">
+    <value>Block Functions</value>
+  </data>
   <data name="Context_InviteToParty_SameWorld">
     <value>Same world</value>
   </data>
@@ -693,6 +699,12 @@
   </data>
   <data name="Context_AddToBlacklist">
     <value>Add to Blacklist</value>
+  </data>
+  <data name="Context_AddToMuteList">
+    <value>Register to Mute List</value>
+  </data>
+  <data name="Context_AddToTermsFilter">
+    <value>Add to Term Filters</value>
   </data>
   <data name="Context_InviteToNoviceNetwork">
     <value>Invite to Novice Network</value>
@@ -948,6 +960,12 @@
   </data>
   <data name="Options_CollapseDuplicateMessages_Description">
     <value>Replace consecutive duplicate messages with a counter appended to the first instance of the message.</value>
+  </data>
+  <data name="Options_CollapseDuplicateMsgUniqueLink_Name">
+    <value>Keep unique links seperate</value>
+  </data>
+  <data name="Options_CollapseDuplicateMsgUniqueLink_Description">
+    <value>Don't collapse messages if they link to different things with the same text.</value>
   </data>
   <data name="Options_Tabs_ExtraChatChannels">
     <value>ExtraChat channels</value>

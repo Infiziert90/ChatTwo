@@ -542,6 +542,9 @@ Sie wurden gewarnt.</value>
   <data name="Options_Tabs_Opacity">
     <value>Transparenz</value>
   </data>
+  <data name="Options_Tabs_IndependentHide">
+    <value>Use different hide condition than main window</value>
+  </data>
   <data name="Options_FontsEnabled">
     <value>Eigene Schriftarten verwenden</value>
   </data>
@@ -677,6 +680,9 @@ Sie wurden gewarnt.</value>
   <data name="Context_InviteToParty">
     <value>In die Gruppe einladen</value>
   </data>
+  <data name="Context_BlockFunctions">
+    <value>Block Functions</value>
+  </data>
   <data name="Context_InviteToParty_SameWorld">
     <value>Gleiche Welt</value>
   </data>
@@ -694,6 +700,12 @@ Sie wurden gewarnt.</value>
   </data>
   <data name="Context_AddToBlacklist">
     <value>Auf die Schwarze Liste</value>
+  </data>
+  <data name="Context_AddToMuteList">
+    <value>Register to Mute List</value>
+  </data>
+  <data name="Context_AddToTermsFilter">
+    <value>Add to Term Filters</value>
   </data>
   <data name="Context_InviteToNoviceNetwork">
     <value>In den Neulings-Chat einladen</value>
@@ -951,10 +963,10 @@ Sie wurden gewarnt.</value>
     <value>Ersetzt sich wiederholende Nachrichten mit einem Zähler, der der originalen Nachricht angehängt wird.</value>
   </data>
   <data name="Options_CollapseDuplicateMsgUniqueLink_Name">
-      <value>Trenne seperate Verlinkungen</value>
+    <value>Keep unique links seperate</value>
   </data>
   <data name="Options_CollapseDuplicateMsgUniqueLink_Description">
-      <value>Trenne Nachrichten die den gleichen text mit verschieden Verlinkungen haben.</value>
+    <value>Don't collapse messages if they link to different things with the same text.</value>
   </data>
   <data name="Options_Tabs_ExtraChatChannels">
     <value>ExtraChat-Kanäle</value>
