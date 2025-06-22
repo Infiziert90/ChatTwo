@@ -134,7 +134,9 @@ public class DbViewer : Window
                     // We only want to fetch count if this is the first page
                     if (CurrentPage == 1)
                         Count = Plugin.MessageManager.Store.CountDateRange(AfterDate, BeforeDate, channels, character);
-                    Messages = Plugin.MessageManager.Store.GetDateRange(AfterDate, BeforeDate, channels, character, CurrentPage - 1).ToArray();
+
+                    using var dateRangeMessageEnumerator = Plugin.MessageManager.Store.GetDateRange(AfterDate, BeforeDate, channels, character, CurrentPage - 1);
+                    Messages = dateRangeMessageEnumerator.ToArray();
 
                     Filter();
                 }

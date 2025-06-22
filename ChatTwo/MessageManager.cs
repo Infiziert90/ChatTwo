@@ -141,7 +141,7 @@ internal class MessageManager : IAsyncDisposable
         if (!Plugin.Config.FilterIncludePreviousSessions)
             since = Plugin.GameStarted;
 
-        var messages = Store.GetMostRecentMessages(CurrentContentId, since);
+        using var messages = Store.GetMostRecentMessages(CurrentContentId, since);
 
         // We store the pending messages to be added to the chat log in a
         // temporary list, and apply them all at once after filtering.
