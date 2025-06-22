@@ -996,8 +996,7 @@ public sealed class ChatLogWindow : Window
         if (!child.Success)
             return;
 
-        var useTable = tab.DisplayTimestamp && Plugin.Config.PrettierTimestamps;
-        if (useTable)
+        if (tab.DisplayTimestamp && Plugin.Config.PrettierTimestamps)
             DrawLogTableStyle(tab, handler, switchedTab);
         else
             DrawLogNormalStyle(tab, handler, switchedTab);
@@ -1006,9 +1005,7 @@ public sealed class ChatLogWindow : Window
     private void DrawLogNormalStyle(Tab tab, PayloadHandler handler, bool switchedTab)
     {
         using (ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, Vector2.Zero))
-        {
             DrawMessages(tab, handler, false);
-        }
 
         if (switchedTab || ImGui.GetScrollY() >= ImGui.GetScrollMaxY())
             ImGui.SetScrollHereY(1f);
@@ -1094,7 +1091,7 @@ public sealed class ChatLogWindow : Window
                     {
                         ImGui.SameLine();
                         DrawChunks(
-                            new[] { new TextChunk(ChunkSource.None, null, $" ({sameCount + 1}x)") { FallbackColour = ChatType.System, Italic = true, } },
+                            [new TextChunk(ChunkSource.None, null, $" ({sameCount + 1}x)") { FallbackColour = ChatType.System, Italic = true, }],
                             true,
                             handler,
                             ImGui.GetContentRegionAvail().X
@@ -1145,24 +1142,22 @@ public sealed class ChatLogWindow : Window
                         ImGui.TableNextColumn();
 
                     ImGui.Dummy(new Vector2(10f, height.Value));
-                    message.IsVisible[tab.Identifier] = ImGui.IsItemVisible();
 
-                    if (message.IsVisible[tab.Identifier])
-                    {
-                        if (isTable)
-                            ImGui.TableSetColumnIndex(0);
-
-                        ImGui.SetCursorPos(beforeDummy);
-                    }
-                    else
-                    {
+                    var nowVisible = ImGui.IsItemVisible();
+                    if (!nowVisible)
                         continue;
-                    }
+
+                    if (isTable)
+                        ImGui.TableSetColumnIndex(0);
+
+                    ImGui.SetCursorPos(beforeDummy);
+                    message.IsVisible[tab.Identifier] = nowVisible;
                 }
 
                 if (tab.DisplayTimestamp)
                 {
-                    var timestamp = message.Date.ToLocalTime().ToString("t", !Plugin.Config.Use24HourClock ? null : CultureInfo.CreateSpecificCulture("es-ES"));
+                    var localTime = message.Date.ToLocalTime();
+                    var timestamp = localTime.ToString("t", !Plugin.Config.Use24HourClock ? null : CultureInfo.CreateSpecificCulture("es-ES"));
                     if (isTable)
                     {
                         if (!Plugin.Config.HideSameTimestamps || timestamp != lastTimestamp)
@@ -1175,7 +1170,7 @@ public sealed class ChatLogWindow : Window
                             // tooltip string for all visible items on every
                             // frame.
                             if (ImGui.IsItemHovered())
-                                ImGuiUtil.Tooltip(message.Date.ToLocalTime().ToString("F"));
+                                ImGuiUtil.Tooltip(localTime.ToString("F"));
                         }
                         else
                         {
@@ -1203,7 +1198,7 @@ public sealed class ChatLogWindow : Window
 
                 // We need to draw something otherwise the item visibility check below won't work.
                 if (message.Content.Count == 0)
-                    DrawChunks(new[] { new TextChunk(ChunkSource.Content, null, " ") }, true, handler, lineWidth);
+                    DrawChunks([new TextChunk(ChunkSource.Content, null, " ")], true, handler, lineWidth);
                 else
                     DrawChunks(message.Content, true, handler, lineWidth);
 
