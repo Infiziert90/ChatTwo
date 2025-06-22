@@ -109,6 +109,11 @@ internal sealed class Display : ISettingsTab
         ImGui.Spacing();
 
         ImGuiUtil.OptionCheckbox(ref Mutable.CollapseDuplicateMessages, Language.Options_CollapseDuplicateMessages_Name, Language.Options_CollapseDuplicateMessages_Description);
+        if (Mutable.CollapseDuplicateMessages)
+        {
+            using var _ = ImRaii.PushIndent();
+            ImGuiUtil.OptionCheckbox(ref Mutable.CollapseKeepUniqueLinks, Language.Options_CollapseDuplicateMsgUniqueLink_Name, Language.Options_CollapseDuplicateMsgUniqueLink_Description);
+        }
         ImGui.Spacing();
     }
 }
