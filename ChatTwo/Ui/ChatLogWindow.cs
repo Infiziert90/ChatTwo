@@ -1157,7 +1157,7 @@ public sealed class ChatLogWindow : Window
                 if (tab.DisplayTimestamp)
                 {
                     var localTime = message.Date.ToLocalTime();
-                    var timestamp = localTime.ToString("t", !Plugin.Config.Use24HourClock ? null : CultureInfo.CreateSpecificCulture("es-ES"));
+                    var timestamp = localTime.ToString("t", !Plugin.Config.Use24HourClock ? null : CultureInfo.CreateSpecificCulture("de-DE"));
                     if (isTable)
                     {
                         if (!Plugin.Config.HideSameTimestamps || timestamp != lastTimestamp)
