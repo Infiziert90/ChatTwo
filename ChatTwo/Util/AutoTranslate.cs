@@ -83,6 +83,9 @@ internal static class AutoTranslate
             {
                 if (lookup is not ("" or "@"))
                 {
+                    // SE added whitespace to the newest additions, but ParseOrThrow doesn't see them as valid
+                    lookup = lookup.Replace(" ", "");
+
                     var (sheetName, selector) = parser.ParseOrThrow(lookup);
                     var sheet = Plugin.DataManager.Excel.GetSheet<WorkingRawRow>(name: sheetName);
 

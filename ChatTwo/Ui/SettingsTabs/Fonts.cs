@@ -2,7 +2,7 @@ using ChatTwo.Resources;
 using ChatTwo.Util;
 using Dalamud;
 using Dalamud.Interface.FontIdentifier;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 
 namespace ChatTwo.Ui.SettingsTabs;
 

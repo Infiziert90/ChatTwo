@@ -34,7 +34,7 @@ internal sealed unsafe class Chat : IDisposable
     private readonly delegate* unmanaged<NetworkModule*, ulong, ushort, Utf8String*, Utf8String*, ushort, ushort, byte> SendTellNative = null!;
 
     // Client::UI::AddonChatLog.OnRefresh
-    [Signature("40 53 56 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 49 8B F0 8B FA", DetourName = nameof(ChatLogRefreshDetour))]
+    [Signature("40 53 57 41 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 4D 8B F8", DetourName = nameof(ChatLogRefreshDetour))]
     private Hook<ChatLogRefreshDelegate>? ChatLogRefreshHook { get; init; }
     private delegate byte ChatLogRefreshDelegate(nint log, ushort eventId, AtkValue* value);
 

@@ -18,7 +18,7 @@ using Dalamud.Interface.Utility.Raii;
 using Dalamud.Utility;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using Lumina.Excel.Sheets;
 
 using Action = System.Action;
@@ -263,17 +263,21 @@ public sealed class PayloadHandler
         if (!Plugin.GameConfig.TryGet(UiControlOption.DetailTrackingType, out uint selected) || selected != 0)
             return;
 
-        if (LogWindow.LastViewport != ImGuiHelpers.MainViewport.NativePtr)
+        if (LogWindow.LastViewport != ImGuiHelpers.MainViewport.Handle)
             return;
 
-        var atk = (AtkUnitBase*) args.Addon;
-        if (atk->WindowNode == null)
+        var atk = args.Addon;
+        if (atk.IsNull)
             return;
 
-        if (!atk->IsVisible)
+        var atkBase = (AtkUnitBase*)atk.Address;
+        if (atkBase->WindowNode == null)
             return;
 
-        var component = atk->WindowNode->AtkResNode;
+        if (!atkBase->IsVisible)
+            return;
+
+        var component = atkBase->WindowNode->AtkResNode;
         var atkPos = new Vector2(component.ScreenX, component.ScreenY);
         var atkSize = new Vector2(component.GetWidth() * component.ScaleX, component.GetHeight() * component.GetScaleY());
 
@@ -303,7 +307,7 @@ public sealed class PayloadHandler
 
         if (!chatRect.HasOverlap(addonRect))
         {
-            atk->SetPosition((short) addonRect.X, (short) addonRect.Y);
+            atkBase->SetPosition((short) addonRect.X, (short) addonRect.Y);
             return;
         }
 
@@ -321,7 +325,7 @@ public sealed class PayloadHandler
 
         if (!chatRect.HasOverlap(addonRect))
         {
-            atk->SetPosition((short) addonRect.X, (short) addonRect.Y);
+            atkBase->SetPosition((short) addonRect.X, (short) addonRect.Y);
             return;
         }
 
@@ -330,14 +334,14 @@ public sealed class PayloadHandler
         var y = Math.Clamp(chatRect.SizeY - atkSize.Y, 0, float.MaxValue);
         y -= isTop ? 0 : Plugin.Config.TooltipOffset; // offset to prevent cut-off on the bottom
 
-        atk->SetPosition((short) x, (short) y);
+        atkBase->SetPosition((short) x, (short) y);
     }
 
     private static void InlineIcon(IDalamudTextureWrap icon)
     {
         var cursor = ImGui.GetCursorPos();
         var size = ImGuiHelpers.ScaledVector2(32, 32);
-        ImGui.Image(icon.ImGuiHandle, size);
+        ImGui.Image(icon.Handle, size);
         ImGui.SameLine();
         ImGui.SetCursorPos(cursor + new Vector2(size.X + 4, size.Y - ImGui.GetTextLineHeightWithSpacing()));
     }
@@ -373,7 +377,7 @@ public sealed class PayloadHandler
 
     private void HoverItem(ItemPayload item)
     {
-        if (item.Kind == ItemPayload.ItemKind.EventItem)
+        if (item.Kind == ItemKind.EventItem)
         {
             HoverEventItem(item);
             return;
@@ -489,7 +493,7 @@ public sealed class PayloadHandler
 
     private void DrawItemPopup(ItemPayload payload)
     {
-        if (payload.Kind == ItemPayload.ItemKind.EventItem)
+        if (payload.Kind == ItemKind.EventItem)
         {
             DrawEventItemPopup(payload);
             return;
@@ -498,7 +502,7 @@ public sealed class PayloadHandler
         if (!Sheets.ItemSheet.TryGetRow(payload.ItemId, out var itemRow))
             return;
 
-        var hq = payload.Kind == ItemPayload.ItemKind.Hq;
+        var hq = payload.Kind == ItemKind.Hq;
         if (Plugin.TextureProvider.GetFromGameIcon(new GameIconLookup(itemRow.Icon, hq)).GetWrapOrDefault() is { } icon)
             InlineIcon(icon);
 
@@ -506,7 +510,7 @@ public sealed class PayloadHandler
         // hq symbol
         if (hq)
             name.Payloads.Add(new TextPayload(" "));
-        else if (payload.Kind == ItemPayload.ItemKind.Collectible)
+        else if (payload.Kind == ItemKind.Collectible)
             name.Payloads.Add(new TextPayload(" "));
 
         LogWindow.DrawChunks(ChunkUtil.ToChunks(name, ChunkSource.None, null).ToList(), false);
@@ -538,7 +542,7 @@ public sealed class PayloadHandler
 
     private void DrawEventItemPopup(ItemPayload payload)
     {
-        if (payload.Kind != ItemPayload.ItemKind.EventItem)
+        if (payload.Kind != ItemKind.EventItem)
             return;
 
         if (!Sheets.EventItemSheet.HasRow(payload.ItemId))

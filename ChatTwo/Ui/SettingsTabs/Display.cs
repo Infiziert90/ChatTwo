@@ -2,7 +2,7 @@ using ChatTwo.Code;
 using ChatTwo.Resources;
 using ChatTwo.Util;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 
 namespace ChatTwo.Ui.SettingsTabs;
 

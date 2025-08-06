@@ -12,7 +12,7 @@ using Dalamud.Interface.ImGuiFontChooserDialog;
 using Dalamud.Interface.Style;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 
 namespace ChatTwo.Util;
 
@@ -64,7 +64,7 @@ internal static class ImGuiUtil
         {
             var oldPos = ImGui.GetCursorScreenPos();
 
-            ImGuiNative.igTextUnformatted(text, textEnd);
+            ImGuiNative.TextUnformatted(text, textEnd);
             PostPayload(chunk, handler);
 
             if (!ReferenceEquals(LastLink, chunk.Link))
@@ -107,7 +107,7 @@ internal static class ImGuiUtil
                 }
 
                 var widthLeft = ImGui.GetContentRegionAvail().X;
-                var endPrevLine = ImGuiNative.ImFont_CalcWordWrapPositionA(ImGui.GetFont().NativePtr, ImGuiHelpers.GlobalScale, text, textEnd, widthLeft);
+                var endPrevLine = ImGuiNative.CalcWordWrapPositionA(ImGui.GetFont().Handle, ImGuiHelpers.GlobalScale, text, textEnd, widthLeft);
                 if (endPrevLine == null)
                     continue;
 
@@ -126,7 +126,7 @@ internal static class ImGuiUtil
                     else
                     {
                         // check if the next bit is longer than the entire line width
-                        var wrapPos = ImGuiNative.ImFont_CalcWordWrapPositionA(ImGui.GetFont().NativePtr, ImGuiHelpers.GlobalScale, text, firstSpace, lineWidth);
+                        var wrapPos = ImGuiNative.CalcWordWrapPositionA(ImGui.GetFont().Handle, ImGuiHelpers.GlobalScale, text, firstSpace, lineWidth);
 
                         // only go to next line is it's going to wrap at the space
                         if (wrapPos >= firstSpace)
@@ -144,7 +144,7 @@ internal static class ImGuiUtil
                     if (*text == ' ')
                         ++text;
 
-                    var newEnd = ImGuiNative.ImFont_CalcWordWrapPositionA(ImGui.GetFont().NativePtr, ImGuiHelpers.GlobalScale, text, textEnd, widthLeft);
+                    var newEnd = ImGuiNative.CalcWordWrapPositionA(ImGui.GetFont().Handle, ImGuiHelpers.GlobalScale, text, textEnd, widthLeft);
                     if (properBreak && newEnd == endPrevLine)
                         break;
 
@@ -257,7 +257,7 @@ internal static class ImGuiUtil
     {
         ImGui.TextUnformatted(label);
         ImGui.SetNextItemWidth(-1);
-        var r = ImGui.InputInt($"##{label}", ref value, step, stepFast, flags);
+        var r = ImGui.InputInt($"##{label}", ref value, step, stepFast, flags: flags);
         HelpText(description);
 
         return r;
@@ -475,16 +475,16 @@ internal static class ImGuiUtil
             VirtualKey.SNAPSHOT => ImGuiKey.PrintScreen,
             VirtualKey.INSERT => ImGuiKey.Insert,
             VirtualKey.DELETE => ImGuiKey.Delete,
-            VirtualKey.KEY_0 => ImGuiKey._0,
-            VirtualKey.KEY_1 => ImGuiKey._1,
-            VirtualKey.KEY_2 => ImGuiKey._2,
-            VirtualKey.KEY_3 => ImGuiKey._3,
-            VirtualKey.KEY_4 => ImGuiKey._4,
-            VirtualKey.KEY_5 => ImGuiKey._5,
-            VirtualKey.KEY_6 => ImGuiKey._6,
-            VirtualKey.KEY_7 => ImGuiKey._7,
-            VirtualKey.KEY_8 => ImGuiKey._8,
-            VirtualKey.KEY_9 => ImGuiKey._9,
+            VirtualKey.KEY_0 => ImGuiKey.Key0,
+            VirtualKey.KEY_1 => ImGuiKey.Key1,
+            VirtualKey.KEY_2 => ImGuiKey.Key2,
+            VirtualKey.KEY_3 => ImGuiKey.Key3,
+            VirtualKey.KEY_4 => ImGuiKey.Key4,
+            VirtualKey.KEY_5 => ImGuiKey.Key5,
+            VirtualKey.KEY_6 => ImGuiKey.Key6,
+            VirtualKey.KEY_7 => ImGuiKey.Key7,
+            VirtualKey.KEY_8 => ImGuiKey.Key8,
+            VirtualKey.KEY_9 => ImGuiKey.Key9,
             VirtualKey.A => ImGuiKey.A,
             VirtualKey.B => ImGuiKey.B,
             VirtualKey.C => ImGuiKey.C,

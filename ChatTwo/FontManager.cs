@@ -2,7 +2,7 @@
 using Dalamud.Interface.GameFonts;
 using Dalamud.Interface.ManagedFontAtlas;
 using Dalamud.Interface.Utility;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 
 namespace ChatTwo;
 
@@ -44,7 +44,7 @@ public class FontManager
                 .ReadAsByteArrayAsync()
                 .Result;
 
-            Dalamud.Utility.Util.WriteAllBytesSafe(filePath, GameSymFont);
+            Dalamud.Utility.FilesystemUtil.WriteAllBytesSafe(filePath, GameSymFont);
         }
     }
 
@@ -52,10 +52,10 @@ public class FontManager
     {
         ushort[] BuildRange(IReadOnlyList<ushort>? chars, params nint[] ranges)
         {
-            var builder = new ImFontGlyphRangesBuilderPtr(ImGuiNative.ImFontGlyphRangesBuilder_ImFontGlyphRangesBuilder());
+            var builder = new ImFontGlyphRangesBuilderPtr(ImGuiNative.ImFontGlyphRangesBuilder());
             // text
             foreach (var range in ranges)
-                builder.AddRanges(range);
+                builder.AddRanges((ushort*)range);
 
             // chars
             if (chars != null)
@@ -85,7 +85,7 @@ public class FontManager
             return builder.BuildRangesToArray();
         }
 
-        var ranges = new List<nint> { ImGui.GetIO().Fonts.GetGlyphRangesDefault() };
+        var ranges = new List<nint> { (nint)ImGui.GetIO().Fonts.GetGlyphRangesDefault() };
         foreach (var extraRange in Enum.GetValues<ExtraGlyphRanges>())
             if (Plugin.Config.ExtraGlyphRanges.HasFlag(extraRange))
                 ranges.Add(extraRange.Range());

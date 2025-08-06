@@ -310,13 +310,13 @@ internal partial class Message
 
                         var kind = item.ItemId switch
                         {
-                            < 500_000 => ItemPayload.ItemKind.Normal,
-                            < 1_000_000 => ItemPayload.ItemKind.Collectible,
-                            < 2_000_000 => ItemPayload.ItemKind.Hq,
-                            _ => ItemPayload.ItemKind.EventItem
+                            < 500_000 => ItemKind.Normal,
+                            < 1_000_000 => ItemKind.Collectible,
+                            < 2_000_000 => ItemKind.Hq,
+                            _ => ItemKind.EventItem
                         };
 
-                        var name = kind != ItemPayload.ItemKind.EventItem
+                        var name = kind != ItemKind.EventItem
                             ? Plugin.DataManager.GetExcelSheet<Item>().GetRow(item.ItemId).Name.ToString()
                             : Plugin.DataManager.GetExcelSheet<EventItem>().GetRow(item.ItemId).Name.ToString();
 
@@ -346,13 +346,13 @@ internal partial class Message
                     else if (split == "<flag>")
                     {
                         var agentMap = AgentMap.Instance();
-                        if (!agentMap->IsFlagMarkerSet)
+                        if (agentMap->FlagMarkerCount == 0)
                         {
                             AddChunkWithMessage(text.NewWithStyle(chunk.Source, chunk.Link, split));
                             continue;
                         }
 
-                        var mapCoords = agentMap->FlagMapMarker;
+                        var mapCoords = agentMap->FlagMapMarkers[0];
                         var rawX = (int)(MathF.Round(mapCoords.XFloat, 3, MidpointRounding.AwayFromZero) * 1000);
                         var rawY = (int)(MathF.Round(mapCoords.YFloat, 3, MidpointRounding.AwayFromZero) * 1000);
 

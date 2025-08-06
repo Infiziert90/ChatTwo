@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 using Dalamud.Interface.Utility;
-using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System.Collections;
 using Dalamud.Interface.Utility.Raii;
 
@@ -147,7 +147,7 @@ public unsafe class ListClipper : IEnumerable<(int, int)>, IDisposable
         CurrentColumns = cols;
         CurrentRows = TwoDimensional ? items : (int)MathF.Ceiling((float)items / CurrentColumns);
         ItemRemainder = !TwoDimensional ? items % CurrentColumns : 0;
-        Clipper = new ImGuiListClipperPtr(ImGuiNative.ImGuiListClipper_ImGuiListClipper());
+        Clipper = new ImGuiListClipperPtr(ImGuiNative.ImGuiListClipper());
         Clipper.Begin(CurrentRows, itemHeight);
     }
 

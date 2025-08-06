@@ -6,8 +6,8 @@ using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
-using ImGuiNET;
-
+using Dalamud.Bindings.ImGui;
+using Dalamud.Utility;
 using DalamudPartyFinderPayload = Dalamud.Game.Text.SeStringHandling.Payloads.PartyFinderPayload;
 
 namespace ChatTwo.Ui;
@@ -146,7 +146,7 @@ public class SeStringDebugger : Window
                         { "RawItemId", item.RawItemId.ToString() },
                         { "Kind", EnumName(item.Kind) },
                         { "IsHQ", item.IsHQ.ToString() },
-                        { "Item.Name", item.Kind == ItemPayload.ItemKind.EventItem ? Sheets.EventItemSheet.GetRow(item.ItemId).Name.ExtractText() : Sheets.ItemSheet.GetRow(item.ItemId).Name.ExtractText() },
+                        { "Item.Name", item.Kind == ItemKind.EventItem ? Sheets.EventItemSheet.GetRow(item.ItemId).Name.ExtractText() : Sheets.ItemSheet.GetRow(item.ItemId).Name.ExtractText() },
                     });
                     break;
                 }

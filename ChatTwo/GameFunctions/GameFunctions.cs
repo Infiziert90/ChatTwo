@@ -5,7 +5,9 @@ using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Hooking;
 using Dalamud.Memory;
+using Dalamud.Utility;
 using Dalamud.Utility.Signatures;
+using FFXIVClientStructs.FFXIV.Client.Enums;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
@@ -21,10 +23,9 @@ namespace ChatTwo.GameFunctions;
 internal unsafe class GameFunctions : IDisposable
 {
     #region Hooks
-    private delegate nint ResolveTextCommandPlaceholderDelegate(nint a1, byte* placeholderText, byte a3, byte a4);
-
-    [Signature("E8 ?? ?? ?? ?? 49 8D 4F 18 4C 8B E0", DetourName = nameof(ResolveTextCommandPlaceholderDetour))]
+    [Signature("E8 ?? ?? ?? ?? 48 85 C0 0F 84 ?? ?? ?? ?? 48 8B D0 49 8D 4F", DetourName = nameof(ResolveTextCommandPlaceholderDetour))]
     private Hook<ResolveTextCommandPlaceholderDelegate>? ResolveTextCommandPlaceholderHook { get; init; }
+    private delegate nint ResolveTextCommandPlaceholderDelegate(nint a1, byte* placeholderText, byte a3, byte a4);
     #endregion
 
     private Plugin Plugin { get; }
@@ -109,7 +110,7 @@ internal unsafe class GameFunctions : IDisposable
         return addon != null && addon->IsVisible;
     }
 
-    internal static void OpenItemTooltip(uint id, ItemPayload.ItemKind itemKind)
+    internal static void OpenItemTooltip(uint id, ItemKind itemKind)
     {
         var atkStage = AtkStage.Instance();
         var agent = AgentItemDetail.Instance();
@@ -119,7 +120,7 @@ internal unsafe class GameFunctions : IDisposable
         if (agent == null || addon == null)
             return;
 
-        agent->ItemKind = itemKind == ItemPayload.ItemKind.EventItem ? ItemDetailKind.ChatEventItem : ItemDetailKind.ChatItem;
+        agent->DetailKind = itemKind == ItemKind.EventItem ? DetailKind.KeyItem : DetailKind.Item;
         agent->TypeOrId = id;
         agent->Index = 0;
         agent->Flag1 &= 0xEF;
