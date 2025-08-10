@@ -61,6 +61,7 @@ internal class ChatCode
         ChatType.LoseDebuff => ChatType.GainDebuff,
         ChatType.System => ChatType.System,
         ChatType.Alarm => ChatType.System,
+        ChatType.GlamourNotifications => ChatType.System,
         ChatType.RetainerSale => ChatType.System,
         ChatType.PeriodicRecruitmentNotification => ChatType.System,
         ChatType.Sign => ChatType.System,

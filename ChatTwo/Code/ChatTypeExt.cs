@@ -87,6 +87,7 @@ internal static class ChatTypeExt
             ChatType.Orchestrion,
             ChatType.MessageBook,
             ChatType.Alarm,
+            ChatType.GlamourNotifications,
         }),
         // Note: ExtraChat linkshells are handled separately in the tab settings
         // UI.
@@ -131,6 +132,7 @@ internal static class ChatTypeExt
             ChatType.LoseBuff => Language.ChatType_LoseBuff,
             ChatType.LoseDebuff => Language.ChatType_LoseDebuff,
             ChatType.Alarm => Language.ChatType_Alarm,
+            ChatType.GlamourNotifications => Language.ChatType_Glamour,
             ChatType.Echo => Language.ChatType_Echo,
             ChatType.System => Language.ChatType_System,
             ChatType.BattleSystem => Language.ChatType_BattleSystem,
@@ -258,6 +260,7 @@ internal static class ChatTypeExt
             case ChatType.PeriodicRecruitmentNotification:
             case ChatType.Orchestrion:
             case ChatType.Alarm:
+            case ChatType.GlamourNotifications:
             case ChatType.RetainerSale:
             case ChatType.Sign:
             case ChatType.MessageBook:

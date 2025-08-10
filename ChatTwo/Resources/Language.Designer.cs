@@ -573,6 +573,15 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Glamour Notifications.
+        /// </summary>
+        internal static string ChatType_Glamour {
+            get {
+                return ResourceManager.GetString("ChatType_Glamour", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Free Company (GM).
         /// </summary>
         internal static string ChatType_GmFreeCompany {
@@ -2076,7 +2085,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Don't collapse messages if they link to different things with the same text.
+        ///   Looks up a localized string similar to Don&apos;t collapse messages if they link to different things with the same text..
         /// </summary>
         internal static string Options_CollapseDuplicateMsgUniqueLink_Description {
             get {
@@ -2085,7 +2094,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Keep unique links seperate
+        ///   Looks up a localized string similar to Keep unique links seperate.
         /// </summary>
         internal static string Options_CollapseDuplicateMsgUniqueLink_Name {
             get {
@@ -3885,4 +3894,3 @@ namespace ChatTwo.Resources {
         }
     }
 }
-

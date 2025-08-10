@@ -1,5 +1,3 @@
-using Dalamud.Game.Config;
-
 namespace ChatTwo.Code;
 
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1028:Enum Storage should be Int32")]
@@ -41,6 +39,7 @@ public enum ChatType : ushort
     GainDebuff = 47,
     LoseBuff = 48,
     LoseDebuff = 49,
+    GlamourNotifications = 54,
     Alarm = 55,
     Echo = 56,
     System = 57,
