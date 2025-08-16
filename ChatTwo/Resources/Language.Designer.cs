@@ -2497,6 +2497,24 @@ namespace ChatTwo.Resources {
                 return ResourceManager.GetString("Options_HideInBattle_Name", resourceCulture);
             }
         }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Hide Chat 2 when the New Game+ menu is open.
+        /// </summary>
+        internal static string Options_HideInNewGamePlusMenu_Description {
+            get {
+                return ResourceManager.GetString("Options_HideInNewGamePlusMenu_Description", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Hide when New Game+ is open.
+        /// </summary>
+        internal static string Options_HideInNewGamePlusMenu_Name {
+            get {
+                return ResourceManager.GetString("Options_HideInNewGamePlusMenu_Name", resourceCulture);
+            }
+        }
         
         /// <summary>
         ///   Looks up a localized string similar to Hide {0} during loading screens..

@@ -44,6 +44,7 @@ internal class Configuration : IPluginConfiguration
     public bool HideWhenUiHidden = true;
     public bool HideInLoadingScreens;
     public bool HideInBattle;
+    public bool HideInNewGamePlusMenu;
     public bool HideWhenInactive;
     public int InactivityHideTimeout = 10;
     public bool InactivityHideActiveDuringBattle = true;
@@ -135,6 +136,7 @@ internal class Configuration : IPluginConfiguration
         HideWhenUiHidden = other.HideWhenUiHidden;
         HideInLoadingScreens = other.HideInLoadingScreens;
         HideInBattle = other.HideInBattle;
+        HideInNewGamePlusMenu = other.HideInNewGamePlusMenu;
         HideWhenInactive = other.HideWhenInactive;
         InactivityHideTimeout = other.InactivityHideTimeout;
         InactivityHideActiveDuringBattle = other.InactivityHideActiveDuringBattle;
@@ -248,6 +250,7 @@ internal class Tab
     public bool HideWhenUiHidden = true;
     public bool HideInLoadingScreens;
     public bool HideInBattle;
+    public bool HideInNewGamePlusMenu;
     public bool HideWhenInactive;
 
     [NonSerialized] public uint Unread;
@@ -301,6 +304,7 @@ internal class Tab
             HideWhenUiHidden = HideWhenUiHidden,
             HideInLoadingScreens = HideInLoadingScreens,
             HideInBattle = HideInBattle,
+            HideInNewGamePlusMenu = HideInNewGamePlusMenu,
             HideWhenInactive = HideWhenInactive,
         };
     }
