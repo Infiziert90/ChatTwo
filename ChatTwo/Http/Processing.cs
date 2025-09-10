@@ -23,7 +23,7 @@ public class Processing
 
     internal async Task<MessageResponse[]> ReadMessageList()
     {
-        var tabMessages = await Plugin.CurrentTab!.Messages.GetCopy();
+        var tabMessages = await Plugin.CurrentTab.Messages.GetCopy();
         return tabMessages.TakeLast(Plugin.Config.WebinterfaceMaxLinesToSend).Select(ReadMessageContent).ToArray();
     }
 
@@ -80,7 +80,7 @@ public class Processing
 
             color ??= 0;
 
-            var userContent = text.Content ?? "";
+            var userContent = text.Content ?? string.Empty;
             if (Plugin.ChatLogWindow.ScreenshotMode)
             {
                 if (chunk.Link is PlayerPayload playerPayload)

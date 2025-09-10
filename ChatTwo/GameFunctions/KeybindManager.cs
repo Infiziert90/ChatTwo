@@ -467,19 +467,20 @@ internal unsafe class KeybindManager : IDisposable {
 
     private static Keybind GetKeybind(string id)
     {
-        var outData = new UIInputData.Keybind();
+        var outData = new FFXIVClientStructs.FFXIV.Client.System.Input.Keybind();
         var idString = Utf8String.FromString(id);
-        UIInputData.Instance()->GetKeybind(idString, &outData);
+        UIInputData.Instance()->GetKeybindByName(idString, &outData);
         idString->Dtor(true);
 
-        var key1 = RemapInvalidVirtualKey((VirtualKey) outData.Key);
-        var key2 = RemapInvalidVirtualKey((VirtualKey) outData.AltKey);
+        var key1 = outData.KeySettings[0];
+        var key2 = outData.KeySettings[1];
         return new Keybind
         {
-            Key1 = key1,
-            Modifier1 = (ModifierFlag) outData.Modifier,
-            Key2 = key2,
-            Modifier2 = (ModifierFlag) outData.AltModifier,
+            Key1 = RemapInvalidVirtualKey((VirtualKey) key1.Key),
+            Modifier1 = (ModifierFlag) key1.KeyModifier,
+
+            Key2 = RemapInvalidVirtualKey((VirtualKey) key2.Key),
+            Modifier2 = (ModifierFlag) key2.KeyModifier,
         };
     }
 

@@ -10,9 +10,7 @@ internal sealed unsafe class Context
     internal static void InviteToNoviceNetwork(string name, ushort world)
     {
         // can specify content id if we have it, but there's no need
-        fixed (byte* namePtr = name.ToTerminatedBytes()) {
-            InfoProxyNoviceNetwork.Instance()->InviteToNoviceNetwork(0, world, namePtr);
-        }
+        InfoProxyNoviceNetwork.Instance()->InviteToNoviceNetwork(0, 0, world, name.ToTerminatedBytes());
     }
 
     internal static void TryOn(uint itemId, byte stainId)
