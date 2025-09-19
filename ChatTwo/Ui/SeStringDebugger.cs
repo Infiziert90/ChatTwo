@@ -257,33 +257,33 @@ public class SeStringDebugger : Window
         var style = ImGui.GetStyle();
 
         ImGui.Text($"{name}:");
-        ImGui.Indent(style.IndentSpacing);
-        if (!ImGui.BeginTable($"##chat3-{name}", 2, 0))
+        using var indent = ImRaii.PushIndent(style.IndentSpacing);
+        using (var table = ImRaii.Table($"##chat2-{name}", 2))
         {
-            ImGui.EndTable();
-            ImGui.Unindent(style.IndentSpacing);
-            return;
+            if (!table.Success)
+                return;
+
+            ImGui.TableSetupColumn($"##chat2-{name}-key", ImGuiTableColumnFlags.WidthStretch, 0.4f);
+            ImGui.TableSetupColumn($"##chat2-{name}-value");
+            for (var i = 0; i < metadata.Count; i++)
+            {
+                using var id = ImRaii.PushId(i);
+
+                var (key, value) = metadata.ElementAt(i);
+                ImGui.TableNextColumn();
+                ImGui.Text(key);
+
+                ImGui.TableNextColumn();
+                ImGuiTextVisibleWhitespace(value);
+            }
         }
-        ImGui.TableSetupColumn($"##chat3-{name}-key", 0, 0.4f);
-        ImGui.TableSetupColumn($"##chat3-{name}-value");
-        for (var i = 0; i < metadata.Count; i++)
-        {
-            var (key, value) = metadata.ElementAt(i);
-            ImGui.PushID(i);
-            ImGui.TableNextColumn();
-            ImGui.Text(key);
-            ImGui.TableNextColumn();
-            ImGuiTextVisibleWhitespace(value);
-            ImGui.PopID();
-        }
-        ImGui.EndTable();
-        ImGui.Unindent(style.IndentSpacing);
+
         ImGui.NewLine();
     }
 
     // ImGuiTextVisibleWhitespace replaces leading and trailing whitespace with
     // visible characters. The extra characters are rendered with a muted font.
-    private static void ImGuiTextVisibleWhitespace(string? original, bool wrap = true)
+    private static void ImGuiTextVisibleWhitespace(string? original)
     {
         if (string.IsNullOrEmpty(original))
         {
@@ -298,33 +298,28 @@ public class SeStringDebugger : Window
 
         using var pushedStyle = ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, new Vector2(0, 0));
 
-        void WriteText(string wText)
-        {
-            if (wrap)
-                ImGui.TextWrapped(wText);
-            else
-                ImGui.TextUnformatted(wText);
-        }
-
         while (start < end && char.IsWhiteSpace(text[start]))
             start++;
 
         if (start > 0)
         {
             using var pushedColor = ImRaii.PushColor(ImGuiCol.Text, new Vector4(1, 1, 1, 0.5f));
-            WriteText(new string('_', start));
+            ImGui.TextWrapped(new string('_', start));
+
             ImGui.SameLine();
         }
 
         while (end > start && char.IsWhiteSpace(text[end - 1]))
             end--;
 
-        WriteText(text[start..end]);
+        ImGui.TextWrapped(text[start..end]);
+
         if (end < text.Length)
         {
             ImGui.SameLine();
+
             using var pushedColor = ImRaii.PushColor(ImGuiCol.Text, new Vector4(1, 1, 1, 0.5f));
-            WriteText(new string('_', text.Length - end));
+            ImGui.TextWrapped(new string('_', text.Length - end));
         }
     }
 }

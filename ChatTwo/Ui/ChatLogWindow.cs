@@ -1259,8 +1259,8 @@ public sealed class ChatLogWindow : Window
         if (!tabTable.Success)
             return;
 
-        ImGui.TableSetupColumn("tabs", ImGuiTableColumnFlags.None, 1);
-        ImGui.TableSetupColumn("chat", ImGuiTableColumnFlags.None, 4);
+        ImGui.TableSetupColumn("tabs", ImGuiTableColumnFlags.WidthStretch, 1);
+        ImGui.TableSetupColumn("chat", ImGuiTableColumnFlags.WidthStretch, 4);
 
         ImGui.TableNextColumn();
 

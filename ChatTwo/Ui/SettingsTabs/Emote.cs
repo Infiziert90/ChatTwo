@@ -62,7 +62,7 @@ internal sealed class Emote : ISettingsTab
             if (table)
             {
                 ImGui.TableSetupColumn(Language.Options_Emote_EmoteTable);
-                ImGui.TableSetupColumn("##Del", 0, 0.07f);
+                ImGui.TableSetupColumn("##Del", ImGuiTableColumnFlags.WidthStretch, 0.07f);
 
                 ImGui.TableHeadersRow();
 
