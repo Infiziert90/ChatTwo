@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Net;
 using System.Web;
 using ChatTwo.Code;
 using ChatTwo.Http.MessageProtocol;
@@ -31,8 +32,8 @@ public class RouteController
         Plugin = plugin;
         Core = core;
 
-        AuthTemplate = File.ReadAllText(Path.Combine(Core.StaticDir, "templates", "auth.html"));
-        ChatBoxTemplate = File.ReadAllText(Path.Combine(Core.StaticDir, "templates", "chat.html"));
+        AuthTemplate = File.ReadAllText(Path.Combine(Core.StaticDir, "index.html"));
+        ChatBoxTemplate = File.ReadAllText(Path.Combine(Core.StaticDir, "chat.html"));
 
         // Pre Auth
         Core.Host.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/", AuthRoute, ExceptionRoute);
@@ -42,15 +43,19 @@ public class RouteController
         Core.Host.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/files/FFXIV_Lodestone_SSF.ttf", GetLodestoneFont, ExceptionRoute);
         Core.Host.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/favicon.ico", GetFavicon, ExceptionRoute);
         Core.Host.Routes.PreAuthentication.Parameter.Add(HttpMethod.GET, "/emote/{name}", GetEmote, ExceptionRoute);
-        Core.Host.Routes.PreAuthentication.Content.Add("/static", true, ExceptionRoute);
 
         // Post Auth
         Core.Host.Routes.PostAuthentication.Static.Add(HttpMethod.GET, "/chat", ChatBoxRoute, ExceptionRoute);
         Core.Host.Routes.PostAuthentication.Static.Add(HttpMethod.POST, "/send", ReceiveMessage, ExceptionRoute);
         Core.Host.Routes.PostAuthentication.Static.Add(HttpMethod.POST, "/channel", ReceiveChannelSwitch, ExceptionRoute);
+        Core.Host.Routes.PostAuthentication.Static.Add(HttpMethod.POST, "/tab", ReceiveTabSwitch, ExceptionRoute);
+
+        // Ship all other static files dynamically
+        Core.Host.Routes.PreAuthentication.Content.Add("/_app/", true, ExceptionRoute);
+        Core.Host.Routes.PreAuthentication.Content.Add("/static/", true, ExceptionRoute);
 
         // Server-Sent Events Route
-        Core.Host.Routes.PostAuthentication.Static.Add(HttpMethod.GET, "/sse", NewSSEConnection, ExceptionRoute);
+        Core.Host.Routes.PostAuthentication.Static.Add(HttpMethod.POST, "/sse", NewSSEConnection, ExceptionRoute);
     }
 
     private async Task ExceptionRoute(HttpContextBase ctx, Exception _)
@@ -61,6 +66,16 @@ public class RouteController
 
     private async Task AuthRoute(HttpContextBase ctx)
     {
+        if (Plugin.Config.AuthStore.Count > 0)
+        {
+            var cookies = WebserverUtil.GetCookieData(ctx.Request.Headers.Get("Cookie") ?? "");
+            if (cookies.TryGetValue("ChatTwo-token", out var value) && Plugin.Config.AuthStore.Contains(value))
+            {
+                await Redirect(ctx, "/chat");
+                return;
+            }
+        }
+
         await ctx.Response.Send(AuthTemplate);
     }
 
@@ -133,7 +148,7 @@ public class RouteController
         if (RateLimit.TryGetValue(ctx.Request.Source.IpAddress, out var timestamp) && timestamp > currentTick)
         {
             _ = ctx.Request.DataAsString; // Temp fix for Watson.Lite bug #155
-            return await Redirect(ctx, "/", ("message", "Rate limit active."));
+            return await Redirect(ctx, "/", ("message", "Rate limit active (10s)"));
         }
 
         // The next request will be rate limited for 10s
@@ -141,10 +156,10 @@ public class RouteController
 
         var authcode = HttpUtility.ParseQueryString(ctx.Request.DataAsString ?? "").Get("authcode");
         if (authcode == null || authcode != Plugin.Config.WebinterfacePassword)
-            return await Redirect(ctx, "/", ("message", "Authentication failed."));
+            return await Redirect(ctx, "/", ("message", "Authentication failed"));
 
         var token = WebinterfaceUtil.GenerateSimpleToken();
-        Plugin.Config.SessionTokens.TryAdd(token, true);
+        Plugin.Config.AuthStore.Add(token);
 
         ctx.Response.Headers.Add("Set-Cookie", $"ChatTwo-token={token}");
         return await Redirect(ctx, "/chat");
@@ -159,12 +174,8 @@ public class RouteController
 
     private async Task ReceiveMessage(HttpContextBase ctx)
     {
-        if (ctx.Request.ContentType != "application/json")
-        {
-            ctx.Response.StatusCode = 415;
-            await ctx.Response.Send(JsonConvert.SerializeObject(new ErrorResponse("Request contains wrong media type.")));
+        if (!await EnforceMediaType(ctx, "application/json"))
             return;
-        }
 
         var content = JsonConvert.DeserializeObject<IncomingMessage>(ctx.Request.DataAsString, JsonSettings);
         if (content.Message.Length is < 2 or > 500)
@@ -186,28 +197,40 @@ public class RouteController
 
     private async Task ReceiveChannelSwitch(HttpContextBase ctx)
     {
-        if (ctx.Request.ContentType != "application/json")
-        {
-            ctx.Response.StatusCode = 415;
-            await ctx.Response.Send(JsonConvert.SerializeObject(new ErrorResponse("Request contains wrong media type.")));
+        if (!await EnforceMediaType(ctx, "application/json"))
             return;
-        }
 
         var channel = JsonConvert.DeserializeObject<IncomingChannel>(ctx.Request.DataAsString, JsonSettings);
-        if (!Enum.IsDefined(typeof(InputChannel), channel.Channel))
+        if (!Enum.IsDefined((InputChannel)channel.Channel))
         {
             ctx.Response.StatusCode = 400;
             await ctx.Response.Send(JsonConvert.SerializeObject(new ErrorResponse("Invalid channel received.")));
             return;
         }
 
-        await Plugin.Framework.RunOnFrameworkThread(() =>
-        {
-            Plugin.ChatLogWindow.SetChannel((InputChannel)channel.Channel);
-        });
+        await Plugin.Framework.RunOnFrameworkThread(() => { Plugin.ChatLogWindow.SetChannel((InputChannel)channel.Channel); });
 
         ctx.Response.StatusCode = 201;
-        await ctx.Response.Send(JsonConvert.SerializeObject(new OkResponse("Channel switch got initiated.")));
+        await ctx.Response.Send(JsonConvert.SerializeObject(new OkResponse("Channel switch was initiated.")));
+    }
+
+    private async Task ReceiveTabSwitch(HttpContextBase ctx)
+    {
+        if (!await EnforceMediaType(ctx, "application/json"))
+            return;
+
+        var tab = JsonConvert.DeserializeObject<IncomingTab>(ctx.Request.DataAsString, JsonSettings);
+        if (tab.Index < 0 || tab.Index >= Plugin.Config.Tabs.Count)
+        {
+            ctx.Response.StatusCode = 400;
+            await ctx.Response.Send(JsonConvert.SerializeObject(new ErrorResponse("Invalid tab received.")));
+            return;
+        }
+
+        await Plugin.Framework.RunOnFrameworkThread(() => { Plugin.WantedTab = tab.Index; });
+
+        ctx.Response.StatusCode = 201;
+        await ctx.Response.Send(JsonConvert.SerializeObject(new OkResponse("Tab switch was initiated.")));
     }
 
     private async Task NewSSEConnection(HttpContextBase ctx)
@@ -244,5 +267,25 @@ public class RouteController
         ctx.Response.StatusCode = 303;
         return await ctx.Response.Send();
     }
+    #endregion
+
+    #region PreChecks
+
+    /// <summary>
+    /// Check that the request has the correct media type that the functions expects.
+    /// </summary>
+    /// <param name="ctx"></param>
+    /// <param name="requiredMediaType"></param>
+    /// <returns>True if media type is correct, otherwise handled and false</returns>
+    private async Task<bool> EnforceMediaType(HttpContextBase ctx, string requiredMediaType)
+    {
+        if (ctx.Request.ContentType == requiredMediaType)
+            return true;
+
+        ctx.Response.StatusCode = 415;
+        await ctx.Response.Send(JsonConvert.SerializeObject(new ErrorResponse("Request contains wrong media type.")));
+        return false;
+    }
+
     #endregion
 }

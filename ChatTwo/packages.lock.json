@@ -4,9 +4,9 @@
     "net9.0-windows7.0": {
       "DalamudPackager": {
         "type": "Direct",
-        "requested": "[13.0.0, )",
-        "resolved": "13.0.0",
-        "contentHash": "Mb3cUDSK/vDPQ8gQIeuCw03EMYrej1B4J44a1AvIJ9C759p9XeqdU9Hg4WgOmlnlPe0G7ILTD32PKSUpkQNa8w=="
+        "requested": "[13.1.0, )",
+        "resolved": "13.1.0",
+        "contentHash": "XdoNhJGyFby5M/sdcRhnc5xTop9PHy+H50PTWpzLhJugjB19EDBiHD/AsiDF66RETM+0qKUdJBZrNuebn7qswQ=="
       },
       "DotNet.ReproducibleBuilds": {
         "type": "Direct",
@@ -50,23 +50,23 @@
       },
       "Watson.Lite": {
         "type": "Direct",
-        "requested": "[6.2.3, )",
-        "resolved": "6.2.3",
-        "contentHash": "NGVWwQTulT016tiSuwK/AUU+Ebgyq0r0xLaWxll29xv/LTV0w4pHtoPskUPRqnzV8Po+ZndCd5dsUzGCjP0BVA==",
+        "requested": "[6.3.13, )",
+        "resolved": "6.3.13",
+        "contentHash": "AoDQXFPTf/C38Afj4A1p+Siw46sqgr6SOZV6tL2gWmfoAAuiCJ3DymCD9OcY2ZasvvDOQk2NDNSLyXthkS5xhg==",
         "dependencies": {
-          "CavemanTcp": "2.0.3",
-          "Watson.Core": "6.2.3"
+          "CavemanTcp": "2.0.9",
+          "Watson.Core": "6.3.13"
         }
       },
       "CavemanTcp": {
         "type": "Transitive",
-        "resolved": "2.0.3",
-        "contentHash": "/feSFO+5A1tS69Vv9XgD8+Ahz9iRcPj8r1kXIIVxeL+VjUzpPpVoAOtNG70oyu+b8M1RqthZAszaVQHpSPzuwg=="
+        "resolved": "2.0.9",
+        "contentHash": "KgIwYhPhGkBTm+wwVAmWonkKPw4xYVnutzzlIeqOLcX1fti+8d+MEGTvbern1smf3S/UpjFjihkf6XRziTddzQ=="
       },
       "IpMatcher": {
         "type": "Transitive",
-        "resolved": "1.0.4.4",
-        "contentHash": "93zP6KaDdRttUI3fFet6mYQGed1gTVK2amIOxpq4tDl3NRY+2tP/iA30hvRrs+ZY8u8KGF/J7kX6l7jrhKHfZA=="
+        "resolved": "1.0.5",
+        "contentHash": "WXNlWERj+0GN699AnMNsuJ7PfUAbU4xhOHP3nrNXLHqbOaBxybu25luSYywX1133NSlitA4YkSNmJuyPvea4sw=="
       },
       "MessagePack.Annotations": {
         "type": "Transitive",
@@ -93,8 +93,8 @@
       },
       "RegexMatcher": {
         "type": "Transitive",
-        "resolved": "1.0.8",
-        "contentHash": "h3wa6sKJnyojCH2wJpvHdQRGWn+eKiSYGKPInIzvdl+SaKhUN9Qpr0CK4A3aqrYFBTEJKFN7pzYlNR4S5gZnaw=="
+        "resolved": "1.0.9",
+        "contentHash": "RkQGXIrqHjD5h1mqefhgCbkaSdRYNRG5rrbzyw5zeLWiS0K1wq9xR3cNhQdzYR2MsKZ3GN523yRUsEQIMPxh3Q=="
       },
       "SQLitePCLRaw.bundle_e_sqlite3": {
         "type": "Transitive",
@@ -138,24 +138,24 @@
       },
       "Timestamps": {
         "type": "Transitive",
-        "resolved": "1.0.9",
-        "contentHash": "xdCVp+T4VFXOT+Ube2Cz527fnFXFUxQK24uPMGcCmICIpIcGCXPtI7vKLnWsJ6Nfc1B92tNBK9e/I8NDq2ee6g=="
+        "resolved": "1.0.11",
+        "contentHash": "SnWhXm3FkEStQGgUTfWMh9mKItNW032o/v8eAtFrOGqG0/ejvPPA1LdLZx0N/qqoY0TH3x11+dO00jeVcM8xNQ=="
       },
       "UrlMatcher": {
         "type": "Transitive",
-        "resolved": "3.0.0",
-        "contentHash": "IavFDKxhcg5ehi3baGEejxnZoj4bqfkDnoMxTV+6Y4WHVxW8wgxTzdSl9q5WSMi366LG0amDfOxaUJxuHawNLw=="
+        "resolved": "3.0.1",
+        "contentHash": "hHBZVzFSfikrx4XsRsnCIwmGLgbNKtntnlqf4z+ygcNA6Y/L/J0x5GiZZWfXdTfpxhy5v7mlt2zrZs/L9SvbOA=="
       },
       "Watson.Core": {
         "type": "Transitive",
-        "resolved": "6.2.3",
-        "contentHash": "ccdGhC60dHTV1CA+C+U8zZOTQD4yLoPUDV0ZyXqF4dYmQ/zgwhegAxBGkV3WIw+2fqnTKYwMhJFU/tbkykybvA==",
+        "resolved": "6.3.13",
+        "contentHash": "f1qVBxEOYvRGNVfqoQDBuRK5lMsfYRpsWxv9qRiGH22eRtXvvaloQbxeouVtd1X2oiamdICPNAAhBVj/KYZ9Mw==",
         "dependencies": {
-          "IpMatcher": "1.0.4.4",
-          "RegexMatcher": "1.0.8",
+          "IpMatcher": "1.0.5",
+          "RegexMatcher": "1.0.9",
           "System.Text.Json": "8.0.5",
-          "Timestamps": "1.0.9",
-          "UrlMatcher": "3.0.0"
+          "Timestamps": "1.0.11",
+          "UrlMatcher": "3.0.1"
         }
       }
     }

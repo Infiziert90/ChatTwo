@@ -365,9 +365,8 @@ public sealed class ChatLogWindow : Window
         ChangeTab(newIndex);
     }
 
-    private void TabChannelSwitch(Tab newTab, Tab previousTab)
+    private void TabSwitched(Tab newTab, Tab previousTab)
     {
-        Plugin.Log.Information("Channel switch");
         // Use the fixed channel if set by the user, or set it to the current tabs channel if this tab wasn't accessed before
         if (newTab.Channel is not null)
             newTab.CurrentChannel.Channel = newTab.Channel.Value;
@@ -566,7 +565,7 @@ public sealed class ChatLogWindow : Window
         {
             if (popup)
             {
-                var channels = GetAvailableChannels();
+                var channels = GetValidChannels();
                 foreach (var (name, channel) in channels)
                     if (ImGui.Selectable(name))
                         SetChannel(channel);
@@ -713,7 +712,7 @@ public sealed class ChatLogWindow : Window
             GameFunctions.GameFunctions.ClickNoviceNetworkButton();
     }
 
-    internal Dictionary<string, InputChannel> GetAvailableChannels()
+    internal Dictionary<string, InputChannel> GetValidChannels()
     {
         var channels = new Dictionary<string, InputChannel>();
         foreach (var channel in Enum.GetValues<InputChannel>())
@@ -1233,20 +1232,21 @@ public sealed class ChatLogWindow : Window
             var flags = ImGuiTabItemFlags.None;
             if (Plugin.WantedTab == tabI)
                 flags |= ImGuiTabItemFlags.SetSelected;
+
             using var tabItem = ImRaii.TabItem($"{tab.Name}{unread}###log-tab-{tabI}", flags);
             DrawTabContextMenu(tab, tabI);
 
             if (!tabItem.Success)
                 continue;
 
-            var switchedTab = Plugin.LastTab != tabI;
-
+            var hasTabSwitched = Plugin.LastTab != tabI;
             Plugin.LastTab = tabI;
-            if (switchedTab)
-                TabChannelSwitch(tab, previousTab);
+
+            if (hasTabSwitched)
+                TabSwitched(tab, previousTab);
 
             tab.Unread = 0;
-            DrawMessageLog(tab, PayloadHandler, GetRemainingHeightForMessageLog(), switchedTab);
+            DrawMessageLog(tab, PayloadHandler, GetRemainingHeightForMessageLog(), hasTabSwitched);
         }
 
         Plugin.WantedTab = null;
@@ -1264,7 +1264,7 @@ public sealed class ChatLogWindow : Window
 
         ImGui.TableNextColumn();
 
-        var switchedTab = false;
+        var hasTabSwitched = false;
         var childHeight = GetRemainingHeightForMessageLog();
         using (var child = ImRaii.Child("##chat2-tab-sidebar", new Vector2(-1, childHeight)))
         {
@@ -1285,10 +1285,10 @@ public sealed class ChatLogWindow : Window
                         continue;
 
                     currentTab = tabI;
-                    switchedTab = Plugin.LastTab != tabI;
+                    hasTabSwitched = Plugin.LastTab != tabI;
                     Plugin.LastTab = tabI;
-                    if (switchedTab)
-                        TabChannelSwitch(tab, previousTab);
+                    if (hasTabSwitched)
+                        TabSwitched(tab, previousTab);
                 }
             }
         }
@@ -1302,7 +1302,7 @@ public sealed class ChatLogWindow : Window
         }
 
         if (currentTab > -1)
-            DrawMessageLog(Plugin.Config.Tabs[currentTab], PayloadHandler, childHeight, switchedTab);
+            DrawMessageLog(Plugin.Config.Tabs[currentTab], PayloadHandler, childHeight, hasTabSwitched);
 
         Plugin.WantedTab = null;
     }

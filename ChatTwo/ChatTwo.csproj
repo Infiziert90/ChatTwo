@@ -1,4 +1,4 @@
-<Project Sdk="Dalamud.NET.Sdk/13.0.0">
+<Project Sdk="Dalamud.NET.Sdk/13.1.0">
     <PropertyGroup>
         <Version>1.31.2</Version>
         <TargetFramework>net9.0-windows</TargetFramework>
@@ -18,7 +18,7 @@
         <PackageReference Include="Microsoft.Data.Sqlite" Version="9.0.0" />
         <PackageReference Include="Pidgin" Version="3.3.0" />
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.11" />
-        <PackageReference Include="Watson.Lite" Version="6.2.3" />
+        <PackageReference Include="Watson.Lite" Version="6.3.13" />
     </ItemGroup>
 
     <ItemGroup>
@@ -45,6 +45,9 @@
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Content Include="Http\templates\*.*">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="Http\Frontend\build\**">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
     </ItemGroup>

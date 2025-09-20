@@ -17,7 +17,7 @@ public class HostContext
     internal readonly List<SSEConnection> EventConnections = [];
 
     internal readonly CancellationTokenSource TokenSource = new();
-    internal readonly string StaticDir = Path.Combine(Plugin.Interface.AssemblyLocation.DirectoryName!, "Http");
+    internal readonly string StaticDir = Path.Combine(Plugin.Interface.AssemblyLocation.DirectoryName!, "Http/Frontend/build");
 
     public HostContext(Plugin plugin)
     {
@@ -120,14 +120,14 @@ public class HostContext
 
     private async Task CheckAuthenticationCookie(HttpContextBase ctx)
     {
-        if (Plugin.Config.SessionTokens.IsEmpty)
+        if (Plugin.Config.AuthStore.Count == 0)
         {
             await RouteController.Redirect(ctx, "/", ("message", "Invalid session token."));
             return;
         }
 
         var cookies = WebserverUtil.GetCookieData(ctx.Request.Headers.Get("Cookie") ?? "");
-        if (!cookies.TryGetValue("ChatTwo-token", out var token) || !Plugin.Config.SessionTokens.ContainsKey(token))
+        if (!cookies.TryGetValue("ChatTwo-token", out var token) || !Plugin.Config.AuthStore.Contains(token))
             await RouteController.Redirect(ctx, "/", ("message", "Invalid session token."));
 
         // Do nothing to let auth pass

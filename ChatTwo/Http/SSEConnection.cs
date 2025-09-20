@@ -34,7 +34,7 @@ public class SSEConnection
                 if (!OutboundQueue.TryDequeue(out var outgoingEvent))
                     continue;
 
-                if (!await ctx.Response.SendChunk(outgoingEvent.Build(), Token))
+                if (!await ctx.Response.SendChunk(outgoingEvent.Build(), false, Token))
                 {
                     Plugin.Log.Information("SSE connection was unable to send new data");
                     Plugin.Log.Information($"Client disconnected: {ctx.Guid}");
@@ -53,7 +53,7 @@ public class SSEConnection
         finally
         {
             // "No Content" (204) didn't work for Firefox, so manually closing the connection on client side
-            await ctx.Response.SendFinalChunk(new CloseEvent().Build());
+            await ctx.Response.SendChunk(new CloseEvent().Build(), true, Token);
 
             // Manually confirm that we have finished our connection, even if the final response failed
             // This can happen if the client disconnects before the server does

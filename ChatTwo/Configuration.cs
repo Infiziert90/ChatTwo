@@ -120,7 +120,7 @@ internal class Configuration : IPluginConfiguration
     public bool WebinterfaceAutoStart;
     public string WebinterfacePassword = WebinterfaceUtil.GenerateSimpleAuthCode();
     public int WebinterfacePort = 9000;
-    public ConcurrentDictionary<string, bool> SessionTokens = [];
+    public HashSet<string> AuthStore = [];
     public int WebinterfaceMaxLinesToSend = 1000; // 1-10000
 
     internal void UpdateFrom(Configuration other, bool backToOriginal)

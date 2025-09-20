@@ -1,7 +1,6 @@
 ﻿/* fonts */
 @font-face {
     font-family: Lodestone;
-    /*noinspection CssUnknownTarget*/
     src: url('/files/FFXIV_Lodestone_SSF.ttf') format('truetype');
     unicode-range: U+E020-E0DB;
 }
@@ -10,7 +9,7 @@
     font-family: 'Inter var';
     font-weight: 100 900;
     font-style: oblique 0deg 10deg;
-    src: url('Inter.var.woff2') format('woff2');
+    src: url('/static/Inter.var.woff2') format('woff2');
 }
 
 /* variables */
@@ -57,7 +56,7 @@ body {
     background-color: var(--bg-input-hover);
 }
 
-body > main.chat {
+body > div > main.chat {
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -67,7 +66,7 @@ body > main.chat {
     box-shadow: 0 0 50px 0 rgba(0, 0, 0, 0.5);
 }
 
-body > main.auth {
+body > div > main.auth {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -166,6 +165,12 @@ section#messages {
     left: 0;
     pointer-events: none;
     opacity: 0;
+}
+
+/* alerts */
+section#warnings {
+    flex-grow: 0;
+    padding: 20px 20px 0 20px;
 }
 
 /* input bar, channel selector, ... */

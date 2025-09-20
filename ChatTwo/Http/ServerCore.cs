@@ -23,7 +23,7 @@ public class ServerCore : IAsyncDisposable
         {
             Plugin.Framework.RunOnTick(() =>
             {
-                var bundledResponse = new NewMessageEvent(new Messages([HostContext.Processing.ReadMessageContent(message)]));
+                var bundledResponse = new NewMessageEvent(HostContext.Processing.ReadMessageContent(message));
                 foreach (var eventServer in HostContext.EventConnections)
                     eventServer.OutboundQueue.Enqueue(bundledResponse);
             });
@@ -82,7 +82,7 @@ public class ServerCore : IAsyncDisposable
         {
             Plugin.Framework.RunOnTick(() =>
             {
-                var channels = Plugin.ChatLogWindow.GetAvailableChannels();
+                var channels = Plugin.ChatLogWindow.GetValidChannels();
                 var bundledResponse = new ChannelListEvent(new ChannelList(channels.ToDictionary(pair => pair.Key, pair => (uint)pair.Value)));
                 foreach (var eventServer in HostContext.EventConnections)
                     eventServer.OutboundQueue.Enqueue(bundledResponse);
@@ -119,7 +119,7 @@ public class ServerCore : IAsyncDisposable
         if (!HostContext.IsActive)
             return;
 
-        Plugin.Config.SessionTokens.Clear();
+        Plugin.Config.AuthStore.Clear();
         Plugin.SaveConfig();
     }
 

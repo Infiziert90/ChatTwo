@@ -43,14 +43,20 @@ public class Processing
 
     internal async Task PrepareNewClient(SSEConnection sse)
     {
-        var messages = await WebserverUtil.FrameworkWrapper(ReadMessageList);
-        var channels = await Plugin.Framework.RunOnTick(Plugin.ChatLogWindow.GetAvailableChannels);
-        var channel = await Plugin.Framework.RunOnTick(() => ReadChannelName(Plugin.ChatLogWindow.PreviousChannel));
+        // This takes long, so keep it outside the next frame
+        var messages = await GetAllMessages();
 
         // Using the bulk message event to clear everything on the client side that may still exist
-        sse.OutboundQueue.Enqueue(new BulkMessagesEvent(new Messages(messages)));
-        sse.OutboundQueue.Enqueue(new SwitchChannelEvent(new SwitchChannel(channel)));
-        sse.OutboundQueue.Enqueue(new ChannelListEvent(new ChannelList(channels.ToDictionary(pair => pair.Key, pair => (uint)pair.Value))));
+        await Plugin.Framework.RunOnTick(() =>
+        {
+            sse.OutboundQueue.Enqueue(new BulkMessagesEvent(messages));
+
+            sse.OutboundQueue.Enqueue(new SwitchChannelEvent(GetCurrentChannel()));
+            sse.OutboundQueue.Enqueue(new ChannelListEvent(GetValidChannels()));
+
+            sse.OutboundQueue.Enqueue(new ChatTabSwitchedEvent(GetCurrentTab()));
+            sse.OutboundQueue.Enqueue(new ChatTabListEvent(GetAllTabs()));
+        });
     }
 
     private MessageTemplate ProcessChunk(Chunk chunk)
@@ -94,5 +100,34 @@ public class Processing
         }
 
         return MessageTemplate.Empty;
+    }
+
+    private async Task<Messages> GetAllMessages()
+    {
+        var messages = await WebserverUtil.FrameworkWrapper(ReadMessageList);
+        return new Messages(messages);
+    }
+
+    private SwitchChannel GetCurrentChannel()
+    {
+        var channel = ReadChannelName(Plugin.ChatLogWindow.PreviousChannel);
+        return new SwitchChannel(channel);
+    }
+
+    private ChannelList GetValidChannels()
+    {
+        var channels = Plugin.ChatLogWindow.GetValidChannels();
+        return new ChannelList(channels.ToDictionary(pair => pair.Key, pair => (uint)pair.Value));
+    }
+
+    private ChatTab GetCurrentTab()
+    {
+        return new ChatTab(Plugin.CurrentTab.Name, Plugin.LastTab);
+    }
+
+    private ChatTabList GetAllTabs()
+    {
+        var tabs = Plugin.Config.Tabs.Select((tab, idx) => new ChatTab(tab.Name, idx)).ToArray();
+        return new ChatTabList(tabs);
     }
 }

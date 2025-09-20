@@ -1,20 +1,51 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
 <head>
     <title>Authentication</title>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <link href="static/bootstrap.min.css" rel="stylesheet">
+    <script src="static//bootstrap.bundle.min.js"></script>
+
     <link rel="stylesheet" href="static/start.css">
+
+    <script>
+        function appendAlert(message, type) {
+            const alertPlaceholder = document.getElementById('alert-placeholder')
+
+            const wrapper = document.createElement('div')
+            wrapper.innerHTML = [
+                `<div class="alert alert-${type} alert-dismissible" role="alert">`,
+                `   <div>${message}</div>`,
+                '   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>',
+                '</div>'
+            ].join('')
+
+            alertPlaceholder.append(wrapper)
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const params = new Proxy(new URLSearchParams(window.location.search), {
+                get: (searchParams, prop) => searchParams.get(prop),
+            });
+
+            let value = params.message;
+            if (value) {
+                appendAlert(value, "warning")
+            }
+        });
+    </script>
 </head>
 
 <body>
     <main class="auth">
         <h1>Authcode</h1>
+        <div id="alert-placeholder"></div>
         <form action="/auth" method="POST">
             <label><input type="password" name="authcode"></label>
-            <button type="submit">Submit</button>
+            <button type="submit" class="submitButton">Submit</button>
         </form>
         <img src="/emote/Sure">
     </main>

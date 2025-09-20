@@ -1,6 +1,6 @@
 namespace ChatTwo.Code;
 
-internal enum InputChannel : uint
+public enum InputChannel : uint
 {
     Tell = 0,
     Say = 1,

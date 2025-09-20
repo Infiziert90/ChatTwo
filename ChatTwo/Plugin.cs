@@ -64,7 +64,7 @@ public sealed class Plugin : IDalamudPlugin
 
     internal DateTime GameStarted { get; }
 
-    // Tab managed needs to happen outside the chatlog window class for access reasons
+    // Tab management needs to happen outside the chatlog window class for access reasons
     internal int LastTab { get; set; }
     internal int? WantedTab { get; set; }
     internal Tab CurrentTab
