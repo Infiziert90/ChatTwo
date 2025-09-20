@@ -50,12 +50,12 @@
       },
       "Watson.Lite": {
         "type": "Direct",
-        "requested": "[6.3.13, )",
-        "resolved": "6.3.13",
-        "contentHash": "AoDQXFPTf/C38Afj4A1p+Siw46sqgr6SOZV6tL2gWmfoAAuiCJ3DymCD9OcY2ZasvvDOQk2NDNSLyXthkS5xhg==",
+        "requested": "[6.3.9, )",
+        "resolved": "6.3.9",
+        "contentHash": "sDigTY8D8V7W38lfzJGiigf7xZEfp3Kw7XE7VJyeNO9mxOkv+w8HcmCsmORMDhsipDqGU0gMEsPOqORmZzRaWg==",
         "dependencies": {
           "CavemanTcp": "2.0.9",
-          "Watson.Core": "6.3.13"
+          "Watson.Core": "6.3.9"
         }
       },
       "CavemanTcp": {
@@ -148,8 +148,8 @@
       },
       "Watson.Core": {
         "type": "Transitive",
-        "resolved": "6.3.13",
-        "contentHash": "f1qVBxEOYvRGNVfqoQDBuRK5lMsfYRpsWxv9qRiGH22eRtXvvaloQbxeouVtd1X2oiamdICPNAAhBVj/KYZ9Mw==",
+        "resolved": "6.3.9",
+        "contentHash": "hGoadE4SLbko8yxhx5+nxGV8lEVgEquNli87lN6/eOTQEJNpK/Cs+OF0etTgFKZ4p0u5ivetoDxl82Lg6oHZEg==",
         "dependencies": {
           "IpMatcher": "1.0.5",
           "RegexMatcher": "1.0.9",

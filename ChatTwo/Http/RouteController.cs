@@ -1,7 +1,5 @@
 ﻿using System.Collections.Concurrent;
-using System.Net;
 using System.Web;
-using ChatTwo.Code;
 using ChatTwo.Http.MessageProtocol;
 using ChatTwo.Util;
 using Lumina.Data.Files;
@@ -201,14 +199,14 @@ public class RouteController
             return;
 
         var channel = JsonConvert.DeserializeObject<IncomingChannel>(ctx.Request.DataAsString, JsonSettings);
-        if (!Enum.IsDefined((InputChannel)channel.Channel))
+        if (!Enum.IsDefined(channel.Channel))
         {
             ctx.Response.StatusCode = 400;
             await ctx.Response.Send(JsonConvert.SerializeObject(new ErrorResponse("Invalid channel received.")));
             return;
         }
 
-        await Plugin.Framework.RunOnFrameworkThread(() => { Plugin.ChatLogWindow.SetChannel((InputChannel)channel.Channel); });
+        await Plugin.Framework.RunOnFrameworkThread(() => { Plugin.ChatLogWindow.SetChannel(channel.Channel); });
 
         ctx.Response.StatusCode = 201;
         await ctx.Response.Send(JsonConvert.SerializeObject(new OkResponse("Channel switch was initiated.")));
