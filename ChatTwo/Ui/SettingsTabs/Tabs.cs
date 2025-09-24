@@ -111,6 +111,9 @@ internal sealed class Tabs : ISettingsTab
 
                     ImGuiUtil.OptionCheckbox(ref tab.HideInBattle, Language.Options_HideInBattle_Name);
                     ImGui.Spacing();
+
+                    ImGuiUtil.OptionCheckbox(ref tab.HideInNewGamePlusMenu, Language.Options_HideInNewGamePlusMenu_Name);
+                    ImGui.Spacing();
                 }
 
                 ImGuiUtil.OptionCheckbox(ref tab.CanMove, Language.Popout_CanMove_Name);
