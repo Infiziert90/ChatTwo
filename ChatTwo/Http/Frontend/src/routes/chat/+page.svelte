@@ -2,10 +2,12 @@
     import { page } from '$app/state'
     import {Alert} from "@sveltestrap/sveltestrap";
     import { onMount } from 'svelte';
-    import { ChatTwoWeb } from '$lib/chat'
+    import {ChatTwoWeb} from '$lib/chat.svelte'
     import {addGfdStylesheet} from "$lib/gfd";
+    import DynamicTextArea from "../../components/DynamicTextArea.svelte";
+    import ChannelSelector from "../../components/ChannelSelector.svelte";
 
-    let data: App.Warning | null = null;
+    let data: App.Warning = $state({ hasWarning: false, content: '' });
     $effect.pre(() => {
         if (page.url.searchParams.has('message')) {
             data = {
@@ -51,13 +53,9 @@
 
     <section id="input">
         <form>
-            <div class="select-container">
-                <select id="channel-select"></select>
-            </div>
-
             <div class="input-container">
-                <input type="text" id="chat-input" autocomplete="off" placeholder="Message" enterkeyhint="send" maxlength="500">
-                <div id="channel-hint"></div>
+                <DynamicTextArea/>
+                <ChannelSelector/>
             </div>
 
             <button type="submit">Send</button>

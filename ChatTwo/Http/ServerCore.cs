@@ -1,4 +1,5 @@
-﻿using ChatTwo.Http.MessageProtocol;
+﻿using ChatTwo.Code;
+using ChatTwo.Http.MessageProtocol;
 
 namespace ChatTwo.Http;
 

@@ -1,9 +1,7 @@
 import {type Source, source} from "sveltekit-sse";
+import {channelOptions, isChannelLocked} from "$lib/shared.svelte";
 
 interface ChatElements {
-    channelHint: HTMLElement | null,
-    channelSelect: HTMLElement | null,
-
     messagesContainer: Element | null,
     messagesList: HTMLElement | null,
 
@@ -35,6 +33,7 @@ interface Template {
 // ref `DataStructure.SwitchChannel`
 interface SwitchChannel {
     channelName: Template[];
+    channelValue: number;
     channelLocked: boolean;
 }
 
@@ -58,7 +57,6 @@ export class ChatTwoWeb {
     elements!: ChatElements;
     maxTimestampWidth: number = 0;
     scrolledToBottom: boolean = true;
-    channelLocked: boolean = false;
 
     sse!: EventSource;
     connection!: Source;
@@ -70,8 +68,8 @@ export class ChatTwoWeb {
 
     setupDOMElements() {
         this.elements = {
-            channelHint: document.getElementById('channel-hint'),
-            channelSelect: document.getElementById('channel-select'),
+            // channelHint: document.getElementById('channel-hint'),
+            // channelSelect: document.getElementById('channel-select'),
 
             messagesContainer: document.querySelector('#messages > .scroll-container')!,
             messagesList: document.getElementById('messages-list'),
@@ -81,23 +79,6 @@ export class ChatTwoWeb {
             inputForm: document.querySelector('#input > form'),
             chatInput: document.getElementById('chat-input')
         };
-
-        // channel selector
-        this.elements.channelSelect?.addEventListener('change', async (event) => {
-            if (event.currentTarget === null)
-                return;
-
-            const rawResponse = await fetch('/channel', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ channel: (event.currentTarget as HTMLSelectElement).value })
-            });
-            // const content = await rawResponse.json();
-            // TODO: use the response
-        });
 
         // add indicator signaling more messages below
         this.elements.messagesContainer?.addEventListener('scroll', (event) => {
@@ -167,39 +148,25 @@ export class ChatTwoWeb {
     }
 
     updateChannelHint(channel: SwitchChannel) {
-        if (this.elements.channelHint === null || this.elements.channelSelect === null)
-            return;
-
-        this.elements.channelHint.innerHTML = '';
+        // Set storage to the current lock state
+        isChannelLocked.locked = channel.channelLocked;
 
         const channelElement = this.processTemplate(channel.channelName);
+        if (!channelElement.firstChild)
+            return;
 
-        // Makes the channel selector unclickable if the channel is fixed
-        this.channelLocked = channel.channelLocked;
-        if (this.channelLocked) {
-            if (channelElement.firstChild === null)
-                return;
+        let channelName = (channelElement.firstChild as HTMLSpanElement).innerText;
+        if (channel.channelLocked)
+            channelName = `(Locked) ${channelName}`;
 
-            // @ts-ignore
-            channelElement.firstChild.innerText = `(Locked) ${channelElement.firstChild.innerText}`;
-            this.elements.channelSelect.style.pointerEvents = 'none';
-        } else {
-            this.elements.channelSelect.style.removeProperty('pointer-events');
-        }
-
-        this.elements.channelHint.appendChild(channelElement);
+        channelOptions[0] = {text: channelName, value: 0, preview: true }
     }
 
     updateChannels(channelList: ChannelList) {
-        if (this.elements.channelSelect === null)
-            return;
+        channelOptions.length = 1;
 
-        this.elements.channelSelect.innerHTML = '';
         for (const [ label, channel ] of Object.entries(channelList.channels)) {
-            const option = document.createElement('option');
-            option.value = channel.toString();
-            option.innerText = label;
-            this.elements.channelSelect.appendChild(option);
+            channelOptions.push( { text: label, value: channel, preview: false } )
         }
     }
 

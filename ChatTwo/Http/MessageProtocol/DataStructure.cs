@@ -24,9 +24,9 @@ public struct ChatTabList(ChatTab[] tabs)
 /// <summary>
 /// Contains the current channel name
 /// </summary>
-public struct SwitchChannel((MessageTemplate[] ChannelName, bool Locked) channel)
+public struct SwitchChannel((MessageTemplate[] Name, bool Locked) channel)
 {
-    [JsonProperty("channelName")] public MessageTemplate[] ChannelName = channel.ChannelName;
+    [JsonProperty("channelName")] public MessageTemplate[] ChannelName = channel.Name;
     [JsonProperty("channelLocked")] public bool Locked = channel.Locked;
 }
 

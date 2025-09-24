@@ -15,7 +15,7 @@ public class Processing
         Plugin = plugin;
     }
 
-    internal (MessageTemplate[] ChannelName, bool Locked) ReadChannelName(Chunk[] channelName)
+    internal (MessageTemplate[] Name, bool Locked) ReadChannelName(Chunk[] channelName)
     {
         var locked = Plugin.CurrentTab is not { Channel: null };
         return (channelName.Select(ProcessChunk).ToArray(), locked);

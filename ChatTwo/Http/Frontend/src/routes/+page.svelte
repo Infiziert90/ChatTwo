@@ -2,7 +2,7 @@
     import { page } from '$app/state'
     import { Alert } from '@sveltestrap/sveltestrap';
 
-    let data: App.Warning | null = null;
+    let data: App.Warning = $state({ hasWarning: false, content: '' });
     $effect.pre(() => {
         if (page.url.searchParams.has('message')) {
             data = {

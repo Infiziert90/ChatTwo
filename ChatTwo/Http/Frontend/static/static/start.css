@@ -183,7 +183,7 @@ section#input {
         gap: 10px;
     }
 
-    input, button, select {
+    input, button {
         font-size: 1rem;
         border: 3px solid transparent;
         border-radius: 20px;
@@ -194,7 +194,7 @@ section#input {
         }
     }
 
-    button, select {
+    button {
         padding: 5px 15px;
         border: 3px solid var(--bg-input);
         background-image: var(--gradient-clickable);
@@ -207,27 +207,10 @@ section#input {
         }
     }
 
-    .select-container, button {
+    button {
         position: relative;
         flex-grow: 0;
         flex-shrink: 0;
-    }
-
-    .select-container {
-        flex-basis: 0;
-
-        &::before {
-            /* "message-circle" icon from https://github.com/feathericons/feather, under MIT license */
-            mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>');
-        }
-
-        select {
-            width: 100%;
-            padding-left: 1.5rem;
-            padding-right: 1.5rem;
-            appearance: none;
-            color: transparent;
-        }
     }
 
     button {
@@ -239,7 +222,7 @@ section#input {
         }
     }
 
-    .select-container::before, button::before {
+    button::before {
         content: '';
         position: absolute;
         left: 15px;
@@ -252,11 +235,6 @@ section#input {
         pointer-events: none;
     }
 
-    .select-container::before {
-        left: 50%;
-        transform: translateX(-50%) translateY(-50%);
-    }
-
     .input-container {
         flex: 1;
         position: relative;
@@ -266,9 +244,9 @@ section#input {
             padding: 5px 20px;
         }
 
-        #channel-hint {
+        #channel-select {
             position: absolute;
-            top: -1.2em;
+            top: -1.5em;
             left: 23px;
             max-width: 100%;
             overflow: hidden;
@@ -276,7 +254,23 @@ section#input {
             font-weight: 550;
             white-space: nowrap;
             text-overflow: ellipsis;
-            pointer-events: none;
+
+            border: 0;
+            border-radius: 0;
+            background-color: transparent;
+
+            padding: 5px 15px;
+            cursor: pointer;
+
+            &:hover {
+                border-color: var(--bg-input-hover);
+                background-color: var(--bg-input-hover);
+                background-image: var(--gradient-clickable-hover);
+            }
+
+            &:focus {
+                outline: 2px solid var(--focus-color);
+            }
 
         }
     }
@@ -360,7 +354,7 @@ section#input {
             transform: translateX(-50%) translateY(-50%);
         }
 
-        .input-container #channel-hint {
+        .input-container #channel-select {
             font-size: 0.9rem;
         }
     }
