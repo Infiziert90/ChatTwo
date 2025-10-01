@@ -1,20 +1,37 @@
-﻿using ChatTwo.Code;
-using ChatTwo.Http.MessageProtocol;
+﻿using ChatTwo.Http.MessageProtocol;
 
 namespace ChatTwo.Http;
 
 public class ServerCore : IAsyncDisposable
 {
-    private readonly Plugin Plugin;
+    public readonly Plugin Plugin;
     private readonly HostContext HostContext;
 
     public ServerCore(Plugin plugin)
     {
         Plugin = plugin;
-        HostContext = new HostContext(plugin);
+        HostContext = new HostContext(this);
     }
 
     #region SSE Helper
+    internal async Task PrepareNewClient(SSEConnection sse)
+    {
+        // This takes long, so keep it outside the next frame
+        var messages = await HostContext.Processing.GetAllMessages();
+
+        // Using the bulk message event to clear everything on the client side that may still exist
+        await Plugin.Framework.RunOnTick(() =>
+        {
+            sse.OutboundQueue.Enqueue(new BulkMessagesEvent(messages));
+
+            sse.OutboundQueue.Enqueue(new SwitchChannelEvent(HostContext.Processing.GetCurrentChannel()));
+            sse.OutboundQueue.Enqueue(new ChannelListEvent(HostContext.Processing.GetValidChannels()));
+
+            sse.OutboundQueue.Enqueue(new ChatTabSwitchedEvent(HostContext.Processing.GetCurrentTab()));
+            sse.OutboundQueue.Enqueue(new ChatTabListEvent(HostContext.Processing.GetAllTabs()));
+        });
+    }
+
     internal void SendNewMessage(Message message)
     {
         if (!HostContext.IsActive)
@@ -83,8 +100,7 @@ public class ServerCore : IAsyncDisposable
         {
             Plugin.Framework.RunOnTick(() =>
             {
-                var channels = Plugin.ChatLogWindow.GetValidChannels();
-                var bundledResponse = new ChannelListEvent(new ChannelList(channels.ToDictionary(pair => pair.Key, pair => (uint)pair.Value)));
+                var bundledResponse = new ChannelListEvent(HostContext.Processing.GetValidChannels());
                 foreach (var eventServer in HostContext.EventConnections)
                     eventServer.OutboundQueue.Enqueue(bundledResponse);
             });
@@ -105,7 +121,7 @@ public class ServerCore : IAsyncDisposable
             Plugin.Framework.RunOnTick(async () =>
             {
                 foreach (var eventServer in HostContext.EventConnections)
-                    await HostContext.Processing.PrepareNewClient(eventServer);
+                    await HostContext.Core.PrepareNewClient(eventServer);
             });
         }
         catch (Exception ex)

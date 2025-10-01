@@ -12,8 +12,7 @@ namespace ChatTwo.Http;
 
 public class RouteController
 {
-    private readonly Plugin Plugin;
-    private readonly HostContext Core;
+    private readonly HostContext HostContext;
 
     private readonly string AuthTemplate;
     private readonly string ChatBoxTemplate;
@@ -25,35 +24,34 @@ public class RouteController
         Error = delegate(object? _, ErrorEventArgs args) { args.ErrorContext.Handled = true; }
     };
 
-    public RouteController(Plugin plugin, HostContext core)
+    public RouteController(HostContext hostContext)
     {
-        Plugin = plugin;
-        Core = core;
+        HostContext = hostContext;
 
-        AuthTemplate = File.ReadAllText(Path.Combine(Core.StaticDir, "index.html"));
-        ChatBoxTemplate = File.ReadAllText(Path.Combine(Core.StaticDir, "chat.html"));
+        AuthTemplate = File.ReadAllText(Path.Combine(HostContext.StaticDir, "index.html"));
+        ChatBoxTemplate = File.ReadAllText(Path.Combine(HostContext.StaticDir, "chat.html"));
 
         // Pre Auth
-        Core.Host.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/", AuthRoute, ExceptionRoute);
-        Core.Host.Routes.PreAuthentication.Static.Add(HttpMethod.POST, "/auth", AuthenticateClient, ExceptionRoute);
-        Core.Host.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/files/gfdata.gfd", GetGfdData, ExceptionRoute);
-        Core.Host.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/files/fonticon_ps5.tex", GetTexData, ExceptionRoute);
-        Core.Host.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/files/FFXIV_Lodestone_SSF.ttf", GetLodestoneFont, ExceptionRoute);
-        Core.Host.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/favicon.ico", GetFavicon, ExceptionRoute);
-        Core.Host.Routes.PreAuthentication.Parameter.Add(HttpMethod.GET, "/emote/{name}", GetEmote, ExceptionRoute);
+        HostContext.Host.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/", AuthRoute, ExceptionRoute);
+        HostContext.Host.Routes.PreAuthentication.Static.Add(HttpMethod.POST, "/auth", AuthenticateClient, ExceptionRoute);
+        HostContext.Host.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/files/gfdata.gfd", GetGfdData, ExceptionRoute);
+        HostContext.Host.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/files/fonticon_ps5.tex", GetTexData, ExceptionRoute);
+        HostContext.Host.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/files/FFXIV_Lodestone_SSF.ttf", GetLodestoneFont, ExceptionRoute);
+        HostContext.Host.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/favicon.ico", GetFavicon, ExceptionRoute);
+        HostContext.Host.Routes.PreAuthentication.Parameter.Add(HttpMethod.GET, "/emote/{name}", GetEmote, ExceptionRoute);
 
         // Post Auth
-        Core.Host.Routes.PostAuthentication.Static.Add(HttpMethod.GET, "/chat", ChatBoxRoute, ExceptionRoute);
-        Core.Host.Routes.PostAuthentication.Static.Add(HttpMethod.POST, "/send", ReceiveMessage, ExceptionRoute);
-        Core.Host.Routes.PostAuthentication.Static.Add(HttpMethod.POST, "/channel", ReceiveChannelSwitch, ExceptionRoute);
-        Core.Host.Routes.PostAuthentication.Static.Add(HttpMethod.POST, "/tab", ReceiveTabSwitch, ExceptionRoute);
+        HostContext.Host.Routes.PostAuthentication.Static.Add(HttpMethod.GET, "/chat", ChatBoxRoute, ExceptionRoute);
+        HostContext.Host.Routes.PostAuthentication.Static.Add(HttpMethod.POST, "/send", ReceiveMessage, ExceptionRoute);
+        HostContext.Host.Routes.PostAuthentication.Static.Add(HttpMethod.POST, "/channel", ReceiveChannelSwitch, ExceptionRoute);
+        HostContext.Host.Routes.PostAuthentication.Static.Add(HttpMethod.POST, "/tab", ReceiveTabSwitch, ExceptionRoute);
 
         // Ship all other static files dynamically
-        Core.Host.Routes.PreAuthentication.Content.Add("/_app/", true, ExceptionRoute);
-        Core.Host.Routes.PreAuthentication.Content.Add("/static/", true, ExceptionRoute);
+        HostContext.Host.Routes.PreAuthentication.Content.Add("/_app/", true, ExceptionRoute);
+        HostContext.Host.Routes.PreAuthentication.Content.Add("/static/", true, ExceptionRoute);
 
         // Server-Sent Events Route
-        Core.Host.Routes.PostAuthentication.Static.Add(HttpMethod.POST, "/sse", NewSSEConnection, ExceptionRoute);
+        HostContext.Host.Routes.PostAuthentication.Static.Add(HttpMethod.POST, "/sse", NewSSEConnection, ExceptionRoute);
     }
 
     private async Task ExceptionRoute(HttpContextBase ctx, Exception _)
@@ -97,7 +95,7 @@ public class RouteController
 
     private async Task GetLodestoneFont(HttpContextBase ctx)
     {
-        var data = Plugin.FontManager.GameSymFont;
+        var data = HostContext.Core.Plugin.FontManager.GameSymFont;
         await ctx.Response.Send(data);
     }
 
@@ -185,8 +183,8 @@ public class RouteController
 
         await Plugin.Framework.RunOnFrameworkThread(() =>
         {
-            Plugin.ChatLogWindow.Chat = content.Message;
-            Plugin.ChatLogWindow.SendChatBox(Plugin.CurrentTab);
+            HostContext.Core.Plugin.ChatLogWindow.Chat = content.Message;
+            HostContext.Core.Plugin.ChatLogWindow.SendChatBox(HostContext.Core.Plugin.CurrentTab);
         });
 
         ctx.Response.StatusCode = 201;
@@ -206,7 +204,7 @@ public class RouteController
             return;
         }
 
-        await Plugin.Framework.RunOnFrameworkThread(() => { Plugin.ChatLogWindow.SetChannel(channel.Channel); });
+        await Plugin.Framework.RunOnFrameworkThread(() => { HostContext.Core.Plugin.ChatLogWindow.SetChannel(channel.Channel); });
 
         ctx.Response.StatusCode = 201;
         await ctx.Response.Send(JsonConvert.SerializeObject(new OkResponse("Channel switch was initiated.")));
@@ -225,7 +223,7 @@ public class RouteController
             return;
         }
 
-        await Plugin.Framework.RunOnFrameworkThread(() => { Plugin.WantedTab = tab.Index; });
+        await Plugin.Framework.RunOnFrameworkThread(() => { HostContext.Core.Plugin.WantedTab = tab.Index; });
 
         ctx.Response.StatusCode = 201;
         await ctx.Response.Send(JsonConvert.SerializeObject(new OkResponse("Tab switch was initiated.")));
@@ -237,15 +235,15 @@ public class RouteController
         {
             Plugin.Log.Information($"Client connected: {ctx.Guid}");
 
-            var sse = new SSEConnection(Core.TokenSource.Token);
-            await Core.Processing.PrepareNewClient(sse);
-            Core.EventConnections.Add(sse);
+            var sse = new SSEConnection(HostContext.TokenSource.Token);
+            await HostContext.Core.PrepareNewClient(sse);
+            HostContext.EventConnections.Add(sse);
 
             await sse.HandleEventLoop(ctx);
 
             // It should always be done after return
             if (sse.Done)
-                Core.EventConnections.Remove(sse);
+                HostContext.EventConnections.Remove(sse);
         }
         catch (Exception ex)
         {

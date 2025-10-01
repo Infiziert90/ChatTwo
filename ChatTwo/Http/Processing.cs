@@ -8,22 +8,22 @@ namespace ChatTwo.Http;
 
 public class Processing
 {
-    private readonly Plugin Plugin;
+    private readonly HostContext HostContext;
 
-    public Processing(Plugin plugin)
+    public Processing(HostContext hostContext)
     {
-        Plugin = plugin;
+        HostContext = hostContext;
     }
 
     internal (MessageTemplate[] Name, bool Locked) ReadChannelName(Chunk[] channelName)
     {
-        var locked = Plugin.CurrentTab is not { Channel: null };
+        var locked = HostContext.Core.Plugin.CurrentTab is not { Channel: null };
         return (channelName.Select(ProcessChunk).ToArray(), locked);
     }
 
     internal async Task<MessageResponse[]> ReadMessageList()
     {
-        var tabMessages = await Plugin.CurrentTab.Messages.GetCopy();
+        var tabMessages = await HostContext.Core.Plugin.CurrentTab.Messages.GetCopy();
         return tabMessages.TakeLast(Plugin.Config.WebinterfaceMaxLinesToSend).Select(ReadMessageContent).ToArray();
     }
 
@@ -39,24 +39,6 @@ public class Processing
         response.Templates = sender.Concat(content).ToArray();
 
         return response;
-    }
-
-    internal async Task PrepareNewClient(SSEConnection sse)
-    {
-        // This takes long, so keep it outside the next frame
-        var messages = await GetAllMessages();
-
-        // Using the bulk message event to clear everything on the client side that may still exist
-        await Plugin.Framework.RunOnTick(() =>
-        {
-            sse.OutboundQueue.Enqueue(new BulkMessagesEvent(messages));
-
-            sse.OutboundQueue.Enqueue(new SwitchChannelEvent(GetCurrentChannel()));
-            sse.OutboundQueue.Enqueue(new ChannelListEvent(GetValidChannels()));
-
-            sse.OutboundQueue.Enqueue(new ChatTabSwitchedEvent(GetCurrentTab()));
-            sse.OutboundQueue.Enqueue(new ChatTabListEvent(GetAllTabs()));
-        });
     }
 
     private MessageTemplate ProcessChunk(Chunk chunk)
@@ -87,12 +69,12 @@ public class Processing
             color ??= 0;
 
             var userContent = text.Content ?? string.Empty;
-            if (Plugin.ChatLogWindow.ScreenshotMode)
+            if (HostContext.Core.Plugin.ChatLogWindow.ScreenshotMode)
             {
                 if (chunk.Link is PlayerPayload playerPayload)
-                    userContent = Plugin.ChatLogWindow.HidePlayerInString(userContent, playerPayload.PlayerName, playerPayload.World.RowId);
+                    userContent = HostContext.Core.Plugin.ChatLogWindow.HidePlayerInString(userContent, playerPayload.PlayerName, playerPayload.World.RowId);
                 else if (Plugin.ClientState.LocalPlayer is { } player)
-                    userContent = Plugin.ChatLogWindow.HidePlayerInString(userContent, player.Name.TextValue, player.HomeWorld.RowId);
+                    userContent = HostContext.Core.Plugin.ChatLogWindow.HidePlayerInString(userContent, player.Name.TextValue, player.HomeWorld.RowId);
             }
 
             var isNotUrl = text.Link is not UriPayload;
@@ -102,30 +84,30 @@ public class Processing
         return MessageTemplate.Empty;
     }
 
-    private async Task<Messages> GetAllMessages()
+    public async Task<Messages> GetAllMessages()
     {
         var messages = await WebserverUtil.FrameworkWrapper(ReadMessageList);
         return new Messages(messages);
     }
 
-    private SwitchChannel GetCurrentChannel()
+    public SwitchChannel GetCurrentChannel()
     {
-        var channel = ReadChannelName(Plugin.ChatLogWindow.PreviousChannel);
+        var channel = ReadChannelName(HostContext.Core.Plugin.ChatLogWindow.PreviousChannel);
         return new SwitchChannel(channel);
     }
 
-    private ChannelList GetValidChannels()
+    public ChannelList GetValidChannels()
     {
-        var channels = Plugin.ChatLogWindow.GetValidChannels();
+        var channels = HostContext.Core.Plugin.ChatLogWindow.GetValidChannels();
         return new ChannelList(channels.ToDictionary(pair => pair.Key, pair => (uint)pair.Value));
     }
 
-    private ChatTab GetCurrentTab()
+    public ChatTab GetCurrentTab()
     {
-        return new ChatTab(Plugin.CurrentTab.Name, Plugin.LastTab);
+        return new ChatTab(HostContext.Core.Plugin.CurrentTab.Name, HostContext.Core.Plugin.LastTab);
     }
 
-    private ChatTabList GetAllTabs()
+    public ChatTabList GetAllTabs()
     {
         var tabs = Plugin.Config.Tabs.Select((tab, idx) => new ChatTab(tab.Name, idx)).ToArray();
         return new ChatTabList(tabs);
