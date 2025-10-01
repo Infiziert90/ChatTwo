@@ -1,5 +1,5 @@
-import {type Source, source} from "sveltekit-sse";
-import {channelOptions, isChannelLocked} from "$lib/shared.svelte";
+import { channelOptions, isChannelLocked, selectedTab, knownTabs } from "$lib/shared.svelte";
+import { source, type Source } from "sveltekit-sse";
 
 interface ChatElements {
     messagesContainer: Element | null,
@@ -43,7 +43,7 @@ interface ChannelList {
 }
 
 // ref `DataStructure.ChatTab`
-interface ChatTab {
+export interface ChatTab {
     name: string;
     index: number;
 }
@@ -170,9 +170,9 @@ export class ChatTwoWeb {
         }
     }
 
-    // calculate timestamp width
-    // to ensure that all timestamps have the same width. some typefaces have the same width across
-    // all number glyphs, others do not. then there's AM/PM vs 24 hour, and so on
+    // calculate timestamp width to ensure that all timestamps have the same width.
+    // some typefaces have the same width across all number glyphs, others do not.
+    // then there's AM/PM vs 24 hour, and so on
     calculateTimestampWidth(timestamp: string) {
         if (this.elements.timestampWidthProbe === null)
             return;
@@ -368,10 +368,11 @@ export class ChatTwoWeb {
 
         // tab switched
         this.connection.select('tab-switched').subscribe((data: string) => {
-            console.log(`Data received: ${data}`)
+            console.log(`tab-switched: ${data}`)
             if (data) {
                 try {
-                    let chatTab: ChatTab = JSON.parse(data);
+                    const chatTab: ChatTab = JSON.parse(data);
+                    selectedTab.index = chatTab.index;
                 } catch (error) {
                     console.error(error);
                 }
@@ -380,10 +381,14 @@ export class ChatTwoWeb {
 
         // list of all tabs
         this.connection.select('tab-list').subscribe((data: string) => {
-            console.log(`Data received: ${data}`)
+            console.log(`tab-list: ${data}`)
             if (data) {
                 try {
-                    let chatTabLit: ChatTabList = JSON.parse(data);
+                    const chatTabList: ChatTabList = JSON.parse(data);
+                    knownTabs.length = 0;
+                    for (const tab of chatTabList.tabs) {
+                        knownTabs.push(tab);
+                    }
                 } catch (error) {
                     console.error(error);
                 }

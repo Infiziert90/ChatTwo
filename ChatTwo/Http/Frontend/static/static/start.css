@@ -18,9 +18,11 @@
     --fg-faint: #a0a0a0;
     --fg-scrollbar: #404040;
     --bg: #101010;
+    --bg-sidebar: #080808;
     --bg-input: #202020;
     --bg-input-hover: #282828;
     --focus-color: #4060a0;
+    --unread-color: #beffa0;
 
     --gradient-clickable: linear-gradient(to bottom, #404040, var(--bg-input) 65%, var(--bg-input));
     --gradient-clickable-hover: linear-gradient(to bottom, #505050, var(--bg-input-hover) 65%, var(--bg-input-hover));
@@ -51,22 +53,29 @@ span > a {
 
 /* layout and global styles */
 body {
-    padding: 50px;
+    padding: 25px;
     height: 100dvh;
     background-color: var(--bg-input-hover);
 }
 
-body > div > main.chat {
+main.chat {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     width: 100%;
     height: 100%;
+    overflow: hidden;
     background-color: var(--bg);
     border-radius: 20px;
     box-shadow: 0 0 50px 0 rgba(0, 0, 0, 0.5);
+
+    & > .main-content {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+    }
 }
 
-body > div > main.auth {
+main.auth {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -108,6 +117,72 @@ body > div > main.auth {
     }
 }
 
+/* tab list */
+aside#tabs {
+    flex: 0 0 auto;
+    overflow-x: hidden;
+    scrollbar-color: var(--fg-scrollbar) var(--bg-sidebar);
+    background-color: var(--bg-sidebar);
+    transition: width 250ms ease;
+
+    width: 0px;
+    &.visible { width: 200px; }
+
+    div.inner {
+        width: 200px;
+        padding: 20px;
+    }
+
+    header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        font-size: 1.1rem;
+        font-weight: 550;
+
+        button {
+            margin-bottom: 2px;
+            border: none;
+            background-color: transparent;
+        }
+    }
+
+    ol#tabs-list {
+        margin: 0 -5px;
+        padding: 0;
+        list-style-type: none;
+    }
+
+    li {
+        padding: 3px 5px;
+        color: var(--fg-faint);
+
+        button {
+            width: 100%;
+            text-align: left;
+            color: inherit;
+            border: none;
+            background-color: transparent;
+        }
+    }
+
+    li + li {
+        margin-top: 3px;
+    }
+
+    li.active {
+        color: var(--fg);
+        border-radius: 3px;
+        background-color: var(--bg-input);
+    }
+
+    li.unread button {
+        color: var(--unread-color);
+        text-shadow: 0 0 5px var(--unread-color);
+    }
+}
+
 /* message list */
 section#messages {
     position: relative;
@@ -122,7 +197,9 @@ section#messages {
         scrollbar-color: var(--fg-scrollbar) var(--bg);
     }
 
-    ol {
+    ol#messages-list {
+        margin: 0;
+        padding: 0;
         list-style-type: none;
     }
 
@@ -271,7 +348,6 @@ section#input {
             &:focus {
                 outline: 2px solid var(--focus-color);
             }
-
         }
     }
 }
@@ -315,12 +391,12 @@ section#input {
 }
 
 /*** mobile ***/
-@media ((max-width: 600px) and (orientation: portrait)) or (max-width: 400px) {
+@media ((max-width: 600px) and (orientation: portrait)) or (max-height: 400px) {
     body {
         padding: 0;
     }
 
-    body > main.chat {
+    main.chat {
         border-radius: 0;
         box-shadow: none;
     }
