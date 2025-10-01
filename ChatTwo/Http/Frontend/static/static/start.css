@@ -119,7 +119,8 @@ main.auth {
 /* tab list */
 aside#tabs {
     flex: 0 0 auto;
-    overflow: hidden;
+    overflow-x: hidden;
+    scrollbar-color: var(--fg-scrollbar) var(--bg-sidebar);
     background-color: var(--bg-sidebar);
     transition: width 250ms ease;
 

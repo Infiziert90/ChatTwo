@@ -11,4 +11,15 @@ export interface ChannelOption {
 
 export const selectedTab: { index: number } = $state({ index: 0 });
 export const knownTabs: ChatTab[] = $state([]);
-export const tabBarState: { visible: boolean } = $state({ visible: false });
+export const tabPaneState: { visible: boolean } = $state({ visible: false });
+export const persistentTabPabeStateKey = 'chat2_tab_pane_visible';
+
+export function openTabPane() {
+    tabPaneState.visible = true;
+    window.localStorage.setItem(persistentTabPabeStateKey, 'true');
+}
+
+export function closeTabPane() {
+    tabPaneState.visible = false;
+    window.localStorage.setItem(persistentTabPabeStateKey, 'false');
+}

@@ -3,6 +3,7 @@
     import { Alert } from "@sveltestrap/sveltestrap";
     import { onMount } from 'svelte';
     import { ChatTwoWeb } from '$lib/chat.svelte'
+    import { tabPaneState, persistentTabPabeStateKey } from "$lib/shared.svelte";
     import { addGfdStylesheet } from "$lib/gfd";
     import DynamicTextArea from "../../components/DynamicTextArea.svelte";
     import ChannelSelector from "../../components/ChannelSelector.svelte";
@@ -29,6 +30,17 @@
 
         // Populate the stylesheet with gfd data
         addGfdStylesheet('/files/gfdata.gfd', '/files/fonticon_ps5.tex');
+
+        // read saved tab pane state from localStorage
+        try {
+            const tabPaneVisible = window.localStorage.getItem(persistentTabPabeStateKey);
+            if (tabPaneVisible !== null) {
+                tabPaneState.visible = JSON.parse(tabPaneVisible);
+            }
+        } catch (e) {
+            // JSON.parse() failed, let's reset what's in localStorage
+            window.localStorage.removeItem(persistentTabPabeStateKey);
+        }
 
         // Load all web functions in the background
         const _ = new ChatTwoWeb();

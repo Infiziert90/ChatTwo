@@ -1,12 +1,13 @@
 <script lang="ts">
-    import { tabBarState } from "$lib/shared.svelte";
+    import { tabPaneState, openTabPane } from "$lib/shared.svelte";
 
     function onclick() {
-        tabBarState.visible = true;
+        openTabPane();
     }
 </script>
 
-<button type="button" aria-label="Open tab pane" class:visible={!tabBarState.visible} {onclick}>
+<button type="button" aria-label="Open tab pane" class:visible={!tabPaneState.visible} {onclick} disabled={tabPaneState.visible}>
+    <!-- "chevron-right" icon from https://github.com/feathericons/feather, under MIT license -->
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
 </button>
 
