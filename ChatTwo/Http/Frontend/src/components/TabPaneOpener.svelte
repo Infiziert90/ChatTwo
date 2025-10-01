@@ -28,4 +28,9 @@
     button.visible {
         opacity: 1;
     }
+
+    button.unread svg {
+        stroke: var(--unread-color);
+        filter: drop-shadow(0 0 2px var(--unread-color));
+    }
 </style>

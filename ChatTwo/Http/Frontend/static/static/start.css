@@ -22,6 +22,7 @@
     --bg-input: #202020;
     --bg-input-hover: #282828;
     --focus-color: #4060a0;
+    --unread-color: #beffa0;
 
     --gradient-clickable: linear-gradient(to bottom, #404040, var(--bg-input) 65%, var(--bg-input));
     --gradient-clickable-hover: linear-gradient(to bottom, #505050, var(--bg-input-hover) 65%, var(--bg-input-hover));
@@ -174,6 +175,11 @@ aside#tabs {
         color: var(--fg);
         border-radius: 3px;
         background-color: var(--bg-input);
+    }
+
+    li.unread button {
+        color: var(--unread-color);
+        text-shadow: 0 0 5px var(--unread-color);
     }
 }
 
