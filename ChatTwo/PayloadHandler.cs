@@ -340,7 +340,13 @@ public sealed class PayloadHandler
     private static void InlineIcon(IDalamudTextureWrap icon)
     {
         var cursor = ImGui.GetCursorPos();
-        var size = ImGuiHelpers.ScaledVector2(32, 32);
+        const int maxIconSize = 32;
+        // Keep the icons aspect ratio while also shrinking it down so its at most 32px wide/tall
+        var iconRatio = icon.Size.X / icon.Size.Y;
+        var x = Math.Min(maxIconSize, (int) (maxIconSize * iconRatio));
+        var y = Math.Min(maxIconSize, (int) (maxIconSize / iconRatio));
+        var size = ImGuiHelpers.ScaledVector2(x, y);
+
         ImGui.Image(icon.Handle, size);
         ImGui.SameLine();
         ImGui.SetCursorPos(cursor + new Vector2(size.X + 4, size.Y - ImGui.GetTextLineHeightWithSpacing()));
