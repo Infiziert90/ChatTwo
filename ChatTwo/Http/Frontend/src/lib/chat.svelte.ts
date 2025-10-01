@@ -1,4 +1,4 @@
-import { channelOptions, isChannelLocked, selectedTab, knownTabs } from "$lib/shared.svelte";
+import { channelOptions, isChannelLocked, selectedTab, knownTabs, chatInput } from "$lib/shared.svelte";
 import { source, type Source } from "sveltekit-sse";
 
 interface ChatElements {
@@ -8,7 +8,6 @@ interface ChatElements {
     timestampWidthProbe: HTMLElement | null,
 
     inputForm: Element | null,
-    chatInput: HTMLElement | null,
 }
 
 // ref `DataStructure.Messages`
@@ -77,7 +76,6 @@ export class ChatTwoWeb {
             timestampWidthProbe: document.getElementById('timestamp-width-probe'),
 
             inputForm: document.querySelector('#input > form'),
-            chatInput: document.getElementById('chat-input')
         };
 
         // add indicator signaling more messages below
@@ -102,13 +100,8 @@ export class ChatTwoWeb {
 
         // handle message sending
         this.elements.inputForm?.addEventListener('submit', async (event) => {
-            if (this.elements.chatInput === null)
-                return;
-
             event.preventDefault();
-            // @ts-ignore
-            const message = this.elements.chatInput.value;
-            if (message.length > 500) {
+            if (chatInput.content.length > 500) {
                 return;
             }
 
@@ -118,13 +111,12 @@ export class ChatTwoWeb {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ message: message })
+                body: JSON.stringify({ message: chatInput.content })
             });
             // const content = await rawResponse.json();
             // TODO: use the response
 
-            // @ts-ignore
-            this.elements.chatInput.value = '';
+            chatInput.content = '';
         });
     }
 

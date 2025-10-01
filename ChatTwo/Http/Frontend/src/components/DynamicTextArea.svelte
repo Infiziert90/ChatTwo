@@ -1,6 +1,19 @@
 <script lang="ts">
+    import {onMount} from "svelte";
+    import {subscribe} from "$lib/utils.svelte";
+    import {chatInput} from "$lib/shared.svelte";
+
     let textarea: HTMLTextAreaElement;
-    let content: string = $state('');
+
+    subscribe(
+        () => chatInput,
+        (v) => {
+            // Input box has been reset to empty, so resize it back to smaller box
+            if (v.content === '') {
+                resize();
+            }
+        }
+    );
 
     function preventNewlines(e: KeyboardEvent) {
         if (e.key === 'Enter') {
@@ -13,7 +26,6 @@
                 (e.currentTarget as HTMLTextAreaElement).closest('form')?.dispatchEvent(newEvent);
             }
         }
-
     }
 
     function resize() {
@@ -21,13 +33,17 @@
             return;
 
         textarea.style.height = '1px';
-        textarea.style.height = `${textarea.scrollHeight}px`;
+        textarea.style.height = `${textarea.scrollHeight + 10}px`; // with +10px extra padding
     }
+
+    onMount(() => {
+        resize();
+    })
 </script>
 
 <textarea
     bind:this={textarea}
-    bind:value={content}
+    bind:value={chatInput.content}
     oninput={() => resize()}
     onkeydown={(e) => preventNewlines(e)}
 
@@ -52,6 +68,8 @@
         }
 
         width: 100%;
-        padding: 5px 20px;
+
+        min-height: 2.5em;
+        line-height: 1.25;
     }
 </style>

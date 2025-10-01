@@ -23,3 +23,5 @@ export function closeTabPane() {
     tabPaneState.visible = false;
     window.localStorage.setItem(persistentTabPabeStateKey, 'false');
 }
+
+export const chatInput: { content: string } = $state({ content: ''} );
