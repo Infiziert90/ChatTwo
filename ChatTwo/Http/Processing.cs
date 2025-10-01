@@ -104,12 +104,13 @@ public class Processing
 
     public ChatTab GetCurrentTab()
     {
-        return new ChatTab(HostContext.Core.Plugin.CurrentTab.Name, HostContext.Core.Plugin.LastTab);
+        var currentTab = HostContext.Core.Plugin.CurrentTab;
+        return new ChatTab(currentTab.Name, HostContext.Core.Plugin.LastTab, currentTab.Unread);
     }
 
     public ChatTabList GetAllTabs()
     {
-        var tabs = Plugin.Config.Tabs.Select((tab, idx) => new ChatTab(tab.Name, idx)).ToArray();
+        var tabs = Plugin.Config.Tabs.Select((tab, idx) => new ChatTab(tab.Name, idx, tab.Unread)).ToArray();
         return new ChatTabList(tabs);
     }
 }

@@ -251,6 +251,7 @@ internal class Tab
     public bool HideWhenInactive;
 
     [NonSerialized] public uint Unread;
+    [NonSerialized] public uint LastSendUnread;
     [NonSerialized] public long LastActivity;
     [NonSerialized] public MessageList Messages = new();
 
@@ -265,8 +266,8 @@ internal class Tab
         Messages.AddPrune(message, MessageManager.MessageDisplayLimit);
         if (!unread)
             return;
-        Unread += 1;
 
+        Unread += 1;
         if (message.Matches(Plugin.Config.InactivityHideChannels!, Plugin.Config.InactivityHideExtraChatAll, Plugin.Config.InactivityHideExtraChatChannels))
             LastActivity = Environment.TickCount64;
     }

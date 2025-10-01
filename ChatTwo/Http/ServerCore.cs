@@ -1,4 +1,6 @@
 ﻿using ChatTwo.Http.MessageProtocol;
+using ChatTwo.Util;
+using Dalamud.Plugin.Services;
 
 namespace ChatTwo.Http;
 
@@ -11,6 +13,27 @@ public class ServerCore : IAsyncDisposable
     {
         Plugin = plugin;
         HostContext = new HostContext(this);
+
+        Plugin.Framework.Update += FrameworkUpdate;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        Plugin.Framework.Update -= FrameworkUpdate;
+        await HostContext.DisposeAsync();
+    }
+
+    private void FrameworkUpdate(IFramework _)
+    {
+        foreach (var (tab, idx) in Plugin.Config.Tabs.WithIndex())
+        {
+            if (tab.Unread == tab.LastSendUnread)
+                continue;
+
+            tab.LastSendUnread = tab.Unread;
+            foreach (var eventServer in HostContext.EventConnections)
+                eventServer.OutboundQueue.Enqueue(new ChatTabUnreadStateEvent(new ChatTabUnreadState(idx, tab.Unread)));
+        }
     }
 
     #region SSE Helper
@@ -164,10 +187,5 @@ public class ServerCore : IAsyncDisposable
     public async ValueTask<bool> Stop()
     {
         return await HostContext.Stop();
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        await HostContext.DisposeAsync();
     }
 }

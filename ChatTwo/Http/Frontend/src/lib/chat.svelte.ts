@@ -45,11 +45,18 @@ interface ChannelList {
 export interface ChatTab {
     name: string;
     index: number;
+    unreadCount: number;
 }
 
 // ref `DataStructure.ChatTabList`
 interface ChatTabList {
     tabs: ChatTab[];
+}
+
+// ref `DataStructure.ChatTabUnreadState`
+interface ChatTabUnreadState {
+    index: number;
+    unreadCount: number;
 }
 
 export class ChatTwoWeb {
@@ -297,7 +304,7 @@ export class ChatTwoWeb {
         this.connection = source('/sse')
 
         this.connection.select('close').subscribe((data: string) => {
-            console.log(`Data received: ${data}`)
+            console.log(`close: ${data}`)
             if (data) {
                 console.log('Closing SSE connection.');
                 this.connection.close();
@@ -306,7 +313,7 @@ export class ChatTwoWeb {
 
         // new messages to be appended to the message list
         this.connection.select('new-message').subscribe((data: string) => {
-            console.log(`Data received: ${data}`)
+            console.log(`new-message: ${data}`)
             if (data) {
                 try {
                     let message: MessageResponse = JSON.parse(data);
@@ -319,7 +326,7 @@ export class ChatTwoWeb {
 
         // a bulk of new messages, with a clear of the message list beforehand
         this.connection.select('bulk-messages').subscribe((data: string) => {
-            console.log(`Data received: ${data}`)
+            console.log(`bulk-messages: ${data}`)
             if (data) {
                 this.clearAllMessages();
                 try {
@@ -334,7 +341,7 @@ export class ChatTwoWeb {
         });
 
         this.connection.select('channel-switched').subscribe((data: string) => {
-            console.log(`Data received: ${data}`)
+            console.log(`channel-switched: ${data}`)
             if (data) {
                 try {
                     let channel: SwitchChannel = JSON.parse(data);
@@ -347,7 +354,7 @@ export class ChatTwoWeb {
 
         // list of all channels
         this.connection.select('channel-list').subscribe((data: string) => {
-            console.log(`Data received: ${data}`)
+            console.log(`channel-list: ${data}`)
             if (data) {
                 try {
                     let channelList: ChannelList = JSON.parse(data);
@@ -381,6 +388,18 @@ export class ChatTwoWeb {
                     for (const tab of chatTabList.tabs) {
                         knownTabs.push(tab);
                     }
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+        });
+
+        // the unread state of a specific tab has changed
+        this.connection.select('tab-unread-state').subscribe((data: string) => {
+            console.log(`tab-unread-state: ${data}`)
+            if (data) {
+                try {
+                    const chatTabUnreadState: ChatTabUnreadState = JSON.parse(data);
                 } catch (error) {
                     console.error(error);
                 }

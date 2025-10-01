@@ -7,10 +7,11 @@ namespace ChatTwo.Http.MessageProtocol;
 /// <summary>
 /// Contains a valid tab with its assigned index
 /// </summary>
-public struct ChatTab(string name, int index)
+public struct ChatTab(string name, int index, uint unreadCount)
 {
     [JsonProperty("name")] public string Name = name;
     [JsonProperty("index")] public int Index = index;
+    [JsonProperty("unreadCount")] public uint UnreadCount = unreadCount;
 }
 
 /// <summary>
@@ -19,6 +20,15 @@ public struct ChatTab(string name, int index)
 public struct ChatTabList(ChatTab[] tabs)
 {
     [JsonProperty("tabs")] public ChatTab[] Tabs = tabs;
+}
+
+/// <summary>
+/// Contains a valid tab index and the current unread state as a number unread of messages
+/// </summary>
+public struct ChatTabUnreadState(int index, uint unreadCount)
+{
+    [JsonProperty("index")] public int Index = index;
+    [JsonProperty("unreadCount")] public uint UnreadCount = unreadCount;
 }
 
 /// <summary>

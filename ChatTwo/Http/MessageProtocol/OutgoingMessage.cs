@@ -9,6 +9,7 @@ public class CloseEvent() : BaseEvent("close");
 // Tab related
 public class ChatTabListEvent(ChatTabList list) : BaseEvent("tab-list", JsonConvert.SerializeObject(list));
 public class ChatTabSwitchedEvent(ChatTab chatTab) : BaseEvent("tab-switched", JsonConvert.SerializeObject(chatTab));
+public class ChatTabUnreadStateEvent(ChatTabUnreadState unreadState) : BaseEvent("tab-unread-state", JsonConvert.SerializeObject(unreadState));
 
 // Input channel related
 public class ChannelListEvent(ChannelList channelList) : BaseEvent("channel-list", JsonConvert.SerializeObject(channelList));
