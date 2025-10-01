@@ -5,12 +5,33 @@
 
     let textarea: HTMLTextAreaElement;
 
+    let skipNextCheck: boolean = $state(false);
+    let requiresResize: boolean = $state(true);
+
     subscribe(
         () => chatInput,
         (v) => {
+            if (skipNextCheck) {
+                skipNextCheck = false;
+                return;
+            }
+
             // Input box has been reset to empty, so resize it back to smaller box
             if (v.content === '') {
-                resize();
+                console.log("Empty chatbox, resize");
+                requiresResize = true;
+                return;
+            }
+
+            // Remove newline characters
+            let original = v.content;
+            v.content = v.content.replace(/(\r\n|\n|\r)/gm,"");
+
+            console.log(`${original.length} vs ${v.content.length}`);
+            let hasChanged = original.length != v.content.length;
+            if (hasChanged) {
+                skipNextCheck = true;
+                requiresResize = true;
             }
         }
     );
@@ -36,8 +57,12 @@
         textarea.style.height = `${textarea.scrollHeight + 10}px`; // with +10px extra padding
     }
 
-    onMount(() => {
-        resize();
+    $effect(() => {
+        console.log(`Checking effect: ${requiresResize}`)
+        if (requiresResize) {
+            requiresResize = false;
+            resize();
+        }
     })
 </script>
 
