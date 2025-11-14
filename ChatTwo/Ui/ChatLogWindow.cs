@@ -40,6 +40,7 @@ public sealed class ChatLogWindow : Window
 
     internal bool FocusedPreview;
     internal bool Activate;
+    internal bool InputFocused { get; private set; }
     private int ActivatePos = -1;
     internal string Chat = string.Empty;
     private readonly List<string> InputBacklog = [];
@@ -72,6 +73,7 @@ public sealed class ChatLogWindow : Window
     private const uint ChatOpenSfx = 35u;
     private const uint ChatCloseSfx = 3u;
     private bool PlayedClosingSound = true;
+    private bool DrewThisFrame;
 
     private long FrameTime; // set every frame
     internal long LastActivityTime = Environment.TickCount64;
@@ -430,6 +432,17 @@ public sealed class ChatLogWindow : Window
         IsHidden = false;
     }
 
+    internal void BeginFrame()
+    {
+        DrewThisFrame = false;
+    }
+
+    internal void FinalizeFrame()
+    {
+        if (!DrewThisFrame)
+            InputFocused = false;
+    }
+
     public override unsafe void PreOpenCheck()
     {
         Flags = ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse | ImGuiWindowFlags.NoFocusOnAppearing;
@@ -500,6 +513,7 @@ public sealed class ChatLogWindow : Window
 
     public override void Draw()
     {
+        DrewThisFrame = true;
         try
         {
             DrawChatLog();
@@ -618,6 +632,8 @@ public sealed class ChatLogWindow : Window
                 ImGui.SetNextItemWidth(inputWidth);
                 ImGui.InputTextWithHint("##chat2-input", isChatEnabled ? "": Language.ChatLog_DisabledInput, ref Chat, 500, flags, Callback);
             }
+            var inputActive = ImGui.IsItemActive();
+            InputFocused = isChatEnabled && inputActive;
 
             var tooltipDraw = Plugin.Config.PreviewPosition is PreviewPosition.Tooltip && Plugin.InputPreview.IsDrawable;
             if (tooltipDraw && ImGui.IsItemHovered())
@@ -655,14 +671,14 @@ public sealed class ChatLogWindow : Window
             }
 
             // Process keybinds that have modifiers while the chat is focused.
-            if (ImGui.IsItemActive())
+            if (inputActive)
             {
                 Plugin.Functions.KeybindManager.HandleKeybinds(KeyboardSource.ImGui, true, true);
                 LastActivityTime = FrameTime;
             }
 
             // Only trigger unfocused if we are currently not calling the auto complete
-            if (!Activate && !ImGui.IsItemActive() && AutoCompleteInfo == null)
+            if (!Activate && !inputActive && AutoCompleteInfo == null)
             {
                 if (Plugin.Config.PlaySounds && !PlayedClosingSound)
                 {

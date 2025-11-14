@@ -56,6 +56,7 @@ public sealed class Plugin : IDalamudPlugin
     internal MessageManager MessageManager { get; }
     internal IpcManager Ipc { get; }
     internal ExtraChat ExtraChat { get; }
+    internal TypingIpc TypingIpc { get; }
     internal FontManager FontManager { get; }
 
     internal ServerCore ServerCore { get; }
@@ -97,6 +98,7 @@ public sealed class Plugin : IDalamudPlugin
             Commands = new Commands(this);
             Functions = new GameFunctions.GameFunctions(this);
             Ipc = new IpcManager();
+            TypingIpc = new TypingIpc(this);
             ExtraChat = new ExtraChat(this);
             FontManager = new FontManager();
 
@@ -181,6 +183,7 @@ public sealed class Plugin : IDalamudPlugin
         DebuggerWindow?.Dispose();
         SeStringDebugger?.Dispose();
 
+        TypingIpc?.Dispose();
         ExtraChat?.Dispose();
         Ipc?.Dispose();
         MessageManager?.DisposeAsync().AsTask().Wait();
@@ -193,8 +196,14 @@ public sealed class Plugin : IDalamudPlugin
 
     private void Draw()
     {
+        ChatLogWindow.BeginFrame();
+
         if (Config.HideInLoadingScreens && Condition[ConditionFlag.BetweenAreas])
+        {
+            ChatLogWindow.FinalizeFrame();
+            TypingIpc?.Update();
             return;
+        }
 
         ChatLogWindow.HideStateCheck();
 
@@ -205,6 +214,9 @@ public sealed class Plugin : IDalamudPlugin
         {
             WindowSystem.Draw();
         }
+
+        ChatLogWindow.FinalizeFrame();
+        TypingIpc?.Update();
     }
 
     internal void SaveConfig()

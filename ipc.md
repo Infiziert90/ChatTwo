@@ -35,11 +35,11 @@ public class ContextMenuIntegration {
         this.Available.Subscribe(() => this.Register());
         // Register if Chat 2 is already loaded.
         this.Register();
-        
+
         // Listen for context menu events.
         this.Invoke.Subscribe(this.Integration);
     }
-    
+
     private void Register() {
         // Register and save the registration ID.
         this._id = this.Register.InvokeFunc();
@@ -68,6 +68,59 @@ public class ContextMenuIntegration {
         // content is the message content SeString
         if (ImGui.Selectable("Test plugin")) {
             PluginLog.Log($"hi!\nsender: {sender}\ncontent id: {contentId:X}\npayload: {payload}\nsender string: {senderString}\ncontent string: {content}");
+        }
+    }
+}
+```
+
+# Typing State IPC
+
+If you need to know whether the player is currently interacting with Chat 2's
+input box, subscribe to the typing IPC.
+- `ChatTwo.GetChatInputState`: call this function to retrieve the current state.
+- `ChatTwo.ChatInputStateChanged`: subscribe to this event to receive updates
+  whenever the state changes (and once immediately after subscribing).
+Both IPC endpoints use the same tuple payload:
+```
+(bool InputVisible, bool InputFocused, bool HasText, bool IsTyping, int TextLength, ChatType ChannelType)
+```
+- `InputVisible`: `true` when Chat 2 is not hidden by user/cutscene/battle
+  settings.
+- `InputFocused`: `true` while the Chat 2 input box currently has keyboard focus.
+- `HasText`: `true` when the input buffer contains more than whitespace.
+- `IsTyping`: convenience flag (`InputFocused && HasText`).
+- `TextLength`: length of the raw input buffer.
+- `ChannelType`: the `ChatTwo.Code.ChatType` representing the channel/mode that
+  will be used if the buffer is submitted. This value comes from the current
+  tab's `UsedChannel` (`ChatTwo/Configuration.cs`) which the plugin keeps in
+  sync by hooking the in-game shell (`ChatTwo/GameFunctions/Chat.cs`) and by
+  resolving temporary overrides inside the chat UI
+  (`ChatTwo/Ui/ChatLogWindow.cs:597`). `InputChannel` values are converted into
+  the exported `ChatType` via `ChatTwo/Code/InputChannelExt.ToChatType`.
+Example usage:
+```cs
+public sealed class TypingIntegration {
+    private ICallGateSubscriber<(bool InputVisible, bool InputFocused, bool HasText, bool IsTyping, int TextLength, ChatType ChannelType)> GetChatInputState { get; }
+    private ICallGateSubscriber<(bool InputVisible, bool InputFocused, bool HasText, bool IsTyping, int TextLength, ChatType ChannelType)> ChatInputStateChanged { get; }
+    public TypingIntegration(DalamudPluginInterface @interface) {
+        this.GetChatInputState = @interface.GetIpcSubscriber<(bool, bool, bool, bool, int, ChatType)>("ChatTwo.GetChatInputState");
+        this.ChatInputStateChanged = @interface.GetIpcSubscriber<(bool, bool, bool, bool, int, ChatType)>("ChatTwo.ChatInputStateChanged");
+    }
+    public void Enable() {
+        this.ChatInputStateChanged.Subscribe(OnChatInputStateChanged);
+        // Optionally poll the current state on enable.
+        var state = this.GetChatInputState.InvokeFunc();
+        PluginLog.Information($"Initial typing state: {state}");
+    }
+    public void Disable() {
+        this.ChatInputStateChanged.Unsubscribe(OnChatInputStateChanged);
+    }
+
+    private void OnChatInputStateChanged((bool InputVisible, bool InputFocused, bool HasText, bool IsTyping, int TextLength, ChatType ChannelType) state) {
+        if (state.IsTyping) {
+            // Show typing indicator.
+        } else {
+            // Hide typing indicator.
         }
     }
 }
