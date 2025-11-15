@@ -1,7 +1,7 @@
 <script lang="ts">
-    import {onMount} from "svelte";
-    import {subscribe} from "$lib/utils.svelte";
-    import {chatInput} from "$lib/shared.svelte";
+    import { onMount } from "svelte";
+    import { subscribe } from "$lib/utils.svelte";
+    import { chatInput, messagesList, scrollMessagesToBottom } from "$lib/shared.svelte";
 
     let textarea: HTMLTextAreaElement;
 
@@ -53,8 +53,11 @@
         if (!textarea)
             return;
 
+        const scrolledToBottom = messagesList.scrolledToBottom;
         textarea.style.height = '1px';
         textarea.style.height = `${textarea.scrollHeight + 10}px`; // with +10px extra padding
+        if (scrolledToBottom)
+            scrollMessagesToBottom();
     }
 
     $effect(() => {

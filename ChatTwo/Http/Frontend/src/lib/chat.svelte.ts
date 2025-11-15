@@ -1,4 +1,4 @@
-import { channelOptions, isChannelLocked, selectedTab, knownTabs, chatInput } from "$lib/shared.svelte";
+import { channelOptions, isChannelLocked, selectedTab, knownTabs, chatInput, messagesList, scrollMessagesToBottom } from "$lib/shared.svelte";
 import { source, type Source } from "sveltekit-sse";
 
 interface ChatElements {
@@ -62,7 +62,6 @@ interface ChatTabUnreadState {
 export class ChatTwoWeb {
     elements!: ChatElements;
     maxTimestampWidth: number = 0;
-    scrolledToBottom: boolean = true;
 
     sse!: EventSource;
     connection!: Source;
@@ -84,6 +83,7 @@ export class ChatTwoWeb {
 
             inputForm: document.querySelector('#input > form'),
         };
+        messagesList.element = this.elements.messagesList;
 
         // add indicator signaling more messages below
         this.elements.messagesContainer?.addEventListener('scroll', (event) => {
@@ -100,8 +100,8 @@ export class ChatTwoWeb {
 
         // adjust scroll when the window size changes; mostly for mobile (opening/closing the keyboard)
         window.addEventListener('resize', () => {
-            if (this.scrolledToBottom) {
-                this.scrollMessagesToBottom();
+            if (messagesList.scrolledToBottom) {
+                scrollMessagesToBottom();
             }
         })
 
@@ -129,21 +129,17 @@ export class ChatTwoWeb {
 
     messagesAreScrolledToBottom() {
         if (this.elements.messagesContainer === null) {
-            return this.scrolledToBottom;
+            return messagesList.scrolledToBottom;
         }
 
-        if (this.elements.messagesContainer.scrollTopMax) {
-            this.scrolledToBottom = this.elements.messagesContainer.scrollTop === this.elements.messagesContainer.scrollTopMax;
-        } else {
-            this.scrolledToBottom =
-                (
-                    this.elements.messagesContainer.scrollHeight -
-                    this.elements.messagesContainer.clientHeight -
-                    this.elements.messagesContainer.scrollTop
-                ) < 1;
-        }
+        messagesList.scrolledToBottom =
+            (
+                this.elements.messagesContainer.scrollHeight -
+                this.elements.messagesContainer.clientHeight -
+                this.elements.messagesContainer.scrollTop
+            ) < 1;
 
-        return this.scrolledToBottom;
+        return messagesList.scrolledToBottom;
     }
 
     updateChannelHint(channel: SwitchChannel) {
@@ -183,20 +179,6 @@ export class ChatTwoWeb {
         }
     }
 
-    scrollMessagesToBottom() {
-        if (this.elements.messagesContainer === null || this.elements.messagesList === null)
-            return;
-
-        if (this.elements.messagesContainer.scrollTopMax) {
-            this.elements.messagesContainer.scrollTop = this.elements.messagesContainer.scrollTopMax;
-        } else {
-            if (this.elements.messagesList.lastElementChild === null)
-                return;
-
-            this.elements.messagesList.lastElementChild.scrollIntoView();
-        }
-    }
-
     addMessage(messageData: MessageResponse) {
         if (this.elements.messagesList === null)
             return;
@@ -218,7 +200,7 @@ export class ChatTwoWeb {
         this.elements.messagesList.appendChild(liMessage);
 
         if (scrolledToBottom) {
-            this.scrollMessagesToBottom();
+            scrollMessagesToBottom();
         }
     }
 

@@ -1,7 +1,8 @@
 <script lang="ts">
-    import { tabPaneState, openTabPane } from "$lib/shared.svelte";
+    import { tabPaneState, tabPaneAnimationState, openTabPane } from "$lib/shared.svelte";
 
     function onclick() {
+        tabPaneAnimationState.noAnimation = false;
         openTabPane();
     }
 </script>

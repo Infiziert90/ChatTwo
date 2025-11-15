@@ -1,4 +1,4 @@
-﻿/* fonts */
+/* fonts */
 @font-face {
     font-family: Lodestone;
     src: url('/files/FFXIV_Lodestone_SSF.ttf') format('truetype');
@@ -125,8 +125,12 @@ aside#tabs {
     background-color: var(--bg-sidebar);
     transition: width 250ms ease;
 
-    width: 0px;
-    &.visible { width: 200px; }
+    width: 200px;
+    &.hidden { width: 0px; }
+
+    &.no-animation {
+        transition: none;
+    }
 
     div.inner {
         width: 200px;
@@ -137,7 +141,6 @@ aside#tabs {
         display: flex;
         align-items: flex-end;
         justify-content: space-between;
-        margin-bottom: 20px;
         font-size: 1.1rem;
         font-weight: 550;
 
@@ -146,6 +149,11 @@ aside#tabs {
             border: none;
             background-color: transparent;
         }
+    }
+
+    hr {
+        margin: 0.6rem 0 0.75rem;
+        border-color: var(--fg-faint);
     }
 
     ol#tabs-list {
@@ -157,6 +165,7 @@ aside#tabs {
     li {
         padding: 3px 5px;
         color: var(--fg-faint);
+        border-radius: 3px;
 
         button {
             width: 100%;
@@ -171,9 +180,13 @@ aside#tabs {
         margin-top: 3px;
     }
 
+    li:has(button:hover) {
+        color: var(--fg);
+        background-color: rgb(from var(--bg-input) r g b / 0.5);
+    }
+
     li.active {
         color: var(--fg);
-        border-radius: 3px;
         background-color: var(--bg-input);
     }
 
@@ -187,6 +200,7 @@ aside#tabs {
 section#messages {
     position: relative;
     flex: 1;
+    min-width: 0;
     min-height: 0;
     padding: 20px;
     line-height: 1.5;
@@ -442,6 +456,17 @@ section#input {
         img {
             width: 1.5rem;
             height: 1.5rem;
+        }
+    }
+
+    aside#tabs {
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        z-index: 1000;
+
+        div.inner {
+            width: 100vw;
         }
     }
 }
