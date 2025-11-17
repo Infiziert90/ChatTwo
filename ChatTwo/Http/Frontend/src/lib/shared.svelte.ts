@@ -11,7 +11,8 @@ export interface ChannelOption {
 
 export const selectedTab: { index: number } = $state({ index: 0 });
 export const knownTabs: ChatTab[] = $state([]);
-export const tabPaneState: { visible: boolean } = $state({ visible: false });
+export const tabPaneState: { visible: boolean } = $state({ visible: true });
+export const tabPaneAnimationState: { noAnimation: boolean } = $state({ noAnimation: true });
 export const persistentTabPabeStateKey = 'chat2_tab_pane_visible';
 
 export function openTabPane() {
@@ -25,3 +26,14 @@ export function closeTabPane() {
 }
 
 export const chatInput: { content: string } = $state({ content: ''} );
+export const messagesList: {
+    element: HTMLElement | null,
+    scrolledToBottom: boolean
+} = $state({ element: null, scrolledToBottom: true });
+
+export function scrollMessagesToBottom() {
+    if (messagesList.element === null)
+        return;
+
+    messagesList.element.lastElementChild?.scrollIntoView();
+}
