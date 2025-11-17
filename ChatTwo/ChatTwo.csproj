@@ -39,17 +39,27 @@
     <ItemGroup>
       <Folder Include="images\" />
     </ItemGroup>
+    
+    <!--This doesn't work until Plogon is updated to include NodeJS-->
+    <!--    <Target Name="NodeJS Compile" BeforeTargets="BeforeCompile">-->
+    <!--        <Exec Command="npm install" WorkingDirectory="Http\Frontend"/>-->
+    <!--        <Exec Command="npm run build" WorkingDirectory="Http\Frontend"/>-->
+    <!--    </Target>-->
+    <!--    -->
+    <!--    <Target Name="CopyFiles" AfterTargets="Build">-->
+    <!--        <ItemGroup>-->
+    <!--            <Files Include="$(MSBuildThisFileDirectory)\Http\Frontend\build\**" />-->
+    <!--        </ItemGroup>-->
+    <!--        -->
+    <!--        <Copy SourceFiles="@(Files)" DestinationFolder="$(TargetDir)\Frontend\%(RecursiveDir)" />-->
+    <!--    </Target>-->
 
-    <Target Name="NodeJS Compile" BeforeTargets="BeforeCompile">
+    <Target Name="NodeJS Compile" BeforeTargets="BeforeCompile" Condition="'$(Configuration)' == 'Debug'">
         <Exec Command="npm install" WorkingDirectory="Http\Frontend"/>
         <Exec Command="npm run build" WorkingDirectory="Http\Frontend"/>
     </Target>
     
-    <Target Name="CopyFiles" AfterTargets="Build">
-        <ItemGroup>
-            <Files Include="$(MSBuildThisFileDirectory)\Http\Frontend\build\**" />
-        </ItemGroup>
-        
-        <Copy SourceFiles="@(Files)" DestinationFolder="$(TargetDir)\Frontend\%(RecursiveDir)" />
+    <Target Name="UnzipBuild" AfterTargets="Build">
+        <Unzip SourceFiles="websiteBuild.zip" DestinationFolder="$(TargetDir)\Frontend"/>
     </Target>
 </Project>
