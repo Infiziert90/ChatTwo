@@ -218,12 +218,19 @@ internal class MessageManager : IAsyncDisposable
     // called for each message.
     private unsafe void ContentIdResolver(RaptureLogModule* agent, ulong contentId, ulong accountId, int messageIndex, ushort worldId, ushort chatType)
     {
-        ContentIdResolverHook?.Original(agent, contentId, accountId, messageIndex, worldId, chatType);
-        if (PendingSync.Count == 0)
-            return;
+        try
+        {
+            ContentIdResolverHook?.Original(agent, contentId, accountId, messageIndex, worldId, chatType);
+            if (PendingSync.Count == 0)
+                return;
 
-        PendingSync.Last().ContentId = contentId;
-        PendingSync.Last().AccountId = accountId;
+            PendingSync.Last().ContentId = contentId;
+            PendingSync.Last().AccountId = accountId;
+        }
+        catch (Exception ex)
+        {
+            Plugin.Log.Error(ex, "Error in ContentIdResolver");
+        }
     }
 
     private void ProcessMessage(PendingMessage pendingMessage)

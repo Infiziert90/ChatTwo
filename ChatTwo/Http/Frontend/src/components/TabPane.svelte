@@ -25,8 +25,9 @@
     }
 
     function ontransitionend() {
-        if (scrolledToBottom)
+        if (scrolledToBottom) {
             scrollMessagesToBottom();
+        }
     }
 </script>
 
@@ -50,9 +51,9 @@
 
         <ol id="tabs-list">
             {#each knownTabs as tab}
-                <li class:active={selectedTab.index == tab.index}>
+                <li class:active={selectedTab.index === tab.index}>
                     <button type="button" onclick={() => selectTab(tab.index)}>
-                        { tab.name }
+                        { tab.name } {tab.unreadCount > 0 ? `(${tab.unreadCount})`: '' }
                     </button>
                 </li>
             {/each}

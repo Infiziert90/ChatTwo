@@ -18,7 +18,7 @@ public class HostContext
     public readonly List<SSEConnection> EventConnections = [];
 
     public readonly CancellationTokenSource TokenSource = new();
-    public readonly string StaticDir = Path.Combine(Plugin.Interface.AssemblyLocation.DirectoryName!, "Http/Frontend/build");
+    public readonly string StaticDir = Path.Combine(Plugin.Interface.AssemblyLocation.DirectoryName!, "Frontend/");
 
     public HostContext(ServerCore core)
     {

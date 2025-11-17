@@ -1,4 +1,5 @@
 import { channelOptions, isChannelLocked, selectedTab, knownTabs, chatInput, messagesList, scrollMessagesToBottom } from "$lib/shared.svelte";
+import { WebPayloadType } from "$lib/payload";
 import { source, type Source } from "sveltekit-sse";
 
 interface ChatElements {
@@ -17,15 +18,16 @@ interface Messages {
 
 // ref `DataStructure.MessageResponse`
 interface MessageResponse {
+    id: string;
     timestamp: string;
     templates: Template[];
 }
 
 // ref `DataStructure.MessageTemplate`
 interface Template {
-    id: number;
-    payload: string;
+    payloadType: WebPayloadType;
     content: string;
+    iconId: number;
     color: number;
 }
 
@@ -73,9 +75,6 @@ export class ChatTwoWeb {
 
     setupDOMElements() {
         this.elements = {
-            // channelHint: document.getElementById('channel-hint'),
-            // channelSelect: document.getElementById('channel-select'),
-
             messagesContainer: document.querySelector('#messages > .scroll-container')!,
             messagesList: document.getElementById('messages-list'),
 
@@ -209,20 +208,20 @@ export class ChatTwoWeb {
 
         for( const template of templates ) {
             const spanElement = document.createElement('span');
-            switch (template.payload) {
-                case 'text':
+            switch (template.payloadType) {
+                case WebPayloadType.RawText:
                     this.processTextTemplate(template, spanElement);
                     break;
-                case 'url':
+                case WebPayloadType.CustomUri:
                     this.processUrlTemplate(template, spanElement);
                     break;
-                case 'emote':
+                case WebPayloadType.CustomEmote:
                     this.processEmote(template, spanElement);
                     break;
-                case 'icon':
+                case WebPayloadType.Icon:
                     this.processIcon(template, spanElement);
                     break;
-                case 'empty':
+                default:
                     continue;
             }
 
@@ -272,7 +271,7 @@ export class ChatTwoWeb {
 
     processIcon(template: Template, spanElement: HTMLSpanElement) {
         spanElement.classList.add('gfd-icon');
-        spanElement.classList.add(`gfd-icon-hq-${template.id}`);
+        spanElement.classList.add(`gfd-icon-hq-${template.iconId}`);
     }
 
     clearAllMessages() {
@@ -378,10 +377,18 @@ export class ChatTwoWeb {
 
         // the unread state of a specific tab has changed
         this.connection.select('tab-unread-state').subscribe((data: string) => {
-            console.log(`tab-unread-state: ${data}`)
+            console.log(`tab-unread-state`, data)
             if (data) {
                 try {
                     const chatTabUnreadState: ChatTabUnreadState = JSON.parse(data);
+                    let tab = knownTabs.find((tab) => tab.index === chatTabUnreadState.index);
+                    if (tab) {
+                        tab.unreadCount = chatTabUnreadState.unreadCount;
+                    }
+                    else {
+                        console.error("Unable to find tab!")
+                        console.error(chatTabUnreadState)
+                    }
                 } catch (error) {
                     console.error(error);
                 }

@@ -61,6 +61,7 @@ public struct Messages(MessageResponse[] set)
 /// </summary>
 public struct MessageResponse()
 {
+    [JsonProperty("id")] public Guid Id = Guid.NewGuid();
     [JsonProperty("timestamp")] public string Timestamp = "";
     [JsonProperty("templates")] public MessageTemplate[] Templates;
 }
@@ -71,17 +72,10 @@ public struct MessageResponse()
 public struct MessageTemplate()
 {
     /// <summary>
-    /// Template type
-    ///
-    /// icon = a game icon
-    /// emote = BetterTTV emote
-    /// url = Simple url that should be clickable
-    /// text = Simple text content of the message
-    ///
-    /// Note:
-    /// Empty is used for invalid payloads
+    /// The type of payload.
+    /// Dalamuds enum is just a baseline, there exists more that are expressed through raw values.
     /// </summary>
-    [JsonProperty("payload")] public required string Payload;
+    [JsonProperty("payloadType")] public WebPayloadType PayloadType = WebPayloadType.Unknown;
 
     /// <summary>
     /// Used for text and emote.
@@ -91,7 +85,7 @@ public struct MessageTemplate()
     /// <summary>
     /// Used for an icon.
     /// </summary>
-    [JsonProperty("id")] public uint Id;
+    [JsonProperty("iconId")] public uint IconId;
 
     /// <summary>
     /// Used for text and url
@@ -101,7 +95,7 @@ public struct MessageTemplate()
     /// </summary>
     [JsonProperty("color")] public uint Color;
 
-    public static MessageTemplate Empty => new() {Payload = "empty"};
+    public static MessageTemplate Empty => new();
 }
 #endregion
 
