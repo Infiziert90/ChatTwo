@@ -842,6 +842,9 @@ Sie wurden gewarnt.</value>
   <data name="ChatType_Alarm">
     <value>Alarmbenachrichtigungen</value>
   </data>
+  <data name="ChatType_Glamour">
+    <value>Glamour Notifications</value>
+  </data>
   <data name="ChatType_Echo">
     <value>Für andere unsichtbarer „/echo“-Text</value>
   </data>

@@ -122,139 +122,139 @@
         </value>
   </resheader>
   <data name="Options_HideChat_Name">
-    <value>Hide vanilla chat</value>
+    <value>バニラチャットを非表示</value>
   </data>
   <data name="Options_HideChat_Description">
-    <value>Hide the in-game chat window when the plugin is active.</value>
+    <value>プラグインがアクティブな場合、ゲーム内チャットウィンドウを非表示にします。</value>
   </data>
   <data name="Options_HideDuringCutscenes_Name">
-    <value>Hide during cutscenes</value>
+    <value>カットシーン中は非表示</value>
   </data>
   <data name="Options_HideDuringCutscenes_Description">
-    <value>Hide {0} during cutscenes.</value>
+    <value>カットシーン中は {0} を非表示にします。</value>
   </data>
   <data name="Options_NativeItemTooltips_Name">
-    <value>Show native item tooltips</value>
+    <value>ネイティブアイテムのツールチップを表示</value>
   </data>
   <data name="Options_NativeItemTooltips_Description">
-    <value>Show in-game item tooltips when hovering over items in {0}.</value>
+    <value>{0} のアイテムにカーソルを合わせると、ゲーム内のアイテムツールチップを表示します。</value>
   </data>
   <data name="Options_SidebarTabView_Name">
-    <value>Show tabs in a sidebar</value>
+    <value>タブをサイドバーに表示</value>
   </data>
   <data name="Options_SidebarTabView_Description">
-    <value>Show tabs in {0} as a sidebar instead of a bar at the top.</value>
+    <value>上部にバーの代わりにサイドバーとして {0} のタブを表示します。</value>
   </data>
   <data name="Options_PrettierTimestamps_Name">
-    <value>Use modern layout</value>
+    <value>モダンなレイアウトを使用</value>
   </data>
   <data name="Options_PrettierTimestamps_Description">
-    <value>Display messages in a more modern style.</value>
+    <value>よりモダンなスタイルでメッセージを表示します。</value>
   </data>
   <data name="Options_Use24HourClock_Name">
-    <value>24-hour clock</value>
+    <value>24時間表示</value>
   </data>
   <data name="Options_Use24HourClock_Description">
-    <value>Display timestamps as their 24-hour clock version.</value>
+    <value>タイムスタンプを24時間表示します。</value>
   </data>
   <data name="Options_MoreCompactPretty_Name">
-    <value>More compact modern layout</value>
+    <value>コンパクトなモダンなレイアウト</value>
   </data>
   <data name="Options_MoreCompactPretty_Description">
-    <value>Reduce the spacing between messages.</value>
+    <value>メッセージ間の間隔を縮小します。</value>
   </data>
   <data name="Options_ShowNoviceNetwork_Name">
-    <value>Show Novice Network join button</value>
+    <value>ビギナーチャット参加ボタンを表示する</value>
   </data>
   <data name="Options_ShowNoviceNetwork_Description">
-    <value>Show the Novice Network join button next to the settings button if logged in as a mentor.</value>
+    <value>メンターとしてログインしている場合は、設定ボタンの横にビギナーチャット参加ボタンを表示します。</value>
   </data>
   <data name="Options_ShowHideButton_Name" xml:space="preserve">
-        <value>Show hide button</value>
+        <value>非表示ボタンを表示</value>
     </data>
   <data name="Options_ShowHideButton_Description" xml:space="preserve">
-        <value>Show a hide button next to the settings button. The chat window can be returned by pressing return or slash to focus it.</value>
+        <value>設定ボタンの横に非表示ボタンを表示します。チャットウィンドウは、リターンまたはスラッシュを押してフォーカスできます。</value>
     </data>
   <data name="Options_FontSize_Name">
-    <value>Font size</value>
+    <value>フォントサイズ</value>
   </data>
   <data name="Options_WindowOpacity_Name">
-    <value>Window opacity</value>
+    <value>ウィンドウの不透明度</value>
   </data>
   <data name="Options_CanMove_Name">
-    <value>Allow moving chat</value>
+    <value>チャットの移動を許可</value>
   </data>
   <data name="Options_CanResize_Name">
-    <value>Allow resizing chat</value>
+    <value>チャットのサイズ変更を許可</value>
   </data>
   <data name="Popout_CanMove_Name">
-    <value>Allow moving window</value>
+    <value>ウィンドウの移動を許可</value>
   </data>
   <data name="Popout_CanResize_Name">
-    <value>Allow resizing window</value>
+    <value>ウィンドウのサイズ変更を許可</value>
   </data>
   <data name="Options_ShowTitleBar_Name">
-    <value>Show title bar for chat</value>
+    <value>チャットのタイトルバーを表示</value>
   </data>
   <data name="Options_Display_Tab">
-    <value>Display</value>
+    <value>表示</value>
   </data>
   <data name="Options_ChatColours_Tab">
-    <value>Chat colours</value>
+    <value>チャットの色</value>
   </data>
   <data name="Options_ChatColours_Reset">
-    <value>Reset to default</value>
+    <value>既定にリセット</value>
   </data>
   <data name="Options_ChatColours_Import">
-    <value>Import from game</value>
+    <value>ゲームからインポート</value>
   </data>
   <data name="Options_Tabs_Tab">
-    <value>Tabs</value>
+    <value>タブ</value>
   </data>
   <data name="Options_Tabs_Add">
-    <value>Add</value>
+    <value>追加</value>
   </data>
   <data name="Options_Tabs_Delete">
-    <value>Delete</value>
+    <value>削除</value>
   </data>
   <data name="Options_Tabs_MoveUp">
-    <value>Move up</value>
+    <value>上へ移動</value>
   </data>
   <data name="Options_Tabs_MoveDown">
-    <value>Move down</value>
+    <value>下へ移動</value>
   </data>
   <data name="Options_Tabs_Name">
-    <value>Name</value>
+    <value>名前</value>
   </data>
   <data name="Options_Tabs_ShowTimestamps">
-    <value>Show timestamps</value>
+    <value>タイムスタンプを表示</value>
   </data>
   <data name="Options_Tabs_UnreadMode">
-    <value>Unread mode</value>
+    <value>未読モード</value>
   </data>
   <data name="Options_Tabs_InactivityBehaviour">
-    <value>Unhide the chat window on activity</value>
+    <value>アクティビティ時にチャットウィンドウを再表示する</value>
   </data>
   <data name="Options_Tabs_NoInputChannel">
-    <value>&lt;None&gt;</value>
+    <value>；</value>
   </data>
   <data name="Options_Tabs_InputChannel">
-    <value>Input channel</value>
+    <value>入力チャンネル</value>
   </data>
   <data name="Options_Tabs_Channels">
-    <value>Channels</value>
+    <value>チャネル</value>
   </data>
   <data name="UnreadMode_All_Tooltip">
-    <value>Always show unread indicators.</value>
+    <value>未読のインジケーターを常に表示します。</value>
   </data>
   <data name="UnreadMode_Unseen_Tooltip">
-    <value>Only show unread indicators for messages you haven't seen.</value>
+    <value>未読のインジケータのみを表示します。</value>
   </data>
   <data name="UnreadMode_None_Tooltip">
-    <value>Never show unread indicators.</value>
+    <value>未読のインジケータを表示しない。</value>
   </data>
   <data name="Tab_DefaultName">
-    <value>新規タブ</value>
+    <value>新しいタブ</value>
   </data>
   <data name="Settings_SaveAndClose">
     <value>保存して閉じる</value>
@@ -293,43 +293,43 @@
     <value>戦闘</value>
   </data>
   <data name="Options_Tabs_ChannelTypes_Announcements">
-    <value>Announcements</value>
+    <value>お知らせ</value>
   </data>
   <data name="UnreadMode_All">
-    <value>All</value>
+    <value>すべて</value>
   </data>
   <data name="UnreadMode_Unseen">
     <value>Unseen</value>
   </data>
   <data name="UnreadMode_None">
-    <value>None</value>
+    <value>なし</value>
   </data>
   <data name="ChatSource_Self">
-    <value>Self</value>
+    <value>自身</value>
   </data>
   <data name="ChatSource_PartyMember">
-    <value>Party Member</value>
+    <value>Ptメンバー</value>
   </data>
   <data name="ChatSource_AllianceMember">
-    <value>Alliance Member</value>
+    <value>アライアンスメンバー</value>
   </data>
   <data name="ChatSource_Other">
-    <value>Other</value>
+    <value>その他</value>
   </data>
   <data name="ChatSource_EngagedEnemy">
-    <value>Engaged Enemy</value>
+    <value>交戦中の敵</value>
   </data>
   <data name="ChatSource_UnengagedEnemy">
-    <value>Unengaged Enemy</value>
+    <value>未交戦の敵</value>
   </data>
   <data name="ChatSource_FriendlyNpc">
-    <value>Friendly NPC</value>
+    <value>フレンドリーな NPC</value>
   </data>
   <data name="ChatSource_SelfPet">
-    <value>Pet (Self)</value>
+    <value>ペット（自分）</value>
   </data>
   <data name="ChatSource_PartyPet">
-    <value>Pet (Party)</value>
+    <value>ペット (パーティー)</value>
   </data>
   <data name="ChatSource_AlliancePet">
     <value>ペット (アライアンス)</value>
@@ -347,133 +347,133 @@
     <value>フォント {0} は日本語以外のテキストを表示するために使用します。</value>
   </data>
   <data name="Options_Font_Warning">
-    <value>Using certain system fonts may crash your game. You have been warned.</value>
+    <value>特定のシステムフォントを使用するとゲームがクラッシュする可能性があります。警告されています。</value>
   </data>
   <data name="Options_JapaneseFont_Description">
-    <value>The font {0} will use to display Japanese text.</value>
+    <value>フォント {0} は日本語以外のテキストを表示するために使用します。</value>
   </data>
   <data name="Options_ItalicFont_Name">
-    <value>Italic font</value>
+    <value>斜体フォント</value>
   </data>
   <data name="Options_Italic_Description">
-    <value>If enabled, uses the italic font in {0}, else it will use the ingame italic font.</value>
+    <value>有効にすると、 {0}で斜体フォントを使用します。そうでなければ、斜体フォントを使用します。</value>
   </data>
   <data name="Options_Tabs_ChannelTypes_Special">
-    <value>Special</value>
+    <value>特別</value>
   </data>
   <data name="Options_Fonts_Tab">
-    <value>Fonts</value>
+    <value>フォント</value>
   </data>
   <data name="Options_SymbolsFontSize_Name">
-    <value>Symbols font size</value>
+    <value>シンボルのフォント サイズ</value>
   </data>
   <data name="Options_JapaneseFontSize_Name">
-    <value>Japanese font size</value>
+    <value>日本語のフォントサイズ</value>
   </data>
   <data name="Options_SymbolsFontSize_Description">
-    <value>The font size to use for game symbols.</value>
+    <value>ゲームシンボルに使用するフォントサイズ。</value>
   </data>
   <data name="ChatLog_Tabs_Delete">
-    <value>Delete tab</value>
+    <value>タブの削除</value>
   </data>
   <data name="Options_HideWhenNotLoggedIn_Name">
-    <value>Hide when not logged in</value>
+    <value>ログインしていない時は非表示</value>
   </data>
   <data name="Options_HideWhenNotLoggedIn_Description">
-    <value>Hide {0} when you are not logged in to a character.</value>
+    <value>キャラクターにログインしていないときは、 {0} を非表示にします。</value>
   </data>
   <data name="Tabs_Presets_General">
-    <value>General</value>
+    <value>全般</value>
   </data>
   <data name="Options_Tabs_Preset">
-    <value>Preset: {0}</value>
+    <value>プリセット: {0}</value>
   </data>
   <data name="Tabs_Presets_Event">
-    <value>Event</value>
+    <value>イベント</value>
   </data>
   <data name="Options_Tabs_NewTab">
-    <value>New tab</value>
+    <value>新しいタブ</value>
   </data>
   <data name="Options_About_Tab">
-    <value>About</value>
+    <value>概要</value>
   </data>
   <data name="Options_About_Opening">
-    <value>{0} is a project to completely recreate the in-game chat and make it even better.</value>
+    <value>{0} はゲーム内チャットを完全に再現し、さらに改善するためのプロジェクトです。</value>
   </data>
   <data name="Options_About_CrowdIn">
-    <value>Help to translate: </value>
+    <value>翻訳の手助け: </value>
   </data>
   <data name="Options_About_Translators">
-    <value>Translators</value>
+    <value>翻訳者</value>
   </data>
   <data name="CommandHelpSide_None">
-    <value>None</value>
+    <value>なし</value>
   </data>
   <data name="CommandHelpSide_Left">
-    <value>Left</value>
+    <value>左</value>
   </data>
   <data name="CommandHelpSide_Right">
-    <value>Right</value>
+    <value>右</value>
   </data>
   <data name="Options_CommandHelpSide_Name">
-    <value>Command help side (None = off)</value>
+    <value>コマンドヘルプサイド (None = off)</value>
   </data>
   <data name="Options_CommandHelpSide_Description">
-    <value>The side of {0} to display help for commands on.</value>
+    <value>コマンドのヘルプを表示する {0} 側。</value>
   </data>
   <data name="Options_HideWhenUiHidden_Name">
-    <value>Hide when game UI is hidden</value>
+    <value>ゲームUIが非表示の場合は非表示</value>
   </data>
   <data name="Options_HideWhenUiHidden_Description">
-    <value>Hide {0} when the game UI is hidden.</value>
+    <value>ゲームUIが非表示の場合、 {0} を非表示にします。</value>
   </data>
   <data name="Options_HideWhenInactive_Name">
-    <value>Hide when inactive</value>
+    <value>非アクティブ時は非表示</value>
   </data>
   <data name="Options_HideWhenInactive_Description">
-    <value>Hide the chat after a configurable period of inactivity. The current tab and any other tabs with the setting enabled are considered for activity.</value>
+    <value>非アクティブ期間後にチャットを非表示にします。現在のタブや設定が有効になっているその他のタブはアクティビティとみなされます。</value>
   </data>
   <data name="Options_InactivityHideTimeout_Name">
-    <value>Inactivity timeout</value>
+    <value>未使用時タイムアウト</value>
   </data>
   <data name="Options_InactivityHideTimeout_Description">
-    <value>How long to wait (in seconds) before considering the chat log inactive.</value>
+    <value>チャットログの非アクティブ化を検討するまでの待機時間 (秒単位)。</value>
   </data>
   <data name="Options_InactivityHideActiveDuringBattle_Name" xml:space="preserve">
-        <value>Enable inactivity hide during battle</value>
+        <value>戦闘中の非表示を有効にする</value>
     </data>
   <data name="Options_InactivityHideActiveDuringBattle_Description" xml:space="preserve">
-        <value>When disabled, the chat log will stay active during battle.</value>
+        <value>無効にすると、チャットログは戦闘中に表示されます。</value>
     </data>
   <data name="Options_InactivityHideChannels_Name">
-    <value>Chat channels considered for activity</value>
+    <value>チャットチャンネルはアクティビティを検討しています</value>
   </data>
   <data name="Options_InactivityHideChannels_Description">
-    <value>Which chat channels should be considered for activity. Other channels will not restore the chat regardless of which tab they occur in.</value>
+    <value>どのチャットチャンネルがアクティビティのために考慮されるべきか。他のチャンネルは、どのタブで発生するかに関係なくチャットを復元しません。</value>
   </data>
   <data name="Options_InactivityHideChannels_All_Label">
-    <value>Select All</value>
+    <value>すべて選択</value>
   </data>
   <data name="Options_InactivityHideChannels_None_Label">
-    <value>Unselect All</value>
+    <value>すべて解除</value>
   </data>
   <data name="Options_InactivityHideChannels_Button_Tooltip">
-    <value>Hold Ctrl+Shift to click.</value>
+    <value>Ctrl + Shift キーを押しながらクリックします。</value>
   </data>
   <data name="Options_KeybindMode_Name">
-    <value>Keybind mode</value>
+    <value>キー割り当てモード</value>
   </data>
   <data name="Options_KeybindMode_Description">
-    <value>The way in which {0} should handle keybinds.</value>
+    <value>{0} がキーバインドを処理する方法。</value>
   </data>
   <data name="Options_Miscellaneous_Tab">
-    <value>Miscellaneous</value>
+    <value>その他の設定</value>
   </data>
   <data name="Options_Webinterface_Tab">
-    <value>Webinterface</value>
+    <value>Webインターフェイス</value>
   </data>
   <data name="LanguageOverride_None">
-    <value>Use Dalamud's default language</value>
+    <value>Dalamudのデフォルト言語を使用する</value>
   </data>
   <data name="KeybindMode_Flexible_Name">
     <value>Flexible</value>
@@ -482,127 +482,127 @@
     <value>Strict</value>
   </data>
   <data name="KeybindMode_Flexible_Tooltip">
-    <value>Process keybinds with modifiers even if other modifiers are pressed.</value>
+    <value>プロセスキーは、他の修飾子が押されていても修飾子と結合します。</value>
   </data>
   <data name="KeybindMode_Strict_Tooltip">
-    <value>Only process keybinds with modifiers if no other modifiers are pressed.</value>
+    <value>他の修飾子が押されていない場合、プロセスキーは修飾子で結合されます。</value>
   </data>
   <data name="Options_Language_Name">
-    <value>Language</value>
+    <value>言語</value>
   </data>
   <data name="Options_Language_Description">
-    <value>The language to display {0} in.</value>
+    <value>{0} を表示する言語。</value>
   </data>
   <data name="Options_DatabaseBattleMessages_Name">
-    <value>Save battle messages in database</value>
+    <value>戦闘メッセージをデータベースに保存する</value>
   </data>
   <data name="Options_DatabaseBattleMessages_Description">
-    <value>If battle messages are saved to the database, the size of the database will grow much faster, and there will be a noticeable freeze when saving settings. It is recommended to leave this disabled.</value>
+    <value>バトルメッセージをデータベースに保存すると、データベースのサイズが大きくなります。 設定を保存するとフリーズが顕著になります 無効のままにすることをお勧めします。</value>
   </data>
   <data name="Options_LoadPreviousSession_Name">
-    <value>Display previous chat session on login</value>
+    <value>ログイン時に前のチャットセッションを表示する</value>
   </data>
   <data name="Options_LoadPreviousSession_Description">
-    <value>After logging in, populate the chat with the messages from when you last logged off.</value>
+    <value>ログイン後、最後にログオフした時点からのメッセージをチャットに入力します。</value>
   </data>
   <data name="Options_Database_Tab">
-    <value>Database</value>
+    <value>データベース</value>
   </data>
   <data name="Options_FilterIncludePreviousSessions_Name">
-    <value>Include previous sessions when populating tabs</value>
+    <value>タブを入力するときに以前のセッションを含める</value>
   </data>
   <data name="Options_FilterIncludePreviousSessions_Description">
-    <value>Include messages from before the game was launched when populating tabs. Tabs are populated when the settings are saved.</value>
+    <value>タブを入力したときにゲームが開始される前のメッセージを含めます。設定が保存されたときにタブが表示されます。</value>
   </data>
   <data name="Options_Database_Advanced_Warning">
-    <value>Do not click these buttons unless you know what you're doing.</value>
+    <value>何をしているか分からない限り、これらのボタンをクリックしないでください。</value>
   </data>
   <data name="Options_Database_Advanced">
-    <value>Advanced</value>
+    <value>高度な設定</value>
   </data>
   <data name="ChatLog_Tabs_PopOut">
-    <value>Pop out</value>
+    <value>ポップアウト</value>
   </data>
   <data name="Options_HideSameTimestamps_Name">
-    <value>Hide timestamps when redundant</value>
+    <value>冗長時にタイムスタンプを隠す</value>
   </data>
   <data name="Options_HideSameTimestamps_Description">
-    <value>Hide timestamps when previous messages have the same timestamp.</value>
+    <value>前のメッセージが同じタイムスタンプを持っている場合はタイムスタンプを非表示にします。</value>
   </data>
   <data name="Options_ShowPopOutTitleBar_Name">
-    <value>Show title bar for popped-out tabs</value>
+    <value>ポップアップタブのタイトルバーを表示</value>
   </data>
   <data name="Options_Tabs_PopOut">
-    <value>Display in separate window</value>
+    <value>別のウィンドウで表示</value>
   </data>
   <data name="Options_Tabs_IndependentOpacity">
-    <value>Use different opacity than main window</value>
+    <value>メインウィンドウとは異なる不透明度を使用する</value>
   </data>
   <data name="Options_Tabs_Opacity">
-    <value>Opacity</value>
+    <value>透明度</value>
   </data>
   <data name="Options_Tabs_IndependentHide">
-    <value>Use different hide condition than main window</value>
+    <value>メインウィンドウとは異なる非表示条件を使用する</value>
   </data>
   <data name="Options_FontsEnabled">
-    <value>Enable custom fonts</value>
+    <value>カスタムフォントを有効にする</value>
   </data>
   <data name="Options_ItalicEnabled">
-    <value>Use italic font</value>
+    <value>斜体フォントを使用</value>
   </data>
   <data name="AutoTranslate_Search_Hint">
-    <value>Search Auto Translate...</value>
+    <value>自動翻訳を検索…</value>
   </data>
   <data name="Options_SortAutoTranslate_Name">
-    <value>Sort the Auto Translate list</value>
+    <value>自動翻訳リストを並べ替える</value>
   </data>
   <data name="Options_SortAutoTranslate_Description">
-    <value>If this is enabled, the Auto Translate list will be sorted alphabetically.</value>
+    <value>これが有効な場合、自動翻訳リストはアルファベット順にソートされます。</value>
   </data>
   <data name="Options_WebinterfaceEnable_Name">
-    <value>Enabled</value>
+    <value>有効</value>
   </data>
   <data name="Options_WebinterfaceEnable_Description">
-    <value>Enables the webinterface that can be accessed with a browser.</value>
+    <value>ブラウザでアクセスできるWebインターフェースを有効にします。</value>
   </data>
   <data name="Options_WebinterfaceAutoStart_Name">
-    <value>Start automatically</value>
+    <value>自動で開始</value>
   </data>
   <data name="Options_WebinterfaceAutoStart_Description">
-    <value>Webinterface will start alongside the plugin automatically</value>
+    <value>Webインターフェイスは自動的にプラグインと一緒に起動します</value>
   </data>
   <data name="Options_OverrideStyle_Name">
-    <value>Override Style</value>
+    <value>スタイルを上書き</value>
   </data>
   <data name="Options_OverrideStyleDropdown_Name">
-    <value>Styles</value>
+    <value>スタイル</value>
   </data>
   <data name="Options_ChatTabForwardKeybind_Name">
-    <value>Cycle chat tab forwards keybind</value>
+    <value>チャットタブの順方向キーバインド</value>
   </data>
   <data name="Options_ChatTabBackwardKeybind_Name">
-    <value>Cycle chat tab backwards keybind</value>
+    <value>チャットタブの逆方向キーバインド</value>
   </data>
   <data name="Webinterface_CurrentPassword">
-    <value>Authcode:</value>
+    <value>認証コード：</value>
   </data>
   <data name="Webinterface_PasswordReset_Tooltip">
-    <value>Reset your password and invalidate all session tokens.</value>
+    <value>パスワードをリセットし、すべてのセッショントークンを無効にします。</value>
   </data>
   <data name="Webinterface_Controls">
-    <value>Control Panel:</value>
+    <value>コントロールパネル：</value>
   </data>
   <data name="Webinterface_Controls_Active">
-    <value>Active:</value>
+    <value>有効：</value>
   </data>
   <data name="Webinterface_Controls_Url">
-    <value>URL:</value>
+    <value>URL：</value>
   </data>
   <data name="Keybind_None">
-    <value>none set</value>
+    <value>未設定</value>
   </data>
   <data name="Keybind_EscToClear">
-    <value>ESC to clear</value>
+    <value>ESCでクリア</value>
   </data>
   <data name="Keybind_Modifier_Ctrl">
     <value>Ctrl</value>
@@ -620,34 +620,34 @@
     <value>Extra font glyphs</value>
   </data>
   <data name="Options_ExtraGlyphs_Description">
-    <value>Extra glyphs can be added to {0}'s global font by enabling the checkboxes below. This will likely require increasing Dalamud's font atlas size.</value>
+    <value>以下のチェックボックスをオンにすることで、 {0}のグローバルフォントに追加することができます。これは、恐らくダライムのフォントアトラスのサイズを増やす必要があるでしょう。</value>
   </data>
   <data name="ExtraGlyphRanges_ChineseFull_Name">
-    <value>Chinese (full)</value>
+    <value>中国語 (完全)</value>
   </data>
   <data name="ExtraGlyphRanges_ChineseSimplifiedCommon_Name">
-    <value>Chinese (common simplified)</value>
+    <value>中国語（簡体字）</value>
   </data>
   <data name="ExtraGlyphRanges_Cyrillic_Name">
-    <value>Cyrillic</value>
+    <value>キリル語</value>
   </data>
   <data name="ExtraGlyphRanges_Japanese_Name">
-    <value>Japanese</value>
+    <value>日本語</value>
   </data>
   <data name="ExtraGlyphRanges_Korean_Name">
-    <value>Korean</value>
+    <value>韓国語</value>
   </data>
   <data name="ExtraGlyphRanges_Thai_Name">
-    <value>Thai</value>
+    <value>タイ語</value>
   </data>
   <data name="ExtraGlyphRanges_Vietnamese_Name">
-    <value>Vietnamese</value>
+    <value>ベトナム語</value>
   </data>
   <data name="Context_Integrations">
     <value>Integrations</value>
   </data>
   <data name="Context_ScreenshotMode">
-    <value>Screenshot mode</value>
+    <value>スクリーンショットモード</value>
   </data>
   <data name="Context_HideChat">
     <value>ログウィンドウを隠す</value>
@@ -701,10 +701,10 @@
     <value>ブラックリストに登録する</value>
   </data>
   <data name="Context_AddToMuteList">
-    <value>Register to Mute List</value>
+    <value>ミュートリストに登録</value>
   </data>
   <data name="Context_AddToTermsFilter">
-    <value>Add to Term Filters</value>
+    <value>用語フィルタに追加</value>
   </data>
   <data name="Context_InviteToNoviceNetwork">
     <value>ビギナーチャンネルに招待する</value>
@@ -716,13 +716,13 @@
     <value>ターゲットする</value>
   </data>
   <data name="ChatType_Debug">
-    <value>Debug</value>
+    <value>デバッグ</value>
   </data>
   <data name="ChatType_Urgent">
-    <value>Urgent</value>
+    <value>緊急</value>
   </data>
   <data name="ChatType_Notice">
-    <value>Notice</value>
+    <value>通知</value>
   </data>
   <data name="ChatType_Say">
     <value>Say</value>
@@ -743,28 +743,28 @@
     <value>アライアンス</value>
   </data>
   <data name="ChatType_Linkshell1">
-    <value>Linkshell[1]</value>
+    <value>リンクシェル[1]</value>
   </data>
   <data name="ChatType_Linkshell2">
-    <value>Linkshell[2]</value>
+    <value>リンクシェル[2]</value>
   </data>
   <data name="ChatType_Linkshell3">
-    <value>Linkshell[3]</value>
+    <value>リンクシェル[3]</value>
   </data>
   <data name="ChatType_Linkshell4">
-    <value>Linkshell[4]</value>
+    <value>リンクシェル[4]</value>
   </data>
   <data name="ChatType_Linkshell5">
-    <value>Linkshell[5]</value>
+    <value>リンクシェル[5]</value>
   </data>
   <data name="ChatType_Linkshell6">
-    <value>Linkshell[6]</value>
+    <value>リンクシェル[6]</value>
   </data>
   <data name="ChatType_Linkshell7">
-    <value>Linkshell[7]</value>
+    <value>リンクシェル[7]</value>
   </data>
   <data name="ChatType_Linkshell8">
-    <value>Linkshell[8]</value>
+    <value>リンクシェル[8]</value>
   </data>
   <data name="ChatType_FreeCompany">
     <value>フリーカンパニー</value>
@@ -773,16 +773,16 @@
     <value>ビギナーチャンネル</value>
   </data>
   <data name="ChatType_CustomEmotes">
-    <value>Custom Emotes</value>
+    <value>カスタムエモート</value>
   </data>
   <data name="ChatType_StandardEmotes">
-    <value>Standard Emotes</value>
+    <value>標準のエモート</value>
   </data>
   <data name="ChatType_Yell">
     <value>Yell</value>
   </data>
   <data name="ChatType_CrossWorldParty">
-    <value>Cross-world Party</value>
+    <value>クロスワールドパーティー</value>
   </data>
   <data name="ChatType_PvpTeam">
     <value>PvPチーム</value>
@@ -815,19 +815,19 @@
     <value>ダメージを与えた</value>
   </data>
   <data name="ChatType_Miss">
-    <value>Failed attacks</value>
+    <value>失敗した攻撃</value>
   </data>
   <data name="ChatType_Action">
-    <value>Actions used</value>
+    <value>使用されたアクション</value>
   </data>
   <data name="ChatType_Item">
-    <value>Items used</value>
+    <value>使用されたアイテム</value>
   </data>
   <data name="ChatType_Healing">
-    <value>Healing</value>
+    <value>回復</value>
   </data>
   <data name="ChatType_GainBuff">
-    <value>Beneficial effects granted</value>
+    <value></value>
   </data>
   <data name="ChatType_GainDebuff">
     <value>Detrimental effects inflicted</value>
@@ -839,7 +839,10 @@
     <value>Detrimental effects cured</value>
   </data>
   <data name="ChatType_Alarm">
-    <value>Alarm Notifications</value>
+    <value>アラーム通知</value>
+  </data>
+  <data name="ChatType_Glamour">
+    <value>装備変更通知</value>
   </data>
   <data name="ChatType_Echo">
     <value>/echoで出力するテキスト</value>
@@ -860,40 +863,40 @@
     <value>NPC会話</value>
   </data>
   <data name="ChatType_LootNotice">
-    <value>Loot Notices</value>
+    <value>戦利品通知</value>
   </data>
   <data name="ChatType_Progress">
-    <value>Progression Messages</value>
+    <value>進捗メッセージ</value>
   </data>
   <data name="ChatType_LootRoll">
-    <value>Loot Messages</value>
+    <value>戦利品メッセージ</value>
   </data>
   <data name="ChatType_Crafting">
     <value>Synthesis Messages</value>
   </data>
   <data name="ChatType_Gathering">
-    <value>Gathering Messages</value>
+    <value>収集メッセージ</value>
   </data>
   <data name="ChatType_NpcAnnouncement">
-    <value>NPC Dialogue (Announcements)</value>
+    <value>NPCダイアログ (お知らせ)</value>
   </data>
   <data name="ChatType_FreeCompanyAnnouncement">
     <value>フリーカンパニーアナウンス</value>
   </data>
   <data name="ChatType_FreeCompanyLoginLogout">
-    <value>Free Company Member Login Notifications</value>
+    <value>フリーカンパニーログイン通知</value>
   </data>
   <data name="ChatType_RetainerSale">
-    <value>Retainer Sale Notifications</value>
+    <value>リテイナー売却通知</value>
   </data>
   <data name="ChatType_PeriodicRecruitmentNotification">
-    <value>Periodic Recruitment Notifications</value>
+    <value>PT募集通知</value>
   </data>
   <data name="ChatType_Sign">
-    <value>Sign Messages for PC Targets</value>
+    <value></value>
   </data>
   <data name="ChatType_RandomNumber">
-    <value>Random Number Messages</value>
+    <value></value>
   </data>
   <data name="ChatType_NoviceNetworkSystem">
     <value>ビギナーチャンネルアナウンス</value>
@@ -959,13 +962,13 @@
     <value>Collapse duplicate messages</value>
   </data>
   <data name="Options_CollapseDuplicateMessages_Description">
-    <value>Replace consecutive duplicate messages with a counter appended to the first instance of the message.</value>
+    <value>連続した重複したメッセージを、最初のメッセージインスタンスに追加されたカウンタに置き換えます。</value>
   </data>
   <data name="Options_CollapseDuplicateMsgUniqueLink_Name">
-    <value>Keep unique links seperate</value>
+    <value>ユニークなリンクを分離する</value>
   </data>
   <data name="Options_CollapseDuplicateMsgUniqueLink_Description">
-    <value>Don't collapse messages if they link to different things with the same text.</value>
+    <value>同じテキストで異なるものにリンクしている場合、メッセージを折りたたまないでください。</value>
   </data>
   <data name="Options_Tabs_ExtraChatChannels">
     <value>ExtraChat channels</value>
@@ -974,16 +977,16 @@
     <value>All</value>
   </data>
   <data name="Context_AdventurerPlate">
-    <value>View Adventurer Plate</value>
+    <value>アドベンチャープレート表示</value>
   </data>
   <data name="Context_AdventurerPlateError">
-    <value>Unable to open adventurer plate at this moment</value>
+    <value>アドベンチャープレートを表示できません</value>
   </data>
   <data name="Options_TooltipOffset_Name">
-    <value>Tooltip offset </value>
+    <value>ツールチップオフセット </value>
   </data>
   <data name="Options_TooltipOffset_Desc">
-    <value>Use this option if you experience cut-off tooltips.</value>
+    <value>カットオフツールチップが発生した場合は、このオプションを使用します。</value>
   </data>
   <data name="ChatType_ExtraChatLinkshell1" xml:space="preserve">
         <value>ExtraChat Linkshell [1]</value>
@@ -1010,196 +1013,196 @@
         <value>ExtraChat Linkshell [8]</value>
     </data>
   <data name="Context_CopyContent">
-    <value>Copy content</value>
+    <value>コンテンツをコピー</value>
   </data>
   <data name="Context_CopyContentSuccess">
-    <value>Copied message content to clipboard</value>
+    <value>メッセージ内容をクリップボードにコピーしました</value>
   </data>
   <data name="Context_CopySuccess">
-    <value>Copied message to clipboard</value>
+    <value>メッセージをクリップボードにコピー</value>
   </data>
   <data name="PartyInvite_NoId">
-    <value>Unable to find ID for this message, please try another one.</value>
+    <value>このメッセージの ID が見つかりません。別のものをお試しください。</value>
   </data>
   <data name="Context_CopyLink" xml:space="preserve">
-        <value>Copy link to clipboard</value>
+        <value>リンクをコピー</value>
     </data>
   <data name="Context_CopyLinkNotification" xml:space="preserve">
-        <value>Copied link to clipboard</value>
+        <value>リンクをコピーしました</value>
     </data>
   <data name="Context_OpenInBrowser" xml:space="preserve">
-        <value>Open link in browser</value>
+        <value>リンクをブラウザーで開く</value>
     </data>
   <data name="Context_OpenInBrowserError" xml:space="preserve">
-        <value>Failed to open the link in the browser, please report this issue</value>
+        <value>ブラウザーでリンクを開けませんでした。この問題を報告してください</value>
     </data>
   <data name="Context_URLDomain" xml:space="preserve">
-        <value>URL at {0}</value>
+        <value>{0} の URL</value>
     </data>
   <data name="Context_URLWarning" xml:space="preserve">
-        <value>Only open URLs from websites you trust</value>
+        <value>信頼できるウェブサイトのURLのみ開く</value>
     </data>
   <data name="Options_About_Authors" xml:space="preserve">
-        <value>Authors: </value>
+        <value>作成者: </value>
     </data>
   <data name="Options_About_Discord" xml:space="preserve">
         <value>Discord: </value>
     </data>
   <data name="Options_About_Version" xml:space="preserve">
-        <value>Version: </value>
+        <value>バージョン: </value>
     </data>
   <data name="Options_About_Github_Issues" xml:space="preserve">
-        <value>Get help through github issues: </value>
+        <value>Githubでヘルプを表示: </value>
     </data>
   <data name="Options_About_Discord_Thread" xml:space="preserve">
-        <value>Get help in the discord thread: </value>
+        <value>Discordスレッドでヘルプを表示： </value>
     </data>
   <data name="Options_OverrideStyle_Name_Desc" xml:space="preserve">
-        <value>Override your selected dalamud style with a different one</value>
+        <value>選択したdalamudスタイルを別のスタイルで上書きする</value>
     </data>
   <data name="Options_HideInLoadingScreens_Name" xml:space="preserve">
-        <value>Hide during loading screens</value>
+        <value>読み込み中は非表示</value>
     </data>
   <data name="Options_HideInLoadingScreens_Description" xml:space="preserve">
-        <value>Hide {0} during loading screens.</value>
+        <value>ロード中は {0} を非表示にします。</value>
     </data>
   <data name="Options_ClearDatabase_Button">
-    <value>Clear the message history database</value>
+    <value>メッセージ履歴データベースをクリア</value>
   </data>
   <data name="Options_ClearDatabase_Success">
-    <value>Successfully cleared the chat database</value>
+    <value>チャットデータベースをクリアしました</value>
   </data>
   <data name="Options_ClearDatabase_Tooltip">
-    <value>Removes all message history. Cannot be restored. Hold Ctrl+Shift to click.</value>
+    <value>すべてのメッセージ履歴を削除します。復元できません。Ctrl+Shiftキーを押しながらクリックしてください。</value>
   </data>
   <data name="Options_Database_Metadata_CopyConfigPath">
-    <value>Click to copy database directory path</value>
+    <value>クリックしてデータベースディレクトリパスをコピー</value>
   </data>
   <data name="Options_Database_Metadata_CopyConfigPathNotification">
-    <value>Copied database directory path to clipboard</value>
+    <value>データベースディレクトリパスをクリップボードにコピーしました</value>
   </data>
   <data name="Options_Database_Metadata_Heading">
-    <value>Database details:</value>
+    <value>データベースの詳細:</value>
   </data>
   <data name="Options_Database_Metadata_LogSize">
-    <value>Log size: {0}</value>
+    <value>ログサイズ: {0}</value>
   </data>
   <data name="Options_Database_Metadata_MessageCount">
-    <value>Stored messages: {0:N0}</value>
+    <value>保存されたメッセージ: {0:N0}</value>
   </data>
   <data name="Options_Database_Metadata_Path">
-    <value>Path: {0}</value>
+    <value>パス: {0}</value>
   </data>
   <data name="Options_Database_Metadata_Size">
-    <value>Size: {0}</value>
+    <value>サイズ： {0}</value>
   </data>
   <data name="Options_OverrideStyle_NotSelected" xml:space="preserve">
-        <value>Not selected</value>
+        <value>未選択</value>
     </data>
   <data name="Options_OverrideStyle_NotAvailable" xml:space="preserve">
-        <value>No dalamud styles available</value>
+        <value>Dalamudスタイルは利用できません</value>
     </data>
   <data name="Options_PlaySounds_Name" xml:space="preserve">
-        <value>Play sounds</value>
+        <value>音を鳴らす</value>
     </data>
   <data name="Options_PlaySounds_Description" xml:space="preserve">
-        <value>Play sounds on interaction.</value>
+        <value>インタラクション時に音を再生します。</value>
     </data>
   <data name="Options_MaxLinesToShow_Name" xml:space="preserve">
-        <value>Maximum amount of log lines to display in the chat window</value>
+        <value>チャットウィンドウに表示するログの最大数</value>
     </data>
   <data name="Options_MaxLinesToShow_Description" xml:space="preserve">
-        <value>Limits the amount of log lines to show in the chat window. This may slightly improve performance.</value>
+        <value>チャットウィンドウに表示するログ行数を制限します。これによりパフォーマンスが若干向上する可能性があります。</value>
     </data>
   <data name="Options_WebinterfaceMaxLinesToSend_Name" xml:space="preserve">
-        <value>Log line limit for the webinterface</value>
+        <value>Webインターフェースのログ行数制限</value>
     </data>
   <data name="Options_WebinterfaceMaxLinesToSend_Description" xml:space="preserve">
-        <value>Limits the amount of log lines to show in the webinterface. This will improve loading performance.</value>
+        <value>Webインターフェースに表示するログの数を制限します。これにより読み込みのパフォーマンスが向上します。</value>
     </data>
   <data name="LoadMessages_Error" xml:space="preserve">
-        <value>An error occurred while loading chat history. Please see plugin logs for more information to report this issue.</value>
+        <value>チャット履歴の読み込み中にエラーが発生しました。この問題を報告するには、プラグインのログを参照してください。</value>
     </data>
   <data name="Options_Database_Old_Heading" xml:space="preserve">
-        <value>Old database:</value>
+        <value>古いデータベース:</value>
     </data>
   <data name="Options_Database_Old_Delete" xml:space="preserve">
         <value>Delete</value>
     </data>
   <data name="Options_Database_Old_Delete_Tooltip" xml:space="preserve">
-        <value>Removes the database from your disk. This is not recoverable! Hold Ctrl+Shift to click.</value>
+        <value>ディスクからデータベースを削除します。これは回復できません。Ctrl+Shiftキーを押したままクリックしてください。</value>
     </data>
   <data name="Options_Database_Old_Delete_Error" xml:space="preserve">
-        <value>Unable to remove the old database, more information under /xllog.</value>
+        <value>古いデータベースを削除できません。詳細は/xllogディレクトリを参照してください。</value>
     </data>
   <data name="Options_Database_Old_Delete_Success" xml:space="preserve">
-        <value>The old database was successfully removed.</value>
+        <value>古いデータベースは正常に削除されました。</value>
     </data>
   <data name="Options_Database_Old_Migration" xml:space="preserve">
         <value>Open migration window</value>
     </data>
   <data name="Options_Tabs_NoInput" xml:space="preserve">
-        <value>Disable input for this channel</value>
+        <value>このチャンネルの入力を無効にする</value>
     </data>
   <data name="ChatLog_DisabledInput" xml:space="preserve">
-        <value>Input is disabled for this tab</value>
+        <value>このタブの入力は無効です</value>
     </data>
   <data name="Options_ChatLog_Tab" xml:space="preserve">
-        <value>Chat log</value>
+        <value>チャットログ</value>
     </data>
   <data name="Options_AdjustPosition_Name" xml:space="preserve">
-        <value>Adjust chat log position</value>
+        <value>チャットログの位置を調整</value>
     </data>
   <data name="Options_AdjustPosition_Warning" xml:space="preserve">
-        <value>Attention, this change applies immediately and is not discardable!</value>
+        <value>注意、この変更はすぐに適用され、破棄できません!</value>
     </data>
   <data name="Options_KeepInputFocus_Name" xml:space="preserve">
-        <value>Keep input focus</value>
+        <value>入力フォーカスを維持</value>
     </data>
   <data name="Options_KeepInputFocus_Description" xml:space="preserve">
-        <value>Keeps the input focus, even if you enter battle or do other actions.</value>
+        <value>戦闘に入ったり、他のアクションを行ったりしても、入力フォーカスを維持します。</value>
     </data>
   <data name="Options_ShowEmotes_Name" xml:space="preserve">
-        <value>Show emotes</value>
+        <value>エモートを表示</value>
     </data>
   <data name="Options_ShowEmotes_Desc" xml:space="preserve">
-        <value>Replaces words with their emote version, currently supports BetterTTV.</value>
+        <value>単語をエモートバージョンに置き換え、現在BetterTTVをサポートしています。</value>
     </data>
   <data name="Options_Emote_Tab" xml:space="preserve">
-        <value>Emotes</value>
+        <value>エモート</value>
     </data>
   <data name="Options_Emote_BlockedEmotes" xml:space="preserve">
-        <value>Blocked emotes</value>
+        <value>ブロックされたエモート</value>
     </data>
   <data name="Options_Emote_EmoteTable" xml:space="preserve">
-        <value>Emote</value>
+        <value>エモート</value>
     </data>
   <data name="Options_HideInBattle_Name" xml:space="preserve">
-        <value>Hide during battle</value>
+        <value>戦闘中は非表示</value>
     </data>
   <data name="Options_HideInBattle_Description" xml:space="preserve">
-        <value>Hide the chat during battles.</value>
+        <value>戦闘中はチャットを非表示にします。</value>
     </data>
   <data name="Options_Emote_EmoteStats" xml:space="preserve">
         <value>Emote Stats</value>
     </data>
   <data name="Options_Emote_Ready" xml:space="preserve">
-        <value>Ready</value>
+        <value>準備完了</value>
     </data>
   <data name="Options_Emote_NotReady" xml:space="preserve">
-        <value>Not Ready</value>
+        <value>未準備</value>
     </data>
   <data name="Options_Emote_Loaded" xml:space="preserve">
-        <value>Emotes available:</value>
+        <value>利用可能なエモート：</value>
     </data>
   <data name="Options_Preview_Description" xml:space="preserve">
-        <value>Displays a preview with special parameter evaluated, like emotes and &lt;item&gt;.</value>
+        <value>emotes や &lt;item&gt; のように、特別なパラメータが評価されたプレビューを表示します。</value>
     </data>
   <data name="Options_Preview_Name" xml:space="preserve">
-        <value>Position (None = off)</value>
+        <value>ポジション (None = off)</value>
     </data>
   <data name="Options_Preview_None" xml:space="preserve">
-        <value>None</value>
+        <value>なし</value>
     </data>
   <data name="Options_Preview_Inside" xml:space="preserve">
         <value>Inside</value>
@@ -1211,142 +1214,142 @@
         <value>Bottom</value>
     </data>
   <data name="Options_Preview_Header" xml:space="preserve">
-        <value>Message Preview:</value>
+        <value>メッセージのプレビュー</value>
     </data>
   <data name="Options_Preview_Tooltip" xml:space="preserve">
-        <value>Tooltip</value>
+        <value>[Tooltip]</value>
     </data>
   <data name="Options_PreviewOnlyIf_Name" xml:space="preserve">
-        <value>Must contain parameter</value>
+        <value>パラメータを含める必要があります</value>
     </data>
   <data name="Options_PreviewOnlyIf_Description" xml:space="preserve">
-        <value>Only show if the text contains special parameter.</value>
+        <value>テキストに特別なパラメータが含まれている場合にのみ表示します。</value>
     </data>
   <data name="Options_PreviewMinimum_Name" xml:space="preserve">
-        <value>Minimum input length</value>
+        <value>最小入力値</value>
     </data>
   <data name="Options_PreviewMinimum_Description" xml:space="preserve">
-        <value>Only show if the text length is greater-than or equal.</value>
+        <value>テキストの長さがより大きいか、等しい場合にのみ表示します。</value>
     </data>
   <data name="Options_Preview_Tab" xml:space="preserve">
-        <value>Preview</value>
+        <value>プレビュー</value>
     </data>
   <data name="Options_Changelog_Tab" xml:space="preserve">
-        <value>Changelog</value>
+        <value>変更ログ</value>
     </data>
   <data name="Options_PrintChangelog_Name" xml:space="preserve">
-        <value>Print changelog</value>
+        <value>変更ログを表示</value>
     </data>
   <data name="Options_PrintChangelog_Description" xml:space="preserve">
-        <value>Print the changelog to chat after an update.</value>
+        <value>更新後のチャットに更新履歴を表示します。</value>
     </data>
   <data name="Options_Warning_NotImplemented" xml:space="preserve">
-        <value>This feature isn't implemented yet</value>
+        <value>この機能はまだ実装されていません</value>
     </data>
   <data name="Options_Changelog_Header" xml:space="preserve">
-        <value>Changelog:</value>
+        <value>変更ログ</value>
     </data>
   <data name="DateWidget_InvalidDate" xml:space="preserve">
-        <value>Date before {0} is not possible</value>
+        <value>{0} の前の日付は不可能です</value>
     </data>
   <data name="DateWidget_Day_Sun" xml:space="preserve">
-        <value>Sun</value>
+        <value>（日）</value>
     </data>
   <data name="DateWidget_Day_Mon" xml:space="preserve">
-        <value>Mon</value>
+        <value>（月）</value>
     </data>
   <data name="DateWidget_Day_Tue" xml:space="preserve">
-        <value>Tue</value>
+        <value>（火）</value>
     </data>
   <data name="DateWidget_Day_Wed" xml:space="preserve">
-        <value>Wed</value>
+        <value>（水）</value>
     </data>
   <data name="DateWidget_Day_Thu" xml:space="preserve">
-        <value>Thu</value>
+        <value>（木）</value>
     </data>
   <data name="DateWidget_Day_Fri" xml:space="preserve">
-        <value>Fri</value>
+        <value>（金）</value>
     </data>
   <data name="DateWidget_Day_Sat" xml:space="preserve">
-        <value>Sat</value>
+        <value>（土）</value>
     </data>
   <data name="DateWidget_Month_January" xml:space="preserve">
-        <value>January</value>
+        <value>1月</value>
     </data>
   <data name="DateWidget_Month_February" xml:space="preserve">
-        <value>February</value>
+        <value>2月</value>
     </data>
   <data name="DateWidget_Month_March" xml:space="preserve">
-        <value>March</value>
+        <value>3月</value>
     </data>
   <data name="DateWidget_Month_April" xml:space="preserve">
-        <value>April</value>
+        <value>4 月</value>
     </data>
   <data name="DateWidget_Month_May" xml:space="preserve">
-        <value>May</value>
+        <value>5月</value>
     </data>
   <data name="DateWidget_Month_June" xml:space="preserve">
-        <value>June</value>
+        <value>6月</value>
     </data>
   <data name="DateWidget_Month_July" xml:space="preserve">
-        <value>July</value>
+        <value>7月</value>
     </data>
   <data name="DateWidget_Month_August" xml:space="preserve">
-        <value>August</value>
+        <value>8月</value>
     </data>
   <data name="DateWidget_Month_September" xml:space="preserve">
-        <value>September</value>
+        <value>9月</value>
     </data>
   <data name="DateWidget_Month_October" xml:space="preserve">
-        <value>October</value>
+        <value>10月</value>
     </data>
   <data name="DateWidget_Month_November" xml:space="preserve">
-        <value>November</value>
+        <value>11月</value>
     </data>
   <data name="DateWidget_Month_December" xml:space="preserve">
-        <value>December</value>
+        <value>12月</value>
     </data>
   <data name="DbViewer_TableField_Date" xml:space="preserve">
-        <value>Date</value>
+        <value>日付</value>
     </data>
   <data name="DbViewer_TableField_Type" xml:space="preserve">
-        <value>Channel</value>
+        <value>チャンネル</value>
     </data>
   <data name="DbViewer_TableField_Sender" xml:space="preserve">
-        <value>Sender</value>
+        <value>差出人</value>
     </data>
   <data name="DbViewer_TableField_Content" xml:space="preserve">
-        <value>Content</value>
+        <value>コンテンツ</value>
     </data>
   <data name="DbViewer_Status_NothingFound" xml:space="preserve">
-        <value>Nothing Found.</value>
+        <value>見つかりませんでした。</value>
     </data>
   <data name="DbViewer_Status_NoSearchResult" xml:space="preserve">
-        <value>Search had no match on this page.</value>
+        <value>検索に一致するものはありませんでした。</value>
     </data>
   <data name="DbViewer_SearcHint" xml:space="preserve">
         <value>Simple Sender/Content Search</value>
     </data>
   <data name="DbViewer_Page" xml:space="preserve">
-        <value>Page: {0} / {1} ({2} Rows) {3}</value>
+        <value>ページ: {0} / {1} ({2} 行) {3}</value>
     </data>
   <data name="DbViewer_LoadingIndicator" xml:space="preserve">
-        <value>[Loading...]</value>
+        <value>[読み込み中...]</value>
     </data>
   <data name="DbViewer_CharacterOption" xml:space="preserve">
-        <value>Only current character</value>
+        <value>現在のキャラクターのみ</value>
     </data>
   <data name="DbViewer_DatePicker_FromTo" xml:space="preserve">
         <value>FromTo:</value>
     </data>
   <data name="Chat_SendTell_Error" xml:space="preserve">
-        <value>An error occured while sending this tell message</value>
+        <value>このメッセージを送信中にエラーが発生しました</value>
     </data>
   <data name="Webinterface_Stop_Success" xml:space="preserve">
-        <value>Webinterface was stopped.</value>
+        <value>Webインターフェースが停止しました。</value>
     </data>
   <data name="Webinterface_Stop_Failed" xml:space="preserve">
-        <value>Webinterface failed to stop. Check /xllog for more information.</value>
+        <value>Webインターフェイスの停止に失敗しました。詳細は /xllog を確認してください。</value>
     </data>
   <data name="Webinterface_Button_Stop" xml:space="preserve">
         <value>Stop</value>
@@ -1355,45 +1358,45 @@
         <value>Start</value>
     </data>
   <data name="Webinterface_Start_Success" xml:space="preserve">
-        <value>Webinterface was started.</value>
+        <value>Webインターフェースを開始しました。</value>
     </data>
   <data name="Webinterface_Start_Failed" xml:space="preserve">
-        <value>Webinterface failed to start. Check /xllog for more information.</value>
+        <value>Webインターフェースの起動に失敗しました。詳細は /xllog を確認してください。</value>
     </data>
   <data name="Webinterface_Option_Port_Name" xml:space="preserve">
-        <value>Port</value>
+        <value>ポート</value>
     </data>
   <data name="Webinterface_Option_Port_Description" xml:space="preserve">
-        <value>The port this webinterface will be running on.</value>
+        <value>このWebインターフェイスのポートは動作します。</value>
     </data>
   <data name="Options_Webinterface_Warning_Header" xml:space="preserve">
-        <value>After checking 'Enabled' and clicking 'Start' this will load up Chat2's built-in web interface, which will allow devices on your network to access in-game chat. This feature may be used to allow a phone or another computer to see Chat2 activity, switch channels, and send messages as though you were typing in FFXIV itself.</value>
+        <value>「有効」にチェックを入れて「開始」をクリックすると、Chat2の内蔵Webインターフェースが読み込まれ、ネットワーク上のデバイスがゲーム内チャットにアクセスできるようになります。 この機能は、電話または別のコンピュータがチャット2アクティビティを表示できるようにするために使用できます。 FFXIV を入力しているかのようにチャネルを切り替え、メッセージを送信します。</value>
     </data>
   <data name="Options_Webinterface_Warning_Reason" xml:space="preserve">
-        <value>For reasons of account security, this feature is not intended for use outside of your local network, you have been warned!</value>
+        <value>アカウントのセキュリティ上の理由から、この機能はローカルネットワーク外での使用を意図したものではありません。注意してください！</value>
     </data>
   <data name="Options_Webinterface_Warning_DoNot" xml:space="preserve">
         <value>Do Not:</value>
     </data>
   <data name="Options_Webinterface_DoNot_Port" xml:space="preserve">
-        <value>- Forward the port used (9000)</value>
+        <value>- 使用するポートを転送 (9000)</value>
     </data>
   <data name="Options_Webinterface_DoNot_Share" xml:space="preserve">
-        <value>- Share your authentication code with anyone else</value>
+        <value>- あなたの認証コードを他の人と共有します</value>
     </data>
   <data name="Options_Webinterface_DoNot_Multibox" xml:space="preserve">
-        <value>- Expect multi-boxing to work with this (only first client works)</value>
+        <value>- マルチボクシングがこれで動作することを期待します (最初のクライアントのみ)</value>
     </data>
   <data name="Options_Webinterface_Warning_Support" xml:space="preserve">
-        <value>No support will be provided if any of the 'Do Not' clauses aren't respected and adhered to appropriately.</value>
+        <value>「Do Not」条項のいずれかが尊重されず、適切に遵守されていない場合は、サポートは提供されません。</value>
     </data>
   <data name="Options_Webinterface_Hostname_Fail" xml:space="preserve">
-        <value>Unable to resolve hostname.</value>
+        <value>ホスト名を解決できません</value>
     </data>
   <data name="Options_Webinterface_Note" xml:space="preserve">
-        <value>Note: This will require at least a semi-modern browser in order to function correctly.</value>
+        <value>注意: 正しく機能するためには、少なくとも半最新のブラウザが必要です。</value>
     </data>
   <data name="Webinterface_UsageNotice" xml:space="preserve">
-        <value>Usage Notice</value>
+        <value>使用上の注意</value>
     </data>
 </root>

@@ -842,6 +842,9 @@
   <data name="ChatType_Alarm">
     <value>鬧鐘通知資訊</value>
   </data>
+  <data name="ChatType_Glamour">
+    <value>Glamour Notifications</value>
+  </data>
   <data name="ChatType_Echo">
     <value>默語</value>
   </data>

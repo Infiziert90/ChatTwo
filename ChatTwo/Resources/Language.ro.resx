@@ -841,6 +841,9 @@
   <data name="ChatType_Alarm">
     <value>Alarm Notifications</value>
   </data>
+  <data name="ChatType_Glamour">
+    <value>Glamour Notifications</value>
+  </data>
   <data name="ChatType_Echo">
     <value>Echo</value>
   </data>

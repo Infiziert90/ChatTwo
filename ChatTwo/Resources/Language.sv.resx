@@ -841,6 +841,9 @@
   <data name="ChatType_Alarm">
     <value>Larmaviseringar</value>
   </data>
+  <data name="ChatType_Glamour">
+    <value>Glamour Notifications</value>
+  </data>
   <data name="ChatType_Echo">
     <value>Eko</value>
   </data>

@@ -841,6 +841,9 @@
   <data name="ChatType_Alarm">
     <value>알람 알림 정보</value>
   </data>
+  <data name="ChatType_Glamour">
+    <value>Glamour Notifications</value>
+  </data>
   <data name="ChatType_Echo">
     <value>혼잣말</value>
   </data>

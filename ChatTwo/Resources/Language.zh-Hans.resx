@@ -542,7 +542,7 @@
     <value>窗口不透明度</value>
   </data>
   <data name="Options_Tabs_IndependentHide">
-    <value>Use different hide condition than main window</value>
+    <value>使用与主窗口不同的隐藏条件</value>
   </data>
   <data name="Options_FontsEnabled">
     <value>启用自定义字体</value>
@@ -680,7 +680,7 @@
     <value>发送组队邀请</value>
   </data>
   <data name="Context_BlockFunctions">
-    <value>Block Functions</value>
+    <value>屏蔽功能</value>
   </data>
   <data name="Context_InviteToParty_SameWorld">
     <value>同服</value>
@@ -701,10 +701,10 @@
     <value>加入到黑名单</value>
   </data>
   <data name="Context_AddToMuteList">
-    <value>Register to Mute List</value>
+    <value>注册到静音列表</value>
   </data>
   <data name="Context_AddToTermsFilter">
-    <value>Add to Term Filters</value>
+    <value>添加到条目过滤</value>
   </data>
   <data name="Context_InviteToNoviceNetwork">
     <value>邀请到新人频道中</value>
@@ -841,6 +841,9 @@
   <data name="ChatType_Alarm">
     <value>闹钟通知信息</value>
   </data>
+  <data name="ChatType_Glamour">
+    <value>幻化提醒</value>
+  </data>
   <data name="ChatType_Echo">
     <value>默语</value>
   </data>
@@ -962,10 +965,10 @@
     <value>折叠连续重复的消息并显示折叠数量。</value>
   </data>
   <data name="Options_CollapseDuplicateMsgUniqueLink_Name">
-    <value>Keep unique links seperate</value>
+    <value>保持唯一链接分开显示</value>
   </data>
   <data name="Options_CollapseDuplicateMsgUniqueLink_Description">
-    <value>Don't collapse messages if they link to different things with the same text.</value>
+    <value>如果消息链接到不同内容但文本相同，则不要折叠消息。</value>
   </data>
   <data name="Options_Tabs_ExtraChatChannels">
     <value>ExtraChat频道</value>
