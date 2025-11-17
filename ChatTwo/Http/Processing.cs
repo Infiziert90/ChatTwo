@@ -31,6 +31,7 @@ public class Processing
     {
         var response = new MessageResponse
         {
+            Id = message.Id,
             Timestamp = message.Date.ToLocalTime().ToString("t", !Plugin.Config.Use24HourClock ? null : CultureInfo.CreateSpecificCulture("es-ES"))
         };
 

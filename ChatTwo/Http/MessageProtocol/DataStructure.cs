@@ -61,7 +61,7 @@ public struct Messages(MessageResponse[] set)
 /// </summary>
 public struct MessageResponse()
 {
-    [JsonProperty("id")] public Guid Id = Guid.NewGuid();
+    [JsonProperty("id")] public Guid Id = Guid.Empty;
     [JsonProperty("timestamp")] public string Timestamp = "";
     [JsonProperty("templates")] public MessageTemplate[] Templates;
 }
