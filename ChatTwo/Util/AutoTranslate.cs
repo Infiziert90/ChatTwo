@@ -87,7 +87,7 @@ internal static class AutoTranslate
                     lookup = lookup.Replace(" ", "");
 
                     var (sheetName, selector) = parser.ParseOrThrow(lookup);
-                    var sheet = Plugin.DataManager.Excel.GetSheet<WorkingRawRow>(name: sheetName);
+                    var sheet = Plugin.DataManager.Excel.GetSheet<RawRow>(name: sheetName);
 
                     var columns = new List<int>();
                     var rows = new List<Range>();
@@ -143,7 +143,7 @@ internal static class AutoTranslate
 
                             foreach (var col in columns)
                             {
-                                var rawName = rowParser.RawRow.ReadStringColumn(col);
+                                var rawName = rowParser.ReadStringColumn(col);
                                 var name = rawName.ToDalamudString();
                                 var text = name.TextValue;
                                 if (text.Length > 0)
@@ -251,16 +251,6 @@ internal static class AutoTranslate
                 start = i;
         }
     }
-}
-
-[Sheet]
-public readonly struct WorkingRawRow(RawRow row) : IExcelRow<WorkingRawRow>
-{
-    public uint RowId => row.RowId;
-    public RawRow RawRow => row;
-
-    static WorkingRawRow IExcelRow<WorkingRawRow>.Create(ExcelPage page, uint offset, uint row) =>
-        new(new RawRow(page, offset, row));
 }
 
 internal interface ISelectorPart { }

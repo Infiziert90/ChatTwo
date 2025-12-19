@@ -161,8 +161,8 @@ internal sealed class Database : ISettingsTab
 
         // Generate
         var stopwatch = Stopwatch.StartNew();
-        var playerName = Plugin.ClientState.LocalPlayer?.Name.ToString() ?? "Unknown Player";
-        var worldId = Plugin.ClientState.LocalPlayer?.HomeWorld.RowId ?? 0;
+        var playerName = Plugin.PlayerState.CharacterName;
+        var worldId = Plugin.PlayerState.HomeWorld.ValueNullable?.RowId ?? 0;
         var senderSource = new SeStringBuilder()
             .AddText("<")
             .Add(new PlayerPayload(playerName, worldId))

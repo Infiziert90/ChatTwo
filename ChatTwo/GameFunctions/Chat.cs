@@ -368,6 +368,7 @@ internal sealed unsafe class Chat : IDisposable
         {
             RotateMode.Forward => 1,
             RotateMode.Reverse => -1,
+            _ => 1
         };
 
         // Iterate up to 8 times to find a valid linkshell.

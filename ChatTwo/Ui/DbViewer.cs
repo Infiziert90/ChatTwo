@@ -128,7 +128,7 @@ public class DbViewer : Window
             {
                 try
                 {
-                    ulong? character = OnlyCurrentCharacter ? Plugin.ClientState.LocalContentId : null;
+                    ulong? character = OnlyCurrentCharacter ? Plugin.PlayerState.ContentId : null;
                     var channels = ChatCodes.Select(c => (uint) c.Key).ToArray();
 
                     // We only want to fetch count if this is the first page

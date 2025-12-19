@@ -1,7 +1,6 @@
-<Project Sdk="Dalamud.NET.Sdk/13.1.0">
+<Project Sdk="Dalamud.NET.Sdk/14.0.1">
     <PropertyGroup>
-        <Version>1.32.0</Version>
-        <TargetFramework>net9.0-windows</TargetFramework>
+        <Version>1.34.0</Version>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -39,7 +38,7 @@
     <ItemGroup>
       <Folder Include="images\" />
     </ItemGroup>
-    
+
     <!--This doesn't work until Plogon is updated to include NodeJS-->
     <!--    <Target Name="NodeJS Compile" BeforeTargets="BeforeCompile">-->
     <!--        <Exec Command="npm install" WorkingDirectory="Http\Frontend"/>-->
@@ -58,7 +57,7 @@
         <Exec Command="npm install" WorkingDirectory="Http\Frontend"/>
         <Exec Command="npm run build" WorkingDirectory="Http\Frontend"/>
     </Target>
-    
+
     <Target Name="UnzipBuild" AfterTargets="Build">
         <Unzip SourceFiles="websiteBuild.zip" DestinationFolder="$(TargetDir)\Frontend"/>
     </Target>

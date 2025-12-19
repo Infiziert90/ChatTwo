@@ -74,7 +74,7 @@ public class Processing
             {
                 if (chunk.Link is PlayerPayload playerPayload)
                     userContent = HostContext.Core.Plugin.ChatLogWindow.HidePlayerInString(userContent, playerPayload.PlayerName, playerPayload.World.RowId);
-                else if (Plugin.ClientState.LocalPlayer is { } player)
+                else if (Plugin.ObjectTable.LocalPlayer is { } player)
                     userContent = HostContext.Core.Plugin.ChatLogWindow.HidePlayerInString(userContent, player.Name.TextValue, player.HomeWorld.RowId);
             }
 

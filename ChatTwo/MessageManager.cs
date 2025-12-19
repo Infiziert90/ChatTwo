@@ -42,7 +42,7 @@ internal class MessageManager : IAsyncDisposable
     {
         get
         {
-            var contentId = Plugin.ClientState.LocalContentId;
+            var contentId = Plugin.PlayerState.ContentId;
             return contentId == 0 ? LastContentId : contentId;
         }
     }
@@ -98,7 +98,7 @@ internal class MessageManager : IAsyncDisposable
 
     private void OnFrameworkUpdate(IFramework framework)
     {
-        var contentId = Plugin.ClientState.LocalContentId;
+        var contentId = Plugin.PlayerState.ContentId;
         if (contentId != 0)
             LastContentId = contentId;
 

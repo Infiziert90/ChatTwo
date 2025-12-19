@@ -572,8 +572,8 @@ public sealed class PayloadHandler
 
         var world = player.World;
         if (chunk.Message?.Code.Type == ChatType.FreeCompanyLoginLogout)
-            if (Plugin.ClientState.LocalPlayer?.HomeWorld.IsValid == true)
-                world = Plugin.ClientState.LocalPlayer.HomeWorld;
+            if (Plugin.PlayerState.HomeWorld.IsValid)
+                world = Plugin.PlayerState.HomeWorld;
 
         var name = new List<Chunk> { new TextChunk(ChunkSource.None, null, player.PlayerName) };
         if (world.Value.IsPublic)
@@ -611,7 +611,7 @@ public sealed class PayloadHandler
         {
             var party = Plugin.PartyList;
             var leader = (ulong?) party[(int) party.PartyLeaderIndex]?.ContentId;
-            var isLeader = party.Length == 0 || Plugin.ClientState.LocalContentId == leader;
+            var isLeader = party.Length == 0 || Plugin.PlayerState.ContentId == leader;
             var member = party.FirstOrDefault(member => member.Name.TextValue == player.PlayerName && member.World.RowId == world.RowId);
             var isInParty = member != null;
             var inInstance = GameFunctions.GameFunctions.IsInInstance();
