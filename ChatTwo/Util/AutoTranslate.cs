@@ -144,11 +144,9 @@ internal static class AutoTranslate
                             foreach (var col in columns)
                             {
                                 var rawName = rowParser.ReadStringColumn(col);
-                                var name = rawName.ToDalamudString();
-                                var text = name.TextValue;
-                                if (text.Length > 0)
+                                if (!rawName.IsEmpty)
                                 {
-                                    list.Add(new AutoTranslateEntry(row.Group, (uint)i, text, name));
+                                    list.Add(new AutoTranslateEntry(row.Group, (uint)i, rawName.ToString(), string.Empty));
 
                                     if (shouldAdd)
                                         ValidEntries.Add((row.Group, (uint)i));
@@ -159,8 +157,7 @@ internal static class AutoTranslate
                 }
                 else if (lookup is not "@")
                 {
-                    var text = row.Text.ToDalamudString();
-                    list.Add(new AutoTranslateEntry(row.Group, row.RowId, text.TextValue, text));
+                    list.Add(new AutoTranslateEntry(row.Group, row.RowId, row.Text.ToString(), row.GroupTitle.ToString()));
 
                     if (shouldAdd)
                         ValidEntries.Add((row.Group, row.RowId));
@@ -183,19 +180,34 @@ internal static class AutoTranslate
         var otherMatches = new List<AutoTranslateEntry>();
         foreach (var entry in AllEntries())
         {
-            if (entry.String.Equals(prefix, StringComparison.OrdinalIgnoreCase))
+            if (entry.Text.Equals(prefix, StringComparison.OrdinalIgnoreCase))
+            {
                 wholeMatches.Add(entry);
-            else if (entry.String.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            }
+            else if (entry.Text.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            {
                 prefixMatches.Add(entry);
-            else if (entry.String.Contains(prefix, StringComparison.OrdinalIgnoreCase))
+            }
+            else if (entry.Text.Contains(prefix, StringComparison.OrdinalIgnoreCase))
+            {
                 otherMatches.Add(entry);
+            }
+            else if (entry.Title.Length > 0)
+            {
+                if (entry.Title.Equals(prefix, StringComparison.OrdinalIgnoreCase))
+                    wholeMatches.Add(entry);
+                else if (entry.Title.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                    prefixMatches.Add(entry);
+                else if (entry.Title.Contains(prefix, StringComparison.OrdinalIgnoreCase))
+                    otherMatches.Add(entry);
+            }
         }
 
         if (sort)
         {
-            return wholeMatches.OrderBy(entry => entry.String, StringComparer.OrdinalIgnoreCase)
-                .Concat(prefixMatches.OrderBy(entry => entry.String, StringComparer.OrdinalIgnoreCase))
-                .Concat(otherMatches.OrderBy(entry => entry.String, StringComparer.OrdinalIgnoreCase))
+            return wholeMatches.OrderBy(entry => entry.Text, StringComparer.OrdinalIgnoreCase)
+                .Concat(prefixMatches.OrderBy(entry => entry.Text, StringComparer.OrdinalIgnoreCase))
+                .Concat(otherMatches.OrderBy(entry => entry.Text, StringComparer.OrdinalIgnoreCase))
                 .ToList();
         }
 
@@ -293,14 +305,14 @@ internal class AutoTranslateEntry
 {
     internal uint Group { get; }
     internal uint Row { get; }
-    internal string String { get; }
-    internal SeString SeString { get; }
+    internal string Text { get; }
+    internal string Title { get; }
 
-    public AutoTranslateEntry(uint group, uint row, string str, SeString seStr)
+    public AutoTranslateEntry(uint group, uint row, string str, string title)
     {
         Group = group;
         Row = row;
-        String = str;
-        SeString = seStr;
+        Text = str;
+        Title = title;
     }
 }

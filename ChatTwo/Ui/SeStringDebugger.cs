@@ -155,6 +155,7 @@ public class SeStringDebugger : Window
                     RenderMetadataDictionary("Link AutoTranslatePayload", new Dictionary<string, string?>
                     {
                         { "Text", at.Text },
+                        { "Key/Group", $"{at.Key}/{at.Group}" },
                         { "Data", string.Join(" ", at.Encode().Select(b => b.ToString("X2"))) },
                     });
                     break;

@@ -1486,7 +1486,7 @@ public sealed class ChatLogWindow : Window
                 var entry = AutoCompleteList[i];
 
                 var highlight = AutoCompleteSelection == i;
-                var clicked = ImGui.Selectable($"{entry.String}##{entry.Group}/{entry.Row}", highlight) || selected == i;
+                var clicked = ImGui.Selectable($"{entry.Text}##{entry.Group}/{entry.Row}", highlight) || selected == i;
                 if (i < 10)
                 {
                     var button = (i + 1) % 10;
