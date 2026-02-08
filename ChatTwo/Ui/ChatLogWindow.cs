@@ -388,7 +388,8 @@ public sealed class ChatLogWindow : Window
         Cutscene,
         CutsceneOverride,
         User,
-        Battle
+        Battle,
+        NewGamePlus,
     }
 
     private HideState CurrentHideState = HideState.None;
@@ -411,6 +412,13 @@ public sealed class ChatLogWindow : Window
                 CurrentHideState = HideState.Cutscene;
         }
 
+        var newGamePlusOpen = GameFunctions.GameFunctions.IsAddonInteractable("QuestRedo");
+        if (Plugin.Config.HideInNewGamePlusMenu && CurrentHideState == HideState.None && newGamePlusOpen)
+            CurrentHideState = HideState.NewGamePlus;
+
+        if (CurrentHideState is HideState.NewGamePlus && !newGamePlusOpen)
+            CurrentHideState = HideState.None;
+
         // if the chat is hidden because of a cutscene and no longer in a cutscene, set the hide state to none
         if (CurrentHideState is HideState.Cutscene or HideState.CutsceneOverride && !Plugin.CutsceneActive && !Plugin.GposeActive)
             CurrentHideState = HideState.None;
@@ -423,7 +431,7 @@ public sealed class ChatLogWindow : Window
         if (CurrentHideState == HideState.User && Activate)
             CurrentHideState = HideState.None;
 
-        if (CurrentHideState is HideState.Cutscene or HideState.User or HideState.Battle || (Plugin.Config.HideWhenNotLoggedIn && !Plugin.ClientState.IsLoggedIn))
+        if (CurrentHideState is HideState.Cutscene or HideState.User or HideState.Battle or HideState.NewGamePlus || (Plugin.Config.HideWhenNotLoggedIn && !Plugin.ClientState.IsLoggedIn))
         {
             IsHidden = true;
             return;
