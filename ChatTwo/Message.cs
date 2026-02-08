@@ -158,8 +158,17 @@ internal partial class Message
         {
             // this does an encode and clone every time it's accessed, so cache
             var data = raw.Data;
-            if (data[1] == 0x27 && data[2] == 18 && data[3] == 0x20)
-                return new Guid(data[4..^1]);
+            try
+            {
+                if (data[1] == 0x27 && data[2] == 18 && data[3] == 0x20)
+                    return new Guid(data[4..^1]);
+            }
+            catch (ArgumentException ex)
+            {
+                Plugin.Log.Error(ex, "Failed to parse extra chat channel GUID");
+                Plugin.Log.Error($"Byte Array: ${string.Join(", ", data[4..^1])}");
+                return Guid.Empty;
+            }
         }
 
         return Guid.Empty;
