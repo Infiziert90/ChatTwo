@@ -233,7 +233,7 @@ public class RouteController
     {
         try
         {
-            Plugin.Log.Information($"Client connected: {ctx.Guid}");
+            Plugin.Log.Debug($"Client connected: {ctx.Guid}");
 
             var sse = new SSEConnection(HostContext.TokenSource.Token);
             await HostContext.Core.PrepareNewClient(sse);

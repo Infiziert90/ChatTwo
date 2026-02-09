@@ -45,7 +45,7 @@ public class HostContext
             Host.Settings.Debug.Responses = true;
             Host.Settings.Debug.AccessControl = true;
             #endif
-            Host.Events.Logger = logMessage => Plugin.Log.Information(logMessage);
+            Host.Events.Logger = logMessage => Plugin.Log.Debug(logMessage);
 
             IsActive = true;
             return true;

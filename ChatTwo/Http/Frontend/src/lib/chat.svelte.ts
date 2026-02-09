@@ -241,14 +241,21 @@ export class ChatTwoWeb {
 
     processUrlTemplate(template: Template, spanElement: HTMLSpanElement) {
         const urlElement = document.createElement('a');
+        let url = template.content;
+        if (!url.startsWith('https://')) {
+            url = `https://${url}`;
+        }
+
         urlElement.innerText = template.content;
-        urlElement.href = encodeURI(template.content);
+        urlElement.href = encodeURI(url);
         urlElement.target = '_blank'
 
         if (template.color !== 0)
         {
             this.processColor(template, spanElement);
         }
+
+        spanElement.appendChild(urlElement);
     }
 
     // converts a RGBA uint number to components

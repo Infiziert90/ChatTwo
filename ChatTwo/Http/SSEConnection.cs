@@ -36,8 +36,8 @@ public class SSEConnection
 
                 if (!await ctx.Response.SendChunk(outgoingEvent.Build(), false, Token))
                 {
-                    Plugin.Log.Information("SSE connection was unable to send new data");
-                    Plugin.Log.Information($"Client disconnected: {ctx.Guid}");
+                    Plugin.Log.Debug("SSE connection was unable to send new data");
+                    Plugin.Log.Debug($"Client disconnected: {ctx.Guid}");
                     return;
                 }
             }
