@@ -21,7 +21,6 @@ public class FontManager
     private ushort[] Ranges;
     private ushort[] JpRange;
 
-
     public static readonly HashSet<float> AxisFontSizeList =
     [
         9.6f, 10f, 12f, 14f, 16f,

@@ -1,4 +1,5 @@
-﻿using ChatTwo.Http.MessageProtocol;
+﻿using System.Collections.Concurrent;
+using ChatTwo.Http.MessageProtocol;
 using WatsonWebserver.Core;
 
 namespace ChatTwo.Http;
@@ -9,7 +10,7 @@ public class SSEConnection
     private readonly CancellationToken Token;
 
     public bool Done;
-    public readonly Queue<BaseEvent> OutboundQueue = new();
+    public readonly ConcurrentQueue<BaseEvent> OutboundQueue = new();
 
     public SSEConnection(CancellationToken token)
     {
