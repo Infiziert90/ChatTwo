@@ -10,6 +10,7 @@ internal static class TabsUtil
         var channels = new Dictionary<ChatType, ChatSource>();
         foreach (var chatType in Enum.GetValues<ChatType>())
             channels[chatType] = ChatSourceExt.All;
+
         return channels;
     }
 
@@ -76,7 +77,7 @@ internal static class TabsUtil
             [ChatType.MessageBook] = ChatSourceExt.All,
             [ChatType.Alarm] = ChatSourceExt.All,
             [ChatType.GlamourNotifications] = ChatSourceExt.All,
-        },
+        }
     };
 
     internal static Tab VanillaEvent => new()

@@ -6,14 +6,9 @@ namespace ChatTwo.Code;
 
 internal static class ChatTypeExt
 {
-    internal static IEnumerable<(string, ChatType[])> SortOrder => new[]
-    {
-        (Language.Options_Tabs_ChannelTypes_Special,
-        [
-            ChatType.Debug,
-            ChatType.Urgent,
-            ChatType.Notice
-        ]),
+    internal static IEnumerable<(string, ChatType[])> SortOrder =>
+    [
+        (Language.Options_Tabs_ChannelTypes_Special, [ChatType.Debug, ChatType.Urgent, ChatType.Notice]),
 
         (Language.Options_Tabs_ChannelTypes_Chat,
         [
@@ -48,8 +43,8 @@ internal static class ChatTypeExt
             ChatType.CustomEmote
         ]),
 
-        (Language.Options_Tabs_ChannelTypes_Battle, new[]
-        {
+        (Language.Options_Tabs_ChannelTypes_Battle,
+        [
             ChatType.Damage,
             ChatType.Miss,
             ChatType.Action,
@@ -58,11 +53,11 @@ internal static class ChatTypeExt
             ChatType.GainBuff,
             ChatType.LoseBuff,
             ChatType.GainDebuff,
-            ChatType.LoseDebuff,
-        }),
+            ChatType.LoseDebuff
+        ]),
 
-        (Language.Options_Tabs_ChannelTypes_Announcements, new[]
-        {
+        (Language.Options_Tabs_ChannelTypes_Announcements,
+        [
             ChatType.System,
             ChatType.BattleSystem,
             ChatType.GatheringSystem,
@@ -87,11 +82,11 @@ internal static class ChatTypeExt
             ChatType.Orchestrion,
             ChatType.MessageBook,
             ChatType.Alarm,
-            ChatType.GlamourNotifications,
-        }),
+            ChatType.GlamourNotifications
+        ])
         // Note: ExtraChat linkshells are handled separately in the tab settings
         // UI.
-    };
+    ];
 
     internal static string Name(this ChatType type)
     {

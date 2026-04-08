@@ -3,6 +3,7 @@ using ChatTwo.Util;
 using Dalamud;
 using Dalamud.Interface.FontIdentifier;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 
 namespace ChatTwo.Ui.SettingsTabs;
 
@@ -19,7 +20,7 @@ public class Fonts : ISettingsTab
 
     public void Draw(bool _)
     {
-        using var wrap = ImGuiUtil.TextWrapPos();
+        using var wrap = ImRaii.TextWrapPos(0.0f);
 
         ImGui.Checkbox(Language.Options_FontsEnabled, ref Mutable.FontsEnabled);
         ImGui.Spacing();

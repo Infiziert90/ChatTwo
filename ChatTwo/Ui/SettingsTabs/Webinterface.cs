@@ -138,7 +138,7 @@ internal sealed class Webinterface(Plugin plugin, Configuration mutable) : ISett
                 clicked |= ImGuiUtil.IconButton(FontAwesomeIcon.ExternalLinkAlt, "urlOpen");
 
                 if (clicked)
-                    WrapperUtil.TryOpenURI(uri);
+                    WrapperUtil.TryOpenUri(uri);
             }
             else
             {

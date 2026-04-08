@@ -1,5 +1,4 @@
 ﻿using ChatTwo.Http.MessageProtocol;
-using ChatTwo.Util;
 using Dalamud.Plugin.Services;
 
 namespace ChatTwo.Http;
@@ -25,7 +24,7 @@ public class ServerCore : IAsyncDisposable
 
     private void FrameworkUpdate(IFramework _)
     {
-        foreach (var (tab, idx) in Plugin.Config.Tabs.WithIndex())
+        foreach (var (idx, tab) in Plugin.Config.Tabs.Index())
         {
             if (tab.Unread == tab.LastSendUnread)
                 continue;

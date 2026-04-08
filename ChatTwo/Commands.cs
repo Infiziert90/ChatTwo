@@ -4,13 +4,7 @@ namespace ChatTwo;
 
 internal sealed class Commands : IDisposable
 {
-    private Plugin Plugin { get; }
-    private Dictionary<string, CommandWrapper> Registered { get; } = new();
-
-    internal Commands(Plugin plugin)
-    {
-        Plugin = plugin;
-    }
+    private readonly Dictionary<string, CommandWrapper> Registered = [];
 
     public void Dispose()
     {
@@ -47,7 +41,8 @@ internal sealed class Commands : IDisposable
         return Registered[name];
     }
 
-    private void Invoke(string command, string arguments) {
+    private void Invoke(string command, string arguments)
+    {
         if (!Registered.TryGetValue(command, out var wrapper))
         {
             Plugin.Log.Warning($"Missing registration for command {command}");

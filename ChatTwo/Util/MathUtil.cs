@@ -25,13 +25,10 @@ public static class MathUtil
             SizeY = Y + Height;
         }
 
-        public Rectangle(Vector2 pos, Vector2 size)
-            : this((int) pos.X, (int) pos.Y, (int) size.X, (int) size.Y) { }
+        public Rectangle(Vector2 pos, Vector2 size) : this((int) pos.X, (int) pos.Y, (int) size.X, (int) size.Y) { }
 
         public override string ToString()
-        {
-            return $"X: {X} Y: {Y} Width: {Width} Height: {Height}";
-        }
+            => $"X: {X} Y: {Y} Width: {Width} Height: {Height}";
     }
 
     // From: https://stackoverflow.com/a/306379

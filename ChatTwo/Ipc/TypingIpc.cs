@@ -28,19 +28,16 @@ internal sealed class TypingIpc : IDisposable
     private ChatInputState BuildState()
     {
         var log = Plugin.ChatLogWindow;
-        var chat = log.Chat ?? string.Empty;
-        var hasText = !string.IsNullOrWhiteSpace(chat);
-        var usedChannel = Plugin.CurrentTab?.CurrentChannel;
-        var inputChannel = usedChannel is not null
-            ? (usedChannel.UseTempChannel ? usedChannel.TempChannel : usedChannel.Channel)
-            : InputChannel.Invalid;
+
+        var usedChannel = Plugin.CurrentTab.CurrentChannel;
+        var inputChannel = usedChannel.UseTempChannel ? usedChannel.TempChannel : usedChannel.Channel;
         var channelType = inputChannel.ToChatType();
 
         return (InputVisible: !log.IsHidden,
             InputFocused: log.InputFocused,
-            HasText: hasText,
-            IsTyping: log.InputFocused && hasText,
-            TextLength: chat.Length,
+            HasText: log.Chat.Length > 0,
+            IsTyping: log is { InputFocused: true, Chat.Length: > 0 },
+            TextLength: log.Chat.Length,
             ChannelType: channelType);
     }
 

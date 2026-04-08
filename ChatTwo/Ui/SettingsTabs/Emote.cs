@@ -38,7 +38,7 @@ internal sealed class Emote : ISettingsTab
 
     public void Draw(bool changed)
     {
-        using var wrap = ImGuiUtil.TextWrapPos();
+        using var wrap = ImRaii.TextWrapPos(0.0f);
 
         ImGuiUtil.OptionCheckbox(ref Mutable.ShowEmotes, Language.Options_ShowEmotes_Name, Language.Options_ShowEmotes_Desc);
         ImGui.Spacing();

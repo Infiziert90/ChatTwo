@@ -3,13 +3,12 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text;
 using Dalamud.Game;
-using Dalamud.Game.Text.SeStringHandling;
-using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Utility;
 using Lumina.Excel;
 using Lumina.Text.Payloads;
 using Lumina.Text.ReadOnly;
 using Pidgin;
+
 using static Pidgin.Parser;
 using static Pidgin.Parser<char>;
 
@@ -157,6 +156,9 @@ internal static class AutoTranslate
                 }
                 else if (lookup is not "@")
                 {
+                    if (row.Text.IsEmpty)
+                        continue;
+
                     list.Add(new AutoTranslateEntry(row.Group, row.RowId, row.Text.ToString(), row.GroupTitle.ToString()));
 
                     if (shouldAdd)
@@ -242,9 +244,7 @@ internal static class AutoTranslate
                 var parts = tag[4..^1].Split(',', 2);
                 if (parts.Length == 2 && uint.TryParse(parts[0], out var group) && uint.TryParse(parts[1], out var key))
                 {
-                    var payload = ValidEntries.Contains((group, key))
-                        ? new AutoTranslatePayload(group, key).Encode()
-                        : [];
+                    var payload = ValidEntries.Contains((group, key)) ? CreateFixedTranslation(group, key) : [];
 
                     var oldBytes = bytes.ToArray();
                     var lengthDiff = payload.Length - (i - start);
@@ -263,56 +263,83 @@ internal static class AutoTranslate
                 start = i;
         }
     }
+
+    public static bool StartsWithCommand(ref byte[] bytes)
+    {
+        var search = "<at:"u8;
+        if (bytes.Length <= search.Length)
+            return false;
+
+        // populate the list of valid entries
+        if (ValidEntries.Count == 0)
+            AllEntries();
+
+        for (var i = 0; i < search.Length; i++)
+        {
+            if (bytes[i] != search[i])
+                return false;
+        }
+
+        for (var i = 0; i < bytes.Length; i++)
+        {
+            if (bytes[i] != '>')
+                continue;
+
+            var tag = Encoding.UTF8.GetString(bytes[..(i + 1)]);
+            var parts = tag[4..^1].Split(',', 2);
+            if (parts.Length == 2 && uint.TryParse(parts[0], out var group) && uint.TryParse(parts[1], out var key))
+            {
+                if (!ValidEntries.Contains((group, key)))
+                    return false;
+
+                var evaluated = Plugin.Evaluator.Evaluate(new ReadOnlySeString(CreateFixedTranslation(group, key))).ToString();
+                if (!evaluated.StartsWith('/'))
+                    return false;
+
+                bytes = Encoding.UTF8.GetBytes(evaluated);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static byte[] CreateFixedTranslation(uint group, uint key)
+    {
+        using var rssb = new RentedSeStringBuilder();
+        return rssb.Builder
+            .BeginMacro(MacroCode.Fixed)
+            .AppendUIntExpression(group - 1)
+            .AppendUIntExpression(key)
+            .EndMacro()
+            .ToArray();
+    }
 }
 
 internal interface ISelectorPart { }
 
-internal class SingleRow : ISelectorPart
+internal class SingleRow(uint row) : ISelectorPart
 {
-    public uint Row { get; }
-
-    public SingleRow(uint row)
-    {
-        Row = row;
-    }
+    public uint Row { get; } = row;
 }
 
-internal class IndexRange : ISelectorPart
+internal class IndexRange(uint start, uint end) : ISelectorPart
 {
-    public uint Start { get; }
-    public uint End { get; }
-
-    public IndexRange(uint start, uint end)
-    {
-        Start = start;
-        End = end;
-    }
+    public uint Start { get; } = start;
+    public uint End { get; } = end;
 }
 
 internal class NounMarker : ISelectorPart { }
 
-internal class ColumnSpecifier : ISelectorPart
+internal class ColumnSpecifier(uint column) : ISelectorPart
 {
-    public uint Column { get; }
-
-    public ColumnSpecifier(uint column)
-    {
-        Column = column;
-    }
+    public uint Column { get; } = column;
 }
 
-internal class AutoTranslateEntry
+internal class AutoTranslateEntry(uint group, uint row, string str, string title)
 {
-    internal uint Group { get; }
-    internal uint Row { get; }
-    internal string Text { get; }
-    internal string Title { get; }
-
-    public AutoTranslateEntry(uint group, uint row, string str, string title)
-    {
-        Group = group;
-        Row = row;
-        Text = str;
-        Title = title;
-    }
+    internal uint Group { get; } = group;
+    internal uint Row { get; } = row;
+    internal string Text { get; } = str;
+    internal string Title { get; } = title;
 }

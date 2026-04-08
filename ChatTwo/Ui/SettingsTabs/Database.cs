@@ -138,7 +138,7 @@ internal sealed class Database : ISettingsTab
             return;
 
         using var treeNode = ImRaii.TreeNode(Language.Options_Database_Advanced);
-        using var wrap = ImGuiUtil.TextWrapPos();
+        using var wrap = ImRaii.TextWrapPos(0.0f);
 
         ImGuiUtil.WarningText(Language.Options_Database_Advanced_Warning);
         if (ImGuiUtil.CtrlShiftButton("Perform maintenance", "Ctrl+Shift: MessageManager.Store.PerformMaintenance()"))

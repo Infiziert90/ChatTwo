@@ -21,7 +21,7 @@ internal sealed class ChatLog : ISettingsTab
 
     public void Draw(bool changed)
     {
-        using (ImGuiUtil.TextWrapPos())
+        using (ImRaii.TextWrapPos(0.0f))
         {
             ImGuiUtil.OptionCheckbox(ref Mutable.KeepInputFocus, Language.Options_KeepInputFocus_Name, Language.Options_KeepInputFocus_Description);
             ImGui.Spacing();

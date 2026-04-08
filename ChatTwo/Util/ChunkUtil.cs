@@ -1,8 +1,11 @@
+using System.Runtime.CompilerServices;
 using ChatTwo.Code;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using System.Text;
+using Lumina.Text.Expressions;
 using Lumina.Text.Payloads;
+using Lumina.Text.ReadOnly;
 
 using PayloadType = Dalamud.Game.Text.SeStringHandling.PayloadType;
 
@@ -10,6 +13,244 @@ namespace ChatTwo.Util;
 
 internal static class ChunkUtil
 {
+    // internal static IEnumerable<Chunk> ToChunks(ReadOnlySeString msg, ChunkSource source, ChatType? defaultColour)
+    // {
+    //     var chunks = new List<Chunk>();
+    //
+    //     var italic = false;
+    //     var foreground = new Stack<uint>();
+    //     var glow = new Stack<uint>();
+    //     Payload? link = null;
+    //
+    //     void Append(string text)
+    //     {
+    //         chunks.Add(new TextChunk(source, link, text)
+    //         {
+    //             FallbackColour = defaultColour,
+    //             Foreground = foreground.Count > 0 ? foreground.Peek() : null,
+    //             Glow = glow.Count > 0 ? glow.Peek() : null,
+    //             Italic = italic,
+    //         });
+    //     }
+    //
+    //     foreach (var payload in msg)
+    //     {
+    //         if (payload.Type == ReadOnlySePayloadType.Text)
+    //         {
+    //             // We don't want to parse any null string
+    //             var str = payload.ToString();
+    //             var nulIndex = str.IndexOf('\0');
+    //             if (nulIndex > 0)
+    //                 str = str[..nulIndex];
+    //             if (string.IsNullOrEmpty(str))
+    //                 continue;
+    //
+    //             Append(str);
+    //             continue;
+    //         }
+    //
+    //         switch (payload.MacroCode)
+    //         {
+    //             case MacroCode.Italic:
+    //                 var newStatus = payload.TryGetExpression(out var expression) && expression.TryGetUInt(out var value) && value == 1;
+    //                 italic = newStatus;
+    //                 break;
+    //             case MacroCode.Color:
+    //                 if (payload.TryGetExpression(out var eColor))
+    //                 {
+    //                     if (eColor.TryGetPlaceholderExpression(out var ph) && ph == (int)ExpressionType.StackColor)
+    //                     {
+    //                         if (foreground.Count > 0)
+    //                             foreground.Pop();
+    //                     }
+    //                     else if (TryResolveUInt(eColor, out var eColorVal))
+    //                     {
+    //                         var color = ColourUtil.ArgbToRgba(eColorVal);
+    //
+    //                         if (color > 0)
+    //                             foreground.Push(color);
+    //                         else if (foreground.Count > 0) // Push the previous color as we don't want invisible text
+    //                             foreground.Push(foreground.Peek());
+    //                     }
+    //                 }
+    //                 break;
+    //             case MacroCode.EdgeColor:
+    //                 if (payload.TryGetExpression(out eColor))
+    //                 {
+    //                     if (eColor.TryGetPlaceholderExpression(out var ph) && ph == (int)ExpressionType.StackColor)
+    //                     {
+    //                         if (glow.Count > 0)
+    //                             glow.Pop();
+    //                     }
+    //                     else if (TryResolveUInt(eColor, out var eColorVal))
+    //                     {
+    //                         glow.Push(ColourUtil.ArgbToRgba(eColorVal));
+    //                     }
+    //                 }
+    //                 break;
+    //             case MacroCode.ColorType:
+    //                 if (!payload.TryGetExpression(out var eColorType) || !eColorType.TryGetUInt(out var eColorTypeVal))
+    //                 {
+    //                     if (foreground.Count > 0)
+    //                         foreground.Pop();
+    //                     break;
+    //                 }
+    //
+    //                 if (eColorTypeVal == 0)
+    //                 {
+    //                     if (foreground.Count > 0)
+    //                         foreground.Pop();
+    //                 }
+    //                 else if (Sheets.UIColorSheet.TryGetRow(eColorTypeVal, out var row))
+    //                 {
+    //                     foreground.Push(row.Dark);
+    //                 }
+    //                 break;
+    //             case MacroCode.EdgeColorType:
+    //                 if (!payload.TryGetExpression(out var eEdgeColor) || !eEdgeColor.TryGetUInt(out var eEdgeColorVal))
+    //                 {
+    //                     if (glow.Count > 0)
+    //                         glow.Pop();
+    //                     break;
+    //                 }
+    //
+    //                 if (eEdgeColorVal == 0)
+    //                 {
+    //                     if (glow.Count > 0)
+    //                         glow.Pop();
+    //                 }
+    //                 else if (Sheets.UIColorSheet.TryGetRow(eEdgeColorVal, out var row))
+    //                 {
+    //                     glow.Push(row.Dark);
+    //                 }
+    //                 break;
+    //             case MacroCode.Fixed:
+    //                 if (!payload.TryGetExpression(out var expr1, out var expr2))
+    //                     break;
+    //
+    //                 if (expr1.TryGetUInt(out var group) && expr2.TryGetUInt(out var key))
+    //                 {
+    //                     chunks.Add(new IconChunk(source, null, BitmapFontIcon.AutoTranslateBegin));
+    //                     using var rssb = new RentedSeStringBuilder();
+    //                     var translatePayload = rssb.Builder
+    //                         .BeginMacro(MacroCode.Fixed)
+    //                         .AppendUIntExpression(group - 1)
+    //                         .AppendUIntExpression(key)
+    //                         .EndMacro()
+    //                         .ToReadOnlySeString();
+    //
+    //                     Append(Plugin.Evaluator.Evaluate(translatePayload).ToString());
+    //                     chunks.Add(new IconChunk(source, null, BitmapFontIcon.AutoTranslateEnd));
+    //                 }
+    //                 break;
+    //             case MacroCode.Icon:
+    //                 if (payload.TryGetExpression(out var eIcon) && TryResolveInt(eIcon, out var iconVal))
+    //                     chunks.Add(new IconChunk(source, link, (BitmapFontIcon)iconVal));
+    //                 break;
+    //             case MacroCode.Link:
+    //                 if (!payload.TryGetExpression(
+    //                         out var linkTypeExpr1,
+    //                         out var uintExpr2,
+    //                         out var intExpr3,
+    //                         out var intExpr4,
+    //                         out var strExpr5))
+    //                     break;
+    //
+    //                 if (!linkTypeExpr1.TryGetUInt(out var linkType))
+    //                     break;
+    //
+    //                 switch ((LinkMacroPayloadType)linkType)
+    //                 {
+    //                     case LinkMacroPayloadType.Terminator:
+    //                         link = null;
+    //                         break;
+    //                     case LinkMacroPayloadType.MapPosition:
+    //                         if (!uintExpr2.TryGetUInt(out var ids))
+    //                             break;
+    //
+    //                         if (!intExpr3.TryGetInt(out var rawX))
+    //                             break;
+    //
+    //                         if (!intExpr4.TryGetInt(out var rawY))
+    //                             break;
+    //
+    //                         var mapId = ids & 0xFF;
+    //                         var territoryId = (ids >> 16) & 0xFF;
+    //                         break;
+    //                     case (LinkMacroPayloadType)Payload.EmbeddedInfoType.DalamudLink - 1:
+    //                         if (!uintExpr2.TryGetUInt(out var commandId))
+    //                             break;
+    //
+    //                         if (!intExpr3.TryGetInt(out var extra1))
+    //                             break;
+    //
+    //                         if (!intExpr4.TryGetInt(out var extra2))
+    //                             break;
+    //
+    //                         if (!strExpr5.TryGetString(out var extraStr))
+    //                             break;
+    //                         break;
+    //                     case LinkMacroPayloadType.Quest:
+    //                         if (!uintExpr2.TryGetUInt(out var questId))
+    //                             break;
+    //                         break;
+    //                     case LinkMacroPayloadType.Status:
+    //                         if (!uintExpr2.TryGetUInt(out var statusId))
+    //                             break;
+    //                         break;
+    //                     case LinkMacroPayloadType.Item:
+    //                         if (!uintExpr2.TryGetUInt(out var itemId))
+    //                             break;
+    //                         break;
+    //                     case LinkMacroPayloadType.Character:
+    //                         if (!uintExpr2.TryGetUInt(out var flags))
+    //                             break;
+    //
+    //                         if (!intExpr3.TryGetUInt(out var worldId))
+    //                             break;
+    //                         break;
+    //                     case LinkMacroPayloadType.PartyFinder:
+    //                         if (!uintExpr2.TryGetUInt(out var listingId))
+    //                             break;
+    //
+    //                         // intExpr3 is unused
+    //
+    //                         if (!intExpr4.TryGetUInt(out worldId))
+    //                             break;
+    //                         break;
+    //                     case LinkMacroPayloadType.PartyFinderNotification:
+    //                         // no expr used
+    //                         break;
+    //                     case LinkMacroPayloadType.Achievement:
+    //                         if (!uintExpr2.TryGetUInt(out var achievementId))
+    //                             break;
+    //                         break;
+    //                 }
+    //                 break;
+    //             case MacroCode.NonBreakingSpace:
+    //                 Append(" ");
+    //                 break;
+    //             case PayloadType.Unknown:
+    //                 var rawPayload = (RawPayload)payload;
+    //                 else if (rawPayload.Data.Length > 1 && rawPayload.Data[1] == 0x14)
+    //                 {
+    //                     if (glow.Count > 0)
+    //                     {
+    //                         glow.Pop();
+    //                     }
+    //                     else if (rawPayload.Data.Length > 6 && rawPayload.Data[2] == 0x05 && rawPayload.Data[3] == 0xF6)
+    //                     {
+    //                         var (r, g, b) = (rawPayload.Data[4], rawPayload.Data[5], rawPayload.Data[6]);
+    //                         glow.Push(ColourUtil.ComponentsToRgba(r, g, b));
+    //                     }
+    //                 }
+    //                 break;
+    //         }
+    //     }
+    //
+    //     return chunks;
+    // }
+
     internal static IEnumerable<Chunk> ToChunks(SeString msg, ChunkSource source, ChatType? defaultColour)
     {
         var chunks = new List<Chunk>();
@@ -176,22 +417,46 @@ internal static class ChunkUtil
         return BitConverter.ToUInt32(numArray, 0);
     }
 
-    public static unsafe void PrintMemoryArea(nint address, int length)
+    private static bool TryResolveUInt(in ReadOnlySeExpressionSpan expression, out uint value)
     {
-        var ptr = (byte*)address;
-        var str = new StringBuilder("\n");
-        for(var i = 0; i < length; i++)
+        if (expression.TryGetUInt(out value))
+            return true;
+
+        if (expression.TryGetParameterExpression(out var exprType, out var operand1))
         {
-            str.Append($"{ptr![i]:X02}");
+            if (!TryResolveUInt(operand1, out var paramIndex))
+                return false;
 
-            if (i == 0)
-                continue;
+            if (paramIndex == 0)
+                return false;
 
-            if ((i+1) % 16 == 0)
-                str.Append('\n');
-            else if ((i+1) % 4 == 0)
-                str.Append(' ');
+            paramIndex--;
+            if ((ExpressionType)exprType == ExpressionType.GlobalNumber)
+            {
+                value = (uint) GlobalParametersCache.GetValue((int)paramIndex);
+                return true;
+            }
+            // return (ExpressionType)exprType switch
+            // {
+            //     // ExpressionType.LocalNumber => context.TryGetLNum((int)paramIndex, out value), // lnum
+            //     ExpressionType.GlobalNumber => (uint) GlobalParametersCache.GetValue((int)paramIndex), // gnum
+            //     _ => false, // gstr, lstr
+            // };
         }
-        Plugin.Log.Information(str.ToString());
+
+        return false;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool TryResolveInt(in ReadOnlySeExpressionSpan expression, out int value)
+    {
+        if (TryResolveUInt(expression, out var u32))
+        {
+            value = (int)u32;
+            return true;
+        }
+
+        value = 0;
+        return false;
     }
 }

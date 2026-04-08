@@ -25,7 +25,7 @@ public static class DateWidget
     private static float LongestMonthWidth;
     private static readonly float[] MonthWidths = new float[12];
 
-    private static uint LastOpenComboID;
+    private static uint LastOpenComboId;
 
     public static bool Validate(DateTime minimal, ref DateTime currentMin, ref DateTime currentMax)
     {
@@ -109,9 +109,9 @@ public static class DateWidget
             // reset date when user right-clicks the date chooser header when the dialog is open
             dateOut = DateTime.Now;
         }
-        else if (LastOpenComboID != id)
+        else if (LastOpenComboId != id)
         {
-            LastOpenComboID = id;
+            LastOpenComboId = id;
             if (dateOut.Year == 1)
                 dateOut = DateTime.Now;
         }

@@ -33,7 +33,7 @@ internal sealed class About : ISettingsTab
 
     public void Draw(bool changed)
     {
-        using var wrap = ImGuiUtil.TextWrapPos();
+        using var wrap = ImRaii.TextWrapPos(0.0f);
 
         ImGui.TextUnformatted(string.Format(Language.Options_About_Opening, Plugin.PluginName));
 

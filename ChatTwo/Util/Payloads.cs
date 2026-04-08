@@ -63,18 +63,18 @@ internal class UriPayload(Uri uri) : Payload
     /// <exception cref="UriFormatException">
     /// If the URI is invalid, or if the scheme is not supported.
     /// </exception>
-    public static UriPayload ResolveURI(string rawURI)
+    public static UriPayload ResolveUri(string rawUri)
     {
-        ArgumentNullException.ThrowIfNull(rawURI);
+        ArgumentNullException.ThrowIfNull(rawUri);
 
         // Check for an expected scheme '://', if not add 'https://'
-        if (ExpectedSchemes.Any(scheme => rawURI.StartsWith($"{scheme}://")))
-            return new UriPayload(new Uri(rawURI));
+        if (ExpectedSchemes.Any(scheme => rawUri.StartsWith($"{scheme}://")))
+            return new UriPayload(new Uri(rawUri));
 
-        if (rawURI.Contains("://"))
-            throw new UriFormatException($"Unsupported scheme in URL: {rawURI}");
+        if (rawUri.Contains("://"))
+            throw new UriFormatException($"Unsupported scheme in URL: {rawUri}");
 
-        return new UriPayload(new Uri($"{DefaultScheme}://{rawURI}"));
+        return new UriPayload(new Uri($"{DefaultScheme}://{rawUri}"));
     }
 
     protected override void DecodeImpl(BinaryReader reader, long endOfStream)

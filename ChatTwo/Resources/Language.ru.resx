@@ -401,7 +401,7 @@
     <value>{0} - проект, полностью пересоздаёт внутриигровой чат и делает его еще лучше.</value>
   </data>
   <data name="Options_About_CrowdIn">
-    <value>Нажмите кнопку слева, чтобы помочь перевести {0}.</value>
+    <value>Help to translate: </value>
   </data>
   <data name="Options_About_Translators">
     <value>Переводчики</value>

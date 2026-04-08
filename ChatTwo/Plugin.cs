@@ -7,7 +7,6 @@ using ChatTwo.Resources;
 using ChatTwo.Ui;
 using ChatTwo.Util;
 using Dalamud.Game.ClientState.Conditions;
-using Dalamud.Game.ClientState.Objects;
 using Dalamud.Interface.Windowing;
 using Dalamud.IoC;
 using Dalamud.Plugin;
@@ -40,6 +39,7 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static INotificationManager Notification { get; private set; } = null!;
     [PluginService] internal static IAddonLifecycle AddonLifecycle { get; private set; } = null!;
     [PluginService] internal static IPlayerState PlayerState { get; private set; } = null!;
+    [PluginService] internal static ISeStringEvaluator Evaluator { get; private set; } = null!;
 
     internal static Configuration Config = null!;
 
@@ -96,7 +96,7 @@ public sealed class Plugin : IDalamudPlugin
             // Functions calls this in its ctor if the player is already logged in
             ServerCore = new ServerCore(this);
 
-            Commands = new Commands(this);
+            Commands = new Commands();
             Functions = new GameFunctions.GameFunctions(this);
             Ipc = new IpcManager();
             TypingIpc = new TypingIpc(this);
@@ -202,7 +202,7 @@ public sealed class Plugin : IDalamudPlugin
         if (Config.HideInLoadingScreens && Condition[ConditionFlag.BetweenAreas])
         {
             ChatLogWindow.FinalizeFrame();
-            TypingIpc?.Update();
+            TypingIpc.Update();
             return;
         }
 
@@ -212,12 +212,10 @@ public sealed class Plugin : IDalamudPlugin
         ChatLogWindow.DefaultText = ImGui.GetStyle().Colors[(int) ImGuiCol.Text];
 
         using ((Config.FontsEnabled ? FontManager.RegularFont : FontManager.Axis).Push())
-        {
             WindowSystem.Draw();
-        }
 
         ChatLogWindow.FinalizeFrame();
-        TypingIpc?.Update();
+        TypingIpc.Update();
     }
 
     internal void SaveConfig()

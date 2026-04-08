@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
+using System.Text;
 using ChatTwo.Code;
 using ChatTwo.Resources;
 using ChatTwo.Util;
@@ -10,7 +11,9 @@ using Dalamud.Interface.ImGuiNotification;
 using Dalamud.Plugin.Services;
 using Dalamud.Utility;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
-using Lumina.Excel.Sheets;
+using Lumina.Text.Expressions;
+using Lumina.Text.Payloads;
+using Lumina.Text.ReadOnly;
 
 namespace ChatTwo;
 
@@ -21,7 +24,7 @@ internal class MessageManager : IAsyncDisposable
     private Plugin Plugin { get; }
     internal MessageStore Store { get; }
 
-    private Dictionary<ChatType, NameFormatting> Formats { get; } = new();
+    private Dictionary<ChatType, NameFormatting> Formats { get; } = [];
     private ulong LastContentId { get; set; }
 
     // Messages go into the PendingSync queue first, which will be consumed one
@@ -31,8 +34,8 @@ internal class MessageManager : IAsyncDisposable
     // After that, the message is enqueued in the PendingAsync queue, which will
     // be consumed in a separate thread and perform more processing (emotes,
     // URLs) as well as inserting the message into the database.
-    private Queue<PendingMessage> PendingSync { get; } = new();
-    private ConcurrentQueue<PendingMessage> PendingAsync { get; } = new();
+    private Queue<PendingMessage> PendingSync { get; } = [];
+    private ConcurrentQueue<PendingMessage> PendingAsync { get; } = [];
     private readonly Thread PendingMessageThread;
     private readonly CancellationTokenSource PendingThreadCancellationToken = new();
 
@@ -298,36 +301,38 @@ internal class MessageManager : IAsyncDisposable
         }
     }
 
-    private NameFormatting? FormatFor(ChatType type)
+    private NameFormatting FormatFor(ChatType type)
     {
         if (Formats.TryGetValue(type, out var cached))
             return cached;
 
-        var logKind = Plugin.DataManager.GetExcelSheet<LogKind>().GetRow((ushort)type);
-        var format = logKind.Format.ToDalamudString();
-
-        static bool IsStringParam(Payload payload, byte num)
+        var formats = Sheets.LogKindSheet.GetRow((uint)type).Format.ToList();
+        static bool IsStringParam(ReadOnlySePayload payload, byte num)
         {
-            var data = payload.Encode();
-            return data.Length >= 5 && data[1] == 0x29 && data[4] == num + 1;
+            if (payload.MacroCode != MacroCode.String)
+                return false;
+
+            return payload.TryGetExpression(out var expr1)
+                && expr1.TryGetParameterExpression(out var expressionType, out var operand)
+                && expressionType == (byte)ExpressionType.LocalString
+                && operand.TryGetInt(out var lstrIndex)
+                && lstrIndex == num;
         }
 
-        var firstStringParam = format.Payloads.FindIndex(payload => IsStringParam(payload, 1));
-        var secondStringParam = format.Payloads.FindIndex(payload => IsStringParam(payload, 2));
+        var firstStringParam = formats.FindIndex(payload => IsStringParam(payload, 1));
+        var secondStringParam = formats.FindIndex(payload => IsStringParam(payload, 2));
 
         if (firstStringParam == -1 || secondStringParam == -1)
             return NameFormatting.Empty();
 
-        var before = format.Payloads
+        var before = formats
             .GetRange(0, firstStringParam)
-            .Where(payload => payload is ITextProvider)
-            .Cast<ITextProvider>()
-            .Select(text => text.Text);
-        var after = format.Payloads
+            .Where(payload => payload.Type == ReadOnlySePayloadType.Text)
+            .Select(text => Encoding.UTF8.GetString(text.Body.Span));
+        var after = formats
             .GetRange(firstStringParam + 1, secondStringParam - firstStringParam)
-            .Where(payload => payload is ITextProvider)
-            .Cast<ITextProvider>()
-            .Select(text => text.Text);
+            .Where(payload => payload.Type == ReadOnlySePayloadType.Text)
+            .Select(text => Encoding.UTF8.GetString(text.Body.Span)); // Can't use `ToString()` as it defaults to macro
 
         var nameFormatting = NameFormatting.Of(string.Join("", before), string.Join("", after));
         Formats[type] = nameFormatting;

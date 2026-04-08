@@ -827,7 +827,7 @@
     <value>回復</value>
   </data>
   <data name="ChatType_GainBuff">
-    <value></value>
+    <value>Beneficial effects granted</value>
   </data>
   <data name="ChatType_GainDebuff">
     <value>Detrimental effects inflicted</value>
@@ -893,10 +893,10 @@
     <value>PT募集通知</value>
   </data>
   <data name="ChatType_Sign">
-    <value></value>
+    <value>Sign Messages for PC Targets</value>
   </data>
   <data name="ChatType_RandomNumber">
-    <value></value>
+    <value>Random Number Messages</value>
   </data>
   <data name="ChatType_NoviceNetworkSystem">
     <value>ビギナーチャンネルアナウンス</value>

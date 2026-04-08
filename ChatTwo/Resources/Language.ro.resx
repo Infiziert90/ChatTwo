@@ -401,7 +401,7 @@
     <value>{0} este un proiect care recreează complet chat-ul din joc si îl îmbunătățește.</value>
   </data>
   <data name="Options_About_CrowdIn">
-    <value>Apasă butonul din stânga pentru a contribui la traducerea {0}.</value>
+    <value>Help to translate: </value>
   </data>
   <data name="Options_About_Translators">
     <value>Traducători</value>

@@ -1,4 +1,3 @@
-using Dalamud.Plugin.Services;
 using Lumina.Excel.Sheets;
 
 namespace ChatTwo.Code;
@@ -108,11 +107,10 @@ internal static class InputChannelExt
         InputChannel.ExtraChatLinkshell6 => "/ecl6",
         InputChannel.ExtraChatLinkshell7 => "/ecl7",
         InputChannel.ExtraChatLinkshell8 => "/ecl8",
-        InputChannel.Invalid => "/e",
         _ => "/e",
     };
 
-    public static IEnumerable<TextCommand>? TextCommands(this InputChannel channel, IDataManager data)
+    public static IEnumerable<TextCommand>? TextCommands(this InputChannel channel)
     {
         var ids = channel switch
         {
@@ -147,8 +145,7 @@ internal static class InputChannelExt
         if (ids.Length == 0)
             return null;
 
-        var cmds = data.GetExcelSheet<TextCommand>();
-        return ids.Where(id => cmds.HasRow(id)).Select(id => cmds.GetRow(id));
+        return ids.Where(id => Sheets.TextCommandSheet.HasRow(id)).Select(id => Sheets.TextCommandSheet.GetRow(id));
     }
 
     internal static bool IsLinkshell(this InputChannel channel) => channel switch

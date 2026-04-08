@@ -7,7 +7,6 @@ using System.Text.RegularExpressions;
 using Dalamud.Game.Text;
 using Dalamud.Utility;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
-using Lumina.Excel.Sheets;
 
 namespace ChatTwo;
 
@@ -234,7 +233,7 @@ internal partial class Message
                     AddChunkWithMessage(text.NewWithStyle(chunk.Source, chunk.Link, sentenceBuilder.Append(!wordUsed ? word : "").ToString()));
                     try
                     {
-                        AddChunkWithMessage(text.NewWithStyle(chunk.Source, UriPayload.ResolveURI(token.Value), token.Value));
+                        AddChunkWithMessage(text.NewWithStyle(chunk.Source, UriPayload.ResolveUri(token.Value), token.Value));
                     }
                     catch (UriFormatException)
                     {
@@ -326,8 +325,8 @@ internal partial class Message
                         };
 
                         var name = kind != ItemKind.EventItem
-                            ? Plugin.DataManager.GetExcelSheet<Item>().GetRow(item.ItemId).Name.ToString()
-                            : Plugin.DataManager.GetExcelSheet<EventItem>().GetRow(item.ItemId).Name.ToString();
+                            ? Sheets.ItemSheet.GetRow(item.ItemId).Name.ToString()
+                            : Sheets.EventItemSheet.GetRow(item.ItemId).Name.ToString();
 
                         var link = new ItemPayload(item.ItemId, kind, $"{SeIconChar.LinkMarker.ToIconChar()}{name}");
                         AddChunkWithMessage(text.NewWithStyle(chunk.Source, link, link.DisplayName ?? "Unknown"));
@@ -341,7 +340,7 @@ internal partial class Message
                             continue;
                         }
 
-                        var nameValue = statusRow.Name.ToDalamudString().TextValue;
+                        var nameValue = statusRow.Name.ToString();
                         var content = statusRow.StatusCategory switch
                         {
                             1 => $"{SeIconChar.Buff.ToIconString()}{nameValue}",

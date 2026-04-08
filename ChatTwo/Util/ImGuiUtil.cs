@@ -183,13 +183,15 @@ internal static class ImGuiUtil
         if (id != null)
             label += $"##{id}";
 
-        Plugin.FontManager.FontAwesome.Push();
-        var size = new Vector2(0, 0);
-        if (width > 0)
-            size.X = width - 2 * ImGui.GetStyle().CellPadding.X;
+        bool ret;
+        using (Plugin.FontManager.FontAwesome.Push())
+        {
+            var size = Vector2.Zero;
+            if (width > 0)
+                size.X = width - 2 * ImGui.GetStyle().CellPadding.X;
 
-        var ret = ImGui.Button(label, size);
-        Plugin.FontManager.FontAwesome.Pop();
+            ret = ImGui.Button(label, size);
+        }
 
         if (!string.IsNullOrEmpty(tooltip) && ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
             Tooltip(tooltip);
@@ -200,7 +202,7 @@ internal static class ImGuiUtil
     internal static bool OptionCheckbox(ref bool value, string label, string? description = null)
     {
         var ret = ImGui.Checkbox(label, ref value);
-        if (description != null)
+        if (!string.IsNullOrEmpty(description))
             HelpText(description);
 
         return ret;
@@ -208,13 +210,9 @@ internal static class ImGuiUtil
 
     internal static void HelpText(string text)
     {
-        var colour = ImGui.GetStyle().Colors[(int) ImGuiCol.TextDisabled];
-
-        using (TextWrapPos())
-        using (ImRaii.PushColor(ImGuiCol.Text, colour))
-        {
+        using (ImRaii.TextWrapPos(0.0f))
+        using (ImRaii.PushColor(ImGuiCol.Text, ImGui.GetStyle().Colors[(int) ImGuiCol.TextDisabled]))
             ImGui.TextUnformatted(text);
-        }
     }
 
     internal static void WarningText(string text, bool wrap = true)
@@ -222,11 +220,9 @@ internal static class ImGuiUtil
         var style = StyleModel.GetConfiguredStyle() ?? StyleModel.GetFromCurrent();
         var dalamudOrange = style.BuiltInColors?.DalamudOrange;
 
-        using (TextWrapPos(wrap))
+        using (ImRaii.TextWrapPos(wrap ? 0.0f : ImGui.GetFontSize() * 35.0f))
         using (ImRaii.PushColor(ImGuiCol.Text, dalamudOrange ?? Vector4.Zero, dalamudOrange != null))
-        {
             ImGui.TextUnformatted(text);
-        }
     }
 
     internal static ImRaii.IEndObject BeginComboVertical(string label, string previewValue, ImGuiComboFlags flags = ImGuiComboFlags.None)
@@ -267,9 +263,7 @@ internal static class ImGuiUtil
     {
         using (ImRaii.Tooltip())
         using (ImRaii.TextWrapPos(ImGui.GetFontSize() * 35.0f))
-        {
             ImGui.TextUnformatted(tooltip);
-        }
     }
 
     public static SingleFontChooserDialog? FontChooser(string label, SingleFontSpec font, bool checkbox, ref bool checkboxValue, Predicate<IFontFamilyId>? exclusion = null, string? preview = null)
@@ -306,20 +300,18 @@ internal static class ImGuiUtil
         ImGui.TextUnformatted(label);
         ImGui.SetNextItemWidth(-1);
         using var combo = ImRaii.Combo($"##{label}", $"{currentSize:###.##}pt");
-        if (combo)
-        {
-            foreach (var size in FontManager.AxisFontSizeList)
-                if (ImGui.Selectable($"{size:###.##}pt", currentSize.Equals(size)))
-                    currentSize = size;
-        }
+        if (!combo.Success)
+            return;
+
+        foreach (var size in FontManager.AxisFontSizeList)
+            if (ImGui.Selectable($"{size:###.##}pt", currentSize.Equals(size)))
+                currentSize = size;
     }
 
     public static bool Button(string id, FontAwesomeIcon icon, bool disabled)
     {
         using (ImRaii.Disabled(disabled))
-        {
             return ImGuiComponents.IconButton(id, icon);
-        }
     }
 
     internal static bool CtrlShiftButton(string label, string tooltip = "")
@@ -330,28 +322,10 @@ internal static class ImGuiUtil
         using (ImRaii.Disabled(!ctrlShiftHeld))
             ret = ImGui.Button(label) && ctrlShiftHeld;
 
-        if (!string.IsNullOrEmpty(tooltip) && ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
+        if (tooltip.Length != 0 && ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
             Tooltip(tooltip);
 
         return ret;
-    }
-
-    internal static bool CtrlShiftButtonColored(string label, string tooltip = "")
-    {
-        var ctrlShiftHeld = ImGui.GetIO() is { KeyCtrl: true, KeyShift: true };
-
-        var colorNormal = new Vector4(0.780f, 0.245f, 0.245f, 1.0f);
-        var colorHovered = new Vector4(0.7f, 0.0f, 0.0f, 1.0f);
-        using (ImRaii.PushColor(ImGuiCol.Button, colorNormal))
-        using (ImRaii.PushColor(ImGuiCol.ButtonHovered, colorHovered))
-        {
-            var ret = ImGui.Button(label) && ctrlShiftHeld;
-
-            if (!string.IsNullOrEmpty(tooltip) && ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
-                Tooltip(tooltip);
-
-            return ret;
-        }
     }
 
     internal static void KeybindInput(string id, ref ConfigKeyBind? keybind)
@@ -394,19 +368,15 @@ internal static class ImGuiUtil
                 return;
             }
 
-            foreach (var vk in Enum.GetValues(typeof(VirtualKey)).Cast<VirtualKey>())
+            foreach (var vk in Enum.GetValues<VirtualKey>())
             {
                 if (vk is VirtualKey.NO_KEY or VirtualKey.CONTROL or VirtualKey.LCONTROL or VirtualKey.RCONTROL or VirtualKey.SHIFT or VirtualKey.LSHIFT or VirtualKey.RSHIFT or VirtualKey.MENU or VirtualKey.LMENU or VirtualKey.RMENU)
                     continue;
 
-                if (!TryToImGui(vk, out var imKey) || !ImGui.IsKeyPressed(imKey))
+                if (!vk.TryToImGui(out var imKey) || !ImGui.IsKeyPressed(imKey))
                     continue;
 
-                keybind = new ConfigKeyBind
-                {
-                    Modifier = currentMods,
-                    Key = vk
-                };
+                keybind = new ConfigKeyBind { Modifier = currentMods, Key = vk };
                 ImGui.GetStateStorage().SetBool(idUint, false);
                 return;
             }
@@ -440,6 +410,12 @@ internal static class ImGuiUtil
             if (IconButton(FontAwesomeIcon.ArrowRight, id+1.ToString()))
                 selected++;
         }
+    }
+
+    public static void WrappedTextWithColor(Vector4 color, string text)
+    {
+        using (ImRaii.PushColor(ImGuiCol.Text, color))
+            ImGui.TextWrapped(text);
     }
 
     public static void CenterText(string text, float indent = 0.0f)
@@ -566,63 +542,6 @@ internal static class ImGuiUtil
         return result != 0 || key == VirtualKey.NO_KEY;
     }
 
-    public struct EndUnconditionally(Action endAction, bool success) : ImRaii.IEndObject
-    {
-        public bool Success { get; } = success;
-
-        private bool Disposed { get; set; } = false;
-        private Action EndAction { get; } = endAction;
-
-        public void Dispose()
-        {
-            if (!Disposed)
-            {
-                EndAction();
-                Disposed = true;
-            }
-        }
-    }
-
-    // Use end-function only on success.
-    private struct EndConditionally(Action endAction, bool success) : ImRaii.IEndObject
-    {
-        public bool Success { get; } = success;
-
-        private bool Disposed { get; set; } = false;
-        private Action EndAction { get; } = endAction;
-
-        public void Dispose()
-        {
-            if (Disposed)
-                return;
-
-            if (Success)
-                EndAction();
-
-            Disposed = true;
-        }
-    }
-
-    public static ImRaii.IEndObject TextWrapPos()
-    {
-        ImGui.PushTextWrapPos();
-        return new EndUnconditionally(ImGui.PopTextWrapPos, true);
-    }
-
-    public static ImRaii.IEndObject TextWrapPos(bool condition)
-    {
-        if (!condition)
-            return new EndUnconditionally(Nop, false);
-
-        ImGui.PushTextWrapPos();
-        return new EndUnconditionally(ImGui.PopTextWrapPos, true);
-    }
-
-    public static ImRaii.IEndObject Menu(string label)
-    {
-        return new EndConditionally(ImGui.EndMenu, ImGui.BeginMenu(label));
-    }
-
     public static void ChannelSelector(string headerText, Dictionary<ChatType, ChatSource> chatCodes)
     {
         using var channelNode = ImRaii.TreeNode(headerText);
@@ -696,15 +615,4 @@ internal static class ImGuiUtil
                 extraChatChannels.Remove(id);
         }
     }
-
-    public static void WrappedTextWithColor(Vector4 color, string text)
-    {
-        using (ImRaii.PushColor(ImGuiCol.Text, color))
-        {
-            ImGui.TextWrapped(text);
-        }
-    }
-
-    // Used to avoid pops if condition is false for Push.
-    private static void Nop() { }
 }

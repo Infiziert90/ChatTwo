@@ -20,7 +20,6 @@ using FFXIVClientStructs.FFXIV.Client.UI;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using Dalamud.Bindings.ImGui;
 using Lumina.Excel.Sheets;
-
 using Action = System.Action;
 using DalamudPartyFinderPayload = Dalamud.Game.Text.SeStringHandling.Payloads.PartyFinderPayload;
 using ChatTwoPartyFinderPayload = ChatTwo.Util.PartyFinderPayload;
@@ -39,7 +38,7 @@ public sealed class PayloadHandler
     public uint HoverCounter;
     public uint LastHoverCounter;
 
-    private const uint PopupSfx = 1u;
+    private const uint PopupSfx = 1;
 
     internal PayloadHandler(ChatLogWindow logWindow)
     {
@@ -110,7 +109,7 @@ public sealed class PayloadHandler
         var contentId = chunk.Message?.ContentId ?? 0;
         var sender = chunk.Message?.Sender.Select(c => c.Link).FirstOrDefault(p => p is PlayerPayload) as PlayerPayload;
 
-        using var menu = ImGuiUtil.Menu(Language.Context_Integrations);
+        using var menu = ImRaii.Menu(Language.Context_Integrations);
         if (!menu.Success)
             return;
 
@@ -146,7 +145,7 @@ public sealed class PayloadHandler
             //
             // It makes it much more convenient in the majority of cases to
             // copy the message content without having to open a submenu.
-            menu = ImGuiUtil.Menu(Plugin.PluginName);
+            menu = ImRaii.Menu(Plugin.PluginName);
             if (!menu.Success)
                 return;
         }
@@ -240,7 +239,7 @@ public sealed class PayloadHandler
                 DoHover(() => HoverItem(item), hoverSize);
                 break;
             case UriPayload uri:
-                DoHover(() => HoverURI(uri), hoverSize);
+                DoHover(() => HoverUri(uri), hoverSize);
                 break;
         }
     }
@@ -250,16 +249,14 @@ public sealed class PayloadHandler
         ImGui.SetNextWindowSize(new Vector2(width, -1f));
 
         using (ImRaii.Tooltip())
-        using (ImGuiUtil.TextWrapPos())
+        using (ImRaii.TextWrapPos(0.0f))
         using (ImRaii.PushColor(ImGuiCol.Text, LogWindow.DefaultText))
-        {
             inside();
-        }
     }
 
     public unsafe void MoveTooltip(AddonEvent type, AddonArgs args)
     {
-        // Only move if user has "Next to Cursor" option selected
+        // Only move if the user has the "Next to Cursor" option selected
         if (!Plugin.GameConfig.TryGet(UiControlOption.DetailTrackingType, out uint selected) || selected != 0)
             return;
 
@@ -352,7 +349,7 @@ public sealed class PayloadHandler
             InlineIcon(icon);
 
         var builder = new SeStringBuilder();
-        var nameValue = status.Status.Value.Name.ToDalamudString().TextValue;
+        var nameValue = status.Status.Value.Name.ToString();
         switch (status.Status.Value.StatusCategory)
         {
             case 1:
@@ -364,14 +361,13 @@ public sealed class PayloadHandler
             default:
                 builder.AddUiForeground(nameValue, 1);
                 break;
-        };
+        }
 
         var name = ChunkUtil.ToChunks(builder.BuiltString, ChunkSource.None, null);
         LogWindow.DrawChunks(name.ToList());
         ImGui.Separator();
 
-        var descString = status.Status.Value.Description.ToDalamudString();
-        var desc = ChunkUtil.ToChunks(descString, ChunkSource.None, null);
+        var desc = ChunkUtil.ToChunks(status.Status.Value.Description.ToDalamudString(), ChunkSource.None, null);
         LogWindow.DrawChunks(desc.ToList());
     }
 
@@ -383,7 +379,9 @@ public sealed class PayloadHandler
             return;
         }
 
-        item.Item.TryGetValue(out Item resolvedItem);
+        if (!item.Item.TryGetValue(out Item resolvedItem))
+            return;
+
         if (Plugin.TextureProvider.GetFromGameIcon(new GameIconLookup(resolvedItem.Icon, item.IsHQ)).GetWrapOrDefault() is { } icon)
             InlineIcon(icon);
 
@@ -413,7 +411,7 @@ public sealed class PayloadHandler
         LogWindow.DrawChunks(ChunkUtil.ToChunks(itemHelpRow.Description.ToDalamudString(), ChunkSource.None, null).ToList());
     }
 
-    private void HoverURI(UriPayload uri)
+    private void HoverUri(UriPayload uri)
     {
         ImGui.TextUnformatted(string.Format(Language.Context_URLDomain, uri.Uri.Authority));
         ImGuiUtil.WarningText(Language.Context_URLWarning);
@@ -449,7 +447,7 @@ public sealed class PayloadHandler
                     GameFunctions.GameFunctions.OpenPartyFinder();
                 break;
             case UriPayload uri:
-                WrapperUtil.TryOpenURI(uri.Uri);
+                WrapperUtil.TryOpenUri(uri.Uri);
                 break;
             default:
                 RightClickPayload(chunk, payload);
@@ -552,8 +550,7 @@ public sealed class PayloadHandler
         if (Plugin.TextureProvider.GetFromGameIcon(new GameIconLookup(item.Icon)).GetWrapOrDefault() is { } icon)
             InlineIcon(icon);
 
-        var name = item.Name.ToDalamudString();
-        LogWindow.DrawChunks(ChunkUtil.ToChunks(name, ChunkSource.None, null).ToList(), false);
+        LogWindow.DrawChunks(ChunkUtil.ToChunks(item.Name.ToDalamudString(), ChunkSource.None, null).ToList(), false);
         ImGui.Separator();
 
         var realItemId = payload.RawItemId;
@@ -561,12 +558,13 @@ public sealed class PayloadHandler
             GameFunctions.Context.LinkItem(realItemId);
 
         if (ImGui.Selectable(Language.Context_CopyItemName))
-            ImGui.SetClipboardText(name.TextValue);
+            ImGui.SetClipboardText(item.Name.ToString());
     }
 
     private void DrawPlayerPopup(Chunk chunk, PlayerPayload player)
     {
         // Possible that GMs return a null payload
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
         if (player == null)
             return;
 
@@ -627,7 +625,7 @@ public sealed class PayloadHandler
                     }
                     else if (!inInstance)
                     {
-                        using var menu = ImGuiUtil.Menu(Language.Context_InviteToParty);
+                        using var menu = ImRaii.Menu(Language.Context_InviteToParty);
                         if (menu.Success)
                         {
                             if (ImGui.Selectable(Language.Context_InviteToParty_SameWorld))
@@ -653,7 +651,7 @@ public sealed class PayloadHandler
             if (!isFriend && ImGui.Selectable(Language.Context_SendFriendRequest))
                 LogWindow.Plugin.Functions.SendFriendRequest(player.PlayerName, (ushort) world.RowId);
 
-            using (var menuBlockFunctions = ImGuiUtil.Menu(Language.Context_BlockFunctions))
+            using (var menuBlockFunctions = ImRaii.Menu(Language.Context_BlockFunctions))
             {
                 if (menuBlockFunctions.Success)
                 {
@@ -718,7 +716,7 @@ public sealed class PayloadHandler
         ImGui.Separator();
 
         if (ImGui.Selectable(Language.Context_OpenInBrowser))
-            WrapperUtil.TryOpenURI(uri.Uri);
+            WrapperUtil.TryOpenUri(uri.Uri);
 
         if (ImGui.Selectable(Language.Context_CopyLink))
         {
@@ -733,7 +731,7 @@ public sealed class PayloadHandler
             InlineIcon(icon);
 
         var builder = new SeStringBuilder();
-        var nameValue = status.Status.Value.Name.ToDalamudString().TextValue;
+        var nameValue = status.Status.Value.Name.ToString();
         switch (status.Status.Value.StatusCategory)
         {
             case 1:

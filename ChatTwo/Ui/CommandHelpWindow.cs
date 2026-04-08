@@ -4,15 +4,15 @@ using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
 using Dalamud.Utility;
 using Dalamud.Bindings.ImGui;
-using Lumina.Excel.Sheets;
+using Lumina.Text.ReadOnly;
 
 namespace ChatTwo.Ui;
 
 public class CommandHelpWindow : Window {
     private ChatLogWindow LogWindow { get; }
-    private TextCommand? Command { get; set; }
+    private ReadOnlySeString? CommandDescription { get; set; }
 
-    internal CommandHelpWindow(ChatLogWindow logWindow) : base($"command help##chat2-commandhelp")
+    internal CommandHelpWindow(ChatLogWindow logWindow) : base("command help##chat2-commandhelp")
     {
         LogWindow = logWindow;
 
@@ -24,9 +24,9 @@ public class CommandHelpWindow : Window {
     }
 
     // Sets IsOpen to true if it should be drawn
-    public void UpdateContent(TextCommand command)
+    public void UpdateContent(ReadOnlySeString commandDesc)
     {
-        Command = command;
+        CommandDescription = commandDesc;
 
         var width = 350;
         var scaledWidth = width * ImGuiHelpers.GlobalScale;
@@ -56,9 +56,9 @@ public class CommandHelpWindow : Window {
 
     public override void Draw()
     {
-        if (Command == null)
+        if (CommandDescription == null)
             return;
 
-        LogWindow.DrawChunks(ChunkUtil.ToChunks(Command.Value.Description.ToDalamudString(), ChunkSource.None, null).ToList());
+        LogWindow.DrawChunks(ChunkUtil.ToChunks(CommandDescription.Value.ToDalamudString(), ChunkSource.None, null).ToList());
     }
 }

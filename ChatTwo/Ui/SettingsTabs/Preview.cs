@@ -1,6 +1,7 @@
 using ChatTwo.Resources;
 using ChatTwo.Util;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.Utility.Raii;
 
 namespace ChatTwo.Ui.SettingsTabs;
 
@@ -17,7 +18,7 @@ internal sealed class Preview : ISettingsTab
 
     public void Draw(bool changed)
     {
-        using var wrap = ImGuiUtil.TextWrapPos();
+        using var wrap = ImRaii.TextWrapPos(0.0f);
 
         using (var combo = ImGuiUtil.BeginComboVertical(Language.Options_Preview_Name, Mutable.PreviewPosition.Name()))
         {

@@ -401,7 +401,7 @@
     <value>{0} est un projet visant à recréer complètement le chat en jeu et à l'améliorer.</value>
   </data>
   <data name="Options_About_CrowdIn">
-    <value>Cliquez sur le bouton à gauche pour nous aider à traduire {0}.</value>
+    <value>Help to translate: </value>
   </data>
   <data name="Options_About_Translators">
     <value>Traducteurs</value>
@@ -542,7 +542,7 @@
     <value>Opacité</value>
   </data>
   <data name="Options_Tabs_IndependentHide">
-    <value>Use different hide condition than main window</value>
+    <value>Utiliser une condition de masquage différente de la fenêtre principale</value>
   </data>
   <data name="Options_FontsEnabled">
     <value>Activer les fontes personnalisées</value>
@@ -680,7 +680,7 @@
     <value>Inviter dans l'équipe</value>
   </data>
   <data name="Context_BlockFunctions">
-    <value>Block Functions</value>
+    <value>Fonctions de blocage</value>
   </data>
   <data name="Context_InviteToParty_SameWorld">
     <value>Même monde</value>
@@ -701,10 +701,10 @@
     <value>Ajouter à la liste noire</value>
   </data>
   <data name="Context_AddToMuteList">
-    <value>Register to Mute List</value>
+    <value>Ajouter à la Liste Muette</value>
   </data>
   <data name="Context_AddToTermsFilter">
-    <value>Add to Term Filters</value>
+    <value>Ajouter aux filtres des termes</value>
   </data>
   <data name="Context_InviteToNoviceNetwork">
     <value>Inviter dans le réseau des novices</value>
@@ -842,7 +842,7 @@
     <value>Notifications d'alarme</value>
   </data>
   <data name="ChatType_Glamour">
-    <value>Glamour Notifications</value>
+    <value>Notification de Glamour</value>
   </data>
   <data name="ChatType_Echo">
     <value>Écho</value>
@@ -965,10 +965,10 @@
     <value>Remplace les messages identiques consécutifs par un compteur ajouté à la première instance des dits messages.</value>
   </data>
   <data name="Options_CollapseDuplicateMsgUniqueLink_Name">
-    <value>Keep unique links seperate</value>
+    <value>Garder les liens uniques séparés</value>
   </data>
   <data name="Options_CollapseDuplicateMsgUniqueLink_Description">
-    <value>Don't collapse messages if they link to different things with the same text.</value>
+    <value>Ne pas réduire les messages s'ils sont liés à des choses différentes avec le même texte.</value>
   </data>
   <data name="Options_Tabs_ExtraChatChannels">
     <value>Canaux d'ExtraChat</value>

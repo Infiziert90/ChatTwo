@@ -402,7 +402,7 @@
 繁體中文是為了不開補全功能也能與其他玩家正常顯示溝通所翻譯及修改。</value>
   </data>
   <data name="Options_About_CrowdIn">
-    <value>點選左邊的按鈕來幇助翻譯 {0}。</value>
+    <value>Help to translate: </value>
   </data>
   <data name="Options_About_Translators">
     <value>翻譯人員</value>

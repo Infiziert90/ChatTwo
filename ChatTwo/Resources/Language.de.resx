@@ -402,7 +402,7 @@ Sie wurden gewarnt.</value>
     <value>{0} ist ein Projekt, dessen Ziel es ist, den Spielchat zu verbessern und neu zu gestalten.</value>
   </data>
   <data name="Options_About_CrowdIn">
-    <value>Drücken Sie auf den linken Knopf, um bei der Übersetzung von {0} zu helfen.</value>
+    <value>Helfen Sie bei der Übersetzung: </value>
   </data>
   <data name="Options_About_Translators">
     <value>Übersetzer</value>

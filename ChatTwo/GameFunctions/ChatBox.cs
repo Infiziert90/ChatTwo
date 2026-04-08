@@ -4,7 +4,6 @@ using FFXIVClientStructs.FFXIV.Client.UI;
 
 namespace ChatTwo.GameFunctions;
 
-// From: https://git.anna.lgbt/anna/XivCommon/src/branch/main/XivCommon/Functions/Chat.cs
 public unsafe class ChatBox
 {
     public static void SendMessageUnsafe(byte[] message)

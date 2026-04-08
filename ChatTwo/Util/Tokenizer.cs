@@ -47,7 +47,7 @@ public static class Tokenizer
                 new TokenDefinition(TokenType.Whitespace, "\\s", 1),
                 new TokenDefinition(TokenType.Equals, "=", 1),
                 new TokenDefinition(TokenType.OpenParenthesis, "\\(", 1),
-                new TokenDefinition(TokenType.UrlString, URLRegex, 1),
+                new TokenDefinition(TokenType.UrlString, UrlRegex, 1),
                 new TokenDefinition(TokenType.StringValue, "\\p{IsBasicLatin}", 2),
                 new TokenDefinition(TokenType.Leftover, ".", 3)
             ];
@@ -127,7 +127,7 @@ public static class Tokenizer
     private class TokenMatch
     {
         public TokenType TokenType { get; set; }
-        public string Value { get; set; }
+        public required string Value { get; set; }
         public int StartIndex { get; set; }
         public int EndIndex { get; set; }
         public int Precedence { get; set; }
@@ -145,7 +145,7 @@ public static class Tokenizer
     /// It matches URLs with www. or https:// prefix, and also matches URLs
     /// without a prefix on specific TLDs.
     /// </summary>
-    private static Regex URLRegex = new(
+    private static readonly Regex UrlRegex = new(
         @"(?<URL>((https?:\/\/|www\.)[a-z0-9-]+(\.[a-z0-9-]+)*|([a-z0-9-]+(\.[a-z0-9-]+)*\.(com|net|org|co|io|app)))(:[\d]{1,5})?(\/[^\s]*)?)",
         RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture
     );

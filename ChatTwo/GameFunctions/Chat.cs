@@ -478,12 +478,20 @@ internal sealed unsafe class Chat : IDisposable
 
     internal void SendTell(TellReason reason, ulong contentId, string name, ushort homeWorld, byte[] message, string rawText)
     {
+        if (contentId == 0)
+        {
+            Plugin.ChatGui.PrintError(Language.Chat_SendTell_Error);
+            Plugin.Log.Warning("Tried to send a tell with ContentId being 0, sorry this is an internal error.");
+            return;
+        }
+
         var uName = Utf8String.FromString(name);
         var uMessage = Utf8String.FromSequence(message);
 
         var encoded = Utf8String.FromUtf8String(PronounModule.Instance()->ProcessString(uMessage, true));
         var decoded = EncodeMessage(rawText);
         AutoTranslate.ReplaceWithPayload(ref decoded);
+
         using var decodedUtf8String = new Utf8String(decoded);
 
         var logModule = RaptureLogModule.Instance();
@@ -493,25 +501,11 @@ internal sealed unsafe class Chat : IDisposable
         if (reason == TellReason.Direct)
             reason = TellReason.Friend;
 
-        if (contentId == 0)
-        {
-            encoded->Dtor(true);
-            uName->Dtor(true);
-            uMessage->Dtor(true);
-
-            Plugin.Log.Warning("Tried to send a tell with content id being 0");
-            return;
-        }
-
         var ok = SendTellNative(networkModule, contentId, homeWorld, uName, encoded, (ushort) reason, homeWorld);
         if (ok == 1)
-        {
             PrintTellNative(logModule, 33, uName, &decodedUtf8String, 0, contentId, homeWorld, 255, 0, 0);
-        }
         else
-        {
             Plugin.ChatGui.PrintError(Language.Chat_SendTell_Error);
-        }
 
         encoded->Dtor(true);
         uName->Dtor(true);

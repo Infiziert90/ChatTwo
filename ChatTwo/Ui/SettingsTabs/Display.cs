@@ -19,7 +19,7 @@ internal sealed class Display : ISettingsTab
 
     public void Draw(bool changed)
     {
-        using var wrap = ImGuiUtil.TextWrapPos();
+        using var wrap = ImRaii.TextWrapPos(0.0f);
 
         ImGuiUtil.OptionCheckbox(ref Mutable.HideChat, Language.Options_HideChat_Name, Language.Options_HideChat_Description);
         ImGui.Spacing();

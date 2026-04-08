@@ -15,7 +15,7 @@ internal sealed unsafe class Context
 
     internal static void TryOn(uint itemId, byte stainId)
     {
-        AgentTryon.TryOn(0xFF, itemId, stainId, 0, 0);
+        AgentTryon.TryOn(0xFF, itemId, stainId);
     }
 
     internal static void LinkItem(uint itemId)
@@ -40,6 +40,6 @@ internal sealed unsafe class Context
 
     internal static void SearchForItem(uint itemId)
     {
-        ItemFinderModule.Instance()->SearchForItem(itemId, true);
+        ItemFinderModule.Instance()->SearchForItem(itemId);
     }
 }

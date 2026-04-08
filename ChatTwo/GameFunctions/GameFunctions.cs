@@ -2,7 +2,6 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.Text.SeStringHandling;
-using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Hooking;
 using Dalamud.Memory;
 using Dalamud.Utility;
@@ -15,7 +14,6 @@ using FFXIVClientStructs.FFXIV.Client.UI.Info;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using Lumina.Excel;
 using Lumina.Excel.Sheets;
-
 using ValueType = FFXIVClientStructs.FFXIV.Component.GUI.ValueType;
 
 namespace ChatTwo.GameFunctions;
@@ -75,10 +73,9 @@ internal unsafe class GameFunctions : IDisposable
 
     private void ListCommand(string name, ushort world, string commandName)
     {
-        var row = Plugin.DataManager.GetExcelSheet<World>().GetRow(world);
+        var worldRow = Sheets.WorldSheet.GetRow(world);
 
-        var worldName = row.Name.ExtractText();
-        ReplacementName = $"{name}@{worldName}";
+        ReplacementName = $"{name}@{worldRow.Name.ToString()}";
         ChatBox.SendMessage($"/{commandName} add {Placeholder}");
     }
 
@@ -191,7 +188,7 @@ internal unsafe class GameFunctions : IDisposable
 
     internal static void OpenQuestLog(RowRef<Quest> quest)
     {
-        var splits = quest.Value.Id.ExtractText().Split("_");
+        var splits = quest.Value.Id.ToString().Split("_");
         if (splits.Length != 2)
         {
             Plugin.ChatGui.Print("QuestId is wrongly formatted");

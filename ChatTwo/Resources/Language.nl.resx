@@ -401,7 +401,7 @@
     <value>{0} is een project om de in-game chat volledig opnieuw te maken en nog beter te maken.</value>
   </data>
   <data name="Options_About_CrowdIn">
-    <value>Klik op de knop links om {0} te helpen vertalen.</value>
+    <value>Help to translate: </value>
   </data>
   <data name="Options_About_Translators">
     <value>Vertalers</value>
