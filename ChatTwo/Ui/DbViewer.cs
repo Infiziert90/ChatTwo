@@ -1,6 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Globalization;
 using System.Numerics;
+using System.Text;
 using ChatTwo.Code;
 using ChatTwo.Resources;
 using ChatTwo.Util;
@@ -10,6 +11,9 @@ using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.ImGuiNotification;
+using Lumina.Text.ReadOnly;
+using MoreLinq;
 
 namespace ChatTwo.Ui;
 
@@ -43,6 +47,10 @@ public class DbViewer : Window
     private Message[] Messages = [];  // Messages are only touched while processing is false
     private ConcurrentStack<Message> Filtered = [];  // Is used every frame, so ConcurrentStack for safety
 
+    private bool IsExporting;
+    private string InputPath = string.Empty;
+    private IActiveNotification Notification = null!;
+
     public DbViewer(Plugin plugin) : base("DBViewer###chat2-dbviewer")
     {
         Plugin = plugin;
@@ -63,12 +71,12 @@ public class DbViewer : Window
         RespectCloseHotkey = false;
         DisableWindowSounds = true;
 
-        Plugin.Commands.Register("/chat2Viewer", "Database Viewer", true).Execute += Toggle;
+        Plugin.Commands.Register("/chat2Viewer", "Get access to your message history, with simple filter options.", true).Execute += Toggle;
     }
 
     public void Dispose()
     {
-        Plugin.Commands.Register("/chat2Viewer", "Database Viewer", true).Execute -= Toggle;
+        Plugin.Commands.Register("/chat2Viewer", "Get access to your message history, with simple filter options.", true).Execute -= Toggle;
     }
 
     private void Toggle(string _, string __) => Toggle();
@@ -81,6 +89,8 @@ public class DbViewer : Window
 
         if (CurrentPage > totalPages)
             CurrentPage = 1;
+
+        // First row
 
         ImGui.AlignTextToFramePadding();
         ImGui.TextColored(ImGuiColors.DalamudViolet, Language.DbViewer_DatePicker_FromTo);
@@ -101,6 +111,49 @@ public class DbViewer : Window
         ImGui.SameLine(ImGui.GetContentRegionMax().X - textLength);
         ImGui.Checkbox(skipText, ref OnlyCurrentCharacter);
 
+        // Second row
+
+        ImGui.AlignTextToFramePadding();
+        ImGui.TextColored(ImGuiColors.DalamudViolet, "Export:");
+        ImGui.SameLine(0, spacing);
+        ImGui.SetNextItemWidth(ImGui.GetWindowWidth() * 0.4f);
+        ImGui.InputText("##InputPath", ref InputPath, 255);
+        ImGui.SameLine(0, spacing);
+        if (ImGuiUtil.IconButton(FontAwesomeIcon.FolderClosed, "##folderPicker"))
+            ImGui.OpenPopup("InputPathDialog");
+
+        if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
+            ImGui.SetTooltip("Pick a folder location for export.");
+
+        using (var innerPopup = ImRaii.Popup("InputPathDialog"))
+        {
+            if (innerPopup.Success)
+                Plugin.FileDialogManager.OpenFolderDialog("Pick an export location", (b, s) => { if (b) InputPath = s; }, null, true);
+        }
+
+        ImGui.SameLine(0, spacing);
+        using (ImRaii.Disabled(InputPath.Length == 0 || IsExporting))
+        {
+            if (ImGuiUtil.IconButton(FontAwesomeIcon.Save))
+            {
+                Notification = Plugin.Notification.AddNotification(
+                    new Notification
+                    {
+                        Title = "Chat2 Export",
+                        Content = "Loading logs ...",
+                        Type = NotificationType.Info,
+                        Minimized = false,
+                        UserDismissable = false,
+                        InitialDuration = TimeSpan.FromSeconds(10000),
+                        Progress = 0.0f,
+                    });
+                CreateTxtBackup();
+            }
+        }
+
+        if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
+            ImGui.SetTooltip("Export the message history to a text file.");
+
         var width = 350 * ImGuiHelpers.GlobalScale;
         var loadingIndicator = IsProcessing && ProcessingStart < Environment.TickCount64;
 
@@ -109,7 +162,9 @@ public class DbViewer : Window
         ImGui.SameLine(ImGui.GetContentRegionMax().X - width);
         ImGui.SetNextItemWidth(width);
         if (ImGui.InputTextWithHint("##searchbar", Language.DbViewer_SearcHint, ref SimpleSearchTerm, 30))
-            Filter();
+            Filtered = Filter(Messages);
+
+        // Third row
 
         if (DateWidget.Validate(MinimalDate, ref AfterDate, ref BeforeDate))
             DateRefresh();
@@ -135,10 +190,10 @@ public class DbViewer : Window
                     if (CurrentPage == 1)
                         Count = Plugin.MessageManager.Store.CountDateRange(AfterDate, BeforeDate, channels, character);
 
-                    using var dateRangeMessageEnumerator = Plugin.MessageManager.Store.GetDateRange(AfterDate, BeforeDate, channels, character, CurrentPage - 1);
-                    Messages = dateRangeMessageEnumerator.ToArray();
+                    using var rangeMessageEnumerator = Plugin.MessageManager.Store.GetPagedDateRange(AfterDate, BeforeDate, channels, character, CurrentPage - 1);
+                    Messages = rangeMessageEnumerator.ToArray();
 
-                    Filter();
+                    Filtered = Filter(Messages);
                 }
                 catch (Exception ex)
                 {
@@ -236,16 +291,13 @@ public class DbViewer : Window
         }
     }
 
-    private void Filter()
+    private ConcurrentStack<Message> Filter(Message[] messages)
     {
         if (SimpleSearchTerm == "")
-        {
-            Filtered = new ConcurrentStack<Message>(Messages.Reverse().OrderByDescending(m => m.Date));
-            return;
-        }
+            return new ConcurrentStack<Message>(messages.Reverse().OrderByDescending(m => m.Date));
 
-        Filtered = new ConcurrentStack<Message>(
-            Messages.Reverse().Where(m =>
+        return new ConcurrentStack<Message>(
+            messages.Reverse().Where(m =>
                 ChunkUtil.ToRawString(m.Sender).Contains(SimpleSearchTerm, StringComparison.InvariantCultureIgnoreCase) ||
                 ChunkUtil.ToRawString(m.Content).Contains(SimpleSearchTerm, StringComparison.InvariantCultureIgnoreCase)
                 ).OrderByDescending(m => m.Date));
@@ -270,5 +322,73 @@ public class DbViewer : Window
 
         AdjustDates();
         DateRefresh();
+    }
+
+    private void CreateTxtBackup()
+    {
+        IsExporting = true;
+        Task.Run(async () =>
+        {
+            try
+            {
+                ulong? character = OnlyCurrentCharacter ? Plugin.PlayerState.ContentId : null;
+                var channels = ChatCodes.Select(c => (uint)c.Key).ToArray();
+
+                var rangeMessageEnumerator = Plugin.MessageManager.Store.GetDateRange(AfterDate, BeforeDate, channels, character);
+                var messageHistory = rangeMessageEnumerator.ToArray();
+                await rangeMessageEnumerator.DisposeAsync();
+
+                var filteredHistory = Filter(messageHistory);
+
+                var sb = new StringBuilder();
+                await using var stream = new StreamWriter(Path.Join(InputPath, $"Chat2_{DateTime.Now:yyyy_dd_M__HH_mm_ss}.txt"));
+
+                var batch = 0;
+                foreach (var messages in filteredHistory.Batch(5000))
+                {
+                    await Plugin.Framework.RunOnTick(() =>
+                    {
+                        foreach (var message in messages)
+                        {
+                            if (!Sheets.LogKindSheet.TryGetRow((uint)message.Code.Type, out var logKind))
+                                logKind = Sheets.LogKindSheet.GetRow(10); // default to say
+
+                            var rossSender = new ReadOnlySeString(message.SenderSource.Encode());
+                            var rossMessage = new ReadOnlySeString(message.ContentSource.Encode());
+
+                            var timestamp = message.Date.ToLocalTime().ToString(DateTimeFormat);
+                            var text = Plugin.Evaluator.Evaluate(logKind.Format, [rossSender, rossMessage]).ToString();
+                            sb.AppendLine($"[{timestamp}][{message.Code.Type.Name()}]   {text}");
+
+                            batch++;
+                        }
+                    }, delayTicks: 5);
+
+                    Notification.Progress = (float)batch / filteredHistory.Count;
+                    Notification.Content = $"Exported {batch} of {filteredHistory.Count} messages";
+                    await stream.WriteAsync(sb.ToString());
+                    sb.Clear();
+                }
+
+                await stream.WriteAsync(sb.ToString());
+                sb.Clear();
+
+                Notification.Progress = 1.0f;
+                Notification.Content = "Done!!!";
+                Notification.Type = NotificationType.Success;
+            }
+            catch (Exception ex)
+            {
+                Plugin.Log.Error(ex, "Failed creating txt backup");
+
+                Notification.Content = "Error ...";
+                Notification.Type = NotificationType.Error;
+            }
+            finally
+            {
+                IsExporting = false;
+                Notification.UserDismissable = true;
+            }
+        });
     }
 }

@@ -12,6 +12,7 @@ using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface.ImGuiFileDialog;
 
 namespace ChatTwo;
 
@@ -42,6 +43,7 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] internal static ISeStringEvaluator Evaluator { get; private set; } = null!;
 
     internal static Configuration Config = null!;
+    public static FileDialogManager FileDialogManager { get; private set; } = null!;
 
     public readonly WindowSystem WindowSystem = new(PluginName);
     public SettingsWindow SettingsWindow { get; }
@@ -92,6 +94,8 @@ public sealed class Plugin : IDalamudPlugin
 
             LanguageChanged(Interface.UiLanguage);
             ImGuiUtil.Initialize(this);
+
+            FileDialogManager = new FileDialogManager();
 
             // Functions calls this in its ctor if the player is already logged in
             ServerCore = new ServerCore(this);
@@ -216,6 +220,8 @@ public sealed class Plugin : IDalamudPlugin
 
         ChatLogWindow.FinalizeFrame();
         TypingIpc.Update();
+
+        FileDialogManager.Draw();
     }
 
     internal void SaveConfig()
