@@ -39,6 +39,9 @@ internal sealed class Display : ISettingsTab
         ImGuiUtil.OptionCheckbox(ref Mutable.HideInBattle, Language.Options_HideInBattle_Name, Language.Options_HideInBattle_Description);
         ImGui.Spacing();
 
+        ImGuiUtil.OptionCheckbox(ref Mutable.HideInNewGamePlusMenu, Language.Options_HideInNewGamePlusMenu_Name, Language.Options_HideInNewGamePlusMenu_Description);
+        ImGui.Spacing();
+
         ImGui.Separator();
         ImGui.Spacing();
 
