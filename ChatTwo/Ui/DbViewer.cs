@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Numerics;
 using System.Text;
 using ChatTwo.Code;
+using ChatTwo.Http.MessageProtocol;
 using ChatTwo.Resources;
 using ChatTwo.Util;
 using Dalamud.Interface;
@@ -11,9 +12,11 @@ using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface.ImGuiNotification;
 using Lumina.Text.ReadOnly;
 using MoreLinq;
+using Newtonsoft.Json;
 
 namespace ChatTwo.Ui;
 
@@ -139,7 +142,7 @@ public class DbViewer : Window
                 Notification = Plugin.Notification.AddNotification(
                     new Notification
                     {
-                        Title = "Chat2 Export",
+                        Title = "Chat2 Text Export",
                         Content = "Loading logs ...",
                         Type = NotificationType.Info,
                         Minimized = false,
@@ -148,6 +151,26 @@ public class DbViewer : Window
                         Progress = 0.0f,
                     });
                 CreateTxtBackup();
+            }
+        }
+
+        ImGui.SameLine(0, spacing);
+        using (ImRaii.Disabled(InputPath.Length == 0 || IsExporting))
+        {
+            if (ImGuiUtil.IconButton(FontAwesomeIcon.FileExport))
+            {
+                Notification = Plugin.Notification.AddNotification(
+                    new Notification
+                    {
+                        Title = "Chat2 Json Export",
+                        Content = "Loading logs ...",
+                        Type = NotificationType.Info,
+                        Minimized = false,
+                        UserDismissable = false,
+                        InitialDuration = TimeSpan.FromSeconds(10000),
+                        Progress = 0.0f,
+                    });
+                CreateTempJsonFile();
             }
         }
 
@@ -390,5 +413,120 @@ public class DbViewer : Window
                 Notification.UserDismissable = true;
             }
         });
+    }
+
+    private void CreateTempJsonFile()
+    {
+        IsExporting = true;
+        Task.Run(async () =>
+        {
+            try
+            {
+                var channels = ChatCodes.Select(c => (uint)c.Key).ToArray();
+
+                var rangeMessageEnumerator = Plugin.MessageManager.Store.GetDateRange(AfterDate, BeforeDate, channels);
+                var messageHistory = rangeMessageEnumerator.ToArray();
+                await rangeMessageEnumerator.DisposeAsync();
+
+                var filteredHistory = Filter(messageHistory);
+
+                await using var stream = new StreamWriter(Path.Join(InputPath, $"Chat2_{DateTime.Now:yyyy_dd_M__HH_mm_ss}.json"));
+
+                var batch = 0;
+                var messageContainer = new Messages();
+                List<MessageResponse> templates = [];
+                foreach (var messages in filteredHistory.Batch(5000))
+                {
+                    foreach (var message in messages)
+                    {
+                        templates.Add(ReadMessageContent(message));
+                        batch++;
+                    }
+
+                    Notification.Progress = (float)batch / filteredHistory.Count;
+                    Notification.Content = $"Exported {batch} of {filteredHistory.Count} messages";
+
+                    await Task.Delay(100);
+                }
+
+                messageContainer.Set = templates.ToArray();
+                await stream.WriteAsync(JsonConvert.SerializeObject(messageContainer));
+                templates.Clear();
+
+                Notification.Progress = 1.0f;
+                Notification.Content = "Done!!!";
+                Notification.Type = NotificationType.Success;
+            }
+            catch (Exception ex)
+            {
+                Plugin.Log.Error(ex, "Failed creating txt backup");
+
+                Notification.Content = "Error ...";
+                Notification.Type = NotificationType.Error;
+            }
+            finally
+            {
+                IsExporting = false;
+                Notification.UserDismissable = true;
+            }
+        });
+    }
+
+    private MessageResponse ReadMessageContent(Message message)
+    {
+        var response = new MessageResponse
+        {
+            Id = message.Id,
+            Timestamp = message.Date.ToLocalTime().ToString("t", !Plugin.Config.Use24HourClock ? null : CultureInfo.CreateSpecificCulture("es-ES"))
+        };
+
+        var sender = message.Sender.Select(ProcessChunk);
+        var content = message.Content.Select(ProcessChunk);
+        response.Templates = sender.Concat(content).ToArray();
+
+        return response;
+    }
+
+    private MessageTemplate ProcessChunk(Chunk chunk)
+    {
+        if (chunk is IconChunk { } icon)
+        {
+            var iconId = (uint)icon.Icon;
+            return IconUtil.GfdFileView.TryGetEntry(iconId, out _) ? new MessageTemplate {PayloadType = WebPayloadType.Icon, IconId = iconId}: MessageTemplate.Empty;
+        }
+
+        if (chunk is TextChunk { } text)
+        {
+            if (chunk.Link is EmotePayload emotePayload && Plugin.Config.ShowEmotes)
+            {
+                var image = EmoteCache.GetEmote(emotePayload.Code);
+
+                if (image is { Failed: false })
+                    return new MessageTemplate { PayloadType = WebPayloadType.CustomEmote, Color = 0, Content = emotePayload.Code };
+            }
+
+            var color = text.Foreground;
+            if (color == null && text.FallbackColour != null)
+            {
+                var type = text.FallbackColour.Value;
+                color = Plugin.Config.ChatColours.TryGetValue(type, out var col) ? col : type.DefaultColor();
+            }
+
+            color ??= 0;
+
+            var userContent = text.Content ?? string.Empty;
+            if (Plugin.ChatLogWindow.ScreenshotMode)
+            {
+                if (chunk.Link is PlayerPayload playerPayload)
+                    userContent = Plugin.ChatLogWindow.HidePlayerInString(userContent, playerPayload.PlayerName, playerPayload.World.RowId);
+                else if (Plugin.ObjectTable.LocalPlayer is { } player)
+                    userContent = Plugin.ChatLogWindow.HidePlayerInString(userContent, player.Name.TextValue, player.HomeWorld.RowId);
+            }
+
+            var isNotUrl = text.Link is not UriPayload;
+            return new MessageTemplate { PayloadType = isNotUrl ? WebPayloadType.RawText : WebPayloadType.CustomUri, Color = color.Value, Content = userContent };
+        }
+
+        return MessageTemplate.Empty;
     }
 }
