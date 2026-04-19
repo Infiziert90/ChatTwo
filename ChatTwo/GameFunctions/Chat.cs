@@ -468,7 +468,7 @@ internal sealed unsafe class Chat : IDisposable
 
     internal void SendTellUsingCommandInner(byte[] message)
     {
-        var mes = Utf8String.FromSequence(message);
+        var mes = Utf8String.FromSequence(message.NullTerminate());
 
         RaptureShellModule.Instance()->ExecuteCommandInner(mes, UIModule.Instance());
         RaptureAtkModule.Instance()->ClearFocus(); // Clear the focus of vanilla chat that was still active
@@ -486,13 +486,13 @@ internal sealed unsafe class Chat : IDisposable
         }
 
         var uName = Utf8String.FromString(name);
-        var uMessage = Utf8String.FromSequence(message);
+        var uMessage = Utf8String.FromSequence(message.NullTerminate());
 
         var encoded = Utf8String.FromUtf8String(PronounModule.Instance()->ProcessString(uMessage, true));
         var decoded = EncodeMessage(rawText);
         AutoTranslate.ReplaceWithPayload(ref decoded);
 
-        using var decodedUtf8String = new Utf8String(decoded);
+        using var decodedUtf8String = new Utf8String(decoded.NullTerminate());
 
         var logModule = RaptureLogModule.Instance();
         var networkModule = Framework.Instance()->GetNetworkModuleProxy()->NetworkModule;
