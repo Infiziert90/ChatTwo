@@ -14,6 +14,7 @@ using Dalamud.Interface.Windowing;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface.ImGuiNotification;
+using Lumina.Data.Files;
 using Lumina.Text.ReadOnly;
 using MoreLinq;
 using Newtonsoft.Json;
@@ -154,6 +155,9 @@ public class DbViewer : Window
             }
         }
 
+        if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
+            ImGui.SetTooltip("Export the message history to a text file.");
+
         ImGui.SameLine(0, spacing);
         using (ImRaii.Disabled(InputPath.Length == 0 || IsExporting))
         {
@@ -175,7 +179,7 @@ public class DbViewer : Window
         }
 
         if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
-            ImGui.SetTooltip("Export the message history to a text file.");
+            ImGui.SetTooltip("Export the message history to a json file.");
 
         var width = 350 * ImGuiHelpers.GlobalScale;
         var loadingIndicator = IsProcessing && ProcessingStart < Environment.TickCount64;
@@ -452,6 +456,24 @@ public class DbViewer : Window
                 messageContainer.Set = templates.ToArray();
                 await stream.WriteAsync(JsonConvert.SerializeObject(messageContainer));
                 templates.Clear();
+
+                await using (var fileStream = File.Open(Path.Join(InputPath, "gfdata.gfd"), FileMode.OpenOrCreate))
+                {
+                    await using var byteWriter = new BinaryWriter(fileStream);
+                    byteWriter.Write(Plugin.DataManager.GetFile("common/font/gfdata.gfd")!.Data);
+                }
+
+                await using (var fileStream = File.Open(Path.Join(InputPath, "fonticon_ps5.tex"), FileMode.OpenOrCreate))
+                {
+                    await using var byteWriter = new BinaryWriter(fileStream);
+                    byteWriter.Write(Plugin.DataManager.GetFile<TexFile>("common/font/fonticon_ps5.tex")!.Data);
+                }
+
+                await using (var fileStream = File.Open(Path.Join(InputPath, "FFXIV_Lodestone_SSF.ttf"), FileMode.OpenOrCreate))
+                {
+                    await using var byteWriter = new BinaryWriter(fileStream);
+                    byteWriter.Write(Plugin.FontManager.GameSymFont);
+                }
 
                 Notification.Progress = 1.0f;
                 Notification.Content = "Done!!!";
