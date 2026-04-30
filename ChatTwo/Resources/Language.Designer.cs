@@ -3462,7 +3462,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Show all messages send by target.
+        ///   Looks up a localized string similar to Show all messages sent by target.
         /// </summary>
         internal static string Options_Tabs_SenderMessages {
             get {

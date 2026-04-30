@@ -169,12 +169,16 @@ internal class MessageStore : IDisposable
         {
             case <= 0:
                 migrationsToDo.Add(Migrate0);
-                // Migration support was only added in version 1. Migrate0 is
+
+                // Migration support was only added in version 1. Migrate 0 is
                 // idempotent.
                 migrationsToDo.Add(Migrate1);
+                migrationsToDo.Add(Migrate2);
+                migrationsToDo.Add(Migrate3);
                 break;
             case 1:
                 migrationsToDo.Add(Migrate2);
+                migrationsToDo.Add(Migrate3);
                 break;
             case 2:
                 migrationsToDo.Add(Migrate3);

@@ -1148,7 +1148,7 @@
         <value>Disable input for this channel</value>
     </data>
     <data name="Options_Tabs_SenderMessages" xml:space="preserve">
-        <value>Show all messages send by target</value>
+        <value>Show all messages sent by target</value>
     </data>
     <data name="ChatLog_DisabledInput" xml:space="preserve">
         <value>Input is disabled for this tab</value>

@@ -159,12 +159,12 @@ internal sealed class Tabs : ISettingsTab
                     }
                 }
 
-                ImGui.Checkbox(Language.Options_Tabs_SenderMessages, ref tab.AllSenderMessages);
-                ImGuiUtil.HelpText(Language.Options_Help_SenderMessages);
-
                 var player = Plugin.ObjectTable.LocalPlayer;
                 if (tab.Channel == InputChannel.Tell && player != null)
                 {
+                    ImGui.Checkbox(Language.Options_Tabs_SenderMessages, ref tab.AllSenderMessages);
+                    ImGuiUtil.HelpText(Language.Options_Help_SenderMessages);
+
                     var worlds = Sheets.WorldsOnDatacenter(player).OrderByDescending(world => world.DataCenter.RowId).ThenBy(world => world.Name.ToString()).ToList();
 
                     using (ImRaii.ItemWidth(ImGui.GetWindowWidth() / 3f))
