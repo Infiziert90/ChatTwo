@@ -191,6 +191,7 @@ internal class MessageStore : IDisposable
 
     private void Migrate0()
     {
+        Plugin.Log.Information("Running migration 0: Creating tables");
         Connection.Execute(@"
             CREATE TABLE IF NOT EXISTS messages (
                 Id BLOB PRIMARY KEY NOT NULL,  -- Guid
@@ -215,6 +216,7 @@ internal class MessageStore : IDisposable
 
     private void Migrate1()
     {
+        Plugin.Log.Information("Running migration 1: Adding Deleted column");
         Connection.Execute(@"
             -- Migration 1: Add Deleted column
             ALTER TABLE messages ADD COLUMN Deleted BOOLEAN NOT NULL DEFAULT false;
@@ -225,6 +227,7 @@ internal class MessageStore : IDisposable
 
     private void Migrate2()
     {
+        Plugin.Log.Information("Running migration 2: Adding Channel generated column");
         Connection.Execute(@"
             -- Migration 2: Add Channel generated column
             ALTER TABLE messages ADD COLUMN Channel INTEGER GENERATED ALWAYS AS (Code & 0x7f) VIRTUAL;
@@ -236,6 +239,7 @@ internal class MessageStore : IDisposable
 
     private void Migrate3()
     {
+        Plugin.Log.Information("Running migration 3: Fix log kinds to fit the new format");
         Connection.Execute(@"
             -- Migration 3: Fix log kinds to fit the new format
             -- Add new ChatType, SourceKind, TargetKind (byte), SortCodeV2
@@ -268,6 +272,7 @@ internal class MessageStore : IDisposable
 
     private void SetMigrationVersion(int version)
     {
+        Plugin.Log.Information($"Setting version {version}");
         using var cmd = Connection.CreateCommand();
         // Parameters aren't supported for PRAGMA queries, and you can't set the
         // version with a pragma_ function.
