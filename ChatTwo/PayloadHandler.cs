@@ -135,7 +135,7 @@ public sealed class PayloadHandler
 
     private void ContextFooter(bool didCustomContext, Chunk chunk)
     {
-        ImRaii.IEndObject? menu = null;
+        ImRaii.MenuDisposable menu = default;
         if (didCustomContext)
         {
             ImGui.Separator();
@@ -177,7 +177,7 @@ public sealed class PayloadHandler
             ImGui.TextUnformatted(message.Code.Type.Name());
         }
 
-        menu?.Dispose();
+        menu.Dispose();
     }
 
     private static string StringifyMessage(Message? message, bool withSender = false)
@@ -192,7 +192,7 @@ public sealed class PayloadHandler
             .Aggregate(string.Concat);
     }
 
-    internal void Click(Chunk chunk, Payload? payload, ImGuiMouseButton button)
+    internal unsafe void Click(Chunk chunk, Payload? payload, ImGuiMouseButton button)
     {
         if (Plugin.Config.PlaySounds)
             UIGlobals.PlaySoundEffect(PopupSfx);
@@ -608,7 +608,7 @@ public sealed class PayloadHandler
         if (world.Value.IsPublic)
         {
             var party = Plugin.PartyList;
-            var leader = (ulong?) party[(int) party.PartyLeaderIndex]?.ContentId;
+            var leader = party[(int) party.PartyLeaderIndex]?.ContentId;
             var isLeader = party.Length == 0 || Plugin.PlayerState.ContentId == leader;
             var member = party.FirstOrDefault(member => member.Name.TextValue == player.PlayerName && member.World.RowId == world.RowId);
             var isInParty = member != null;
@@ -640,10 +640,10 @@ public sealed class PayloadHandler
                 if (isInParty && member != null && (!inInstance || (inInstance && inPartyInstance)))
                 {
                     if (ImGui.Selectable(Language.Context_Promote))
-                        GameFunctions.Party.Promote(player.PlayerName, (ulong) member.ContentId);
+                        GameFunctions.Party.Promote(player.PlayerName, member.ContentId);
 
                     if (ImGui.Selectable(Language.Context_KickFromParty))
-                        GameFunctions.Party.Kick(player.PlayerName, (ulong) member.ContentId);
+                        GameFunctions.Party.Kick(player.PlayerName, member.ContentId);
                 }
             }
 
@@ -743,7 +743,7 @@ public sealed class PayloadHandler
             default:
                 builder.AddUiForeground(nameValue, 1);
                 break;
-        };
+        }
 
         LogWindow.DrawChunks(ChunkUtil.ToChunks(builder.BuiltString, ChunkSource.None, null).ToList(), false);
         ImGui.Separator();

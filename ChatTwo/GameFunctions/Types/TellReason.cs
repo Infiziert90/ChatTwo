@@ -1,6 +1,6 @@
 namespace ChatTwo.GameFunctions.Types;
 
-internal enum TellReason
+public enum TellReason
 {
     Direct = 0,
     PartyFinder = 1,

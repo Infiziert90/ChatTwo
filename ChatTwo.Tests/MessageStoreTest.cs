@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using ChatTwo.Code;
 using ChatTwo.Util;
+using Dalamud.Game.Text;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using JetBrains.Annotations;
@@ -207,17 +208,17 @@ public class MessageStoreTest {
             new TextChunk(ChunkSource.Content, new UriPayload(new Uri("https://dalamud.dev")), "chat 2 uri"),
         ]).ToList();
 
+        var chatCode = new ChatCode((XivChatType)46, XivChatRelationKind.LocalPlayer, XivChatRelationKind.EngagedEnemy);
         return new Message(
             uniqId ? Guid.NewGuid() : Guid.Parse("f011343e-6a21-49e5-a6f9-238f0f1f8c2c"),
             receiver,
             54321,
             dateTime ?? DateTimeOffset.FromUnixTimeMilliseconds(1713520182440),
-            new ChatCode(12345),
+            chatCode,
             ChunkUtil.ToChunks(senderSeString, ChunkSource.Sender, ChatType.Debug).ToList(),
             contentChunks,
             senderSeString,
             contentSeString,
-            new SortCode(ChatType.Crafting, ChatSource.AlliancePet),
             extraChatId
         );
     }
@@ -230,10 +231,10 @@ public class MessageStoreTest {
         // Assert time is within 1 second
         var timeDifference = Math.Abs(input.Date.ToUniversalTime().Subtract(output.Date.ToUniversalTime()).TotalSeconds);
         Assert.IsTrue(timeDifference < 1);
-        Assert.AreEqual(input.Code.Raw, output.Code.Raw);
+        Assert.AreEqual(input.Code, output.Code);
         Assert.AreEqual($"{input.SenderSource.Encode():X}", $"{output.SenderSource.Encode():X}");
         Assert.AreEqual($"{input.ContentSource.Encode():X}", $"{output.ContentSource.Encode():X}");
-        Assert.AreEqual(input.SortCode, output.SortCode);
+        Assert.AreEqual(input.SortCodeV2, output.SortCodeV2);
         Assert.AreEqual(input.ExtraChatChannel, output.ExtraChatChannel);
 
         // Check chunks.

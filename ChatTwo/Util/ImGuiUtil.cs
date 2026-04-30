@@ -225,7 +225,7 @@ internal static class ImGuiUtil
             ImGui.TextUnformatted(text);
     }
 
-    internal static ImRaii.IEndObject BeginComboVertical(string label, string previewValue, ImGuiComboFlags flags = ImGuiComboFlags.None)
+    internal static ImRaii.ComboDisposable BeginComboVertical(string label, string previewValue, ImGuiComboFlags flags = ImGuiComboFlags.None)
     {
         ImGui.TextUnformatted(label);
         ImGui.SetNextItemWidth(-1);
@@ -542,7 +542,7 @@ internal static class ImGuiUtil
         return result != 0 || key == VirtualKey.NO_KEY;
     }
 
-    public static void ChannelSelector(string headerText, Dictionary<ChatType, ChatSource> chatCodes)
+    public static void ChannelSelector(string headerText, Dictionary<ChatType, (ChatSource Source, ChatSource Target)> chatCodes)
     {
         using var channelNode = ImRaii.TreeNode(headerText);
         if (!channelNode.Success)
@@ -563,7 +563,7 @@ internal static class ImGuiUtil
                 if (ImGui.Checkbox($"##{type.Name()}", ref enabled))
                 {
                     if (enabled)
-                        chatCodes[type] = ChatSourceExt.All;
+                        chatCodes[type] = (ChatSourceExt.All, ChatSourceExt.All);
                     else
                         chatCodes.Remove(type);
                 }
@@ -580,12 +580,24 @@ internal static class ImGuiUtil
                 if (!typeNode.Success)
                     continue;
 
-                chatCodes.TryGetValue(type, out var sourcesEnum);
-                var sources = (uint)sourcesEnum;
+                ImGui.Text(Language.ImGuiUtil_ChannelSelector_Source);
+                ImGui.SameLine(400.0f * ImGuiHelpers.GlobalScale);
+                ImGui.Text(Language.ImGuiUtil_ChannelSelector_Target);
 
-                foreach (var source in Enum.GetValues<ChatSource>())
-                    if (ImGui.CheckboxFlags(source.Name(), ref sources, (uint)source))
-                        chatCodes[type] = (ChatSource)sources;
+                chatCodes.TryGetValue(type, out var sourcesEnum);
+                var sources = (uint)sourcesEnum.Source;
+                var targets = (uint)sourcesEnum.Target;
+
+                foreach (var kind in Enum.GetValues<ChatSource>().Where(s => s != ChatSource.None))
+                {
+                    if (ImGui.CheckboxFlags($"{kind.Name()}##source", ref sources, (uint)kind))
+                        chatCodes[type] = ((ChatSource)sources, sourcesEnum.Target);
+
+                    ImGui.SameLine(400.0f * ImGuiHelpers.GlobalScale);
+
+                    if (ImGui.CheckboxFlags($"{kind.Name()}##target", ref targets, (uint)kind))
+                        chatCodes[type] = (sourcesEnum.Source, (ChatSource)targets);
+                }
             }
         }
     }

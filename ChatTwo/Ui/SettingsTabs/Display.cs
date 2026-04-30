@@ -1,4 +1,3 @@
-using ChatTwo.Code;
 using ChatTwo.Resources;
 using ChatTwo.Util;
 using Dalamud.Interface.Utility.Raii;
@@ -67,26 +66,24 @@ internal sealed class Display : ISettingsTab
             using var channelTree = ImRaii.TreeNode(Language.Options_InactivityHideChannels_Name);
             if (channelTree.Success)
             {
-                if (ImGuiUtil.CtrlShiftButton(Language.Options_InactivityHideChannels_All_Label,
-                        Language.Options_InactivityHideChannels_Button_Tooltip))
+                if (ImGuiUtil.CtrlShiftButton(Language.Options_InactivityHideChannels_All_Label, Language.Options_InactivityHideChannels_Button_Tooltip))
                 {
-                    Mutable.InactivityHideChannels = TabsUtil.AllChannels();
+                    Mutable.InactivityHideChannelsV2 = TabsUtil.AllChannels();
                     Mutable.InactivityHideExtraChatAll = true;
                     Mutable.InactivityHideExtraChatChannels = [];
                 }
 
                 ImGui.SameLine();
-                if (ImGuiUtil.CtrlShiftButton(Language.Options_InactivityHideChannels_None_Label,
-                        Language.Options_InactivityHideChannels_Button_Tooltip))
+                if (ImGuiUtil.CtrlShiftButton(Language.Options_InactivityHideChannels_None_Label, Language.Options_InactivityHideChannels_Button_Tooltip))
                 {
-                    Mutable.InactivityHideChannels = new Dictionary<ChatType, ChatSource>();
+                    Mutable.InactivityHideChannelsV2 = [];
                     Mutable.InactivityHideExtraChatAll = false;
                     Mutable.InactivityHideExtraChatChannels = [];
                 }
 
                 ImGui.Spacing();
 
-                ImGuiUtil.ChannelSelector(Language.Options_Tabs_Channels, Mutable.InactivityHideChannels!);
+                ImGuiUtil.ChannelSelector(Language.Options_Tabs_Channels, Mutable.InactivityHideChannelsV2);
                 ImGuiUtil.ExtraChatSelector(Language.Options_Tabs_ExtraChatChannels,
                     ref Mutable.InactivityHideExtraChatAll, Mutable.InactivityHideExtraChatChannels);
             }

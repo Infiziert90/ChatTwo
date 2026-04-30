@@ -1,11 +1,8 @@
-using System.Runtime.CompilerServices;
 using ChatTwo.Code;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using System.Text;
-using Lumina.Text.Expressions;
 using Lumina.Text.Payloads;
-using Lumina.Text.ReadOnly;
 
 using PayloadType = Dalamud.Game.Text.SeStringHandling.PayloadType;
 
@@ -417,46 +414,46 @@ internal static class ChunkUtil
         return BitConverter.ToUInt32(numArray, 0);
     }
 
-    private static bool TryResolveUInt(in ReadOnlySeExpressionSpan expression, out uint value)
-    {
-        if (expression.TryGetUInt(out value))
-            return true;
+    // private static bool TryResolveUInt(in ReadOnlySeExpressionSpan expression, out uint value)
+    // {
+    //     if (expression.TryGetUInt(out value))
+    //         return true;
+    //
+    //     if (expression.TryGetParameterExpression(out var exprType, out var operand1))
+    //     {
+    //         if (!TryResolveUInt(operand1, out var paramIndex))
+    //             return false;
+    //
+    //         if (paramIndex == 0)
+    //             return false;
+    //
+    //         paramIndex--;
+    //         if ((ExpressionType)exprType == ExpressionType.GlobalNumber)
+    //         {
+    //             value = (uint) GlobalParametersCache.GetValue((int)paramIndex);
+    //             return true;
+    //         }
+    //         // return (ExpressionType)exprType switch
+    //         // {
+    //         //     // ExpressionType.LocalNumber => context.TryGetLNum((int)paramIndex, out value), // lnum
+    //         //     ExpressionType.GlobalNumber => (uint) GlobalParametersCache.GetValue((int)paramIndex), // gnum
+    //         //     _ => false, // gstr, lstr
+    //         // };
+    //     }
+    //
+    //     return false;
+    // }
 
-        if (expression.TryGetParameterExpression(out var exprType, out var operand1))
-        {
-            if (!TryResolveUInt(operand1, out var paramIndex))
-                return false;
-
-            if (paramIndex == 0)
-                return false;
-
-            paramIndex--;
-            if ((ExpressionType)exprType == ExpressionType.GlobalNumber)
-            {
-                value = (uint) GlobalParametersCache.GetValue((int)paramIndex);
-                return true;
-            }
-            // return (ExpressionType)exprType switch
-            // {
-            //     // ExpressionType.LocalNumber => context.TryGetLNum((int)paramIndex, out value), // lnum
-            //     ExpressionType.GlobalNumber => (uint) GlobalParametersCache.GetValue((int)paramIndex), // gnum
-            //     _ => false, // gstr, lstr
-            // };
-        }
-
-        return false;
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool TryResolveInt(in ReadOnlySeExpressionSpan expression, out int value)
-    {
-        if (TryResolveUInt(expression, out var u32))
-        {
-            value = (int)u32;
-            return true;
-        }
-
-        value = 0;
-        return false;
-    }
+    // [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    // private static bool TryResolveInt(in ReadOnlySeExpressionSpan expression, out int value)
+    // {
+    //     if (TryResolveUInt(expression, out var u32))
+    //     {
+    //         value = (int)u32;
+    //         return true;
+    //     }
+    //
+    //     value = 0;
+    //     return false;
+    // }
 }

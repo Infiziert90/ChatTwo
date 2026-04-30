@@ -57,16 +57,11 @@ public enum ChunkSource
 [MessagePackObject(AllowPrivate = true)]
 public class TextChunk : Chunk
 {
-    [Key(2)]
-    public ChatType? FallbackColour { get; set; }
-    [Key(3)]
-    public uint? Foreground { get; set; }
-    [Key(4)]
-    public uint? Glow { get; set; }
-    [Key(5)]
-    public bool Italic { get; set; }
-    [Key(6)]
-    public string Content { get; set; }
+    [Key(2)] public ChatType? FallbackColour;
+    [Key(3)] public uint? Foreground;
+    [Key(4)] public uint? Glow;
+    [Key(5)] public bool Italic;
+    [Key(6)] public string Content;
 
     private TextChunk(Chunk chunk, string content) : base(chunk.Source, chunk.Link)
     {

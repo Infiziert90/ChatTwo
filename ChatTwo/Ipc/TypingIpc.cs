@@ -34,7 +34,7 @@ internal sealed class TypingIpc : IDisposable
         var channelType = inputChannel.ToChatType();
 
         return (InputVisible: !log.IsHidden,
-            InputFocused: log.InputFocused,
+            log.InputFocused,
             HasText: log.Chat.Length > 0,
             IsTyping: log is { InputFocused: true, Chat.Length: > 0 },
             TextLength: log.Chat.Length,

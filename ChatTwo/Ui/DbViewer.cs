@@ -35,7 +35,7 @@ public class DbViewer : Window
     private int CurrentPage = 1;
     private string SimpleSearchTerm = "";
     private bool OnlyCurrentCharacter = true;
-    private readonly Dictionary<ChatType, ChatSource> ChatCodes;
+    private readonly Dictionary<ChatType, (ChatSource, ChatSource)> SelectedChannels;
 
     private bool IsProcessing;
     private long ProcessingStart = Environment.TickCount64;
@@ -58,12 +58,12 @@ public class DbViewer : Window
     public DbViewer(Plugin plugin) : base("DBViewer###chat2-dbviewer")
     {
         Plugin = plugin;
-        ChatCodes = TabsUtil.MostlyPlayer;
+        SelectedChannels = TabsUtil.MostlyPlayer;
 
         DateFormat = CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern;
         DateTimeFormat = "ddd, dd MMM yyy HH:mm:ss";
 
-        LastProcessed = (AfterDate, BeforeDate, CurrentPage, OnlyCurrentCharacter, ChatCodes.Count);
+        LastProcessed = (AfterDate, BeforeDate, CurrentPage, OnlyCurrentCharacter, SelectedChannels.Count);
         DateReset();
 
         SizeConstraints = new WindowSizeConstraints
@@ -196,7 +196,7 @@ public class DbViewer : Window
         if (DateWidget.Validate(MinimalDate, ref AfterDate, ref BeforeDate))
             DateRefresh();
 
-        if (!IsProcessing && LastProcessed != (AfterDate, BeforeDate, CurrentPage, OnlyCurrentCharacter, ChatCodes.Count))
+        if (!IsProcessing && LastProcessed != (AfterDate, BeforeDate, CurrentPage, OnlyCurrentCharacter, SelectedChannels.Count))
         {
             // Page hasn't changed, so we reset it back to 1
             if (LastProcessed.Page == CurrentPage)
@@ -205,13 +205,13 @@ public class DbViewer : Window
             AdjustDates();
             IsProcessing = true;
             ProcessingStart = Environment.TickCount64 + 1_000; // + 1 second
-            LastProcessed = (AfterDate, BeforeDate, CurrentPage, OnlyCurrentCharacter, ChatCodes.Count);
+            LastProcessed = (AfterDate, BeforeDate, CurrentPage, OnlyCurrentCharacter, SelectedChannels.Count);
             Task.Run(() =>
             {
                 try
                 {
                     ulong? character = OnlyCurrentCharacter ? Plugin.PlayerState.ContentId : null;
-                    var channels = ChatCodes.Select(c => (uint) c.Key).ToArray();
+                    var channels = SelectedChannels.Select(pair => (byte) pair.Key).ToArray();
 
                     // We only want to fetch count if this is the first page
                     if (CurrentPage == 1)
@@ -263,7 +263,7 @@ public class DbViewer : Window
 
             ImGui.TableNextColumn();
             var pos = ImGui.GetCursorPos();
-            ImGuiUtil.CenterText($"{message.Code.Raw}");
+            ImGuiUtil.CenterText($"{(byte)message.Code.Type}");
             ImGui.SetCursorPos(pos);
             ImGui.Dummy(columnWidth);
             if (ImGui.IsItemHovered())
@@ -303,13 +303,13 @@ public class DbViewer : Window
                 if (type.IsGm())
                     continue;
 
-                var enabled = ChatCodes.ContainsKey(type);
+                var enabled = SelectedChannels.ContainsKey(type);
                 if (ImGui.Checkbox($"##{type.Name()}", ref enabled))
                 {
                     if (enabled)
-                        ChatCodes[type] = ChatSourceExt.All;
+                        SelectedChannels[type] = (ChatSourceExt.All, ChatSourceExt.All);
                     else
-                        ChatCodes.Remove(type);
+                        SelectedChannels.Remove(type);
                 }
 
                 ImGui.SameLine();
@@ -359,7 +359,7 @@ public class DbViewer : Window
             try
             {
                 ulong? character = OnlyCurrentCharacter ? Plugin.PlayerState.ContentId : null;
-                var channels = ChatCodes.Select(c => (uint)c.Key).ToArray();
+                var channels = SelectedChannels.Select(pair => (byte)pair.Key).ToArray();
 
                 var rangeMessageEnumerator = Plugin.MessageManager.Store.GetDateRange(AfterDate, BeforeDate, channels, character);
                 var messageHistory = rangeMessageEnumerator.ToArray();
@@ -426,7 +426,7 @@ public class DbViewer : Window
         {
             try
             {
-                var channels = ChatCodes.Select(c => (uint)c.Key).ToArray();
+                var channels = SelectedChannels.Select(pair => (byte)pair.Key).ToArray();
 
                 var rangeMessageEnumerator = Plugin.MessageManager.Store.GetDateRange(AfterDate, BeforeDate, channels);
                 var messageHistory = rangeMessageEnumerator.ToArray();
@@ -536,7 +536,7 @@ public class DbViewer : Window
 
             color ??= 0;
 
-            var userContent = text.Content ?? string.Empty;
+            var userContent = text.Content;
             if (Plugin.ChatLogWindow.ScreenshotMode)
             {
                 if (chunk.Link is PlayerPayload playerPayload)

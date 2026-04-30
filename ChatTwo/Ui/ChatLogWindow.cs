@@ -639,8 +639,7 @@ public sealed class ChatLogWindow : Window
             {
                 ImGui.SetNextWindowSize(new Vector2(500 * ImGuiHelpers.GlobalScale, -1));
                 using var tooltip = ImRaii.Tooltip();
-                if (tooltip)
-                    Plugin.InputPreview.DrawPreview();
+                Plugin.InputPreview.DrawPreview();
             }
 
             if (ImGui.IsItemDeactivated())
@@ -775,7 +774,7 @@ public sealed class ChatLogWindow : Window
         if (!currentChannel.SequenceEqual(PreviousChannel))
         {
             PreviousChannel = currentChannel;
-            Plugin.ServerCore?.SendChannelSwitch(currentChannel);
+            Plugin.ServerCore.SendChannelSwitch(currentChannel);
         }
 
         DrawChunks(currentChannel);
@@ -820,12 +819,19 @@ public sealed class ChatLogWindow : Window
         }
         else if (activeTab is { Channel: { } channel })
         {
-            // We cannot lookup ExtraChat channel names from index over
-            // IPC so we just don't show the name if it's the tabs channel.
-            //
-            // We don't call channel.ToChatType().Name() as it has the
-            // long name as used in the settings window.
-            channelNameChunks = [new TextChunk(ChunkSource.None, null, channel.IsExtraChatLinkshell() ? $"ECLS [{channel.LinkshellIndex() + 1}]" : channel.ToChatType().Name())];
+            if (channel == InputChannel.Tell && activeTab.TellTarget.IsSet())
+            {
+                channelNameChunks = GenerateTellTargetName(activeTab.TellTarget);
+            }
+            else
+            {
+                // We cannot lookup ExtraChat channel names from index over
+                // IPC so we just don't show the name if it's the tabs channel.
+                //
+                // We don't call channel.ToChatType().Name() as it has the
+                // long name as used in the settings window.
+                channelNameChunks = [new TextChunk(ChunkSource.None, null, channel.IsExtraChatLinkshell() ? $"ECLS [{channel.LinkshellIndex() + 1}]" : channel.ToChatType().Name())];
+            }
         }
         else if (Plugin.ExtraChat.ChannelOverride is var (overrideName, _))
         {
@@ -912,7 +918,7 @@ public sealed class ChatLogWindow : Window
             playerName = HashPlayer(tellTarget.Name, tellTarget.World);
 
         var world = Sheets.WorldSheet.TryGetRow(tellTarget.World, out var worldRow)
-            ? worldRow.Name.ExtractText()
+            ? worldRow.Name.ToString()
             : "???";
 
         return
@@ -954,7 +960,7 @@ public sealed class ChatLogWindow : Window
 
             if (!trimmed.StartsWith('/'))
             {
-                var target = activeTab.CurrentChannel.TempTellTarget ?? activeTab.CurrentChannel.TellTarget;
+                var target = activeTab.TellTarget.IsSet() ? activeTab.TellTarget : activeTab.CurrentChannel.TempTellTarget ?? activeTab.CurrentChannel.TellTarget;
                 if (target != null)
                 {
                     // ContentId 0 is a case where we can't directly send messages, so we send a /tell formatted message and let the game handle it

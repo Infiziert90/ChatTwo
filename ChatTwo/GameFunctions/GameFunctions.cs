@@ -14,7 +14,7 @@ using FFXIVClientStructs.FFXIV.Client.UI.Info;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using Lumina.Excel;
 using Lumina.Excel.Sheets;
-using ValueType = FFXIVClientStructs.FFXIV.Component.GUI.ValueType;
+using ValueType = FFXIVClientStructs.FFXIV.Component.GUI.AtkValueType;
 
 namespace ChatTwo.GameFunctions;
 
@@ -22,7 +22,7 @@ internal unsafe class GameFunctions : IDisposable
 {
     #region Hooks
     [Signature("E8 ?? ?? ?? ?? 48 85 C0 0F 84 ?? ?? ?? ?? 48 8B D0 49 8D 4F", DetourName = nameof(ResolveTextCommandPlaceholderDetour))]
-    private Hook<ResolveTextCommandPlaceholderDelegate>? ResolveTextCommandPlaceholderHook { get; init; }
+    private Hook<ResolveTextCommandPlaceholderDelegate>? ResolveTextCommandPlaceholderHook = null!;
     private delegate nint ResolveTextCommandPlaceholderDelegate(nint a1, byte* placeholderText, byte a3, byte a4);
     #endregion
 
@@ -132,7 +132,7 @@ internal unsafe class GameFunctions : IDisposable
         agent->AddonId = addon->Id;
 
         // Skips early return
-        atkStage->TooltipManager.Flag1 |= 2;
+        atkStage->TooltipManager.TooltipType |= 2;
         addon->Show(false, 15);
     }
 

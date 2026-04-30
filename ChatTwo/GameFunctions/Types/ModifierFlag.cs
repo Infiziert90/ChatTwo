@@ -1,7 +1,7 @@
 namespace ChatTwo.GameFunctions.Types;
 
 [Flags]
-internal enum ModifierFlag
+public enum ModifierFlag
 {
     None = 0,
     Shift = 1 << 0,

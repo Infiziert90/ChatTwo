@@ -20,7 +20,7 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 using InteropGenerator.Runtime;
 using Lumina.Text.ReadOnly;
 
-using ValueType = FFXIVClientStructs.FFXIV.Component.GUI.ValueType;
+using ValueType = FFXIVClientStructs.FFXIV.Component.GUI.AtkValueType;
 
 namespace ChatTwo.GameFunctions;
 
@@ -35,21 +35,21 @@ internal sealed unsafe class Chat : IDisposable
 
     // Client::UI::AddonChatLog.OnRefresh
     [Signature("40 53 57 41 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 4D 8B F8", DetourName = nameof(ChatLogRefreshDetour))]
-    private Hook<ChatLogRefreshDelegate>? ChatLogRefreshHook { get; init; }
+    private Hook<ChatLogRefreshDelegate>? ChatLogRefreshHook = null!;
     private delegate byte ChatLogRefreshDelegate(nint log, ushort eventId, AtkValue* value);
 
     // Replace with CS version later
     [Signature("48 89 5C 24 ?? 55 56 57 48 81 EC ?? ?? ?? ?? 48 8B 05 ?? ?? ?? ?? 48 33 C4 48 89 84 24 ?? ?? ?? ?? 83 B9", DetourName = nameof(ContextMenuTellInForayDetour))]
-    private Hook<ContextMenuTellInForayDelegate>? ContextMenuTellInForayHook { get; set; }
+    private Hook<ContextMenuTellInForayDelegate>? ContextMenuTellInForayHook = null!;
     private delegate void ContextMenuTellInForayDelegate(RaptureShellModule* module, Utf8String* playerName, Utf8String* worldName, ushort worldId, ulong accountId, ulong contentId, ushort reason);
 
-    private Hook<AgentChatLog.Delegates.ChangeChannelName> ChangeChannelNameHook { get; init; }
-    private Hook<RaptureShellModule.Delegates.ReplyInSelectedChatMode>? ReplyInSelectedChatModeHook { get; init; }
-    private Hook<RaptureShellModule.Delegates.SetContextTellTarget>? SetChatLogTellTargetHook { get; init; }
+    private readonly Hook<AgentChatLog.Delegates.ChangeChannelName>? ChangeChannelNameHook;
+    private readonly Hook<RaptureShellModule.Delegates.ReplyInSelectedChatMode>? ReplyInSelectedChatModeHook;
+    private readonly Hook<RaptureShellModule.Delegates.SetContextTellTarget>? SetChatLogTellTargetHook;
 
     // Pointers
-    [Signature("48 8D 35 ?? ?? ?? ?? 8B 05", ScanType = ScanType.StaticAddress)]
-    private readonly char* CurrentCharacter = null!;
+    [Signature("48 8D 1D ?? ?? ?? ?? 8B 05", ScanType = ScanType.StaticAddress)]
+    private readonly char* LastTypedCharacter = null!;
 
     private Plugin Plugin { get; }
 
@@ -64,7 +64,7 @@ internal sealed unsafe class Chat : IDisposable
     private long LastPlayerNameDisplayTypeRefresh;
     private PlayerNameDisplayType CurrentPlayerNameDisplayType = PlayerNameDisplayType.FullName;
 
-    internal Chat(Plugin plugin)
+    public Chat(Plugin plugin)
     {
         Plugin = plugin;
         Plugin.GameInteropProvider.InitializeFromAttributes(this);
@@ -131,7 +131,7 @@ internal sealed unsafe class Chat : IDisposable
     // If this function ever returns 0, it returns null instead.
     internal uint? GetChannelColor(ChatType type)
     {
-        var parent = new ChatCode((ushort) type).Parent();
+        var parent = type.Parent();
         switch (parent)
         {
             case ChatType.Debug:
@@ -169,7 +169,7 @@ internal sealed unsafe class Chat : IDisposable
         if (eventId != 0x31 || value == null || value->UInt is not (0x05 or 0x0C))
             return ChatLogRefreshHook!.Original(log, eventId, value);
 
-        if (Plugin.Functions.KeybindManager.DirectChat && CurrentCharacter != null)
+        if (Plugin.Functions.KeybindManager.DirectChat && LastTypedCharacter != null)
         {
             // FIXME: this whole system sucks
             // FIXME v2: I hate everything about this, but it works
@@ -177,7 +177,7 @@ internal sealed unsafe class Chat : IDisposable
             {
                 string? input = null;
 
-                var utf8Bytes = MemoryHelper.ReadRaw((nint)CurrentCharacter+0x4, 2);
+                var utf8Bytes = MemoryHelper.ReadRaw((nint)LastTypedCharacter+0x4, 2);
                 var chars = Encoding.UTF8.GetString(utf8Bytes).ToCharArray();
                 if (chars.Length == 0)
                     return;
@@ -230,7 +230,7 @@ internal sealed unsafe class Chat : IDisposable
 
     private CStringPointer ChangeChannelNameDetour(AgentChatLog* agent)
     {
-        var ret = ChangeChannelNameHook.Original(agent);
+        var ret = ChangeChannelNameHook!.Original(agent);
         if (agent == null)
             return ret;
 
@@ -572,6 +572,6 @@ internal sealed unsafe class Chat : IDisposable
         // second before the cutscene actually starts, because the game sets
         // the cutscene conditions before processing the skip.
         var raptureAtkUnitManager = RaptureAtkUnitManager.Instance();
-        return raptureAtkUnitManager == null || raptureAtkUnitManager->UiFlags.HasFlag(UIModule.UiFlags.Chat);
+        return raptureAtkUnitManager == null || raptureAtkUnitManager->UiFlags.HasFlag(UiFlags.Chat);
     }
 }

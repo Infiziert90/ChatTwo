@@ -7,6 +7,7 @@ using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface.ImGuiNotification;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Game.Text;
 
 namespace ChatTwo.Ui.SettingsTabs;
 
@@ -180,17 +181,17 @@ internal sealed class Database : ISettingsTab
                 .Build();
             var contentChunks = ChunkUtil.ToChunks(contentSource, ChunkSource.Content, ChatType.Debug).ToList();
 
+            var chatCode = new ChatCode(XivChatType.Say, 0, 0);
             messages.Add(new Message(
                 Guid.NewGuid(),
                 Plugin.MessageManager.CurrentContentId,
                 Plugin.MessageManager.CurrentContentId,
                 DateTimeOffset.UtcNow,
-                new ChatCode(10),
+                chatCode,
                 senderChunks,
                 contentChunks,
                 senderSource,
                 contentSource,
-                new SortCode(ChatType.Debug, ChatSource.Self),
                 Guid.Empty
             ));
         }

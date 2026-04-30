@@ -80,25 +80,25 @@ internal static class InputChannelExt
         InputChannel.Alliance => "/alliance",
         InputChannel.Yell => "/yell",
         InputChannel.Shout => "/shout",
-        InputChannel.FreeCompany => "/freecompany",
-        InputChannel.PvpTeam => "/pvpteam",
-        InputChannel.NoviceNetwork => "/beginner",
-        InputChannel.CrossLinkshell1 => "/cwlinkshell1",
-        InputChannel.CrossLinkshell2 => "/cwlinkshell2",
-        InputChannel.CrossLinkshell3 => "/cwlinkshell3",
-        InputChannel.CrossLinkshell4 => "/cwlinkshell4",
-        InputChannel.CrossLinkshell5 => "/cwlinkshell5",
-        InputChannel.CrossLinkshell6 => "/cwlinkshell6",
-        InputChannel.CrossLinkshell7 => "/cwlinkshell7",
-        InputChannel.CrossLinkshell8 => "/cwlinkshell8",
-        InputChannel.Linkshell1 => "/linkshell1",
-        InputChannel.Linkshell2 => "/linkshell2",
-        InputChannel.Linkshell3 => "/linkshell3",
-        InputChannel.Linkshell4 => "/linkshell4",
-        InputChannel.Linkshell5 => "/linkshell5",
-        InputChannel.Linkshell6 => "/linkshell6",
-        InputChannel.Linkshell7 => "/linkshell7",
-        InputChannel.Linkshell8 => "/linkshell8",
+        InputChannel.FreeCompany => "/fc",
+        InputChannel.PvpTeam => "/pt",
+        InputChannel.NoviceNetwork => "/n",
+        InputChannel.CrossLinkshell1 => "/cwl1",
+        InputChannel.CrossLinkshell2 => "/cwl2",
+        InputChannel.CrossLinkshell3 => "/cwl3",
+        InputChannel.CrossLinkshell4 => "/cwl4",
+        InputChannel.CrossLinkshell5 => "/cwl5",
+        InputChannel.CrossLinkshell6 => "/cwl6",
+        InputChannel.CrossLinkshell7 => "/cwl7",
+        InputChannel.CrossLinkshell8 => "/cwl8",
+        InputChannel.Linkshell1 => "/l1",
+        InputChannel.Linkshell2 => "/l2",
+        InputChannel.Linkshell3 => "/l3",
+        InputChannel.Linkshell4 => "/l4",
+        InputChannel.Linkshell5 => "/l5",
+        InputChannel.Linkshell6 => "/l6",
+        InputChannel.Linkshell7 => "/l7",
+        InputChannel.Linkshell8 => "/l8",
         InputChannel.ExtraChatLinkshell1 => "/ecl1",
         InputChannel.ExtraChatLinkshell2 => "/ecl2",
         InputChannel.ExtraChatLinkshell3 => "/ecl3",
@@ -112,7 +112,7 @@ internal static class InputChannelExt
 
     public static IEnumerable<TextCommand>? TextCommands(this InputChannel channel)
     {
-        var ids = channel switch
+        uint[] ids = channel switch
         {
             InputChannel.Tell => [104, 118],
             InputChannel.Say => [102],
@@ -139,7 +139,7 @@ internal static class InputChannelExt
             InputChannel.Linkshell6 => [112],
             InputChannel.Linkshell7 => [113],
             InputChannel.Linkshell8 => [114],
-            _ => Array.Empty<uint>(),
+            _ => []
         };
 
         if (ids.Length == 0)

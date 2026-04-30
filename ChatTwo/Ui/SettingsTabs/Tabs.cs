@@ -4,6 +4,7 @@ using ChatTwo.Util;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
+using Dalamud.Game.ClientState.Objects.SubKinds;
 
 namespace ChatTwo.Ui.SettingsTabs;
 
@@ -43,6 +44,9 @@ internal sealed class Tabs : ISettingsTab
 
                 if (ImGui.Selectable(string.Format(Language.Options_Tabs_Preset, Language.Tabs_Presets_Event)))
                     Mutable.Tabs.Add(TabsUtil.VanillaEvent);
+
+                if (ImGui.Selectable(string.Format(Language.Options_Tabs_Preset, Language.Tabs_Presets_Tell)))
+                    Mutable.Tabs.Add(TabsUtil.VanillaTellExclusive);
             }
         }
 
@@ -122,7 +126,7 @@ internal sealed class Tabs : ISettingsTab
 
             using (var combo = ImGuiUtil.BeginComboVertical(Language.Options_Tabs_UnreadMode, tab.UnreadMode.Name()))
             {
-                if (combo)
+                if (combo.Success)
                 {
                     foreach (var mode in Enum.GetValues<UnreadMode>())
                     {
@@ -142,19 +146,75 @@ internal sealed class Tabs : ISettingsTab
             if (!tab.InputDisabled)
             {
                 var input = tab.Channel?.ToChatType().Name() ?? Language.Options_Tabs_NoInputChannel;
-                using var combo = ImGuiUtil.BeginComboVertical(Language.Options_Tabs_InputChannel, input);
-                if (combo)
+                using (var combo = ImGuiUtil.BeginComboVertical(Language.Options_Tabs_InputChannel, input))
                 {
-                    if (ImGui.Selectable(Language.Options_Tabs_NoInputChannel, tab.Channel == null))
-                        tab.Channel = null;
+                    if (combo.Success)
+                    {
+                        if (ImGui.Selectable(Language.Options_Tabs_NoInputChannel, tab.Channel == null))
+                            tab.Channel = null;
 
-                    foreach (var channel in Enum.GetValues<InputChannel>())
-                        if (ImGui.Selectable(channel.ToChatType().Name(), tab.Channel == channel))
-                            tab.Channel = channel;
+                        foreach (var channel in Enum.GetValues<InputChannel>())
+                            if (ImGui.Selectable(channel.ToChatType().Name(), tab.Channel == channel))
+                                tab.Channel = channel;
+                    }
+                }
+
+                ImGui.Checkbox(Language.Options_Tabs_SenderMessages, ref tab.AllSenderMessages);
+                ImGuiUtil.HelpText(Language.Options_Help_SenderMessages);
+
+                var player = Plugin.ObjectTable.LocalPlayer;
+                if (tab.Channel == InputChannel.Tell && player != null)
+                {
+                    var worlds = Sheets.WorldsOnDatacenter(player).OrderByDescending(world => world.DataCenter.RowId).ThenBy(world => world.Name.ToString()).ToList();
+
+                    using (ImRaii.ItemWidth(ImGui.GetWindowWidth() / 3f))
+                    {
+                        ImGui.Text(Language.Options_Header_Target);
+                        ImGui.SameLine();
+
+                        var name = tab.TellTarget.Name;
+                        if (ImGui.InputText("##targetInput", ref name, 21))
+                            tab.TellTarget.Name = name;
+
+                        ImGui.SameLine();
+
+                        var selectedWorld = worlds.FindIndex(world => world.RowId == tab.TellTarget.World);
+                        if (selectedWorld == -1)
+                            selectedWorld = 0;
+
+                        using (var combo = ImRaii.Combo("###player-world", worlds[selectedWorld].Name.ToString()))
+                        {
+                            if (combo.Success)
+                            {
+                                var lastDc = worlds.First().DataCenter.RowId;
+                                foreach (var (idx, world) in worlds.Index())
+                                {
+                                    if (ImGui.Selectable(world.Name.ToString(), selectedWorld == idx))
+                                    {
+                                        selectedWorld = idx;
+                                        tab.TellTarget.World = worlds[selectedWorld].RowId;
+                                    }
+
+                                    if (lastDc == world.DataCenter.RowId)
+                                        continue;
+
+                                    lastDc = world.DataCenter.RowId;
+                                    ImGui.Separator();
+                                }
+                            }
+                        }
+                    }
+
+                    var target = (Plugin.TargetManager.SoftTarget ?? Plugin.TargetManager.Target) as IPlayerCharacter;
+                    using (ImRaii.Disabled(target == null))
+                    {
+                        if (ImGui.Button("Set to target") && target != null)
+                            tab.TellTarget.FromTarget(target);
+                    }
                 }
             }
 
-            ImGuiUtil.ChannelSelector(Language.Options_Tabs_Channels, tab.ChatCodes);
+            ImGuiUtil.ChannelSelector(Language.Options_Tabs_Channels, tab.SelectedChannels);
             ImGuiUtil.ExtraChatSelector(Language.Options_Tabs_ExtraChatChannels, ref tab.ExtraChatAll, tab.ExtraChatChannels);
         }
 

@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using ChatTwo.Resources;
 using Dalamud.Memory;
 using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Client.UI;
@@ -18,13 +19,13 @@ public unsafe class ChatBox
     {
         var bytes = Encoding.UTF8.GetBytes(message);
         if (bytes.Length == 0)
-            throw new ArgumentException("message is empty", nameof(message));
+            throw new ArgumentException(Language.ChatBox_Error_Empty, nameof(message));
 
         if (bytes.Length > 500)
-            throw new ArgumentException("message is longer than 500 bytes", nameof(message));
+            throw new ArgumentException(Language.ChatBox_Error_Too_Long, nameof(message));
 
         if (message.Length != SanitiseText(message).Length)
-            throw new ArgumentException("message contained invalid characters", nameof(message));
+            throw new ArgumentException(Language.ChatBox_Error_Invalid, nameof(message));
 
         SendMessageUnsafe(bytes);
     }

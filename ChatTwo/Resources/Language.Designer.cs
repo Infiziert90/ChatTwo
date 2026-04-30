@@ -87,6 +87,33 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to message is empty.
+        /// </summary>
+        internal static string ChatBox_Error_Empty {
+            get {
+                return ResourceManager.GetString("ChatBox_Error_Empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to message contained invalid characters.
+        /// </summary>
+        internal static string ChatBox_Error_Invalid {
+            get {
+                return ResourceManager.GetString("ChatBox_Error_Invalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to message is longer than 500 bytes.
+        /// </summary>
+        internal static string ChatBox_Error_Too_Long {
+            get {
+                return ResourceManager.GetString("ChatBox_Error_Too_Long", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Input is disabled for this tab.
         /// </summary>
         internal static string ChatLog_DisabledInput {
@@ -1752,6 +1779,24 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Source.
+        /// </summary>
+        internal static string ImGuiUtil_ChannelSelector_Source {
+            get {
+                return ResourceManager.GetString("ImGuiUtil_ChannelSelector_Source", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target.
+        /// </summary>
+        internal static string ImGuiUtil_ChannelSelector_Target {
+            get {
+                return ResourceManager.GetString("ImGuiUtil_ChannelSelector_Target", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ESC to clear.
         /// </summary>
         internal static string Keybind_EscToClear {
@@ -2441,6 +2486,24 @@ namespace ChatTwo.Resources {
         internal static string Options_FontSize_Name {
             get {
                 return ResourceManager.GetString("Options_FontSize_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Target.
+        /// </summary>
+        internal static string Options_Header_Target {
+            get {
+                return ResourceManager.GetString("Options_Header_Target", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This disables the channel selection and shows all messages coming from the target..
+        /// </summary>
+        internal static string Options_Help_SenderMessages {
+            get {
+                return ResourceManager.GetString("Options_Help_SenderMessages", resourceCulture);
             }
         }
         
@@ -3399,6 +3462,15 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Show all messages send by target.
+        /// </summary>
+        internal static string Options_Tabs_SenderMessages {
+            get {
+                return ResourceManager.GetString("Options_Tabs_SenderMessages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show timestamps.
         /// </summary>
         internal static string Options_Tabs_ShowTimestamps {
@@ -3710,6 +3782,15 @@ namespace ChatTwo.Resources {
         internal static string Tabs_Presets_General {
             get {
                 return ResourceManager.GetString("Tabs_Presets_General", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tell Exclusive.
+        /// </summary>
+        internal static string Tabs_Presets_Tell {
+            get {
+                return ResourceManager.GetString("Tabs_Presets_Tell", resourceCulture);
             }
         }
         

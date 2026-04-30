@@ -8,18 +8,18 @@ namespace ChatTwo;
 
 public class FontManager
 {
-    internal IFontHandle Axis { get; private set; }
-    internal IFontHandle AxisItalic { get; private set; }
+    internal IFontHandle Axis = null!;
+    internal IFontHandle AxisItalic = null!;
 
-    internal IFontHandle RegularFont { get; private set; }
-    internal IFontHandle? ItalicFont { get; private set; }
+    internal IFontHandle RegularFont = null!;
+    internal IFontHandle? ItalicFont;
 
-    internal IFontHandle FontAwesome { get; private set; }
+    internal IFontHandle FontAwesome = null!;
 
     internal readonly byte[] GameSymFont;
 
-    private ushort[] Ranges;
-    private ushort[] JpRange;
+    private ushort[] Ranges = [];
+    private ushort[] JpRange = [];
 
     public static readonly HashSet<float> AxisFontSizeList =
     [
@@ -69,10 +69,15 @@ public class FontManager
                 }
             }
 
+            // Ingame supported ranges
+            var reader = new FdtReader(Plugin.DataManager.GetFile("common/font/axis_12.fdt")!.Data);
+            foreach (var c in reader.Glyphs)
+                builder.AddChar(c.Char);
+
             // various symbols
             // French
             // Romanian
-            builder.AddText("←→↑↓《》■※☀★★☆♥♡ヅツッシ☀☁☂℃℉°♀♂♠♣♦♣♧®©™€$£♯♭♪✓√◎◆◇♦■□〇●△▽▼▲‹›≤≥<«“”─＼～");
+            // builder.AddText("←→↑↓《》■※☀★★☆♥♡ヅツッシ☀☁☂℃℉°♀♂♠♣♦♣♧®©™€$£♯♭♪✓√◎◆◇♦■□〇●△▽▼▲‹›≤≥<«“”─＼～");
             builder.AddText("Œœ");
             builder.AddText("ĂăÂâÎîȘșȚț");
 

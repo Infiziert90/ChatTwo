@@ -1,13 +1,17 @@
+using Dalamud.Game.ClientState.Objects.SubKinds;
+using FFXIVClientStructs.FFXIV.Client.Game.Character;
+
 namespace ChatTwo.GameFunctions.Types;
 
-internal sealed class TellTarget
+[Serializable]
+public class TellTarget
 {
-    internal string Name { get; }
-    internal ushort World { get; }
-    internal ulong ContentId { get; }
-    internal TellReason Reason { get; }
+    public string Name { get; set; }
+    public uint World { get; set; }
+    public ulong ContentId { get; private set; }
+    public TellReason Reason { get; private set; }
 
-    internal TellTarget(string name, ushort world, ulong contentId, TellReason reason)
+    public TellTarget(string name, uint world, ulong contentId, TellReason reason)
     {
         Name = name;
         World = world;
@@ -15,8 +19,22 @@ internal sealed class TellTarget
         Reason = reason;
     }
 
-    public bool IsSet() => Name.Length > 0 && World > 0;
+    public bool IsSet()
+        => Name.Length > 0 && World > 0;
 
-    public string ToWorldString() => Sheets.WorldSheet.TryGetRow(World, out var worldRow) ? worldRow.Name.ToString() : string.Empty;
-    public string ToTargetString() => $"{Name}@{ToWorldString()}";
+    public string ToWorldString()
+        => Sheets.WorldSheet.TryGetRow(World, out var worldRow) ? worldRow.Name.ToString() : string.Empty;
+
+    public string ToTargetString()
+        => $"{Name}@{ToWorldString()}";
+
+    public unsafe void FromTarget(IPlayerCharacter target)
+    {
+        Name = target.Name.TextValue;
+        World = target.HomeWorld.RowId;
+        ContentId = ((Character*)target.Address)->ContentId;
+    }
+
+    public static TellTarget Empty() => new(string.Empty, 0, 0, TellReason.Direct);
+    public static TellTarget From(TellTarget t) => new(t.Name, t.World, t.ContentId, t.Reason);
 }

@@ -2,8 +2,9 @@ using Dalamud.Plugin.Ipc;
 
 namespace ChatTwo.Ipc;
 
-internal sealed class ExtraChat : IDisposable
+public sealed class ExtraChat : IDisposable
 {
+#pragma warning disable CS0649 // Assigned through IPC
     [Serializable]
     private struct OverrideInfo
     {
@@ -11,8 +12,7 @@ internal sealed class ExtraChat : IDisposable
         public ushort UiColour;
         public uint Rgba;
     }
-
-    private Plugin Plugin { get; }
+#pragma warning restore CS0649
 
     private ICallGateSubscriber<OverrideInfo, object> OverrideChannelGate { get; }
     private ICallGateSubscriber<Dictionary<string, uint>, Dictionary<string, uint>> ChannelCommandColoursGate { get; }
@@ -26,10 +26,8 @@ internal sealed class ExtraChat : IDisposable
     private Dictionary<Guid, string> ChannelNamesInternal { get; set; } = new();
     internal IReadOnlyDictionary<Guid, string> ChannelNames => ChannelNamesInternal;
 
-    internal ExtraChat(Plugin plugin)
+    internal ExtraChat()
     {
-        Plugin = plugin;
-
         OverrideChannelGate = Plugin.Interface.GetIpcSubscriber<OverrideInfo, object>("ExtraChat.OverrideChannelColour");
         ChannelCommandColoursGate = Plugin.Interface.GetIpcSubscriber<Dictionary<string, uint>, Dictionary<string, uint>>("ExtraChat.ChannelCommandColours");
         ChannelNamesGate = Plugin.Interface.GetIpcSubscriber<Dictionary<Guid, string>, Dictionary<Guid, string>>("ExtraChat.ChannelNames");

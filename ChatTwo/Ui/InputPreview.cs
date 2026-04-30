@@ -71,7 +71,7 @@ public partial class InputPreview : Window
             AutoTranslate.ReplaceWithPayload(ref bytes);
 
             var chunks = ChunkUtil.ToChunks(SeString.Parse(bytes), ChunkSource.Content, ChatType.Say).ToList();
-            PreviewMessage = Message.FakeMessage(chunks, new ChatCode((ushort)XivChatType.Say));
+            PreviewMessage = Message.FakeMessage(chunks, new ChatCode(XivChatType.Say, 0, 0));
             PreviewMessage.DecodeTextParam();
         }
         HasEvaluation = !Plugin.Config.OnlyPreviewIf || PreviewMessage.Content.Count > 1;

@@ -37,7 +37,9 @@ public class ColorPayload
                 {
                     return v switch
                     {
+                        // ReSharper disable once LocalizableElement
                         -1 => throw new ArgumentException("Encountered premature end of input (unexpected EOF).", nameof(v)),
+                        // ReSharper disable once LocalizableElement
                         0 => throw new ArgumentException("Encountered premature end of input (unexpected null character).", nameof(v)),
                         _ => (uint)v << shift
                     };

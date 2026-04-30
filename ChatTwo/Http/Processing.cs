@@ -69,7 +69,7 @@ public class Processing
 
             color ??= 0;
 
-            var userContent = text.Content ?? string.Empty;
+            var userContent = text.Content;
             if (HostContext.Core.Plugin.ChatLogWindow.ScreenshotMode)
             {
                 if (chunk.Link is PlayerPayload playerPayload)

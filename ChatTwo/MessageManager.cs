@@ -4,12 +4,12 @@ using System.Text;
 using ChatTwo.Code;
 using ChatTwo.Resources;
 using ChatTwo.Util;
+using Dalamud.Game.Chat;
 using Dalamud.Game.Text;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Hooking;
 using Dalamud.Interface.ImGuiNotification;
 using Dalamud.Plugin.Services;
-using Dalamud.Utility;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using Lumina.Text.Expressions;
 using Lumina.Text.Payloads;
@@ -191,19 +191,19 @@ internal class MessageManager : IAsyncDisposable
     }
 
     public (SeString? Sender, SeString? Message) LastMessage = (null, null);
-    private void ChatMessage(XivChatType type, int timestamp, SeString sender, SeString message)
+    private void ChatMessage(IChatMessage message)
     {
-        LastMessage = (sender, message);
+        LastMessage = (message.Sender, message.Message);
 
         var pendingMessage = new PendingMessage
         {
-            ReceiverId = CurrentContentId,
             ContentId = 0,
             AccountId = 0,
-            Type = type,
-            Timestamp = timestamp,
-            Sender = sender,
-            Content = message,
+            LogKind = message.LogKind,
+            SourceKind = message.SourceKind,
+            TargetKind = message.TargetKind,
+            Sender = message.Sender,
+            Content = message.Message,
         };
 
         // Update colour codes.
@@ -238,7 +238,7 @@ internal class MessageManager : IAsyncDisposable
 
     private void ProcessMessage(PendingMessage pendingMessage)
     {
-        var chatCode = new ChatCode((ushort)pendingMessage.Type);
+        var chatCode = new ChatCode(pendingMessage.LogKind, pendingMessage.SourceKind, pendingMessage.TargetKind);
 
         NameFormatting? formatting = null;
         if (pendingMessage.Sender.Payloads.Count > 0)
@@ -247,15 +247,9 @@ internal class MessageManager : IAsyncDisposable
         var senderChunks = new List<Chunk>();
         if (formatting is { IsPresent: true })
         {
-            senderChunks.Add(new TextChunk(ChunkSource.None, null, formatting.Before)
-            {
-                FallbackColour = chatCode.Type,
-            });
+            senderChunks.Add(new TextChunk(ChunkSource.None, null, formatting.Before) { FallbackColour = chatCode.Type });
             senderChunks.AddRange(ChunkUtil.ToChunks(pendingMessage.Sender, ChunkSource.Sender, chatCode.Type));
-            senderChunks.Add(new TextChunk(ChunkSource.None, null, formatting.After)
-            {
-                FallbackColour = chatCode.Type,
-            });
+            senderChunks.Add(new TextChunk(ChunkSource.None, null, formatting.After) { FallbackColour = chatCode.Type });
         }
 
         var contentChunks = ChunkUtil.ToChunks(pendingMessage.Content, ChunkSource.Content, chatCode.Type).ToList();
@@ -342,12 +336,12 @@ internal class MessageManager : IAsyncDisposable
 
     private class PendingMessage
     {
-        internal ulong ReceiverId { get; set; }
-        internal ulong ContentId { get; set; } // 0 if unknown
-        internal ulong AccountId { get; set; } // 0 if unknown
-        internal XivChatType Type { get; set; }
-        internal int Timestamp { get; set; }
-        internal SeString Sender { get; set; }
-        internal SeString Content { get; set; }
+        public ulong ContentId; // 0 if unknown
+        public ulong AccountId; // 0 if unknown
+        public XivChatType LogKind;
+        public XivChatRelationKind SourceKind;
+        public XivChatRelationKind TargetKind;
+        public required SeString Sender;
+        public required SeString Content;
     }
 }

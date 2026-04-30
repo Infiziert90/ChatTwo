@@ -391,6 +391,9 @@
     <data name="Tabs_Presets_Event">
         <value>Event</value>
     </data>
+    <data name="Tabs_Presets_Tell">
+        <value>Tell Exclusive</value>
+    </data>
     <data name="Options_Tabs_NewTab">
         <value>New tab</value>
     </data>
@@ -1144,6 +1147,9 @@
     <data name="Options_Tabs_NoInput" xml:space="preserve">
         <value>Disable input for this channel</value>
     </data>
+    <data name="Options_Tabs_SenderMessages" xml:space="preserve">
+        <value>Show all messages send by target</value>
+    </data>
     <data name="ChatLog_DisabledInput" xml:space="preserve">
         <value>Input is disabled for this tab</value>
     </data>
@@ -1398,5 +1404,26 @@
     </data>
     <data name="Webinterface_UsageNotice" xml:space="preserve">
         <value>Usage Notice</value>
+    </data>
+    <data name="Options_Help_SenderMessages" xml:space="preserve">
+        <value>This disables the channel selection and shows all messages coming from the target.</value>
+    </data>
+    <data name="Options_Header_Target" xml:space="preserve">
+        <value>Target</value>
+    </data>
+    <data name="ChatBox_Error_Empty" xml:space="preserve">
+        <value>message is empty</value>
+    </data>
+    <data name="ChatBox_Error_Too_Long" xml:space="preserve">
+        <value>message is longer than 500 bytes</value>
+    </data>
+    <data name="ChatBox_Error_Invalid" xml:space="preserve">
+        <value>message contained invalid characters</value>
+    </data>
+    <data name="ImGuiUtil_ChannelSelector_Source" xml:space="preserve">
+        <value>Source</value>
+    </data>
+    <data name="ImGuiUtil_ChannelSelector_Target" xml:space="preserve">
+        <value>Target</value>
     </data>
 </root>
