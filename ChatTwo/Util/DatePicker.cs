@@ -65,6 +65,9 @@ public static class DateWidget
         ImGui.SameLine(0, 3.0f * ImGuiHelpers.GlobalScale);
 
         ImGuiUtil.IconButton(FontAwesomeIcon.Calendar, id.ToString());
+        if (ImGui.IsItemHovered())
+            ImGui.SetTooltip(Language.DatePicker_Tooltip);
+
         if (DatePicker(label, ref date, closeWhenMouseLeavesIt))
             dateString = date.ToString(format);
     }
