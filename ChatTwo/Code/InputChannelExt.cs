@@ -74,15 +74,15 @@ internal static class InputChannelExt
 
     public static string Prefix(this InputChannel channel) => channel switch
     {
-        InputChannel.Tell => "/tell",
-        InputChannel.Say => "/say",
-        InputChannel.Party => "/party",
-        InputChannel.Alliance => "/alliance",
-        InputChannel.Yell => "/yell",
-        InputChannel.Shout => "/shout",
+        InputChannel.Tell => "/t",
+        InputChannel.Say => "/s",
+        InputChannel.Party => "/p",
+        InputChannel.Alliance => "/a",
+        InputChannel.Yell => "/y",
+        InputChannel.Shout => "/sh",
         InputChannel.FreeCompany => "/fc",
         InputChannel.PvpTeam => "/pt",
-        InputChannel.NoviceNetwork => "/n",
+        InputChannel.NoviceNetwork => "/b",
         InputChannel.CrossLinkshell1 => "/cwl1",
         InputChannel.CrossLinkshell2 => "/cwl2",
         InputChannel.CrossLinkshell3 => "/cwl3",
@@ -139,7 +139,7 @@ internal static class InputChannelExt
             InputChannel.Linkshell6 => [112],
             InputChannel.Linkshell7 => [113],
             InputChannel.Linkshell8 => [114],
-            _ => []
+            _ => [],
         };
 
         if (ids.Length == 0)
