@@ -1426,4 +1426,10 @@
     <data name="ImGuiUtil_ChannelSelector_Target" xml:space="preserve">
         <value>Target</value>
     </data>
+    <data name="ChannelSelector_Unselect" xml:space="preserve">
+        <value>Unselect all</value>
+    </data>
+    <data name="ChannelSelector_Select" xml:space="preserve">
+        <value>Select all</value>
+    </data>
 </root>

@@ -392,7 +392,7 @@
     <value>剧情</value>
   </data>
   <data name="Tabs_Presets_Tell">
-    <value>Tell Exclusive</value>
+    <value>悄悄话</value>
   </data>
   <data name="Options_Tabs_NewTab">
     <value>新建标签页</value>
@@ -1148,7 +1148,7 @@
         <value>禁用此频道的输入</value>
     </data>
   <data name="Options_Tabs_SenderMessages" xml:space="preserve">
-        <value>Show all messages send by target</value>
+        <value>Show all messages sent by target</value>
     </data>
   <data name="ChatLog_DisabledInput" xml:space="preserve">
         <value>此选项卡已禁用输入</value>
@@ -1406,24 +1406,30 @@
         <value>使用须知</value>
     </data>
   <data name="Options_Help_SenderMessages" xml:space="preserve">
-        <value>This disables the channel selection and shows all messages coming from the target.</value>
+        <value>禁用频道选择，显示目标的所有消息。</value>
     </data>
   <data name="Options_Header_Target" xml:space="preserve">
-        <value>Target</value>
+        <value>选中</value>
     </data>
   <data name="ChatBox_Error_Empty" xml:space="preserve">
-        <value>message is empty</value>
+        <value>消息内容为空</value>
     </data>
   <data name="ChatBox_Error_Too_Long" xml:space="preserve">
-        <value>message is longer than 500 bytes</value>
+        <value>消息超过500字节</value>
     </data>
   <data name="ChatBox_Error_Invalid" xml:space="preserve">
-        <value>message contained invalid characters</value>
+        <value>消息包含非法字符</value>
     </data>
   <data name="ImGuiUtil_ChannelSelector_Source" xml:space="preserve">
-        <value>Source</value>
+        <value>来源</value>
     </data>
   <data name="ImGuiUtil_ChannelSelector_Target" xml:space="preserve">
-        <value>Target</value>
+        <value>选中</value>
+    </data>
+  <data name="ChannelSelector_Unselect" xml:space="preserve">
+        <value>Unselect all</value>
+    </data>
+  <data name="ChannelSelector_Select" xml:space="preserve">
+        <value>Select all</value>
     </data>
 </root>

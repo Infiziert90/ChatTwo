@@ -1148,7 +1148,7 @@
         <value>Disable input for this channel</value>
     </data>
   <data name="Options_Tabs_SenderMessages" xml:space="preserve">
-        <value>Show all messages send by target</value>
+        <value>Show all messages sent by target</value>
     </data>
   <data name="ChatLog_DisabledInput" xml:space="preserve">
         <value>Input is disabled for this tab</value>
@@ -1425,5 +1425,11 @@
     </data>
   <data name="ImGuiUtil_ChannelSelector_Target" xml:space="preserve">
         <value>Target</value>
+    </data>
+  <data name="ChannelSelector_Unselect" xml:space="preserve">
+        <value>Unselect all</value>
+    </data>
+  <data name="ChannelSelector_Select" xml:space="preserve">
+        <value>Select all</value>
     </data>
 </root>

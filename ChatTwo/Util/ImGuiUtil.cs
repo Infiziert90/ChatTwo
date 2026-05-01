@@ -559,7 +559,7 @@ internal static class ImGuiUtil
             }
 
             if (ImGui.IsItemHovered())
-                ImGui.SetTooltip("Select all");
+                ImGui.SetTooltip(Language.ChannelSelector_Select);
 
             ImGui.SameLine();
 
@@ -570,7 +570,7 @@ internal static class ImGuiUtil
             }
 
             if (ImGui.IsItemHovered())
-                ImGui.SetTooltip("Unselect all");
+                ImGui.SetTooltip(Language.ChannelSelector_Unselect);
 
             ImGui.SameLine();
 

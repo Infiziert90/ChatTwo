@@ -78,6 +78,24 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select all.
+        /// </summary>
+        internal static string ChannelSelector_Select {
+            get {
+                return ResourceManager.GetString("ChannelSelector_Select", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unselect all.
+        /// </summary>
+        internal static string ChannelSelector_Unselect {
+            get {
+                return ResourceManager.GetString("ChannelSelector_Unselect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An error occured while sending this tell message.
         /// </summary>
         internal static string Chat_SendTell_Error {
