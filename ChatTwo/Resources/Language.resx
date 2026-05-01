@@ -1432,4 +1432,11 @@
     <data name="ChannelSelector_Select" xml:space="preserve">
         <value>Select all</value>
     </data>
+    <data name="Database_Migration_Error_Title" xml:space="preserve">
+        <value>Chat2 Database Migration Error</value>
+    </data>
+    <data name="Database_Migration_Error_Desc" xml:space="preserve">
+        <value>Database migration has failed, a new database will be created.
+Your old database can still be recovered, please contact the plugin author for help.</value>
+    </data>
 </root>

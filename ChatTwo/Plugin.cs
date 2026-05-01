@@ -248,12 +248,12 @@ public sealed class Plugin : IDalamudPlugin
         FileDialogManager.Draw();
     }
 
-    internal void SaveConfig()
+    public void SaveConfig()
     {
         Interface.SavePluginConfig(Config);
     }
 
-    internal void LanguageChanged(string langCode)
+    public void LanguageChanged(string langCode)
     {
         var info = Config.LanguageOverride is LanguageOverride.None
             ? new CultureInfo(langCode)

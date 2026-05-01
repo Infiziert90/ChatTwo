@@ -1455,6 +1455,25 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Database migration has failed, a new database will be created.
+        ///Your old database can still be recovered, please contact the plugin author for help..
+        /// </summary>
+        internal static string Database_Migration_Error_Desc {
+            get {
+                return ResourceManager.GetString("Database_Migration_Error_Desc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chat2 Database Migration Error.
+        /// </summary>
+        internal static string Database_Migration_Error_Title {
+            get {
+                return ResourceManager.GetString("Database_Migration_Error_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fri.
         /// </summary>
         internal static string DateWidget_Day_Fri {

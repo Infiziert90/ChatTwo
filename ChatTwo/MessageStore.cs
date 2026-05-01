@@ -2,9 +2,11 @@
 using System.Collections;
 using System.Data.Common;
 using ChatTwo.Code;
+using ChatTwo.Resources;
 using ChatTwo.Ui;
 using ChatTwo.Util;
 using Dalamud.Game.Text.SeStringHandling;
+using Dalamud.Interface.ImGuiNotification;
 using MessagePack;
 using MessagePack.Formatters;
 using MessagePack.Resolvers;
@@ -115,6 +117,7 @@ internal class MessageStore : IDisposable
 {
     private const int MessageQueryLimit = 10_000;
 
+    private Plugin Plugin;
     private string DbPath { get; }
 
     private SqliteConnection Connection { get; set; }
@@ -122,8 +125,9 @@ internal class MessageStore : IDisposable
     internal static readonly MessagePackSerializerOptions MsgPackOptions = MessagePackSerializerOptions.Standard
         .WithResolver(CompositeResolver.Create([new PayloadMessagePackFormatter(), new SeStringMessagePackFormatter()], [StandardResolver.Instance]));
 
-    internal MessageStore(string dbPath)
+    internal MessageStore(Plugin plugin, string dbPath)
     {
+        Plugin = plugin;
         DbPath = dbPath;
         Connection = Connect();
         Migrate();
@@ -240,34 +244,87 @@ internal class MessageStore : IDisposable
     private void Migrate3()
     {
         Plugin.Log.Information("Running migration 3: Fix log kinds to fit the new format");
-        Connection.Execute(@"
-            -- Migration 3: Fix log kinds to fit the new format
-            -- Add new ChatType, SourceKind, TargetKind (byte), SortCodeV2
-            -- Migrate OldChatColumn
-                -- ChatType = OldChatColumn & 0x7f
-                -- SourceKind = log2(1 << ((OldChatColumn >> 11) & 0xF))
-                -- TargetKind = trunc(log2(1 << ((OldChatColumn >> 7) & 0xF)))
-                -- Virtual SortCodeV2 = ChatType << 16 | SourceKind << 8 | TargetKind
-            -- Delete OldChatColumn, Virtual Channel
 
-            ALTER TABLE messages ADD COLUMN ChatType INTEGER;
-            CREATE INDEX IF NOT EXISTS idx_messages_chat_type ON messages (ChatType);
-            ALTER TABLE messages ADD COLUMN SourceKind INTEGER;
-            ALTER TABLE messages ADD COLUMN TargetKind INTEGER;
+        // Only set this the first
+        if (Plugin.Config.MigrationStatus == MigrationStatus.NotStarted)
+        {
+            Plugin.Config.MigrationStatus = MigrationStatus.Started;
+            Plugin.SaveConfig();
+        }
 
-            UPDATE messages SET
-                                ChatType = Code & 0x7f,
-                                SourceKind = trunc(log2(1 << ((Code >> 11) & 0xF))),
-                                TargetKind = trunc(log2(1 << ((Code >> 7) & 0xF)))
-            WHERE true;
+        try
+        {
+            // Only backup if this is the first time
+            if (Plugin.Config.MigrationStatus == MigrationStatus.Started)
+            {
+                File.Copy(DbPath, $"{DbPath}-migration-bak");
 
-            DROP INDEX idx_messages_channel;
-            ALTER TABLE messages DROP COLUMN Channel;
-            ALTER TABLE messages DROP COLUMN Code;
-            ALTER TABLE messages DROP COLUMN SortCode;
-        ");
+                Plugin.Config.MigrationStatus = MigrationStatus.Copied;
+                Plugin.SaveConfig();
+            }
 
-        SetMigrationVersion(3);
+            Connection.Execute(@"
+                -- Migration 3: Fix log kinds to fit the new format
+                -- Add new ChatType, SourceKind, TargetKind (byte), SortCodeV2
+                -- Migrate OldChatColumn
+                    -- ChatType = OldChatColumn & 0x7f
+                    -- SourceKind = log2(1 << ((OldChatColumn >> 11) & 0xF))
+                    -- TargetKind = trunc(log2(1 << ((OldChatColumn >> 7) & 0xF)))
+                    -- Virtual SortCodeV2 = ChatType << 16 | SourceKind << 8 | TargetKind
+                -- Delete OldChatColumn, Virtual Channel
+
+                ALTER TABLE messages ADD COLUMN ChatType INTEGER;
+                CREATE INDEX IF NOT EXISTS idx_messages_chat_type ON messages (ChatType);
+                ALTER TABLE messages ADD COLUMN SourceKind INTEGER;
+                ALTER TABLE messages ADD COLUMN TargetKind INTEGER;
+
+                UPDATE messages SET
+                                    ChatType = Code & 0x7f,
+                                    SourceKind = trunc(log2(1 << ((Code >> 11) & 0xF))),
+                                    TargetKind = trunc(log2(1 << ((Code >> 7) & 0xF)))
+                WHERE true;
+
+                DROP INDEX idx_messages_channel;
+                ALTER TABLE messages DROP COLUMN Channel;
+                ALTER TABLE messages DROP COLUMN Code;
+                ALTER TABLE messages DROP COLUMN SortCode;
+            ");
+
+            SetMigrationVersion(3);
+        }
+        catch (Exception ex)
+        {
+            Plugin.Log.Error(ex, "Failed to migrate database");
+            Plugin.Notification.AddNotification(
+                new Notification
+                {
+                    Title = Language.Database_Migration_Error_Title,
+                    Content = Language.Database_Migration_Error_Desc,
+                    Type = NotificationType.Error,
+                    Minimized = false,
+                    UserDismissable = true,
+                    InitialDuration = TimeSpan.FromSeconds(100000),
+                });
+
+            Connection.Close();
+            Connection.Dispose();
+
+            File.Delete(DbPath);
+
+            Plugin.Config.MigrationStatus = MigrationStatus.Failed;
+            Plugin.SaveConfig();
+
+            throw;
+        }
+
+        // Only delete backup if migration has successfully ran the first time
+        if (Plugin.Config.MigrationStatus == MigrationStatus.Copied)
+        {
+            File.Delete($"{DbPath}-migration-bak");
+
+            Plugin.Config.MigrationStatus = MigrationStatus.Finished;
+            Plugin.SaveConfig();
+        }
     }
 
     private void SetMigrationVersion(int version)

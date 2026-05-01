@@ -54,7 +54,28 @@ internal class MessageManager : IAsyncDisposable
     {
         Plugin = plugin;
 
-        Store = new MessageStore(DatabasePath());
+        try
+        {
+            Store = new MessageStore(plugin, DatabasePath());
+        }
+        catch(Exception ex)
+        {
+            // migration failed, so we create a new database
+            if (Plugin.Config.MigrationStatus == MigrationStatus.Failed)
+            {
+                Plugin.Log.Warning("Migration failed, attempting fresh database");
+                Store = new MessageStore(plugin, DatabasePath());
+
+                Plugin.Config.MigrationStatus = MigrationStatus.Finished;
+                Plugin.SaveConfig();
+            }
+            else
+            {
+                // Something else went wrong, rethrow
+                Plugin.Log.Error(ex, "Failed to open database");
+                throw;
+            }
+        }
 
         PendingMessageThread = new Thread(() => ProcessPendingMessages(PendingThreadCancellationToken.Token));
         PendingMessageThread.Start();
