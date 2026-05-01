@@ -535,6 +535,7 @@ internal class MessageStore : IDisposable
                 ExtraChatChannel
             FROM messages
             " + whereClause + @"
+            ORDER BY Date
             LIMIT $Offset, $OffsetCount;
         ";
         cmd.CommandTimeout = 120; // this could take a while on slow computers

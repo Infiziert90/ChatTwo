@@ -550,6 +550,30 @@ internal static class ImGuiUtil
 
         foreach (var (header, types) in ChatTypeExt.SortOrder)
         {
+            using var pushedId = ImRaii.PushId(header);
+
+            if (ImGuiComponents.IconButton(FontAwesomeIcon.Check))
+            {
+                foreach (var type in types)
+                    chatCodes.TryAdd(type, (ChatSourceExt.All, ChatSourceExt.All));
+            }
+
+            if (ImGui.IsItemHovered())
+                ImGui.SetTooltip("Select all");
+
+            ImGui.SameLine();
+
+            if (ImGuiComponents.IconButton(FontAwesomeIcon.Times))
+            {
+                foreach (var type in types)
+                    chatCodes.Remove(type);
+            }
+
+            if (ImGui.IsItemHovered())
+                ImGui.SetTooltip("Unselect all");
+
+            ImGui.SameLine();
+
             using var headerNode = ImRaii.TreeNode(header);
             if (!headerNode.Success)
                 continue;
