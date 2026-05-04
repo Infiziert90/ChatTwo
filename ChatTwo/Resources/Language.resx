@@ -469,6 +469,12 @@
     <data name="Options_KeybindMode_Description">
         <value>The way in which {0} should handle keybinds.</value>
     </data>
+    <data name="Options_ResetWindowPosition_Name">
+        <value>Reset window position</value>
+    </data>
+    <data name="Options_ResetWindowPosition_Description">
+        <value>Snaps the chat window back to the primary monitor's top-left corner. Useful when the window has drifted off-screen after a display layout change (monitor disconnected, resolution changed). The plugin also runs an automatic bounds check once per session — this button is the manual backup if anything still ends up unreachable.</value>
+    </data>
     <data name="Options_Miscellaneous_Tab">
         <value>Miscellaneous</value>
     </data>

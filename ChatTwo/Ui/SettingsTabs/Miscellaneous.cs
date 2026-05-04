@@ -4,8 +4,9 @@ using Dalamud.Bindings.ImGui;
 
 namespace ChatTwo.Ui.SettingsTabs;
 
-internal sealed class Miscellaneous(Configuration mutable) : ISettingsTab
+internal sealed class Miscellaneous(Plugin plugin, Configuration mutable) : ISettingsTab
 {
+    private Plugin Plugin { get; } = plugin;
     private Configuration Mutable { get; } = mutable;
     public string Name => Language.Options_Miscellaneous_Tab + "###tabs-miscellaneous";
 
@@ -57,6 +58,11 @@ internal sealed class Miscellaneous(Configuration mutable) : ISettingsTab
 
         ImGui.Checkbox(Language.Options_SortAutoTranslate_Name, ref Mutable.SortAutoTranslate);
         ImGuiUtil.HelpText(Language.Options_SortAutoTranslate_Description);
+        ImGui.Spacing();
+
+        if (ImGui.Button(Language.Options_ResetWindowPosition_Name))
+            Plugin.ChatLogWindow.RequestPositionReset = true;
+        ImGuiUtil.HelpText(Language.Options_ResetWindowPosition_Description);
         ImGui.Spacing();
     }
 }

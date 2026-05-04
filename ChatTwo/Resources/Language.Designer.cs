@@ -3236,7 +3236,25 @@ namespace ChatTwo.Resources {
                 return ResourceManager.GetString("Options_PrintChangelog_Name", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Snaps the chat window back to the primary monitor&apos;s top-left corner. Useful when the window has drifted off-screen after a display layout change (monitor disconnected, resolution changed). The plugin also runs an automatic bounds check once per session — this button is the manual backup if anything still ends up unreachable..
+        /// </summary>
+        internal static string Options_ResetWindowPosition_Description {
+            get {
+                return ResourceManager.GetString("Options_ResetWindowPosition_Description", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Reset window position.
+        /// </summary>
+        internal static string Options_ResetWindowPosition_Name {
+            get {
+                return ResourceManager.GetString("Options_ResetWindowPosition_Name", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Replaces words with their emote version, currently supports BetterTTV..
         /// </summary>
