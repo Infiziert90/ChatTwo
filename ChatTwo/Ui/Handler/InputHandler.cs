@@ -1,5 +1,6 @@
-﻿using System.Numerics;
+using System.Numerics;
 using System.Runtime.InteropServices;
+using System.Text;
 using ChatTwo.Code;
 using ChatTwo.GameFunctions;
 using ChatTwo.GameFunctions.Types;
@@ -31,6 +32,11 @@ public class InputHandler
 
     public string ChatInput = string.Empty;
 
+    private string? pendingText;
+    private int pendingPos = -1;
+    private int qsFocusFrames;
+    private int qsCaretFrames;
+
     public bool FocusedPreview;
     public bool Activate;
     public bool InputFocused;
@@ -55,6 +61,19 @@ public class InputHandler
         ChunkHandler = new ChunkHandler(plugin);
         PayloadHandler = new PayloadHandler(this);
         AutoCompleteHandler = new AutoCompleteHandler(this);
+    }
+
+    public void InsertText(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+            return;
+
+        pendingText += text;
+        pendingPos = CursorPos;
+        Activate = true;
+        ActivatePos = CursorPos;
+        qsFocusFrames = 6;
+        qsCaretFrames = 90;
     }
 
     public void DrawInputArea(Tab activeTab, float inputWidth, ref bool tellSpecial)
@@ -87,9 +106,12 @@ public class InputHandler
         using (ImRaii.PushColor(ImGuiCol.Text, push ? ColourUtil.RgbaToAbgr(inputColour!.Value) : 0, push))
         {
             var isChatEnabled = activeTab is { InputDisabled: false };
-            if (isChatEnabled && (Activate || FocusedPreview))
+            if (isChatEnabled && (Activate || FocusedPreview || qsFocusFrames > 0))
             {
                 FocusedPreview = false;
+                if (qsFocusFrames > 0)
+                    qsFocusFrames--;
+
                 ImGui.SetKeyboardFocusHere();
             }
 
@@ -100,8 +122,28 @@ public class InputHandler
                 ImGui.SetNextItemWidth(inputWidth);
                 ImGui.InputTextWithHint("##chat2-input", isChatEnabled ? "": Language.ChatLog_DisabledInput, ref ChatInput, 500, flags, Callback);
             }
-            var inputActive = ImGui.IsItemActive();
+            var inputMin = ImGui.GetItemRectMin();
+            var inputMax = ImGui.GetItemRectMax();
+            var inputActive = ImGui.IsItemActive() || ImGui.IsItemFocused();
             InputFocused = isChatEnabled && inputActive;
+
+            if (qsCaretFrames > 0)
+                qsCaretFrames--;
+
+            Plugin.QuickSymbols.Watch(this, isChatEnabled && (inputActive || qsFocusFrames > 0 || qsCaretFrames > 0));
+
+            if (!inputActive && qsCaretFrames > 0)
+            {
+                var caretAlpha = (ImGui.GetTime() % 1.0) < 0.5 ? 0.95f : 0.35f;
+                var textWidth = ImGui.CalcTextSize(ChatInput).X;
+                var caretX = MathF.Min(inputMax.X - 5f, inputMin.X + 8f + textWidth);
+                var caretY = inputMin.Y + 4f;
+                ImGui.GetWindowDrawList().AddLine(
+                    new Vector2(caretX, caretY),
+                    new Vector2(caretX, inputMax.Y - 4f),
+                    ImGui.GetColorU32(new Vector4(1f, 1f, 1f, caretAlpha)),
+                    1f);
+            }
 
             var tooltipDraw = Plugin.Config.PreviewPosition is PreviewPosition.Tooltip && Plugin.InputPreview.IsDrawable;
             if (tooltipDraw && ImGui.IsItemHovered())
@@ -230,6 +272,19 @@ public class InputHandler
             data.CursorPos = ActivatePos > -1 ? ActivatePos : ChatInput.Length;
             data.SelectionStart = data.SelectionEnd = data.CursorPos;
             ActivatePos = -1;
+        }
+
+        if (pendingText != null)
+        {
+            var insert = pendingText;
+            var pos = pendingPos > -1 ? Math.Min(pendingPos, data.BufTextLen) : data.CursorPos;
+
+            pendingText = null;
+            pendingPos = -1;
+
+            data.InsertChars(pos, insert);
+            data.CursorPos = pos + Encoding.UTF8.GetByteCount(insert);
+            data.SelectionStart = data.SelectionEnd = data.CursorPos;
         }
 
         Plugin.CommandHelpWindow.IsOpen = false;
