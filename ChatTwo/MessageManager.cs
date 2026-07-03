@@ -7,6 +7,7 @@ using ChatTwo.Util;
 using Dalamud.Game.Chat;
 using Dalamud.Game.Text;
 using Dalamud.Game.Text.SeStringHandling;
+using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Hooking;
 using Dalamud.Interface.ImGuiNotification;
 using Dalamud.Plugin.Services;
@@ -275,6 +276,18 @@ public class MessageManager : IAsyncDisposable
 
         var contentChunks = ChunkUtil.ToChunks(pendingMessage.Content, ChunkSource.Content, chatCode.Type).ToList();
         var message = new Message(CurrentContentId, pendingMessage.ContentId, pendingMessage.AccountId, chatCode, senderChunks, contentChunks, pendingMessage.Sender, pendingMessage.Content);
+
+        if (Plugin.StyleIpc.HasProvider)
+        {
+            var senderPayload = pendingMessage.Sender.Payloads.OfType<PlayerPayload>().FirstOrDefault();
+            (message.StyleBackground, message.StyleAlpha) = Plugin.StyleIpc.Evaluate(
+                senderPayload?.PlayerName ?? "",
+                senderPayload?.World.ValueNullable?.Name.ExtractText() ?? "",
+                pendingMessage.ContentId,
+                (ushort) pendingMessage.LogKind,
+                pendingMessage.Sender.TextValue,
+                pendingMessage.Content.TextValue);
+        }
 
         var isBattle = message.Code.IsBattle();
         var isCraftOrGather = message.Code.IsCraftOrGather();
