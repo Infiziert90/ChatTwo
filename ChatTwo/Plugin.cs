@@ -260,6 +260,10 @@ public sealed class Plugin : IDalamudPlugin
     public void SaveConfig()
     {
         Interface.SavePluginConfig(Config);
+        // Config saves are the choke point for tab changes (add, rename,
+        // delete, reorder). StyleIpc is null while migrations save during
+        // load.
+        StyleIpc?.NotifyTabsChanged();
     }
 
     public void LanguageChanged(string langCode)

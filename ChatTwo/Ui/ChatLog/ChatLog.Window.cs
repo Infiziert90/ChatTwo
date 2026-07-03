@@ -4,6 +4,7 @@ using System.Numerics;
 using ChatTwo.Code;
 using ChatTwo.GameFunctions;
 using ChatTwo.GameFunctions.Types;
+using ChatTwo.Ipc;
 using ChatTwo.Resources;
 using ChatTwo.Ui.Handler;
 using ChatTwo.Util;
@@ -674,6 +675,8 @@ public partial class ChatLog : Window, IChatWindow
             int? lastMessageHash = null;
             var sameCount = 0;
 
+            var tabPolicy = Plugin.StyleIpc.GetTabPolicy(tab.Identifier);
+
             var maxLines = Plugin.Config.MaxLinesToRender;
             var startLine = messages.Count > maxLines ? messages.Count - maxLines : 0;
             for (var i = startLine; i < messages.Count; i++)
@@ -689,7 +692,7 @@ public partial class ChatLog : Window, IChatWindow
                 // stored, logged and exported. Skipped before duplicate
                 // collapsing so a hidden message neither anchors nor counts
                 // toward a collapse run.
-                if (message.StyleAlpha <= 0)
+                if (message.StyleAlpha <= 0 && (tabPolicy & StyleIpc.PolicySuppressHide) == 0)
                 {
                     message.IsVisible[tab.Identifier] = false;
                     continue;
@@ -774,7 +777,7 @@ public partial class ChatLog : Window, IChatWindow
                     message.IsVisible[tab.Identifier] = nowVisible;
                 }
 
-                var applyBackground = message.StyleBackground != 0;
+                var applyBackground = message.StyleBackground != 0 && (tabPolicy & StyleIpc.PolicySuppressBackground) == 0;
                 if (applyBackground && isTable)
                     ImGui.TableSetBgColor(ImGuiTableBgTarget.RowBg0, ColourUtil.RgbaToAbgr(message.StyleBackground));
 
@@ -795,8 +798,12 @@ public partial class ChatLog : Window, IChatWindow
                     backgroundSplitActive = true;
                 }
 
-                // Faded by the message style provider.
-                using var styleAlpha = ImRaii.PushStyle(ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * message.StyleAlpha, message.StyleAlpha < 1f);
+                // Faded by the message style provider. A message that reaches
+                // this point with alpha <= 0 had its hiding suppressed by the
+                // tab policy and renders fully visible.
+                var effectiveStyleAlpha = message.StyleAlpha <= 0 ? 1f : message.StyleAlpha;
+                var fade = effectiveStyleAlpha < 1f && (tabPolicy & StyleIpc.PolicySuppressFade) == 0;
+                using var styleAlpha = ImRaii.PushStyle(ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * effectiveStyleAlpha, fade);
 
                 if (tab.DisplayTimestamp)
                 {

@@ -176,6 +176,24 @@ Notes:
 - With the timestamp table layout ("prettier timestamps") the background tints
   the whole row; in the classic layout it is drawn behind the message text.
 
+## Tab awareness
+
+Styling can be limited per tab. Tabs are identified by a persistent `Guid`
+that survives renames, reordering and restarts (pop-out tabs keep the
+identifier of their tab).
+
+- `ChatTwo.GetTabs`: call this function to retrieve the current tabs as
+  `Dictionary<Guid, string>` (identifier → tab name). Temporary tabs are not
+  included.
+- `ChatTwo.TabsChanged`: subscribe to this event (`Dictionary<Guid, string>`)
+  to be notified when tabs are added, renamed, removed or reordered.
+- `ChatTwo.SetTabStylePolicies`: call this action with a
+  `Dictionary<Guid, int>` of suppress-flags per tab. Tabs without an entry
+  have all styling enabled. Flags can be combined:
+  - `1`: no backgrounds in this tab
+  - `2`: no fading in this tab
+  - `4`: no hiding in this tab (affected messages render fully visible)
+
 Example:
 
 ```cs
