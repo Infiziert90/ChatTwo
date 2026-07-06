@@ -69,11 +69,12 @@ public static class ImGuiUtil
     {
         if (Plugin.Config.RenderGlow && chunk is TextChunk { Glow: not null and not 0 } text)
         {
-            // Game glow colours are fully opaque; scale the alpha so the composite
-            // opacity across the 8 outline stamps matches the vanilla glow (~85%).
-            var glow = text.Glow.Value;
-            var alpha = (byte) ((glow & 0xFF) * 0x66 / 0xFF);
-            return (glow & 0xFFFFFF00u) | alpha;
+            // The game ignores the alpha of pushed edge colours entirely (both
+            // EdgeColorType sheet lookups and raw EdgeColor values render fully
+            // opaque), so don't derive anything from the source alpha. Use the
+            // fixed per-stamp alpha whose composite over the 8 outline stamps
+            // matches the vanilla glow (~85%).
+            return (text.Glow.Value & 0xFFFFFF00u) | 0x66;
         }
 
         return Plugin.Config.OutlineAllText ? Plugin.Config.OutlineColor : null;
