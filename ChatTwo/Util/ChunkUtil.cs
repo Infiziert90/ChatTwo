@@ -287,7 +287,7 @@ public static class ChunkUtil
                 case PayloadType.UIGlow:
                     var glowPayload = (UIGlowPayload) payload;
                     if (glowPayload.IsEnabled)
-                        glow.Push(glowPayload.UIColor.Value.Light);
+                        glow.Push(glowPayload.UIColor.Value.Dark);
                     else if (glow.Count > 0)
                         glow.Pop();
                     break;

@@ -553,6 +553,21 @@
     <data name="Options_ItalicEnabled">
         <value>Use italic font</value>
     </data>
+    <data name="Options_RenderGlow_Name">
+        <value>Render text glow</value>
+    </data>
+    <data name="Options_RenderGlow_Description">
+        <value>Draw the glow colour the game specifies around text as a thin outline, like the vanilla chat log.</value>
+    </data>
+    <data name="Options_OutlineAllText_Name">
+        <value>Outline all text</value>
+    </data>
+    <data name="Options_OutlineAllText_Description">
+        <value>Draw an outline around all chat text to improve readability. Text with a game-specified glow colour keeps that colour.</value>
+    </data>
+    <data name="Options_OutlineAllText_Color">
+        <value>Outline colour</value>
+    </data>
     <data name="AutoTranslate_Search_Hint">
         <value>Search Auto Translate...</value>
     </data>
