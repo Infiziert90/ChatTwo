@@ -102,6 +102,13 @@ public sealed class Display : ISettingsTab
             using var _ = ImRaii.PushIndent();
             ImGuiUtil.OptionCheckbox(ref Mutable.MoreCompactPretty, Language.Options_MoreCompactPretty_Name, Language.Options_MoreCompactPretty_Description);
             ImGuiUtil.OptionCheckbox(ref Mutable.HideSameTimestamps, Language.Options_HideSameTimestamps_Name, Language.Options_HideSameTimestamps_Description);
+            ImGuiUtil.OptionCheckbox(ref Mutable.CheckerboardRows, Language.Options_CheckerboardRows_Name, Language.Options_CheckerboardRows_Description);
+            if (Mutable.CheckerboardRows)
+            {
+                var checkerColour = ColourUtil.RgbaToVector4(Mutable.CheckerboardColor)!.Value;
+                if (ImGui.ColorEdit4(Language.Options_CheckerboardRows_Color, ref checkerColour, ImGuiColorEditFlags.NoInputs))
+                    Mutable.CheckerboardColor = ColourUtil.Vector4ToRgba(checkerColour);
+            }
         }
         ImGui.Spacing();
 

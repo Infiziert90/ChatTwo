@@ -2185,6 +2185,33 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Alternate row colour.
+        /// </summary>
+        internal static string Options_CheckerboardRows_Color {
+            get {
+                return ResourceManager.GetString("Options_CheckerboardRows_Color", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Alternate the background colour of every other message to make rows easier to tell apart..
+        /// </summary>
+        internal static string Options_CheckerboardRows_Description {
+            get {
+                return ResourceManager.GetString("Options_CheckerboardRows_Description", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Checkerboard rows.
+        /// </summary>
+        internal static string Options_CheckerboardRows_Name {
+            get {
+                return ResourceManager.GetString("Options_CheckerboardRows_Name", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Clear the message history database.
         /// </summary>
         internal static string Options_ClearDatabase_Button {
