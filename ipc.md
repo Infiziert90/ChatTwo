@@ -127,3 +127,121 @@ public sealed class TypingIntegration {
 ```
 
 All integrations are called inside of an ImGui `BeginMenu`.
+
+# Message Styling IPC
+
+Plugins can style individual messages in the Chat 2 log — a per-message
+background colour, fading, or hiding a message from display (e.g. group
+highlighting or fading chat from far-away players). Hidden and faded messages
+are only affected visually: they are still stored in the database, exported,
+and shown in the web interface.
+
+- `ChatTwo.StyleVersion`: call this function to retrieve the styling IPC
+  version (currently `1`).
+- `ChatTwo.SetMessageStyleProvider`: call this action with the name of an IPC
+  gate **your** plugin provides. Chat 2 will invoke that gate once per
+  incoming message. Pass an empty string to unregister. Only one provider is
+  active at a time (last writer wins).
+- Re-register when the `ChatTwo.Available` event fires (Chat 2 was loaded or
+  updated).
+
+Your provider gate must have this signature:
+
+```
+(string senderName, string senderWorld, ulong contentId, ushort chatType, string senderRaw, string contentText)
+    → (uint BackgroundRgba, float Alpha)
+```
+
+- `senderName` / `senderWorld`: name and home world taken from the first
+  `PlayerPayload` in the sender SeString; empty strings if the sender is not a
+  player.
+- `contentId`: the sender's content ID, or 0 if unknown. Use it transiently
+  only — the plugin submission rules forbid storing other players' content
+  IDs.
+- `chatType`: the raw `XivChatType` / LogKind value of the message.
+- `senderRaw`: the full sender text including party position or friend-group
+  glyphs and cross-world affixes.
+- `contentText`: the message content as plain text (payloads stripped).
+- Returns: `BackgroundRgba` as `RR GG BB AA` (use `0` for no background) and
+  `Alpha` (`1` = normal, between `0` and `1` = faded, `<= 0` = hidden from the
+  log).
+
+Notes:
+
+- The provider is called **once per message at ingestion, on a background
+  thread** — it must be thread-safe, must not assume the framework thread, and
+  should return quickly. If it throws, the message renders unstyled.
+- Styles are fixed at ingestion. Provider configuration changes only affect
+  new messages, and messages loaded from the database render unstyled.
+- With the timestamp table layout ("prettier timestamps") the background tints
+  the whole row; in the classic layout it is drawn behind the message text.
+
+## Tab awareness
+
+Styling can be limited per tab. Tabs are identified by a persistent `Guid`
+that survives renames, reordering and restarts (pop-out tabs keep the
+identifier of their tab).
+
+- `ChatTwo.GetTabs`: call this function to retrieve the current tabs as
+  `Dictionary<Guid, string>` (identifier → tab name). Temporary tabs are not
+  included.
+- `ChatTwo.TabsChanged`: subscribe to this event (`Dictionary<Guid, string>`)
+  to be notified when tabs are added, renamed, removed or reordered.
+- `ChatTwo.SetTabStylePolicies`: call this action with a
+  `Dictionary<Guid, int>` of suppress-flags per tab. Tabs without an entry
+  have all styling enabled. Flags can be combined:
+  - `1`: no backgrounds in this tab
+  - `2`: no fading in this tab
+  - `4`: no hiding in this tab (affected messages render fully visible)
+
+Example:
+
+```cs
+public sealed class StyleIntegration : IDisposable {
+    private ICallGateSubscriber<int> StyleVersion { get; }
+    private ICallGateSubscriber<string, object?> SetMessageStyleProvider { get; }
+    private ICallGateSubscriber<object?> Available { get; }
+    private ICallGateProvider<string, string, ulong, ushort, string, string, (uint BackgroundRgba, float Alpha)> Provider { get; }
+
+    public StyleIntegration(IDalamudPluginInterface pluginInterface) {
+        StyleVersion = pluginInterface.GetIpcSubscriber<int>("ChatTwo.StyleVersion");
+        SetMessageStyleProvider = pluginInterface.GetIpcSubscriber<string, object?>("ChatTwo.SetMessageStyleProvider");
+        Available = pluginInterface.GetIpcSubscriber<object?>("ChatTwo.Available");
+
+        Provider = pluginInterface.GetIpcProvider<string, string, ulong, ushort, string, string, (uint BackgroundRgba, float Alpha)>("MyPlugin.MessageStyle");
+        Provider.RegisterFunc(GetStyle);
+
+        // Re-register when Chat 2 loads or updates, and register now in case
+        // it is already loaded.
+        Available.Subscribe(Register);
+        Register();
+    }
+
+    private void Register() {
+        try {
+            if (StyleVersion.InvokeFunc() == 1)
+                SetMessageStyleProvider.InvokeAction("MyPlugin.MessageStyle");
+        } catch {
+            // Chat 2 is not loaded.
+        }
+    }
+
+    private (uint BackgroundRgba, float Alpha) GetStyle(string senderName, string senderWorld, ulong contentId, ushort chatType, string senderRaw, string contentText) {
+        // Tint messages from a specific player, fade everyone on Novice
+        // Network, leave everything else untouched.
+        if (senderName == "Haurchefant Greystone")
+            return (0x0080FF30u, 1f);
+
+        return (XivChatType) chatType == XivChatType.NoviceNetwork ? (0u, 0.5f) : (0u, 1f);
+    }
+
+    public void Dispose() {
+        Available.Unsubscribe(Register);
+        try {
+            SetMessageStyleProvider.InvokeAction("");
+        } catch {
+            // Chat 2 is not loaded.
+        }
+    }
+}
+```
