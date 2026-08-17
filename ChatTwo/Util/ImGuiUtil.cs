@@ -59,11 +59,63 @@ public static class ImGuiUtil
                 handler.Click(chunk, payload, button);
     }
 
+    /// <summary>
+    /// Resolves the effective glow (outline) colour for a chunk, combining
+    /// the game-specified glow payload with the outline all text option.
+    /// </summary>
+    /// <param name="chunk">The chunk about to be drawn</param>
+    /// <returns>Colour as byte representation RR GG BB AA, or null if no outline should be drawn</returns>
+    public static uint? GetGlowColor(Chunk chunk)
+    {
+        if (Plugin.Config.RenderGlow && chunk is TextChunk { Glow: not null and not 0 } text)
+        {
+            // The game ignores the alpha of pushed edge colours entirely (both
+            // EdgeColorType sheet lookups and raw EdgeColor values render fully
+            // opaque), so don't derive anything from the source alpha. Use the
+            // fixed per-stamp alpha whose composite over the 8 outline stamps
+            // matches the vanilla glow (~85%).
+            return (text.Glow.Value & 0xFFFFFF00u) | 0x66;
+        }
+
+        return Plugin.Config.OutlineAllText ? Plugin.Config.OutlineColor : null;
+    }
+
+    /// <summary>
+    /// Draws a text outline by rendering the text into the window draw list,
+    /// offset by a pixel in each direction. Call this before drawing the text
+    /// itself so the outline stays underneath it.
+    /// </summary>
+    /// <param name="pos">Screen position the text will be drawn at</param>
+    /// <param name="rgba">Outline colour as byte representation RR GG BB AA</param>
+    /// <param name="text">UTF-8 text about to be drawn</param>
+    public static void DrawTextGlow(Vector2 pos, uint rgba, ReadOnlySpan<byte> text)
+    {
+        // Style alpha (e.g. faded windows) is applied to regular text items
+        // but not to raw draw list commands, so bake it into the colour.
+        var colour = ColourUtil.RgbaToVector4(rgba)!.Value;
+        colour.W *= ImGui.GetStyle().Alpha;
+        if (colour.W <= 0)
+            return;
+
+        var abgr = ColourUtil.Vector4ToAbgr(colour);
+        var drawList = ImGui.GetWindowDrawList();
+        var offset = ImGuiHelpers.GlobalScale;
+        for (var x = -1; x <= 1; x++)
+            for (var y = -1; y <= 1; y++)
+                if (x != 0 || y != 0)
+                    drawList.AddText(pos + new Vector2(x, y) * offset, abgr, text);
+    }
+
     public static unsafe void WrapText(string csText, Chunk chunk, PayloadHandler? handler, Vector4 defaultText, float lineWidth)
     {
+        var glow = GetGlowColor(chunk);
+
         void Text(byte* text, byte* textEnd)
         {
             var oldPos = ImGui.GetCursorScreenPos();
+
+            if (glow != null)
+                DrawTextGlow(oldPos, glow.Value, new ReadOnlySpan<byte>(text, (int) (textEnd - text)));
 
             ImGuiNative.TextUnformatted(text, textEnd);
             PostPayload(chunk, handler);

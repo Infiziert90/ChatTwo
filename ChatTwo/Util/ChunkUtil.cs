@@ -280,16 +280,32 @@ public static class ChunkUtil
                 case PayloadType.UIForeground:
                     var foregroundPayload = (UIForegroundPayload) payload;
                     if (foregroundPayload.IsEnabled)
-                        foreground.Push(foregroundPayload.UIColor.Value.Dark);
+                    {
+                        // Rows missing from the UIColor sheet throw on RowRef.Value, which would
+                        // drop the whole message; keep the previous color instead as we don't
+                        // want invisible text.
+                        if (foregroundPayload.UIColor.ValueNullable is { } foregroundRow)
+                            foreground.Push(foregroundRow.Dark);
+                        else if (foreground.Count > 0)
+                            foreground.Push(foreground.Peek());
+                    }
                     else if (foreground.Count > 0)
+                    {
                         foreground.Pop();
+                    }
                     break;
                 case PayloadType.UIGlow:
                     var glowPayload = (UIGlowPayload) payload;
                     if (glowPayload.IsEnabled)
-                        glow.Push(glowPayload.UIColor.Value.Light);
+                    {
+                        // Rows missing from the UIColor sheet throw on RowRef.Value, which would
+                        // drop the whole message; push a no-glow entry to keep the stack balanced.
+                        glow.Push(glowPayload.UIColor.ValueNullable?.Dark ?? 0);
+                    }
                     else if (glow.Count > 0)
+                    {
                         glow.Pop();
+                    }
                     break;
                 case PayloadType.AutoTranslateText:
                     chunks.Add(new IconChunk(source, payload, BitmapFontIcon.AutoTranslateBegin));
@@ -328,16 +344,19 @@ public static class ChunkUtil
                             foreground.Pop();
                         }
                     }
-                    else if (rawPayload.Data.Length > 1 && rawPayload.Data[1] == 0x14)
+                    else if (ColorPayload.From(rawPayload.Data, MacroCode.EdgeColor) is { } edgeColorPayload)
                     {
-                        if (glow.Count > 0)
+                        if (edgeColorPayload.Enabled)
+                        {
+                            // The game pushes the resolved value even when it is 0, which draws
+                            // no outline (verified against the vanilla renderer). A 0 entry keeps
+                            // the stack balanced for the matching stackcolor pop; unlike the
+                            // foreground there is no invisible-text concern.
+                            glow.Push(edgeColorPayload.Color);
+                        }
+                        else if (glow.Count > 0)
                         {
                             glow.Pop();
-                        }
-                        else if (rawPayload.Data.Length > 6 && rawPayload.Data[2] == 0x05 && rawPayload.Data[3] == 0xF6)
-                        {
-                            var (r, g, b) = (rawPayload.Data[4], rawPayload.Data[5], rawPayload.Data[6]);
-                            glow.Push(ColourUtil.ComponentsToRgba(r, g, b));
                         }
                     }
                     else if (rawPayload.Data.Length > 7 && rawPayload.Data[1] == 0x27 && rawPayload.Data[3] == 0x0A)

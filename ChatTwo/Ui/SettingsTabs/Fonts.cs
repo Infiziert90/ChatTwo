@@ -1,6 +1,7 @@
 using ChatTwo.Resources;
 using ChatTwo.Util;
 using Dalamud;
+using Dalamud.Interface;
 using Dalamud.Interface.FontIdentifier;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
@@ -92,6 +93,24 @@ public class Fonts : ISettingsTab
         ImGuiUtil.FontSizeCombo(Language.Options_SymbolsFontSize_Name, ref Mutable.SymbolsFontSizeV2);
         ImGuiUtil.HelpText(Language.Options_SymbolsFontSize_Description);
 
+        ImGui.Spacing();
+        ImGui.Separator();
+        ImGui.Spacing();
+
+        ImGuiUtil.OptionCheckbox(ref Mutable.RenderGlow, Language.Options_RenderGlow_Name, Language.Options_RenderGlow_Description);
+        ImGui.Spacing();
+
+        ImGuiUtil.OptionCheckbox(ref Mutable.OutlineAllText, Language.Options_OutlineAllText_Name, Language.Options_OutlineAllText_Description);
+        if (Mutable.OutlineAllText)
+        {
+            using var indent = ImRaii.PushIndent();
+            if (ImGuiUtil.IconButton(FontAwesomeIcon.UndoAlt, "outline", Language.Options_ChatColours_Reset))
+                Mutable.OutlineColor = Configuration.DefaultOutlineColor;
+            ImGui.SameLine();
+            var outlineColour = ColourUtil.RgbaToVector4(Mutable.OutlineColor)!.Value;
+            if (ImGui.ColorEdit4(Language.Options_OutlineAllText_Color, ref outlineColour, ImGuiColorEditFlags.NoInputs))
+                Mutable.OutlineColor = ColourUtil.Vector4ToRgba(outlineColour);
+        }
         ImGui.Spacing();
     }
 }
