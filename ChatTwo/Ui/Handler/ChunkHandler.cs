@@ -75,7 +75,7 @@ public class ChunkHandler
         if (chunk is not TextChunk text)
             return;
 
-        if (chunk.Link is EmotePayload emotePayload && Plugin.Config.ShowEmotes)
+        if (Plugin.Config.ShowEmotes && chunk.Link is EmotePayload or TwemojiPayload)
         {
             var emoteSize = ImGui.CalcTextSize("W");
             emoteSize = emoteSize with { Y = emoteSize.X } * 1.5f;
@@ -84,8 +84,21 @@ public class ChunkHandler
             if (ImGui.GetContentRegionAvail().X < emoteSize.X)
                 ImGui.NewLine();
 
+            ImGuiDrawable? image = null;
+            var emoteCode = string.Empty;
+            switch (chunk.Link)
+            {
+                case EmotePayload emotePayload:
+                    image = EmoteCache.GetEmote(emotePayload.Code);
+                    emoteCode = emotePayload.Code;
+                    break;
+                case TwemojiPayload twemojiPayload:
+                    image = TwemojiProvider.GetTwemoji(twemojiPayload.Unicode);
+                    emoteCode = twemojiPayload.Shortcode;
+                    break;
+            }
+
             // We only draw a dummy if it is still loading, in the case it failed we draw the actual name
-            var image = EmoteCache.GetEmote(emotePayload.Code);
             if (image is { Failed: false })
             {
                 if (image.IsLoaded)
@@ -94,7 +107,7 @@ public class ChunkHandler
                     ImGui.Dummy(emoteSize);
 
                 if (ImGui.IsItemHovered())
-                    ImGuiUtil.Tooltip(emotePayload.Code);
+                    ImGuiUtil.Tooltip(emoteCode);
 
                 return;
             }

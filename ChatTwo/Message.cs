@@ -179,7 +179,6 @@ public partial class Message
                 var word = wordBuilder.ToString();
                 wordBuilder.Clear();
 
-
                 var wordUsed = false;
                 var tokenUsed = false;
 
@@ -191,6 +190,21 @@ public partial class Message
 
                     wordUsed = true;
                     sentenceBuilder.Clear();
+                }
+
+                if (checkForEmotes && token.TokenType == Tokenizer.TokenType.TwemojiShortcode)
+                {
+                    var unicode = TwemojiProvider.ResolveShortcode(token.Value);
+                    if (unicode != null)
+                    {
+                        // Add the previous sentence before adding the Twemoji
+                        AddChunkWithMessage(text.NewWithStyle(chunk.Source, chunk.Link, sentenceBuilder.Append(!wordUsed ? word : "").ToString()));
+                        AddChunkWithMessage(new TextChunk(chunk.Source, TwemojiPayload.ResolveTwemoji(token.Value, unicode), token.Value) { FallbackColor = text.FallbackColor });
+
+                        wordUsed = true;
+                        tokenUsed = true;
+                        sentenceBuilder.Clear();
+                    }
                 }
 
                 if (token.TokenType == Tokenizer.TokenType.UrlString)

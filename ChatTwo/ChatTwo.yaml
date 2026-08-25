@@ -12,7 +12,8 @@ description: |-
   - Completely variable font size
   - Sidebar tabs
   - Unread counts
-  - Emotes
+  - Emojis
+  - BetterTTV Emotes
   - Screenshot mode (obfuscate names)
 repo_url: https://github.com/Infiziert90/ChatTwo
 accepts_feedback: true

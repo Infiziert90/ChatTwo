@@ -33,6 +33,7 @@ public enum PayloadMessagePackType : byte
     PartyFinder,
     Uri,
     Emote,
+    Twemoji,
     Other = 255,
 }
 
@@ -65,6 +66,13 @@ public class PayloadMessagePackFormatter : IMessagePackFormatter<Payload?>
                 writer.WriteUInt8((byte)PayloadMessagePackType.Emote);
                 writer.WriteString(Encoding.UTF8.GetBytes(emotePayload.Code));
                 break;
+            case TwemojiPayload twemojiPayload:
+                writer.WriteUInt8((byte)PayloadMessagePackType.Twemoji);
+                // Twemoji payloads are encoded as an array of two strings: the shortcode and the unicode representation
+                writer.WriteArrayHeader(2);
+                writer.WriteString(Encoding.UTF8.GetBytes(twemojiPayload.Shortcode));
+                writer.WriteString(Encoding.UTF8.GetBytes(twemojiPayload.Unicode));
+                break;
             default:
                 writer.WriteUInt8((byte)PayloadMessagePackType.Other);
                 writer.Write(value.Encode());
@@ -91,6 +99,11 @@ public class PayloadMessagePackFormatter : IMessagePackFormatter<Payload?>
                 return new UriPayload(new Uri(reader.ReadString() ?? ""));
             case PayloadMessagePackType.Emote:
                 return EmotePayload.ResolveEmote(reader.ReadString() ?? "");
+            case PayloadMessagePackType.Twemoji:
+                // Twemoji payloads are encoded as an array of two strings: the shortcode and the unicode representation
+                if (reader.ReadArrayHeader() != 2)
+                    throw new InvalidOperationException("Invalid array count for TwemojiPayload object");
+                return TwemojiPayload.ResolveTwemoji(reader.ReadString() ?? "", reader.ReadString() ?? "");
             case PayloadMessagePackType.Other:
             default:
                 var bytes = reader.ReadBytes() ?? new ReadOnlySequence<byte>();

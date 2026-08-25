@@ -109,3 +109,26 @@ public class EmotePayload : Payload
         throw new NotImplementedException();
     }
 }
+
+public class TwemojiPayload : Payload
+{
+    public override PayloadType Type => (PayloadType) 0x54;
+
+    public string Shortcode = string.Empty;
+    public string Unicode = string.Empty; // Like "abcdef" or "abcdef-123456"
+
+    public static TwemojiPayload ResolveTwemoji(string shortcode, string unicode)
+    {
+        return new TwemojiPayload { Shortcode = shortcode, Unicode = unicode };
+    }
+
+    protected override void DecodeImpl(BinaryReader reader, long endOfStream)
+    {
+        throw new NotImplementedException();
+    }
+
+    protected override byte[] EncodeImpl()
+    {
+        throw new NotImplementedException();
+    }
+}

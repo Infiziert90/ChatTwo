@@ -3256,7 +3256,7 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Replaces words with their emote version, currently supports BetterTTV..
+        ///   Looks up a localized string similar to Replaces words with their emote version, currently supports BetterTTV and Discord-style emoji shortcodes..
         /// </summary>
         internal static string Options_ShowEmotes_Desc {
             get {

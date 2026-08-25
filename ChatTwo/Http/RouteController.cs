@@ -39,6 +39,7 @@ public class RouteController
         HostContext.Host.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/files/FFXIV_Lodestone_SSF.ttf", GetLodestoneFont, ExceptionRoute);
         HostContext.Host.Routes.PreAuthentication.Static.Add(HttpMethod.GET, "/favicon.ico", GetFavicon, ExceptionRoute);
         HostContext.Host.Routes.PreAuthentication.Parameter.Add(HttpMethod.GET, "/emote/{name}", GetEmote, ExceptionRoute);
+        HostContext.Host.Routes.PreAuthentication.Parameter.Add(HttpMethod.GET, "/twemoji/{shortcode}", GetTwemoji, ExceptionRoute);
 
         // Post Auth
         HostContext.Host.Routes.PostAuthentication.Static.Add(HttpMethod.GET, "/chat", ChatBoxRoute, ExceptionRoute);
@@ -117,6 +118,37 @@ public class RouteController
 
 
         var emote = EmoteCache.GetEmote(name);
+        if (emote is null)
+        {
+            ctx.Response.StatusCode = 400;
+            await ctx.Response.Send("Emote not valid.");
+            return;
+        }
+
+        // Wait for the emote to be loaded a maximum of 5 times
+        var timeout = 5;
+        while (!emote.IsLoaded && timeout > 0)
+        {
+            timeout--;
+            await Task.Delay(25);
+        }
+
+        ctx.Response.Headers.Add("Cache-Control", "max-age=86400");
+        await ctx.Response.Send(emote.RawData);
+    }
+
+    private async Task GetTwemoji(HttpContextBase ctx)
+    {
+        var shortcode = ctx.Request.Url.Parameters["shortcode"] ?? "";
+        var unicode = TwemojiProvider.ResolveShortcode(shortcode);
+        if (unicode == null)
+        {
+            ctx.Response.StatusCode = 400;
+            await ctx.Response.Send("Malformed emote name.");
+            return;
+        }
+
+        var emote = TwemojiProvider.GetTwemoji(unicode);
         if (emote is null)
         {
             ctx.Response.StatusCode = 400;

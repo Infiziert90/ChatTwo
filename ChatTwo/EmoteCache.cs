@@ -2,6 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using ChatTwo.Http;
+using ChatTwo.Util;
 using Dalamud.Interface.Textures;
 using Dalamud.Interface.Textures.TextureWraps;
 using Dalamud.Utility;
@@ -127,16 +128,13 @@ public static class EmoteCache
         }
     }
 
-    public abstract class EmoteBase
+    public abstract class EmoteBase : ImGuiDrawable
     {
-        public bool Failed;
-        public bool IsLoaded;
-
         public byte[] RawData = [];
 
         protected IDalamudTextureWrap? Texture;
 
-        public virtual void Draw(Vector2 size)
+        public override void Draw(Vector2 size)
         {
             ImGui.Image(Texture!.Handle, size);
         }
