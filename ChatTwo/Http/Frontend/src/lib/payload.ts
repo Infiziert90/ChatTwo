@@ -22,4 +22,5 @@
     CustomAchievement = 0x51,
     CustomUri = 0x52,
     CustomEmote = 0x53,
+    CustomTwemoji = 0x54,
 }

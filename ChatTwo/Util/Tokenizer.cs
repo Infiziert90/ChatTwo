@@ -16,10 +16,11 @@ public static class Tokenizer
         Whitespace,
         Equals,
         OpenParenthesis,
+        TwemojiShortcode,
         UrlString,
         StringValue,
         Leftover,
-        SequenceTerminator
+        SequenceTerminator,
     }
 
     public class Token(TokenType tokenType, string value)
@@ -47,6 +48,7 @@ public static class Tokenizer
                 new TokenDefinition(TokenType.Whitespace, "\\s", 1),
                 new TokenDefinition(TokenType.Equals, "=", 1),
                 new TokenDefinition(TokenType.OpenParenthesis, "\\(", 1),
+                new TokenDefinition(TokenType.TwemojiShortcode, TwemojiShortcodeRegex, 1),
                 new TokenDefinition(TokenType.UrlString, UrlRegex, 1),
                 new TokenDefinition(TokenType.StringValue, "\\p{IsBasicLatin}", 2),
                 new TokenDefinition(TokenType.Leftover, ".", 3)
@@ -148,5 +150,13 @@ public static class Tokenizer
     private static readonly Regex UrlRegex = new(
         @"(?<URL>((https?:\/\/|www\.)[a-z0-9-]+(\.[a-z0-9-]+)*|([a-z0-9-]+(\.[a-z0-9-]+)*\.(com|net|org|co|io|app)))(:[\d]{1,5})?(\/[^\s]*)?)",
         RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture
+    );
+
+    /// <summary>
+    /// TwemojiShortcodeRegex returns a regex object that matches twemoji shortcodes like ":smile:".
+    /// </summary>
+    private static readonly Regex TwemojiShortcodeRegex = new(
+        @":[a-z0-9_+-]+:",
+        RegexOptions.Compiled | RegexOptions.IgnoreCase
     );
 }

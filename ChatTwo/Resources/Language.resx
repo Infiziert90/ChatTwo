@@ -1172,7 +1172,7 @@
         <value>Show emotes</value>
     </data>
     <data name="Options_ShowEmotes_Desc" xml:space="preserve">
-        <value>Replaces words with their emote version, currently supports BetterTTV.</value>
+        <value>Replaces words with their emote version, currently supports BetterTTV and Discord-style emoji shortcodes.</value>
     </data>
     <data name="Options_Emote_Tab" xml:space="preserve">
         <value>Emotes</value>

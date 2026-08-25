@@ -1,2 +1,4 @@
 ﻿# Generated files
 ChatTwo/Resources/Language.*.resx linguist-generated=true
+ChatTwo/images/twemoji/assets/*.svg linguist-generated=true
+ChatTwo/images/twemoji/emojibase.*.json linguist-generated=true

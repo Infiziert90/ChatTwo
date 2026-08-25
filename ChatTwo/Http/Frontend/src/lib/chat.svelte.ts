@@ -218,6 +218,9 @@ export class ChatTwoWeb {
                 case WebPayloadType.CustomEmote:
                     this.processEmote(template, spanElement);
                     break;
+                case WebPayloadType.CustomTwemoji:
+                    this.processTwemoji(template, spanElement);
+                    break;
                 case WebPayloadType.Icon:
                     this.processIcon(template, spanElement);
                     break;
@@ -271,6 +274,14 @@ export class ChatTwoWeb {
     processEmote(template: Template, spanElement: HTMLSpanElement) {
         const imgElement = document.createElement('img');
         imgElement.src = `/emote/${template.content}`;
+
+        spanElement.classList.add('emote-icon');
+        spanElement.appendChild(imgElement);
+    }
+
+    processTwemoji(template: Template, spanElement: HTMLSpanElement) {
+        const imgElement = document.createElement('img');
+        imgElement.src = `/twemoji/${template.content}`;
 
         spanElement.classList.add('emote-icon');
         spanElement.appendChild(imgElement);

@@ -60,6 +60,14 @@ public class Processing
                     return new MessageTemplate { PayloadType = WebPayloadType.CustomEmote, Color = 0, Content = emotePayload.Code };
             }
 
+            if (chunk.Link is TwemojiPayload twemojiPayload && Plugin.Config.ShowEmotes)
+            {
+                var image = TwemojiProvider.GetTwemoji(twemojiPayload.Unicode);
+                if (image is { Failed: false })
+                    // We send the shortcode to the web interface, which then loads the emoji from a route on the webserver
+                    return new MessageTemplate { PayloadType = WebPayloadType.CustomTwemoji, Color = 0, Content = twemojiPayload.Shortcode};
+            }
+
             var color = text.Foreground;
             if (color == null && text.FallbackColor != null)
             {
