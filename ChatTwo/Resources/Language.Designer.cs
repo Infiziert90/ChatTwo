@@ -3517,6 +3517,15 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lock input channel.
+        /// </summary>
+        internal static string Options_Tabs_LockChannel {
+            get {
+                return ResourceManager.GetString("Options_Tabs_LockChannel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Move down.
         /// </summary>
         internal static string Options_Tabs_MoveDown {

@@ -37,6 +37,7 @@ public partial class ChatLog : Window, IChatWindow
     private bool WasDocked;
 
     private bool DrewThisFrame;
+    private DateTime? ApplyDefaultChannelAt;
 
     public bool IsHidden;
     public HideState CurrentHideState { get; set; } = HideState.None;
@@ -91,6 +92,7 @@ public partial class ChatLog : Window, IChatWindow
     private void Login()
     {
         Plugin.MessageManager.FilterAllTabsAsync();
+        ApplyDefaultChannelAt = DateTime.UtcNow.AddSeconds(3);
     }
 
     public unsafe void Activated(ChatActivatedArgs args)
@@ -375,8 +377,15 @@ public partial class ChatLog : Window, IChatWindow
 
         var activeTab = Plugin.CurrentTab;
 
-        // This tab has a fixed channel, so we force this channel to be always set as current
-        if (activeTab.Channel is not null)
+        if (ApplyDefaultChannelAt is { } applyAt && DateTime.UtcNow >= applyAt)
+        {
+            ApplyDefaultChannelAt = null;
+            if (activeTab.Channel is not null && !activeTab.LockChannel)
+                Plugin.Functions.Chat.SetChannelWithExtraChat(activeTab.Channel);
+        }
+
+        // This tab has a locked channel, so we force this channel to be always set as current
+        if (activeTab.Channel is not null && activeTab.LockChannel)
             activeTab.CurrentChannel.SetChannel(activeTab.Channel.Value);
 
         if (Plugin.Config.PreviewPosition is PreviewPosition.Inside && Plugin.InputPreview.IsDrawable)
@@ -385,10 +394,11 @@ public partial class ChatLog : Window, IChatWindow
         using (ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, Vector2.Zero))
             DrawChannelName(activeTab);
 
-        if (ImGuiUtil.IconButton(FontAwesomeIcon.Comment) && activeTab.Channel is null)
+        var switcherDisabled = activeTab.Channel is not null && activeTab.LockChannel;
+        if (ImGuiUtil.IconButton(FontAwesomeIcon.Comment) && !switcherDisabled)
             ImGui.OpenPopup(ChatChannelPicker);
 
-        if (activeTab.Channel is not null && ImGui.IsItemHovered())
+        if (switcherDisabled && ImGui.IsItemHovered())
             ImGuiUtil.Tooltip(Language.ChatLog_SwitcherDisabled);
 
         using (var popup = ImRaii.Popup(ChatChannelPicker))

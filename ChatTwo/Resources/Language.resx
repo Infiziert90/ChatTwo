@@ -241,6 +241,9 @@
     <data name="Options_Tabs_InputChannel">
         <value>Input channel</value>
     </data>
+    <data name="Options_Tabs_LockChannel">
+        <value>Lock input channel</value>
+    </data>
     <data name="Options_Tabs_Channels">
         <value>Channels</value>
     </data>
