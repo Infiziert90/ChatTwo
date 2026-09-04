@@ -162,6 +162,9 @@ public sealed class Tabs : ISettingsTab
                     }
                 }
 
+                if (tab.Channel is not null)
+                    ImGui.Checkbox(Language.Options_Tabs_LockChannel, ref tab.LockChannel);
+
                 var player = Plugin.ObjectTable.LocalPlayer;
                 if (tab.Channel == InputChannel.Tell && player != null)
                 {

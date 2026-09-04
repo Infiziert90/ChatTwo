@@ -258,6 +258,7 @@ public class Tab
     public bool UnhideOnActivity;
     public bool DisplayTimestamp = true;
     public InputChannel? Channel;
+    public bool LockChannel = true;
     public bool PopOut;
     public bool IndependentOpacity;
     public float Opacity = 100f;
@@ -342,6 +343,7 @@ public class Tab
             LastActivity = LastActivity,
             DisplayTimestamp = DisplayTimestamp,
             Channel = Channel,
+            LockChannel = LockChannel,
             PopOut = PopOut,
             IndependentOpacity = IndependentOpacity,
             Opacity = Opacity,
