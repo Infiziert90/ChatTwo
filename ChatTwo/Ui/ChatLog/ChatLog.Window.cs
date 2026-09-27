@@ -625,10 +625,17 @@ public partial class ChatLog : Window, IChatWindow
         var oldItemSpacing = ImGui.GetStyle().ItemSpacing;
         var oldCellPadding = ImGui.GetStyle().CellPadding;
 
+        var checkerboard = Plugin.Config.CheckerboardRows;
+        var tableFlags = ImGuiTableFlags.PreciseWidths;
+        if (checkerboard)
+            tableFlags |= ImGuiTableFlags.RowBg;
+
+        using (ImRaii.PushColor(ImGuiCol.TableRowBg, Vector4.Zero, checkerboard))
+        using (ImRaii.PushColor(ImGuiCol.TableRowBgAlt, ColourUtil.RgbaToVector4(Plugin.Config.CheckerboardColor) ?? Vector4.Zero, checkerboard))
         using (ImRaii.PushStyle(ImGuiStyleVar.ItemSpacing, Vector2.Zero))
         using (ImRaii.PushStyle(ImGuiStyleVar.CellPadding, oldCellPadding with { Y = 0 }, compact))
         {
-            using var table = ImRaii.Table("timestamp-table", 2, ImGuiTableFlags.PreciseWidths);
+            using var table = ImRaii.Table("timestamp-table", 2, tableFlags);
             if (!table.Success)
                 return;
 
