@@ -3040,6 +3040,33 @@ namespace ChatTwo.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Outline colour.
+        /// </summary>
+        internal static string Options_OutlineAllText_Color {
+            get {
+                return ResourceManager.GetString("Options_OutlineAllText_Color", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Draw an outline around all chat text to improve readability. Text with a game-specified glow colour keeps that colour..
+        /// </summary>
+        internal static string Options_OutlineAllText_Description {
+            get {
+                return ResourceManager.GetString("Options_OutlineAllText_Description", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Outline all text.
+        /// </summary>
+        internal static string Options_OutlineAllText_Name {
+            get {
+                return ResourceManager.GetString("Options_OutlineAllText_Name", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Override Style.
         /// </summary>
         internal static string Options_OverrideStyle_Name {
@@ -3255,6 +3282,24 @@ namespace ChatTwo.Resources {
             }
         }
         
+        /// <summary>
+        ///   Looks up a localized string similar to Draw the glow colour the game specifies around text as a thin outline, like the vanilla chat log..
+        /// </summary>
+        internal static string Options_RenderGlow_Description {
+            get {
+                return ResourceManager.GetString("Options_RenderGlow_Description", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Render text glow.
+        /// </summary>
+        internal static string Options_RenderGlow_Name {
+            get {
+                return ResourceManager.GetString("Options_RenderGlow_Name", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Replaces words with their emote version, currently supports BetterTTV..
         /// </summary>

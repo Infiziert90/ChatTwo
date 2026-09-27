@@ -40,6 +40,14 @@ public static class ColourUtil
         => ComponentsToRgba((byte)Math.Round(col.X * 255), (byte)Math.Round(col.Y * 255), (byte)Math.Round(col.Z * 255));
 
     /// <summary>
+    /// Converts a Vector4 to an RGBA color value.
+    /// </summary>
+    /// <param name="col">The color</param>
+    /// <returns>Color as byte representation RR GG BB AA</returns>
+    public static uint Vector4ToRgba(Vector4 col)
+        => ComponentsToRgba((byte)Math.Round(col.X * 255), (byte)Math.Round(col.Y * 255), (byte)Math.Round(col.Z * 255), (byte)Math.Round(col.W * 255));
+
+    /// <summary>
     /// Converts a Vector4 to an ABGR color value.
     /// </summary>
     /// <param name="col">The color</param>
@@ -60,9 +68,10 @@ public static class ColourUtil
         if (col == 0)
             return 0;
 
-        // Check if Alpha is set, if not set to 255
-        if (col <= 0x00FFFFFFu)
-            col |= 0xFF000000u;
+        // The game ignores the alpha of pushed colors entirely and renders them
+        // fully opaque (verified against the vanilla renderer), so force alpha
+        // regardless of what the payload carries.
+        col |= 0xFF000000u;
 
         var buf = (byte*)&col;
         (buf[1], buf[2], buf[3], buf[0]) = (buf[0], buf[1], buf[2], buf[3]);

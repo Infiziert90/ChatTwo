@@ -118,6 +118,13 @@ public class Configuration : IPluginConfiguration
         FontId = new DalamudAssetFontAndFamilyId(DalamudAsset.NotoSansCjkRegular),
         SizePt = 12.75f,
     };
+    // Black at 0x66 alpha; composites to roughly the vanilla glow opacity
+    // across the 8 outline stamps drawn by ImGuiUtil.DrawTextGlow.
+    public const uint DefaultOutlineColor = 0x00000066;
+
+    public bool RenderGlow = true;
+    public bool OutlineAllText;
+    public uint OutlineColor = DefaultOutlineColor;
 
     public float TooltipOffset;
     public float WindowAlpha = 100f;
@@ -198,6 +205,9 @@ public class Configuration : IPluginConfiguration
         JapaneseFontV2 = other.JapaneseFontV2;
         ItalicFontV2 = other.ItalicFontV2;
         SymbolsFontSizeV2 = other.SymbolsFontSizeV2;
+        RenderGlow = other.RenderGlow;
+        OutlineAllText = other.OutlineAllText;
+        OutlineColor = other.OutlineColor;
         TooltipOffset = other.TooltipOffset;
         WindowAlpha = other.WindowAlpha;
         ChatColours = other.ChatColours.ToDictionary(entry => entry.Key, entry => entry.Value);
