@@ -34,6 +34,11 @@ public partial class Message
     public Dictionary<Guid, float?> Height { get; } = new();
     public Dictionary<Guid, bool> IsVisible { get; } = new();
 
+    // Set once at ingestion via the message styling IPC; messages loaded from
+    // the database render unstyled.
+    public uint StyleBackground; // RGBA, 0 = no background
+    public float StyleAlpha = 1f; // <= 0 hides the message from the log (it stays stored)
+
     public Message(ulong receiver, ulong contentId, ulong accountId, ChatCode code, List<Chunk> sender, List<Chunk> content, SeString senderSource, SeString contentSource)
     {
         var extraChatChannel = ExtractExtraChatChannel(contentSource);

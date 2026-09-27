@@ -4,6 +4,7 @@ using System.Numerics;
 using ChatTwo.Code;
 using ChatTwo.GameFunctions;
 using ChatTwo.GameFunctions.Types;
+using ChatTwo.Ipc;
 using ChatTwo.Resources;
 using ChatTwo.Ui.Handler;
 using ChatTwo.Util;
@@ -652,6 +653,10 @@ public partial class ChatLog : Window, IChatWindow
 
     private void DrawMessages(Tab tab, PayloadHandler handler, bool isTable, bool moreCompact = false, float oldCellPaddingY = 0)
     {
+        // Set while the classic-layout background has the draw list split, so
+        // an exception mid-message can't leave the list split (the next
+        // frame's split would then assert inside ImGui).
+        var backgroundSplitActive = false;
         try
         {
             // This may produce ApplicationException which is catched below.
@@ -670,6 +675,8 @@ public partial class ChatLog : Window, IChatWindow
             int? lastMessageHash = null;
             var sameCount = 0;
 
+            var tabPolicy = Plugin.StyleIpc.GetTabPolicy(tab.Identifier);
+
             var maxLines = Plugin.Config.MaxLinesToRender;
             var startLine = messages.Count > maxLines ? messages.Count - maxLines : 0;
             for (var i = startLine; i < messages.Count; i++)
@@ -679,6 +686,16 @@ public partial class ChatLog : Window, IChatWindow
                 {
                     message.Height[tab.Identifier] = null;
                     message.IsVisible[tab.Identifier] = false;
+                }
+
+                // Hidden by the message style provider; the message stays
+                // stored, logged and exported. Skipped before duplicate
+                // collapsing so a hidden message neither anchors nor counts
+                // toward a collapse run.
+                if (message.StyleAlpha <= 0 && (tabPolicy & StyleIpc.PolicySuppressHide) == 0)
+                {
+                    message.IsVisible[tab.Identifier] = false;
+                    continue;
                 }
 
                 if (Plugin.Config.CollapseDuplicateMessages)
@@ -760,6 +777,34 @@ public partial class ChatLog : Window, IChatWindow
                     message.IsVisible[tab.Identifier] = nowVisible;
                 }
 
+                var applyBackground = message.StyleBackground != 0 && (tabPolicy & StyleIpc.PolicySuppressBackground) == 0;
+                if (applyBackground && isTable)
+                    ImGui.TableSetBgColor(ImGuiTableBgTarget.RowBg0, ColourUtil.RgbaToAbgr(message.StyleBackground));
+
+                // In the classic layout the background's size is only known
+                // after the message is drawn (word wrapping), so draw the text
+                // into the upper draw list channel and fill the rect behind it
+                // afterwards.
+                var drawList = ImGui.GetWindowDrawList();
+                var splitBackground = applyBackground && !isTable;
+                var backgroundStart = Vector2.Zero;
+                var backgroundWidth = 0f;
+                if (splitBackground)
+                {
+                    backgroundStart = ImGui.GetCursorScreenPos();
+                    backgroundWidth = ImGui.GetContentRegionAvail().X;
+                    drawList.ChannelsSplit(2);
+                    drawList.ChannelsSetCurrent(1);
+                    backgroundSplitActive = true;
+                }
+
+                // Faded by the message style provider. A message that reaches
+                // this point with alpha <= 0 had its hiding suppressed by the
+                // tab policy and renders fully visible.
+                var effectiveStyleAlpha = message.StyleAlpha <= 0 ? 1f : message.StyleAlpha;
+                var fade = effectiveStyleAlpha < 1f && (tabPolicy & StyleIpc.PolicySuppressFade) == 0;
+                using var styleAlpha = ImRaii.PushStyle(ImGuiStyleVar.Alpha, ImGui.GetStyle().Alpha * effectiveStyleAlpha, fade);
+
                 if (tab.DisplayTimestamp)
                 {
                     var localTime = message.Date.ToLocalTime();
@@ -809,6 +854,15 @@ public partial class ChatLog : Window, IChatWindow
                     InputHandler.ChunkHandler.DrawChunks(message.Content, true, handler, lineWidth);
 
                 message.IsVisible[tab.Identifier] = ImGui.IsItemVisible();
+
+                if (splitBackground)
+                {
+                    drawList.ChannelsSetCurrent(0);
+                    var backgroundEnd = new Vector2(backgroundStart.X + backgroundWidth, ImGui.GetItemRectMax().Y);
+                    drawList.AddRectFilled(backgroundStart, backgroundEnd, ColourUtil.RgbaToAbgr(message.StyleBackground));
+                    drawList.ChannelsMerge();
+                    backgroundSplitActive = false;
+                }
             }
         }
         catch (ApplicationException)
@@ -819,6 +873,11 @@ public partial class ChatLog : Window, IChatWindow
         catch (Exception ex)
         {
             Plugin.Log.Warning(ex, "Error drawing chat log");
+        }
+        finally
+        {
+            if (backgroundSplitActive)
+                ImGui.GetWindowDrawList().ChannelsMerge();
         }
     }
 

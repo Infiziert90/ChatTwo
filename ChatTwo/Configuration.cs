@@ -286,7 +286,10 @@ public class Tab
 
     [NonSerialized] public UsedChannel CurrentChannel = new();
 
-    [NonSerialized] public Guid Identifier = Guid.NewGuid();
+    // Persisted so per-tab settings from other plugins (tab style policies)
+    // survive restarts. Configs saved before this field existed get a fresh
+    // Guid on load, which sticks with the next save.
+    public Guid Identifier = Guid.NewGuid();
 
     public bool Matches(Message message)
     {
