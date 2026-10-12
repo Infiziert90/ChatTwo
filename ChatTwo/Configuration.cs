@@ -58,9 +58,6 @@ public class Configuration : IPluginConfiguration
     public int InactivityHideTimeout = 10;
     public bool InactivityHideActiveDuringBattle = true;
 
-    [Obsolete("Use InactivityHideChannelsV2 instead")]
-    public Dictionary<ChatType, ChatSource> InactivityHideChannels = [];
-
     public Dictionary<ChatType, (ChatSource, ChatSource)> InactivityHideChannelsV2 = [];
     public bool InactivityHideExtraChatAll = true;
     public HashSet<Guid> InactivityHideExtraChatChannels = [];
@@ -246,9 +243,6 @@ public static class UnreadModeExt
 public class Tab
 {
     public string Name = Language.Tab_DefaultName;
-
-    [Obsolete("Removed in favor of SelectedChannels")]
-    public Dictionary<ChatType, ChatSource> ChatCodes = new();
 
     public Dictionary<ChatType, (ChatSource, ChatSource)> SelectedChannels = new();
     public bool ExtraChatAll;

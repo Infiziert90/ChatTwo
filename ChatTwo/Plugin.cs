@@ -92,31 +92,6 @@ public sealed class Plugin : IDalamudPlugin
 
             Config = Interface.GetPluginConfig() as Configuration ?? new Configuration();
 
-#pragma warning disable CS0618 // Type or member is obsolete
-            // TODO Remove after 01.07.2026
-            // Migrate old channel values
-            if (Config.Version <= 5)
-            {
-                foreach (var tab in Config.Tabs)
-                {
-                    if (tab.ChatCodes.Count > 0)
-                    {
-                        tab.SelectedChannels = tab.ChatCodes.ToDictionary(pair => pair.Key, pair => (pair.Value, pair.Value));
-                        tab.ChatCodes.Clear();
-                    }
-
-                    if (Config.InactivityHideChannels.Count > 0)
-                    {
-                        Config.InactivityHideChannelsV2 = Config.InactivityHideChannels.ToDictionary(pair => pair.Key, pair => (pair.Value, pair.Value));
-                        Config.InactivityHideChannels.Clear();
-                    }
-
-                    Config.Version = 6;
-                    SaveConfig();
-                }
-            }
-#pragma warning restore CS0618 // Type or member is obsolete
-
             if (Config.Tabs.Count == 0)
                 Config.Tabs.Add(TabsUtil.VanillaGeneral);
 

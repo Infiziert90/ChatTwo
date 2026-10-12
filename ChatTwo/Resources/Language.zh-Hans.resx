@@ -1406,7 +1406,7 @@
         <value>使用须知</value>
     </data>
   <data name="Options_Help_SenderMessagesV2" xml:space="preserve">
-        <value>Shows all messages coming from the target.</value>
+        <value>显示该目标的所有消息。</value>
     </data>
   <data name="Options_Header_Target" xml:space="preserve">
         <value>选中</value>
@@ -1467,12 +1467,21 @@
         <value>正在加载日志...</value>
     </data>
   <data name="Options_Tabs_SupportInput" xml:space="preserve">
-        <value>Show Input Area</value>
+        <value>显示输入区域</value>
     </data>
   <data name="Options_Tabs_TellTabChannelSelection" xml:space="preserve">
-        <value>Channel selection is disabled for tell tabs.</value>
+        <value>悄悄话标签页禁用频道选择。</value>
     </data>
   <data name="Options_Tab_SetTarget" xml:space="preserve">
-        <value>Set to target</value>
+        <value>指定目标</value>
+    </data>
+  <data name="Options_Tabs_ContentIdWarning" xml:space="preserve">
+        <value>内容 ID 尚未设置，将在收到第一条消息后生成。</value>
+    </data>
+  <data name="Options_DatabaseGatherCraftMessages_Name" xml:space="preserve">
+        <value>保存制作与采集消息至数据库</value>
+    </data>
+  <data name="Options_DatabaseGatherCraftMessages_Description" xml:space="preserve">
+        <value>如果将采集和制作消息保存到数据库中，数据库的大小将会更快增长，保存设置时会出现明显的卡顿。 建议禁用此功能。</value>
     </data>
 </root>

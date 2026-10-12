@@ -1476,4 +1476,13 @@ Your old database can still be recovered, please contact the plugin author for h
   <data name="Options_Tab_SetTarget" xml:space="preserve">
         <value>Set to target</value>
     </data>
+  <data name="Options_Tabs_ContentIdWarning" xml:space="preserve">
+        <value>Content ID not set yet, this happens after the first message is received.</value>
+    </data>
+  <data name="Options_DatabaseGatherCraftMessages_Name" xml:space="preserve">
+        <value>Save crafting and gathering messages in database</value>
+    </data>
+  <data name="Options_DatabaseGatherCraftMessages_Description" xml:space="preserve">
+        <value>If gathering and crafting messages are saved to the database, the size of the database will grow much faster, and there will be a noticeable freeze when saving settings. It is recommended to leave this disabled.</value>
+    </data>
 </root>
