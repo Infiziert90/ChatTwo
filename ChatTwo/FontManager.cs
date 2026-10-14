@@ -76,11 +76,16 @@ public class FontManager
                 builder.AddChar(c.Char);
 
             // various symbols
-            // French
-            // Romanian
             // builder.AddText("←→↑↓《》■※☀★★☆♥♡ヅツッシ☀☁☂℃℉°♀♂♠♣♦♣♧®©™€$£♯♭♪✓√◎◆◇♦■□〇●△▽▼▲‹›≤≥<«“”─＼～");
-            builder.AddText("Œœ");
-            builder.AddText("ĂăÂâÎîȘșȚț");
+
+            // "Latin Extended-A" https://www.compart.com/en/unicode/block/U+0100
+            // Covers the accented letters the game font lacks but people still type:
+            // Turkish (ĞğİıŞş), French (Œœ), Polish, Czech, Hungarian, Baltic, ...
+            for (var i = 0x0100; i <= 0x017F; i++)
+                builder.AddChar((char) i);
+
+            // Romanian comma-below variants, which live in "Latin Extended-B"
+            builder.AddText("ȘșȚț");
 
             // "Enclosed Alphanumerics" (partial) https://www.compart.com/en/unicode/block/U+2460
             for (var i = 0x2460; i <= 0x24B5; i++)
