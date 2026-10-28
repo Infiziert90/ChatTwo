@@ -14,9 +14,8 @@ public static class HideStateHelper
             current.CurrentHideState = HideState.None;
 
         // Force return early if user is in keybound brawler
-        if (Sheets.TerritorySheet.TryGetRow(Plugin.ClientState.TerritoryType, out var territoryType))
-            if (territoryType.TerritoryIntendedUse.RowId == (uint)TerritoryIntendedUse.KeyboundBrawler)
-                current.CurrentHideState = HideState.KeyboundBrawler;
+        if (Plugin.InKeyboundBrawler)
+            current.CurrentHideState = HideState.KeyboundBrawler;
 
         // if the chat has no hide state set, and the player has entered battle, we hide chat if they have configured it
         if (hideInBattle && current.CurrentHideState is HideState.None && Plugin.InBattle)

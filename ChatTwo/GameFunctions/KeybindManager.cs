@@ -389,6 +389,10 @@ public unsafe class KeybindManager : IDisposable {
             LastRefresh = Environment.TickCount64;
         }
 
+        // Force return early if user is in keybound brawler
+        if (Plugin.InKeyboundBrawler)
+            return;
+
         // Vanilla text input has focus
         if (RaptureAtkModule.Instance()->AtkModule.IsTextInputActive())
         {

@@ -15,6 +15,7 @@ using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.ImGuiFileDialog;
+using FFXIVClientStructs.FFXIV.Client.Enums;
 
 namespace ChatTwo;
 
@@ -266,4 +267,5 @@ public sealed class Plugin : IDalamudPlugin
     public static bool InBattle => Condition[ConditionFlag.InCombat];
     public static bool GposeActive => Condition[ConditionFlag.WatchingCutscene];
     public static bool CutsceneActive => Condition[ConditionFlag.OccupiedInCutSceneEvent] || Condition[ConditionFlag.WatchingCutscene78];
+    public static bool InKeyboundBrawler => Sheets.TerritorySheet.TryGetRow(ClientState.TerritoryType, out var territoryType) && territoryType.TerritoryIntendedUse.RowId == (uint)TerritoryIntendedUse.KeyboundBrawler;
 }

@@ -159,9 +159,8 @@ public sealed unsafe class Chat : IDisposable
             return ChatLogRefreshHook!.Original(log, eventId, value);
 
         // Force return early if user is in keybound brawler
-        if (Sheets.TerritorySheet.TryGetRow(Plugin.ClientState.TerritoryType, out var territoryType))
-            if (territoryType.TerritoryIntendedUse.RowId == (uint)TerritoryIntendedUse.KeyboundBrawler)
-                return ChatLogRefreshHook!.Original(log, eventId, value);
+        if (Plugin.InKeyboundBrawler)
+            return ChatLogRefreshHook!.Original(log, eventId, value);
 
         if (Plugin.Functions.KeybindManager.DirectChat && LastTypedCharacter != null)
         {
