@@ -62,6 +62,7 @@ public sealed class Plugin : IDalamudPlugin
     public IpcManager Ipc { get; }
     public ExtraChat ExtraChat { get; }
     public TypingIpc TypingIpc { get; }
+    public StyleIpc StyleIpc { get; }
     public FontManager FontManager { get; }
 
     public readonly ServerCore ServerCore;
@@ -105,6 +106,9 @@ public sealed class Plugin : IDalamudPlugin
 
             Commands = new Commands();
             Functions = new GameFunctions.GameFunctions(this);
+            // Constructed before IpcManager so the style gates are already
+            // registered when the ChatTwo.Available broadcast fires.
+            StyleIpc = new StyleIpc();
             Ipc = new IpcManager();
             TypingIpc = new TypingIpc(this);
             ExtraChat = new ExtraChat();
@@ -192,6 +196,7 @@ public sealed class Plugin : IDalamudPlugin
         SeStringDebugger?.Dispose();
 
         TypingIpc?.Dispose();
+        StyleIpc?.Dispose();
         ExtraChat?.Dispose();
         Ipc?.Dispose();
         MessageManager?.DisposeAsync().AsTask().Wait();
