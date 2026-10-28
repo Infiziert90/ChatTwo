@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using System.Text;
 using ChatTwo.Code;
 using ChatTwo.Util;
 using Dalamud.Bindings.ImGui;
@@ -140,6 +141,10 @@ public class ChunkHandler
         }
         else
         {
+            var glow = ImGuiUtil.GetGlowColor(chunk);
+            if (glow != null && content.Length > 0)
+                ImGuiUtil.DrawTextGlow(ImGui.GetCursorScreenPos(), glow.Value, Encoding.UTF8.GetBytes(content));
+
             ImGui.TextUnformatted(content);
             ImGuiUtil.PostPayload(chunk, handler);
         }

@@ -8,6 +8,7 @@ using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Utility;
+using Lumina.Text.Payloads;
 using Lumina.Text.ReadOnly;
 using DalamudPartyFinderPayload = Dalamud.Game.Text.SeStringHandling.Payloads.PartyFinderPayload;
 
@@ -183,10 +184,10 @@ public class SeStringDebugger : Window
                 }
                 case RawPayload raw:
                 {
-                    var colorPayload = ColorPayload.From(raw.Data);
+                    var colorPayload = ColorPayload.From(raw.Data) ?? ColorPayload.From(raw.Data, MacroCode.EdgeColor);
                     if (colorPayload != null)
                     {
-                        RenderMetadataDictionary("Link ColorPayload", new Dictionary<string, string?>
+                        RenderMetadataDictionary($"Link ColorPayload ({colorPayload.MacroCode})", new Dictionary<string, string?>
                         {
                             { "Unshifted", colorPayload.UnshiftedColor.ToString("X8") },
                             { "Color", colorPayload.Color.ToString("X8") },
