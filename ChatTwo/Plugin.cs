@@ -3,7 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Numerics;
 using ChatTwo.Http;
-using ChatTwo.Ipc;
 using ChatTwo.Resources;
 using ChatTwo.Ui;
 using ChatTwo.Ui.ChatLog;
@@ -62,6 +61,7 @@ public sealed class Plugin : IDalamudPlugin
     public IpcManager Ipc { get; }
     public ExtraChat ExtraChat { get; }
     public TypingIpc TypingIpc { get; }
+    public QuickSymbolsIpc QuickSymbols { get; }
     public FontManager FontManager { get; }
 
     public readonly ServerCore ServerCore;
@@ -107,6 +107,7 @@ public sealed class Plugin : IDalamudPlugin
             Functions = new GameFunctions.GameFunctions(this);
             Ipc = new IpcManager();
             TypingIpc = new TypingIpc(this);
+            QuickSymbols = new QuickSymbolsIpc(this);
             ExtraChat = new ExtraChat();
             FontManager = new FontManager();
 
@@ -191,6 +192,7 @@ public sealed class Plugin : IDalamudPlugin
         DebuggerWindow?.Dispose();
         SeStringDebugger?.Dispose();
 
+        QuickSymbols?.Dispose();
         TypingIpc?.Dispose();
         ExtraChat?.Dispose();
         Ipc?.Dispose();
