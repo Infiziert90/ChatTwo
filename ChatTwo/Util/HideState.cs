@@ -1,6 +1,7 @@
 ﻿using ChatTwo.GameFunctions;
 using ChatTwo.GameFunctions.Types;
 using ChatTwo.Ui;
+using FFXIVClientStructs.FFXIV.Client.Enums;
 
 namespace ChatTwo.Util;
 
@@ -8,6 +9,15 @@ public static class HideStateHelper
 {
     public static bool HideStateCheck(IChatWindow current, bool hideInBattle, bool hideDuringCutscenes, bool hideWhenNotLoggedIn, bool activate)
     {
+        // Undo forced state before rechecking
+        if (current.CurrentHideState == HideState.KeyboundBrawler)
+            current.CurrentHideState = HideState.None;
+
+        // Force return early if user is in keybound brawler
+        if (Sheets.TerritorySheet.TryGetRow(Plugin.ClientState.TerritoryType, out var territoryType))
+            if (territoryType.TerritoryIntendedUse.RowId == (uint)TerritoryIntendedUse.KeyboundBrawler)
+                current.CurrentHideState = HideState.KeyboundBrawler;
+
         // if the chat has no hide state set, and the player has entered battle, we hide chat if they have configured it
         if (hideInBattle && current.CurrentHideState is HideState.None && Plugin.InBattle)
             current.CurrentHideState = HideState.Battle;
@@ -35,6 +45,6 @@ public static class HideStateHelper
         if (current.CurrentHideState is HideState.User && activate)
             current.CurrentHideState = HideState.None;
 
-        return current.CurrentHideState is HideState.Cutscene or HideState.User or HideState.Battle || (hideWhenNotLoggedIn && !Plugin.ClientState.IsLoggedIn);
+        return current.CurrentHideState is HideState.KeyboundBrawler or HideState.Cutscene or HideState.User or HideState.Battle || (hideWhenNotLoggedIn && !Plugin.ClientState.IsLoggedIn);
     }
 }

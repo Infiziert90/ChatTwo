@@ -129,7 +129,6 @@ public partial class ChatLog : Window, IChatWindow
         }
 
         var (info, reason, target) = (args.ChannelSwitchInfo, args.TellReason, args.TellTarget);
-
         if (info.Channel != null)
         {
             var targetChannel = info.Channel;

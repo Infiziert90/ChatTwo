@@ -1,9 +1,12 @@
+using System.Runtime.CompilerServices;
 using ChatTwo.Code;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using System.Text;
+using Dalamud.Utility;
+using Lumina.Text.Expressions;
 using Lumina.Text.Payloads;
-
+using Lumina.Text.ReadOnly;
 using PayloadType = Dalamud.Game.Text.SeStringHandling.PayloadType;
 
 namespace ChatTwo.Util;
@@ -23,7 +26,7 @@ public static class ChunkUtil
     //     {
     //         chunks.Add(new TextChunk(source, link, text)
     //         {
-    //             FallbackColour = defaultColour,
+    //             FallbackColor = defaultColour,
     //             Foreground = foreground.Count > 0 ? foreground.Peek() : null,
     //             Glow = glow.Count > 0 ? glow.Peek() : null,
     //             Italic = italic,
@@ -444,7 +447,7 @@ public static class ChunkUtil
     //
     //     return false;
     // }
-
+    //
     // [MethodImpl(MethodImplOptions.AggressiveInlining)]
     // private static bool TryResolveInt(in ReadOnlySeExpressionSpan expression, out int value)
     // {

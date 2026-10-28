@@ -7,4 +7,5 @@ public enum HideState
     CutsceneOverride,
     User,
     Battle,
+    KeyboundBrawler,
 }

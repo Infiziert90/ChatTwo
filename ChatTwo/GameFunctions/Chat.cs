@@ -8,6 +8,7 @@ using Dalamud.Hooking;
 using Dalamud.Memory;
 using Dalamud.Utility.Signatures;
 using FFXIVClientStructs.FFXIV.Application.Network;
+using FFXIVClientStructs.FFXIV.Client.Enums;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Client.UI;
@@ -156,6 +157,11 @@ public sealed unsafe class Chat : IDisposable
 
         if (eventId != 0x31 || value == null || value->UInt is not (0x05 or 0x0C))
             return ChatLogRefreshHook!.Original(log, eventId, value);
+
+        // Force return early if user is in keybound brawler
+        if (Sheets.TerritorySheet.TryGetRow(Plugin.ClientState.TerritoryType, out var territoryType))
+            if (territoryType.TerritoryIntendedUse.RowId == (uint)TerritoryIntendedUse.KeyboundBrawler)
+                return ChatLogRefreshHook!.Original(log, eventId, value);
 
         if (Plugin.Functions.KeybindManager.DirectChat && LastTypedCharacter != null)
         {
