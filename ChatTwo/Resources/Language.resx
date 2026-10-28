@@ -163,6 +163,15 @@
     <data name="Options_MoreCompactPretty_Description">
         <value>Reduce the spacing between messages.</value>
     </data>
+    <data name="Options_CheckerboardRows_Name">
+        <value>Checkerboard rows</value>
+    </data>
+    <data name="Options_CheckerboardRows_Description">
+        <value>Alternate the background colour of every other message to make rows easier to tell apart.</value>
+    </data>
+    <data name="Options_CheckerboardRows_Color">
+        <value>Alternate row colour</value>
+    </data>
     <data name="Options_ShowNoviceNetwork_Name">
         <value>Show Novice Network join button</value>
     </data>

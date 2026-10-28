@@ -65,6 +65,8 @@ public class Configuration : IPluginConfiguration
     public bool NativeItemTooltips = true;
     public bool PrettierTimestamps = true;
     public bool MoreCompactPretty;
+    public bool CheckerboardRows;
+    public uint CheckerboardColor = 0xFFFFFF0A;
     public bool HideSameTimestamps;
     public bool ShowNoviceNetwork;
     public bool SidebarTabView;
@@ -160,6 +162,8 @@ public class Configuration : IPluginConfiguration
         NativeItemTooltips = other.NativeItemTooltips;
         PrettierTimestamps = other.PrettierTimestamps;
         MoreCompactPretty = other.MoreCompactPretty;
+        CheckerboardRows = other.CheckerboardRows;
+        CheckerboardColor = other.CheckerboardColor;
         HideSameTimestamps = other.HideSameTimestamps;
         ShowNoviceNetwork = other.ShowNoviceNetwork;
         SidebarTabView = other.SidebarTabView;

@@ -40,6 +40,14 @@ public static class ColourUtil
         => ComponentsToRgba((byte)Math.Round(col.X * 255), (byte)Math.Round(col.Y * 255), (byte)Math.Round(col.Z * 255));
 
     /// <summary>
+    /// Converts a Vector4 to an RGBA color value.
+    /// </summary>
+    /// <param name="col">The color</param>
+    /// <returns>Color as byte representation RR GG BB AA</returns>
+    public static uint Vector4ToRgba(Vector4 col)
+        => ComponentsToRgba((byte)Math.Round(col.X * 255), (byte)Math.Round(col.Y * 255), (byte)Math.Round(col.Z * 255), (byte)Math.Round(col.W * 255));
+
+    /// <summary>
     /// Converts a Vector4 to an ABGR color value.
     /// </summary>
     /// <param name="col">The color</param>
